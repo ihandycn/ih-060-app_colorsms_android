@@ -23,7 +23,6 @@ import static com.android.messaging.ui.conversationlist.ConversationListActivity
 
 public class CustomizeGuideController {
     private static final String PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE = "pref_show_customize_guide";
-    public static final String PREF_KEY_MAIN_PAGE_SHOW_TIME = "pref_key_main_page_show_time";
 
     @SuppressLint("ClickableViewAccessibility")
     public static void showGuideIfNeed(AppCompatActivity activity) {

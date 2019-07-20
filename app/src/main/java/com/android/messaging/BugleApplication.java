@@ -24,6 +24,7 @@ import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.StrictMode;
 import android.os.SystemClock;
@@ -37,7 +38,6 @@ import android.text.TextUtils;
 
 import com.android.ex.photo.util.PhotoViewAnalytics;
 import com.android.messaging.ad.AdConfig;
-import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.ad.BillingManager;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.debug.BlockCanaryConfig;
@@ -63,6 +63,7 @@ import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.DebugUtils;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.DefaultSmsAppChangeObserver;
+import com.android.messaging.util.ExitAdConfig;
 import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
@@ -99,8 +100,6 @@ import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
 import net.appcloudbox.AcbAds;
-import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
-import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 import net.appcloudbox.autopilot.AutopilotConfig;
 import net.appcloudbox.autopilot.core.PrefsUtils;
 import net.appcloudbox.common.analytics.publisher.AcbPublisherMgr;
@@ -121,6 +120,7 @@ import java.util.concurrent.TimeUnit;
 import io.fabric.sdk.android.Fabric;
 
 import static android.content.IntentFilter.SYSTEM_HIGH_PRIORITY;
+import static com.android.messaging.ad.BillingManager.BILLING_VERIFY_SUCCESS;
 import static com.android.messaging.debug.DebugConfig.ENABLE_BLOCK_CANARY;
 import static com.android.messaging.debug.DebugConfig.ENABLE_LEAK_CANARY;
 import static net.appcloudbox.AcbAds.GDPR_NOT_GRANTED;
@@ -179,6 +179,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
                 StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
             }
+            CrashGuard.install();
             initLeakCanaryAsync();
             SharedPreferencesOptimizer.install(true);
             String packageName = getPackageName();
@@ -191,7 +192,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
             initKeepAlive();
             sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
             Thread.setDefaultUncaughtExceptionHandler(this);
-            CrashGuard.install();
         } finally {
             Trace.endSection();
         }
@@ -220,12 +220,27 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 AcbAds.getInstance().setGdprInfo(GDPR_USER, GDPR_NOT_GRANTED);
             }
         }
+        AcbAds.getInstance().initializeFromGoldenEye(BugleApplication.this);
+        if (!BillingManager.hasUserEverVerifiedSuccessfully()) {
+            AdConfig.activeAllAdsReentrantly();
+        }
 
-        BillingManager.init(this, isPremiumUser -> {
-            if (!isPremiumUser) {
-                AcbAds.getInstance().initializeFromGoldenEye(BugleApplication.this);
-                AdConfig.activeAllAdsReentrantly();
-            }
+        final HandlerThread initAdThread = new HandlerThread("init Ad Thread");
+        initAdThread.start();
+        new Handler(initAdThread.getLooper()).post(() -> {
+            AcbService.initialize(BugleApplication.this, new AcbIAPKit());
+            AcbService.setCustomerUserId(PrefsUtils.getCustomerUserId(BugleApplication.this));
+            AcbService.setCustomerUserInfo(new JSONObject());
+
+            BillingManager.init(BugleApplication.this, isPremiumUser -> {
+                if (!isPremiumUser) {
+                    AdConfig.activeAllAdsReentrantly();
+                    new Handler().postDelayed(ExitAdConfig::preLoadExitAd, 2000);
+                } else {
+                    AdConfig.deactiveAllAds();
+                    Threads.postOnMainThread(() -> HSGlobalNotificationCenter.sendNotification(BILLING_VERIFY_SUCCESS));
+                }
+            });
         });
     }
 
@@ -257,13 +272,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
             initWorks.add(new SyncMainThreadTask("Upgrade", () -> Upgrader.getUpgrader(this).upgrade()));
 
             initWorks.add(new SyncMainThreadTask("InitFactoryImpl", this::initFactoryImpl));
-
-            initWorks.add(new SyncMainThreadTask("initAcbService",
-                    () -> {
-                        AcbService.initialize(BugleApplication.this, new AcbIAPKit());
-                        AcbService.setCustomerUserId(PrefsUtils.getCustomerUserId(this));
-                        AcbService.setCustomerUserInfo(new JSONObject());
-                    }));
 
             initWorks.add(new SyncMainThreadTask("InitAd", this::initAd));
 

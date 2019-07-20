@@ -794,4 +794,5 @@
 	<string name="chat_list_change_background">Hintergrund ändern</string>
 	<string name="chat_list_config_dialog_message">Die Chat-Liste wurde verändert, möchtest du die Änderungen behalten?</string>
 
+	<string name="emoji_skin_tone_setting">Emoji-Hautfarbe </string>
 </resources>

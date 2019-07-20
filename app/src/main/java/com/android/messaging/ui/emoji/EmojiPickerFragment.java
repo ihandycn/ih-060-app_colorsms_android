@@ -408,7 +408,6 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
         }
         super.onDestroyView();
         HSLog.e(TAG, "onDestroyView()");
-        BaseStickerItemRecyclerAdapter.releaseListener();
         if(mEmojiPager != null) {
             EmojiManager.setDefaultMainPosition(mEmojiPager.getCurrentItem());
         }

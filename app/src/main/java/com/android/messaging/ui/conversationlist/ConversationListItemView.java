@@ -228,6 +228,11 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         final String conversationName = mData.getName();
 
+        if (TextUtils.isEmpty(conversationName)) {
+            mConversationNameView.setText("");
+            return;
+        }
+
         // For group conversations, ellipsize the group members that do not fit
         final CharSequence ellipsizedName = UiUtils.commaEllipsize(
                 conversationName,

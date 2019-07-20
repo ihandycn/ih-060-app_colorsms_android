@@ -19,8 +19,8 @@ android {
         applicationId "com.color.sms.messages.emoji"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 64
-        versionName "1.1.4"
+        versionCode 67
+        versionName "1.1.5"
         multiDexEnabled true
 
         vectorDrawables.useSupportLibrary = true
@@ -117,7 +117,7 @@ dependencies {
     // billing
     implementation 'net.appcloudbox.service:libAcbService.beta:1.4.0.beta01'
 
-    implementation "net.appcloudbox.goldeneye:bubble_a:2019.06.05.001"
+    implementation "net.appcloudbox.goldeneye:bubble_a:2019.07.11.001"
     implementation "me.leolin:ShortcutBadger:1.1.22@aar"
     implementation 'net.appcloudbox.autopilot:libAutoPilot.gm:5.5.1.gm'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"

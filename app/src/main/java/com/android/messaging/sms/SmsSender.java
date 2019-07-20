@@ -106,8 +106,6 @@ public class SmsSender {
         }
 
         private int getFailureLevel(final int resultCode) {
-            BugleAnalytics.logEvent("SMS_Send_Failed", false, true,
-                    "SmsSendResultCode", String.valueOf(resultCode));
             switch (resultCode) {
                 case Activity.RESULT_OK:
                     return FAILURE_LEVEL_NONE;
@@ -147,7 +145,7 @@ public class SmsSender {
                     + " requestId=" + requestId + " partId=" + partId
                     + " resultCode=" + resultCode + " errorCode=" + errorCode);
             BugleAnalytics.logEvent("SMS_Send_Failed", false, true,
-                    "SmsSendResult", "False");
+                    "SmsSendResult", "False", "FailCarrierName", PhoneUtils.get(subId).getCarrierName());
             if (errorCode != SendStatusReceiver.NO_ERROR_CODE) {
                 final Context context = Factory.get().getApplicationContext();
                 UiUtils.showToastAtBottom(getSendErrorToastMessage(context, subId, errorCode));
@@ -157,8 +155,6 @@ public class SmsSender {
                 LogUtil.v(TAG, "SmsSender: received sent result. " + " requestId=" + requestId
                         + " partId=" + partId + " resultCode=" + resultCode);
             }
-            BugleAnalytics.logEvent("SMS_Send_Failed", false, true,
-                    "SmsSendResult", "True");
         }
         if (requestId != null) {
             final SendResult result = sPendingMessageMap.get(requestId);
@@ -190,13 +186,12 @@ public class SmsSender {
     public static SendResult sendMessage(final Context context, final int subId, String dest,
                                          String message, final String serviceCenter, final boolean requireDeliveryReport,
                                          final Uri messageUri) throws SmsException {
-        if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
-            LogUtil.v(TAG, "SmsSender: sending message. " +
-                    "dest=" + dest + " message=" + message +
-                    " serviceCenter=" + serviceCenter +
-                    " requireDeliveryReport=" + requireDeliveryReport +
-                    " requestId=" + messageUri);
-        }
+        LogUtil.v(TAG, "SmsSender: sending message. " +
+                "dest=" + dest + " message=" + message +
+                " serviceCenter=" + serviceCenter +
+                " requireDeliveryReport=" + requireDeliveryReport +
+                " requestId=" + messageUri +
+                " subId=" + subId);
         if (TextUtils.isEmpty(message)) {
             throw new SmsException("SmsSender: empty text message");
         }

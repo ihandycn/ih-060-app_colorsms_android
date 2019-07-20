@@ -196,6 +196,12 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     @Override
     public void onResume() {
         super.onResume();
+        Activity activity = getActivity();
+        if (activity instanceof ConversationListActivity) {
+            if (((ConversationListActivity) activity).getExitAdShown()) {
+                return;
+            }
+        }
         if (mRecyclerView != null) {
             if (mRecyclerView.canScrollVertically(-1)) {
                 BugleAnalytics.logEvent("SMS_Messages_Show_NotOnTop", true);

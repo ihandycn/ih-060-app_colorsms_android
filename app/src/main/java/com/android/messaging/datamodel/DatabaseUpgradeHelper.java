@@ -66,6 +66,9 @@ public class DatabaseUpgradeHelper {
         if (currentVersion < 6) {
             currentVersion = upgradeToVersion6(db);
         }
+        if (currentVersion < 7) {
+            currentVersion = upgradeToVersion7(db);
+        }
 
         // Rebuild all the views
         final Context context = Factory.get().getApplicationContext();
@@ -158,6 +161,25 @@ public class DatabaseUpgradeHelper {
             }
         }
         return 6;
+    }
+
+    private int upgradeToVersion7(SQLiteDatabase db) {
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.MESSAGES_TABLE + " LIMIT 0"
+                    , null);
+            if (cursor != null && cursor.getColumnIndex(DatabaseHelper.MessageColumns.IS_DELIVERY_REPORT_OPEN) == -1) {
+                db.execSQL("ALTER TABLE " + DatabaseHelper.MESSAGES_TABLE
+                        + " ADD COLUMN " + DatabaseHelper.MessageColumns.IS_DELIVERY_REPORT_OPEN
+                        + " INT DEFAULT(0)");
+            }
+        } catch (Exception e) {
+        } finally {
+            if (null != cursor && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+        return 7;
     }
 
     /**

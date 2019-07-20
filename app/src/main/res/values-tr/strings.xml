@@ -783,7 +783,6 @@
 	<string name="life_time">ÖMÜR BOYU</string>
 	<string name="purchase_description">REKLAMSIZ sürümü satın alın. Bir daha reklam görmeyin.</string>
 
-
     <string name="chat_list_text_color">Metin Rengi</string>
     <string name="purchase_failed">başarısız</string>
     <string name="chat_list_confirm_dialog_title">Değişiklikleri Kaydet</string>
@@ -793,4 +792,5 @@
 	<string name="chat_list_change_background">Arka planı değiştir</string>
 	<string name="chat_list_config_dialog_message">Sohbet listesi değiştirildi, değişiklikleri kaydetmek ister misin?</string>
 
+	<string name="emoji_skin_tone_setting">Emoji Dış Görünüm Rengi </string>
 </resources>

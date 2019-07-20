@@ -51,6 +51,64 @@ public class ThemeUtils {
         }
     }
 
+    public static void applyThemeFirstTime(ThemeInfo themeInfo, Runnable endRunnable) {
+        sCurrentTheme = themeInfo;
+        Factory.get().getCustomizePrefs().putString(BuglePrefsKeys.PREFS_KEY_THEME_NAME, themeInfo.mThemeKey);
+
+        if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
+            ConversationColors.get().setBubbleBackgroundColor(false, Color.parseColor(themeInfo.outgoingBubbleBgColor));
+        } else {
+            ConversationColors.get().setBubbleBackgroundColor(false, Color.parseColor(themeInfo.themeColor));
+        }
+        // change theme color should be after bubble color set
+        PrimaryColors.changePrimaryColor(Color.parseColor(themeInfo.themeColor));
+
+        ConversationColors.get().setBubbleBackgroundColor(true, Color.parseColor(themeInfo.incomingBubbleBgColor));
+        ConversationColors.get().setMessageTextColor(true, Color.parseColor(themeInfo.incomingBubbleTextColor));
+        ConversationColors.get().setMessageTextColor(false, Color.parseColor(themeInfo.outgoingBubbleTextColor));
+        ConversationColors.get().setListTitleColor(Color.parseColor(themeInfo.listTitleColor));
+        ConversationColors.get().setListSubTitleColor(Color.parseColor(themeInfo.listSubtitleColor));
+        ConversationColors.get().setListTimeColor(Color.parseColor(themeInfo.listTimeColor));
+        ConversationColors.get().setAdActionColor(Color.parseColor(themeInfo.bubbleAdColor));
+
+        ToolbarDrawables.sToolbarBitmap = null;
+        WallpaperDrawables.sListWallpaperBitmap = null;
+        WallpaperDrawables.sWallpaperBitmap = null;
+        WallpaperDrawables.applyWallpaperBg(themeInfo.wallpaperUrl);
+        AvatarBgDrawables.sAvatarBg = null;
+        AvatarBgDrawables.sSolidAvatarBg = null;
+        CreateIconDrawable.sCreateIconBitmap = null;
+
+        ThemeBubbleDrawables.getInstance().clearCacheDrawable();
+
+        if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
+            BubbleDrawables.setSelectedIdentifier(-1);
+        }
+        ChatListDrawableManager.resetAllCustomData();
+        FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
+
+        ThemeDownloadManager.getInstance().copyFileFromAssetsSync(themeInfo,
+                new ThemeDownloadManager.IThemeMoveListener() {
+                    @Override
+                    public void onMoveSuccess() {
+                        FontUtils.onFontTypefaceChanged();
+
+                        WallpaperSizeManager.resizeThemeBitmap(themeInfo);
+
+                        if (endRunnable != null) {
+                            endRunnable.run();
+                        }
+                    }
+
+                    @Override
+                    public void onMoveFailed() {
+
+                    }
+                });
+
+        Factory.get().reclaimMemory();
+    }
+
     private static void applyTheme(ThemeInfo themeInfo) {
         if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
             ConversationColors.get().setBubbleBackgroundColor(false, Color.parseColor(themeInfo.outgoingBubbleBgColor));

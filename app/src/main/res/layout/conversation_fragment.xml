@@ -60,14 +60,6 @@
         android:importantForAccessibility="no"/>
 
     <include
-        android:id="@+id/sim_selector"
-        layout="@layout/sim_selector_view"
-        android:layout_above="@+id/message_compose_view_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"/>
-
-    <include
         android:id="@+id/message_compose_view_container"
         layout="@layout/compose_message_view"
         android:layout_width="match_parent"

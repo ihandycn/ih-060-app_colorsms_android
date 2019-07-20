@@ -847,4 +847,5 @@
 	<string name="chat_list_change_background">Изменить фон</string>
 	<string name="chat_list_config_dialog_message">Список чатов был изменен, хотите сохранить изменения?</string>
 
+	<string name="emoji_skin_tone_setting">Цвет кожи эмотиконов</string>
 </resources>

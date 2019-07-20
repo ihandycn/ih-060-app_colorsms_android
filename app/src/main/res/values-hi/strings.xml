@@ -792,7 +792,6 @@
 	<string name="life_time">आजीवन</string>
 	<string name="purchase_description">एड-फ्री संस्  फिर कभी कोई विज्ञापन नहीं।</string>
 
-
     <string name="chat_list_text_color">टेक्‍स्‍ट का रंग</string>
     <string name="purchase_failed">विफल हो गया</string>
     <string name="chat_list_confirm_dialog_title">बदलावों को सहेजें</string>
@@ -801,5 +800,5 @@
 	<string name="chat_list_background_opacity">पृष्</string>
 	<string name="chat_list_change_background">पृष्</string>
 	<string name="chat_list_config_dialog_message">चैट सूची को संशोधित किया गया है, क्या आप बदलाव रखना चाहेंगे?</string>
-
+	<string name="emoji_skin_tone_setting">इमोजी स्किन टोन </string>
 </resources>

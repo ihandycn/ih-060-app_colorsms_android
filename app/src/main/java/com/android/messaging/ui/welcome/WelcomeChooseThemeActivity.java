@@ -3,7 +3,6 @@ package com.android.messaging.ui.welcome;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
@@ -25,11 +24,13 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
         setContentView(R.layout.welcome_choose_theme_activity);
 
         ChooseThemePagerView chooseThemePagerView = findViewById(R.id.choose_theme_pager_view);
-        chooseThemePagerView.setOnApplyClickListener((View v) -> {
-            BugleActivityUtil.cancelAdaptScreen(this);
-            UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
-            finish();
-        });
+        chooseThemePagerView.setOnApplyClickListener(themeInfo ->
+                ThemeUtils.applyThemeFirstTime(themeInfo, () -> {
+                    BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
+                    UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
+                    finish();
+                    BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, true, "theme", themeInfo.mThemeKey);
+                }));
 
         BugleAnalytics.logEvent("Start_ChooseTheme_Show", true, true);
         Preferences.getDefault().putBoolean(PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN, true);
@@ -41,8 +42,8 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
         BugleActivityUtil.cancelAdaptScreen(this);
 
         // apply default theme
-        ThemeUtils.applyTheme(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()), 0);
-        UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
+        ThemeUtils.applyThemeFirstTime(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()),
+                () -> UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this));
         super.onBackPressed();
     }
 

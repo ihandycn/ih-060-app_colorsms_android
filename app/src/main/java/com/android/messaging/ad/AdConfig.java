@@ -14,7 +14,7 @@ import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 
 public class AdConfig {
 
-    private static boolean isAllAdActivated;
+    private static volatile boolean sIsAllAdActivated;
 
     public static boolean isHomepageBannerAdEnabled() {
         return HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd", "Enabled")
@@ -28,18 +28,20 @@ public class AdConfig {
                 > HSConfig.optInteger(30, "Application", "SMSAd", "SMSDetailspageTopAd", "ShowAfterInstall") * DateUtils.MINUTE_IN_MILLIS;
     }
 
-    static void disableAllAds() {
+    public static void deactiveAllAds() {
         AcbNativeAdManager.getInstance().deactivePlacementInProcess(AdPlacement.AD_BANNER);
         AcbInterstitialAdManager.getInstance().deactivePlacementInProcess(AdPlacement.AD_WIRE);
+        AcbInterstitialAdManager.getInstance().deactivePlacementInProcess(AdPlacement.AD_EXIT_WIRE);
         AcbNativeAdManager.getInstance().deactivePlacementInProcess(AdPlacement.AD_DETAIL_NATIVE);
-        isAllAdActivated = false;
+        sIsAllAdActivated = false;
     }
 
     public static void activeAllAdsReentrantly() {
-        if (!isAllAdActivated) {
-            isAllAdActivated = true;
+        if (!sIsAllAdActivated) {
+            sIsAllAdActivated = true;
             AcbNativeAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_BANNER);
             AcbInterstitialAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_WIRE);
+            AcbInterstitialAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_EXIT_WIRE);
             AcbNativeAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_DETAIL_NATIVE);
         }
     }

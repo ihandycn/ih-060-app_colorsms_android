@@ -19,6 +19,7 @@ import android.animation.LayoutTransition;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -101,15 +102,16 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     private ImageView mMessageIsLockView;
     private ViewGroup mStatusContainer;
     private TextView mStatusTextView;
-    private TextView mSenderNameTextView;
+    @Nullable
     private ContactIconView mContactIconView;
+    @Nullable
     private ViewGroup mContactIconContainer;
+    @Nullable
     private ImageView mContactIconBg;
     private ConversationMessageBubbleView mMessageBubble;
     private ImageView mDeliveredBadge;
     private ViewGroup mMessageMetadataView;
     private ViewGroup mMessageTextAndInfoView;
-    private boolean mOneOnOne;
     private ConversationMessageViewHost mHost;
     private ImageView checkBox;
     private int mOffset;
@@ -128,10 +130,14 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         mContactIconView = findViewById(R.id.conversation_icon);
         mContactIconBg = findViewById(R.id.conversation_icon_bg);
         mContactIconContainer = findViewById(R.id.conversation_icon_container);
-        mContactIconView.setOnLongClickListener(view -> {
-            ConversationMessageView.this.performLongClick();
-            return true;
-        });
+
+        if (mContactIconView != null) {
+            mContactIconView.setOnLongClickListener(view -> {
+                ConversationMessageView.this.performLongClick();
+                return true;
+            });
+
+        }
 
         mMessageAttachmentsView = findViewById(R.id.message_attachments);
         if (mMessageAttachmentsView != null) {
@@ -156,7 +162,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         mMessageIsLockView = findViewById(R.id.message_lock);
 
-        mSenderNameTextView = findViewById(R.id.message_sender_name);
         mMessageBubble = findViewById(R.id.message_content);
         mDeliveredBadge = findViewById(R.id.smsDeliveredBadge);
         mMessageMetadataView = findViewById(R.id.message_metadata);
@@ -175,13 +180,16 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     @Override
     protected void onMeasure(final int widthMeasureSpec, final int heightMeasureSpec) {
         final int horizontalSpace = MeasureSpec.getSize(widthMeasureSpec);
-        final int iconSize = getResources()
+        final int iconContainerSize = getResources()
                 .getDimensionPixelSize(R.dimen.conversation_message_contact_icon_container_size);
 
         final int unspecifiedMeasureSpec = MeasureSpec.makeMeasureSpec(0, MeasureSpec.UNSPECIFIED);
-        final int iconMeasureSpec = MeasureSpec.makeMeasureSpec(iconSize, MeasureSpec.EXACTLY);
 
-        mContactIconContainer.measure(iconMeasureSpec, iconMeasureSpec);
+        if (mContactIconContainer != null) {
+            final int iconMeasureSpec = MeasureSpec.makeMeasureSpec(iconContainerSize, MeasureSpec.EXACTLY);
+            mContactIconContainer.measure(iconMeasureSpec, iconMeasureSpec);
+        }
+
 
         final int arrowWidth =
                 getResources().getDimensionPixelSize(R.dimen.message_bubble_arrow_width);
@@ -189,7 +197,10 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         // We need to subtract contact icon width twice from the horizontal space to get
         // the max leftover space because we want the message bubble to extend no further than the
         // starting position of the message bubble in the opposite direction.
-        final int maxLeftoverSpace = horizontalSpace - mContactIconView.getMeasuredWidth() * 2
+        final int iconSize = getResources()
+                .getDimensionPixelSize(R.dimen.conversation_message_contact_icon_size);
+
+        final int maxLeftoverSpace = horizontalSpace - iconSize * 2
                 - arrowWidth - getPaddingLeft() - getPaddingRight();
         final int messageContentWidthMeasureSpec = MeasureSpec.makeMeasureSpec(maxLeftoverSpace,
                 MeasureSpec.AT_MOST);
@@ -213,8 +224,11 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                             final int bottom) {
         final boolean isRtl = AccessibilityUtil.isLayoutRtl(this);
 
-        final int iconWidth = mContactIconContainer.getMeasuredWidth();
-        final int iconHeight = mContactIconContainer.getMeasuredHeight();
+        final int iconSize = getResources()
+                .getDimensionPixelSize(R.dimen.conversation_message_contact_icon_container_size);
+        final int iconWidth = iconSize;
+        final int iconHeight = iconSize;
+
         final int iconTop = getPaddingTop();
         final int iconBubbleMargin = getResources()
                 .getDimensionPixelSize(R.dimen.conversation_message_contact_bubble_margin);
@@ -242,7 +256,9 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             }
         }
 
-        mContactIconContainer.layout(iconLeft, iconTop, iconLeft + iconWidth, iconTop + iconHeight);
+        if (mContactIconContainer != null) {
+            mContactIconContainer.layout(iconLeft, iconTop, iconLeft + iconWidth, iconTop + iconHeight);
+        }
 
         mMessageBubble.layout(contentLeft, contentTop, contentLeft + contentWidth,
                 contentTop + contentHeight);
@@ -258,17 +274,17 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     /**
      * Fills in the data associated with this view.
      *
-     * @param oneOnOne Whether this is a 1:1 conversation
      */
-    public void bind(final ConversationMessageData data,
-                     final boolean oneOnOne, boolean isMultiSelected) {
-        mOneOnOne = oneOnOne;
+    public void bind(final ConversationMessageData data, boolean isMultiSelected) {
 
         // Update our UI model
         mData = data;
         mHasCustomBackground = WallpaperManager.hasCustomWallpaper(mData.getConversationId());
 
-        mContactIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg(false, mHasCustomBackground));
+        if (mContactIconBg != null) {
+            mContactIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg(false, mHasCustomBackground));
+        }
+
         // Update text and image content for the view.
         updateViewContent();
 
@@ -335,15 +351,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     private void updateViewContent() {
         updateMessageContent();
 
-        final boolean senderNameVisible = !mOneOnOne && !mData.getCanClusterWithNextMessage()
-                && mData.getIsIncoming();
-        if (senderNameVisible) {
-            mSenderNameTextView.setText(mData.getSenderDisplayName());
-            mSenderNameTextView.setVisibility(View.VISIBLE);
-        } else {
-            mSenderNameTextView.setVisibility(View.GONE);
-        }
-
         // Update the sim indicator.
         final SubscriptionListEntry subscriptionEntry =
                 mHost.getSubscriptionEntryForSelfParticipant(mData.getSelfParticipantId(),
@@ -352,9 +359,54 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 !TextUtils.isEmpty(subscriptionEntry.displayName) &&
                 !mData.getCanClusterWithNextMessage();
 
-        final boolean statusVisible = !mData.getCanClusterWithNextMessage() || mData.getIsLocked();
-        if (statusVisible) {
+        boolean deliveredBadgeVisible = false;
+        boolean hasWallPaper = WallpaperManager.hasWallpaper(mData.getConversationId());
+        if (mData.getIsDeliveryReportOpen()) {
+            if (mData.getStatus() == MessageData.BUGLE_STATUS_OUTGOING_COMPLETE) {
+                mDeliveredBadge.setVisibility(View.VISIBLE);
+                mDeliveredBadge.setImageResource(R.drawable.ic_message_sent);
+                if (!hasWallPaper) {
+                    mDeliveredBadge.getDrawable().setColorFilter(
+                            getResources().getColor(R.color.timestamp_text_outgoing), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    mDeliveredBadge.getDrawable().setColorFilter(
+                            getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                }
+                deliveredBadgeVisible = true;
+            } else if (mData.getStatus() == MessageData.BUGLE_STATUS_OUTGOING_DELIVERED) {
+                mDeliveredBadge.setVisibility(View.VISIBLE);
+                mDeliveredBadge.setImageResource(R.drawable.ic_message_delivered);
+                if (!hasWallPaper) {
+                    mDeliveredBadge.getDrawable().setColorFilter(
+                            getResources().getColor(R.color.timestamp_text_outgoing), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    mDeliveredBadge.getDrawable().setColorFilter(
+                            getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                }
+                deliveredBadgeVisible = true;
+            } else {
+                mDeliveredBadge.setVisibility(View.GONE);
+            }
+        } else {
+            if (mData.getStatus() == MessageData.BUGLE_STATUS_OUTGOING_DELIVERED) {
+                mDeliveredBadge.setVisibility(View.VISIBLE);
+                mDeliveredBadge.setImageResource(R.drawable.ic_message_delivered);
+                if (!hasWallPaper) {
+                    mDeliveredBadge.getDrawable().setColorFilter(
+                            getResources().getColor(R.color.timestamp_text_outgoing), PorterDuff.Mode.SRC_ATOP);
+                } else {
+                    mDeliveredBadge.getDrawable().setColorFilter(
+                            getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+                }
+                deliveredBadgeVisible = true;
+            } else {
+                mDeliveredBadge.setVisibility(View.GONE);
+            }
+        }
 
+        final boolean statusVisible = !mData.getCanClusterWithNextMessage()
+                || mData.getIsLocked() || deliveredBadgeVisible;
+        if (statusVisible) {
             int statusResId = -1;
             String statusText = null;
             switch (mData.getStatus()) {
@@ -441,7 +493,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 final String simNameText = mData.getIsIncoming() ? getResources().getString(
                         R.string.incoming_sim_name_text, subscriptionEntry.displayName) :
                         subscriptionEntry.displayName;
-                mStatusTextView.setText(statusText + "   " + simNameText);
+                mStatusTextView.setText(statusText + "  " + simNameText);
             } else {
                 mStatusTextView.setText(statusText);
             }
@@ -456,16 +508,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             mMessageIsLockView.setVisibility(GONE);
         }
 
-        final boolean deliveredBadgeVisible =
-                mData.getStatus() == MessageData.BUGLE_STATUS_OUTGOING_DELIVERED;
-        if (deliveredBadgeVisible) {
-            mDeliveredBadge.setVisibility(View.VISIBLE);
-            mDeliveredBadge.setImageResource(R.drawable.ic_sms_delivery_ok);
-        } else {
-            mDeliveredBadge.setVisibility(View.GONE);
-        }
-
-        final boolean metadataVisible = senderNameVisible || statusVisible
+        final boolean metadataVisible =  statusVisible
                 || deliveredBadgeVisible || simNameVisible;
         mMessageMetadataView.setVisibility(metadataVisible ? VISIBLE : GONE);
 
@@ -473,11 +516,8 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         mMessageTextAndInfoView.setVisibility(
                 messageTextAndOrInfoVisible ? View.VISIBLE : View.GONE);
 
-        if (shouldShowSimplifiedVisualStyle()) {
-            mContactIconContainer.setVisibility(View.GONE);
-            mContactIconView.setImageResourceUri(null);
-        } else {
-            mContactIconContainer.setVisibility(mData.getIsIncoming() ? View.VISIBLE : View.GONE);
+        if (!shouldShowSimplifiedVisualStyle() && mData.getIsIncoming()) {
+            mContactIconContainer.setVisibility(View.VISIBLE);
             final Uri avatarUri = AvatarUriUtil.createAvatarUri(
                     mData.getSenderProfilePhotoUri(),
                     mData.getSenderFullName(),
@@ -870,8 +910,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         }
 
         mStatusTextView.setTextColor(resources.getColor(timestampColorResId));
-
-        mSenderNameTextView.setTextColor(resources.getColor(timestampColorResId));
     }
 
     /**

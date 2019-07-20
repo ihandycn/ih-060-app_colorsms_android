@@ -12,15 +12,6 @@
     android:importantForAccessibility="noHideDescendants"
     android:orientation="horizontal">
 
-    <com.android.messaging.ui.view.MessagesTextView
-        android:id="@+id/message_sender_name"
-        style="@style/ConversationMessageStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="4dp"
-        android:visibility="gone"
-        app:typeface="@string/custom_font_regular"/>
-
     <LinearLayout
         android:id="@+id/message_status_container"
         android:layout_width="wrap_content"
@@ -28,8 +19,8 @@
         android:gravity="center_vertical"
         android:paddingStart="5dp"
         android:paddingLeft="7dp"
-        android:paddingEnd="7dp"
-        android:paddingRight="7dp">
+        android:paddingEnd="5.3dp"
+        android:paddingRight="5.3dp">
 
         <ImageView
             android:id="@+id/message_lock"
@@ -46,17 +37,19 @@
             android:layout_width="wrap_content"
             android:layout_height="16dp"
             android:layout_marginStart="2dp"
+            android:layout_marginEnd="1.7dp"
+            android:layout_marginRight="1.7dp"
             android:gravity="center"
             android:includeFontPadding="false"
             android:visibility="gone"
             app:typeface="@string/custom_font_regular"/>
-    </LinearLayout>
 
-    <ImageView
-        android:id="@+id/smsDeliveredBadge"
-        style="@style/SmsDeliverdBadge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"/>
+        <ImageView
+            android:id="@+id/smsDeliveredBadge"
+            style="@style/SmsDeliverdBadge"
+            android:layout_width="13.7dp"
+            android:layout_height="10.3dp"
+            android:layout_gravity="center_vertical"
+            android:visibility="gone"/>
+    </LinearLayout>
 </LinearLayout>

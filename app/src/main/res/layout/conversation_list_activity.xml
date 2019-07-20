@@ -62,5 +62,13 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:background="@android:color/white"
-        app:menu="@menu/empty"/>
+        app:menu="@menu/empty" />
+
+    <ViewStub
+        android:id="@+id/exit_app_stub"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:inflatedId="@+id/exit_app_stub"
+        android:layout="@layout/exit_app_lottie_animation_view" />
+
 </android.support.v4.widget.DrawerLayout>

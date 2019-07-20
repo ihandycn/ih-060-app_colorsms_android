@@ -789,7 +789,6 @@
 	<string name="life_time">ตลอดชีพ</string>
 	<string name="purchase_description">ซื้อเวอร์ชันปลอดโฆษณา ไม่มีโฆษณาอีกต่อไป</string>
 
-
     <string name="chat_list_text_color">สีข้อความ</string>
     <string name="purchase_failed">ไม่สำเร็จ</string>
     <string name="chat_list_confirm_dialog_title">บันทึกความเปลี่ยนแปลง</string>
@@ -799,4 +798,5 @@
 	<string name="chat_list_change_background">เปลี่ยนพื้นหลัง</string>
 	<string name="chat_list_config_dialog_message">รายการสนทนาได้รับการแก้ไข คุณต้องการบันทึกความเปลี่ยนแปลงหรือไม่</string>
 
+	<string name="emoji_skin_tone_setting">สีผิวอิโมจิ </string>
 </resources>

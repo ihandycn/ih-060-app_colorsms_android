@@ -152,6 +152,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import hugo.weaving.DebugLog;
+
 /**
  * Shows a list of messages/parts comprising a conversation.
  */
@@ -831,7 +833,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mComposeMessageView.setInputManager(inputManager);
         mComposeMessageView.setConversationDataModel(BindingBase.createBindingReference(mBinding));
         mComposeMessageView.getComposeEditText().getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
-        mHost.invalidateActionBar();
 
         mDraftMessageDataModel =
                 BindingBase.createBindingReference(mComposeMessageView.getDraftDataModel());
@@ -882,6 +883,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     /**
      * {@inheritDoc} from Fragment
      */
+    @DebugLog
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
@@ -1243,8 +1245,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 clearScrollToMessagePosition();
             }
         }
-
-        mHost.invalidateActionBar();
     }
 
     /**
@@ -1384,6 +1384,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
                 // Merge the caption text from attachments into the text body of the messages
                 message.consolidateText();
+
+
+                final String deliveryReportsKey = getString(R.string.delivery_reports_pref_key);
+                message.setIsDeliveryReportOpen(Preferences.getDefault().getBoolean(deliveryReportsKey,
+                        getResources().getBoolean(R.bool.delivery_reports_pref_default)));
 
                 mBinding.getData().sendMessage(mBinding, message);
 
@@ -1832,12 +1837,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     @Override
-    public void selectSim(final SubscriptionListEntry subscriptionData) {
-        mComposeMessageView.selectSim(subscriptionData);
-        mHost.onStartComposeMessage();
-    }
-
-    @Override
     public void onStartComposeMessage() {
         mHost.onStartComposeMessage();
     }
@@ -1851,10 +1850,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 excludeDefault);
     }
 
-    @Override
-    public SimSelectorView getSimSelectorView() {
-        return (SimSelectorView) getView().findViewById(R.id.sim_selector);
-    }
 
     @Override
     public MediaPickerFragment createMediaPicker() {
@@ -1959,16 +1954,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public boolean shouldHideAttachmentsWhenSimSelectorShown() {
         return false;
-    }
-
-    @Override
-    public void showHideSimSelector(final boolean show) {
-        // no-op for now
-    }
-
-    @Override
-    public int getSimSelectorItemLayoutId() {
-        return R.layout.sim_selector_item_view;
     }
 
     @Override
