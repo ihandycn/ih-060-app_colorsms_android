@@ -138,7 +138,7 @@ public class ConversationMessageAdapter extends
 
         conversationMessageView.setOnClickListener(v -> {
             int adapterPosition = holder.getAdapterPosition();
-            if (adapterPosition != -1) {
+            if (adapterPosition != -1 && adapterPosition < getItemCount()) {
                 checkbox.setSelected(!checkbox.isSelected());
                 mViewClickListener.onConversationMessageClick(mDataList.get(adapterPosition));
             }
@@ -146,7 +146,7 @@ public class ConversationMessageAdapter extends
 
         conversationMessageView.setOnLongClickListener(v -> {
             int adapterPosition = holder.getAdapterPosition();
-            if (adapterPosition != -1) {
+            if (adapterPosition != -1 && adapterPosition < getItemCount()) {
                 checkbox.setSelected(true);
                 mViewClickListener.onConversationMessageLongClick(mDataList.get(adapterPosition));
             }
