@@ -137,12 +137,19 @@ public class ConversationMessageAdapter extends
         ConversationMessageData data = conversationMessageView.getData();
 
         conversationMessageView.setOnClickListener(v -> {
-            checkbox.setSelected(!checkbox.isSelected());
-            mViewClickListener.onConversationMessageClick(mDataList.get(holder.getAdapterPosition()));
+            int adapterPosition = holder.getAdapterPosition();
+            if (adapterPosition != -1) {
+                checkbox.setSelected(!checkbox.isSelected());
+                mViewClickListener.onConversationMessageClick(mDataList.get(adapterPosition));
+            }
         });
+
         conversationMessageView.setOnLongClickListener(v -> {
-            checkbox.setSelected(true);
-            mViewClickListener.onConversationMessageLongClick(mDataList.get(holder.getAdapterPosition()));
+            int adapterPosition = holder.getAdapterPosition();
+            if (adapterPosition != -1) {
+                checkbox.setSelected(true);
+                mViewClickListener.onConversationMessageLongClick(mDataList.get(adapterPosition));
+            }
             return true;
         });
 
