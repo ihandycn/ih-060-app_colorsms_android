@@ -265,22 +265,22 @@ public class ConversationListActivity extends AbstractConversationListActivity
         if (!sIsRecreate) {
             Threads.postOnThreadPoolExecutor(() -> {
                 String bgPath = WallpaperManager.getWallpaperPathByConversationId(null);
-                String backgroundStr;
-                int wallpaperIndex = 99;
+                String backgroundStr = null;
                 if (TextUtils.isEmpty(bgPath)) {
                     backgroundStr = "default";
-                    wallpaperIndex = 90;
                 } else if (bgPath.contains("_1.png")) {
                     backgroundStr = "customize";
                 } else {
                     for (int i = 0; i < WallpaperInfos.sRemoteUrl.length; i++) {
-                        if (WallpaperDownloader.getSourceLocalPath(WallpaperInfos.sRemoteUrl[i]).equals(bgPath)
-                                || WallpaperDownloader.getWallpaperLocalPath(WallpaperInfos.sRemoteUrl[i]).equals(bgPath)) {
-                            wallpaperIndex = i;
+                        if (WallpaperDownloader.getWallpaperLocalPath(WallpaperInfos.sRemoteUrl[i]).equals(bgPath)) {
+                            backgroundStr = "colorsms_" + i;
                             break;
                         }
                     }
-                    backgroundStr = "colorsms_" + wallpaperIndex;
+                }
+
+                if (backgroundStr == null) {
+                    backgroundStr = "upgrade";
                 }
 
                 BugleAnalytics.logEvent("SMS_Messages_Create", true, true,

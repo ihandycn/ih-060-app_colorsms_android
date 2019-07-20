@@ -82,27 +82,20 @@ public class WallpaperManager {
         view.setImageDrawable(wallpaperDrawable);
     }
 
-    public static void setConversationWallPaper(final ImageView bgView, ImageView themeBgView, String conversationId) {
+    public static void setConversationWallPaper(ImageView themeBgView, String conversationId) {
         if (TextUtils.isEmpty(conversationId)) {
             String wallpaperPath = sPrefs.getString(PREF_KEY_WALLPAPER_PATH, "");
 
             if (!isWallpaperPathEmpty(wallpaperPath)) {
-                bgView.setVisibility(View.VISIBLE);
-                bgView.setImageDrawable(new BitmapDrawable(wallpaperPath));
+                themeBgView.setImageDrawable(new BitmapDrawable(wallpaperPath));
                 return;
-            } else {
-                bgView.setImageDrawable(null);
             }
         } else if (!TextUtils.isEmpty(WallpaperManager.getWallpaperPathByConversationId(conversationId))) {
-            bgView.setVisibility(View.VISIBLE);
-            bgView.setImageDrawable(new BitmapDrawable(WallpaperManager.getWallpaperPathByConversationId(conversationId)));
+            themeBgView.setImageDrawable(new BitmapDrawable(WallpaperManager.getWallpaperPathByConversationId(conversationId)));
             return;
-        } else {
-            bgView.setImageDrawable(null);
         }
 
         Drawable wallpaperDrawable = WallpaperDrawables.getConversationWallpaperBg();
-        themeBgView.setVisibility(View.VISIBLE);
         themeBgView.setImageDrawable(wallpaperDrawable);
     }
 

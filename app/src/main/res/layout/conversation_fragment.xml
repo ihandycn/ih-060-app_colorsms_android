@@ -24,15 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/message_compose_view_container"
-        android:scaleType="fitXY"
-        android:visibility="gone"/>
-
-    <com.android.messaging.ui.view.CenterTopImageView
-        android:id="@+id/conversation_fragment_wallpaper"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/message_compose_view_container"
-        android:visibility="gone"/>
+        android:scaleType="fitXY" />
 
     <!-- Message list -->
     <android.support.v7.widget.RecyclerView

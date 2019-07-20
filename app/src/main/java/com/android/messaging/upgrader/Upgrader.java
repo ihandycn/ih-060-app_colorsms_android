@@ -112,11 +112,11 @@ public class Upgrader extends BaseUpgrader {
                 }
             }
 
-            for (String url : WallpaperInfos.sRemoteUrl) {
-                if (WallpaperDownloader.isWallpaperDownloaded(url)) {
-                    WallpaperDownloader.cutSourceBitmap(url);
-                }
-            }
+//            for (String url : WallpaperInfos.sRemoteUrl) {
+//                if (WallpaperDownloader.isWallpaperDownloaded(url)) {
+//                    WallpaperDownloader.cutSourceBitmap(url);
+//                }
+//            }
         });
     }
 

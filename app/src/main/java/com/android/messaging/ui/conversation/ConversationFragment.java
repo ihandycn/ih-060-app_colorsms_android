@@ -50,10 +50,8 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.ActionMode;
@@ -77,7 +75,6 @@ import com.android.messaging.ad.BillingManager;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.MessagingContentProvider;
-import com.android.messaging.datamodel.action.InsertNewMessageAction;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.binding.ImmutableBindingRef;
@@ -98,7 +95,6 @@ import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.UIIntents;
-import com.android.messaging.ui.animation.BubbleTransitionAnimation;
 import com.android.messaging.ui.conversation.ComposeMessageView.IComposeMessageViewHost;
 import com.android.messaging.ui.conversation.ConversationInputManager.ConversationInputHost;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
@@ -216,7 +212,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     private ConversationMessageAdapter mAdapter;
     private ConversationFastScroller mFastScroller;
     private ImageView mWallpaperView;
-    private ImageView mThemeWallpaperView;
 
     private View mConversationComposeDivider;
     private ChangeDefaultSmsAppHelper mChangeDefaultSmsAppHelper;
@@ -920,8 +915,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         }
 
         mMediaLayout = view.findViewById(R.id.camera_photo_layout);
-        mWallpaperView = view.findViewById(R.id.conversation_fragment_wallpaper);
-        mThemeWallpaperView = view.findViewById(R.id.conversation_fragment_theme_wallpaper);
+        mWallpaperView = view.findViewById(R.id.conversation_fragment_theme_wallpaper);
 
         mComposeMessageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -1035,7 +1029,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public void onResume() {
         super.onResume();
-        WallpaperManager.setConversationWallPaper(mWallpaperView, mThemeWallpaperView, mConversationId);
+        WallpaperManager.setConversationWallPaper(mWallpaperView, mConversationId);
 
         if (mIncomingDraft == null) {
             mComposeMessageView.requestDraftMessage(mClearLocalDraft);
