@@ -106,7 +106,6 @@ import net.appcloudbox.common.analytics.publisher.AcbPublisherMgr;
 import net.appcloudbox.common.utils.AcbApplicationHelper;
 import net.appcloudbox.service.AcbService;
 import net.appcloudbox.service.iap.AcbIAPKit;
-import net.appcloudbox.service.iap.AcbIAPTransaction;
 
 import org.json.JSONObject;
 
@@ -180,6 +179,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectAll().penaltyLog().build());
                 StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectAll().penaltyLog().build());
             }
+            CrashGuard.install();
             initLeakCanaryAsync();
             SharedPreferencesOptimizer.install(true);
             String packageName = getPackageName();
@@ -192,7 +192,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
             initKeepAlive();
             sSystemUncaughtExceptionHandler = Thread.getDefaultUncaughtExceptionHandler();
             Thread.setDefaultUncaughtExceptionHandler(this);
-            CrashGuard.install();
         } finally {
             Trace.endSection();
         }
