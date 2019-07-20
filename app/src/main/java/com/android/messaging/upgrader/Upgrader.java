@@ -17,6 +17,8 @@ import com.android.messaging.ui.customize.theme.ThemeDownloadManager;
 import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.customize.theme.WallpaperSizeManager;
+import com.android.messaging.ui.wallpaper.WallpaperDownloader;
+import com.android.messaging.ui.wallpaper.WallpaperInfos;
 import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
 import com.android.messaging.ui.welcome.WelcomeStartActivity;
 import com.android.messaging.util.BuglePrefs;
@@ -76,7 +78,7 @@ public class Upgrader extends BaseUpgrader {
         }
 
         if (oldVersion < 64 && newVersion >= 64) {
-            resizeLocalThemeResource();
+            resizeLocalThemeAndWallpaperResource();
         }
 
         FontDownloadManager.copyFontsFromAssetsAsync();
@@ -95,7 +97,7 @@ public class Upgrader extends BaseUpgrader {
         }
     }
 
-    private void resizeLocalThemeResource() {
+    private void resizeLocalThemeAndWallpaperResource() {
         // resize current theme bitmap size sync
         ThemeInfo info = ThemeUtils.getCurrentTheme();
         if (!ThemeUtils.isDefaultTheme()) {
@@ -107,6 +109,12 @@ public class Upgrader extends BaseUpgrader {
             for (ThemeInfo theme : list) {
                 if (!theme.mIsLocalTheme && theme.isNecessaryFilesInLocalFolder()) {
                     WallpaperSizeManager.resizeThemeBitmap(theme);
+                }
+            }
+
+            for (String url : WallpaperInfos.sRemoteUrl) {
+                if (WallpaperDownloader.isWallpaperDownloaded(url)) {
+                    WallpaperDownloader.cutSourceBitmap(url);
                 }
             }
         });

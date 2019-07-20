@@ -368,7 +368,7 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
                 for (int i = 0; i < mWallpaperInfoList.size(); i++) {
                     WallpaperChooserItem item = mWallpaperInfoList.get(i);
                     if (item.getItemType() == WallpaperChooserItem.TYPE_NORMAL_WALLPAPER
-                            && mWallpaperPath.equals(item.getAbsolutePath())) {
+                            && mWallpaperPath.equals(item.getSourceLocalPath())) {
                         item.setSelectedState(true);
                         break;
                     }
@@ -389,7 +389,7 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
                                                 && ((Activity) getContext()).isDestroyed()) {
                                             return;
                                         }
-                                        onWallpaperChanged(item.getAbsolutePath());
+                                        onWallpaperChanged(item.getSourceLocalPath());
                                     }
                                 }
 
@@ -470,7 +470,7 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
                             return;
                         }
                         onItemSelected(item);
-                        onWallpaperChanged(item.getAbsolutePath());
+                        onWallpaperChanged(item.getSourceLocalPath());
                     } else {
                         onItemPreSelected(item);
                         item.downloadWallpaper();

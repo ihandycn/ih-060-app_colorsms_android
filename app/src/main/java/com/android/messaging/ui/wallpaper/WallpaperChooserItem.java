@@ -107,12 +107,12 @@ public class WallpaperChooserItem {
         return WallpaperInfos.sThumbnailRes[mIndex];
     }
 
-    public String getLocalPath() {
-        return WallpaperDownloader.getWallPaperLocalPath(WallpaperInfos.sRemoteUrl[mIndex]);
+    public String getSourceLocalPath() {
+        return WallpaperDownloader.getSourceLocalPath(WallpaperInfos.sRemoteUrl[mIndex]);
     }
 
-    public String getAbsolutePath() {
-        return WallpaperDownloader.getAbsolutePath(WallpaperInfos.sRemoteUrl[mIndex]);
+    public String getWallpaperLocalPath() {
+        return WallpaperDownloader.getWallpaperLocalPath(WallpaperInfos.sRemoteUrl[mIndex]);
     }
 
     public String getRemoteUrl() {

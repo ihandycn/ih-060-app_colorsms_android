@@ -217,7 +217,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                 for (int i = 0; i < mWallpaperInfoList.size(); i++) {
                     WallpaperChooserItem item = mWallpaperInfoList.get(i);
                     if (item.getItemType() == WallpaperChooserItem.TYPE_NORMAL_WALLPAPER
-                            && mWallpaperPath.equals(item.getAbsolutePath())) {
+                            && mWallpaperPath.equals(item.getWallpaperLocalPath())) {
                         item.setSelectedState(true);
                         break;
                     }
@@ -237,8 +237,9 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                                         if (isDestroyed()) {
                                             return;
                                         }
-                                        setPreviewImage(item.getLocalPath());
-                                        WallpaperManager.setWallpaperPath(mConversationId, item.getAbsolutePath());
+                                        setPreviewImage(item.getWallpaperLocalPath());
+                                        WallpaperManager.setWallpaperPath(mConversationId, item.getWallpaperLocalPath());
+
                                         WallpaperManager.onOnlineWallpaperChanged();
                                         BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied", true, true,
                                                 "from", TextUtils.isEmpty(mConversationId) ? "Menu" : "Options");
@@ -321,8 +322,8 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                         }
                         onItemSelected(item);
                         if (item.isItemChecked()) {
-                            setPreviewImage(item.getLocalPath());
-                            WallpaperManager.setWallpaperPath(mConversationId, item.getAbsolutePath());
+                            setPreviewImage(item.getSourceLocalPath());
+                            WallpaperManager.setWallpaperPath(mConversationId, item.getWallpaperLocalPath());
                             WallpaperManager.onOnlineWallpaperChanged();
                             BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied", true, true,
                                     "from", TextUtils.isEmpty(mConversationId) ? "Menu" : "Options");

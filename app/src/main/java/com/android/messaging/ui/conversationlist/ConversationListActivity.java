@@ -274,7 +274,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     backgroundStr = "customize";
                 } else {
                     for (int i = 0; i < WallpaperInfos.sRemoteUrl.length; i++) {
-                        if (WallpaperDownloader.getAbsolutePath(WallpaperInfos.sRemoteUrl[i]).equals(bgPath)) {
+                        if (WallpaperDownloader.getSourceLocalPath(WallpaperInfos.sRemoteUrl[i]).equals(bgPath)
+                                || WallpaperDownloader.getWallpaperLocalPath(WallpaperInfos.sRemoteUrl[i]).equals(bgPath)) {
                             wallpaperIndex = i;
                             break;
                         }
@@ -995,17 +996,18 @@ public class ConversationListActivity extends AbstractConversationListActivity
         return mIsExitAdShown;
     }
 
-    @Override protected void onRestart() {
+    @Override
+    protected void onRestart() {
         super.onRestart();
         if (mIsExitAdShown) {
             Intent intent = new Intent(this, ConversationListActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
-            if (mInterstitialAd != null){
+            if (mInterstitialAd != null) {
                 mInterstitialAd.release();
             }
             mIsExitAdShown = false;
-            if (mExitAppAnimationViewContainer != null){
+            if (mExitAppAnimationViewContainer != null) {
                 mExitAppAnimationViewContainer.setVisibility(View.GONE);
             }
 
