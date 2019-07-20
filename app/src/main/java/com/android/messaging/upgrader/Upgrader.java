@@ -77,7 +77,7 @@ public class Upgrader extends BaseUpgrader {
             addDeliveryReportPref();
         }
 
-        if (oldVersion < 64 && newVersion >= 64) {
+        if (oldVersion < 68 && newVersion >= 68) {
             resizeLocalThemeAndWallpaperResource();
         }
 
