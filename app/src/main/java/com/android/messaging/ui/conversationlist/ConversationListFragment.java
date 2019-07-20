@@ -616,18 +616,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
         TextView actionBtn = ViewUtils.findViewById(adView, R.id.banner_action);
         mAdContentView.setAdActionView(actionBtn);
-        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd", "SMSHomepageBannerAdFacebookEnabled")) {
-            adView.setBackgroundColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdBgColor));
-            actionBtn.setTextColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionTextColor));
-            Drawable actionBg = getResources().getDrawable(R.drawable.conversation_list_ad_action_pressed_bg);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                ((LayerDrawable) actionBg).getDrawable(1)
-                        .setColorFilter(
-                                Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionColor),
-                                PorterDuff.Mode.SRC_IN);
-            }
-            actionBtn.setBackgroundDrawable(actionBg);
-        }
+        actionBtn.setTextColor(Color.parseColor(ThemeUtils.getCurrentTheme().listTimeColor));
+        ChatListDrawableManager.changeViewColorIfNeed(actionBtn);
 
         FrameLayout choice = ViewUtils.findViewById(adView, R.id.ad_choice);
         mAdContentView.setAdChoiceView(choice);

@@ -744,13 +744,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mAdContentView.setAdBodyView(description);
         TextView actionBtn = ViewUtils.findViewById(adView, R.id.banner_action);
         mAdContentView.setAdActionView(actionBtn);
-        actionBtn.setTextColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionTextColor));
+        int actionColor = Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).listTimeColor);
+        actionBtn.setTextColor(actionColor);
         Drawable actionBg = getResources().getDrawable(R.drawable.conversation_list_ad_action_pressed_bg);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ((LayerDrawable) actionBg).getDrawable(1)
-                    .setColorFilter(
-                            Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionColor),
-                            PorterDuff.Mode.SRC_IN);
+                    .setColorFilter(actionColor, PorterDuff.Mode.SRC_IN);
         }
         actionBtn.setBackgroundDrawable(actionBg);
         if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSDetailspageTopAd", "FacebookEnabled")) {

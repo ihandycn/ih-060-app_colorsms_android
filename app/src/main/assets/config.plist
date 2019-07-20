@@ -469,8 +469,6 @@
 					<true/>
 					<key>ShowAfterInstall</key>
 					<integer>10</integer>
-					<key>SMSHomepageBannerAdFacebookEnabled</key>
-					<false/>
 				</dict>
 			</dict>
 			<key>SMSPopUps</key>
