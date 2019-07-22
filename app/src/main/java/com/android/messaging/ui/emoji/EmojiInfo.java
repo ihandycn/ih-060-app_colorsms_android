@@ -46,7 +46,7 @@ public class EmojiInfo extends BaseEmojiInfo {
     public static EmojiInfo convert(Emoji emoji, String emojiStyle) {
         boolean useSystemStyle = emojiStyle.equals(EmojiManager.EMOJI_STYLE_SYSTEM);
         if (useSystemStyle && !emoji.isSupport()) {
-            throw new IllegalArgumentException("the emoji unicode is not support in current system");
+            throw new IllegalArgumentException("the emoji unicode is not support in current system " + emoji);
         }
         String unicode = emoji.getUnicode();
         // append 0xFEOF.  Force to show emoji colorful, not white-black

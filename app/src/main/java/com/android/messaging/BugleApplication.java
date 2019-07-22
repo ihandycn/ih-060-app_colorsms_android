@@ -210,12 +210,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
         });
 
         prepareEmoji();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                checkEmoji();
-            }
-        }).start();
     }
 
     @DebugLog
