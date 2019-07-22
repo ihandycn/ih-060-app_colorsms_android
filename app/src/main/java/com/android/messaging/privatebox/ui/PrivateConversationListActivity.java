@@ -165,7 +165,7 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         }
 
         if (mActionMode == null && getSupportActionBar() != null) {
-            Drawable drawable = getDrawable(R.drawable.ic_back);
+            Drawable drawable = getDrawable(R.drawable.ic_back).mutate();
             ChatListCustomizeManager.changeDrawableColorIfNeed(drawable);
             getSupportActionBar().setHomeAsUpIndicator(drawable);
         }
@@ -290,7 +290,6 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
         invalidateActionBar();
     }
 

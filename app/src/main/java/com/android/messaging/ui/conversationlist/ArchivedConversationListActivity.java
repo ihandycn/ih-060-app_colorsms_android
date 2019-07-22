@@ -83,7 +83,9 @@ public class ArchivedConversationListActivity extends AbstractConversationListAc
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(getString(R.string.archived_conversations));
         ChatListCustomizeManager.changeViewColorIfNeed(title);
-        ChatListCustomizeManager.changeDrawableColorIfNeed(toolbar.getNavigationIcon());
+        Drawable backDrawable = getResources().getDrawable(R.drawable.ic_back).mutate();
+        ChatListCustomizeManager.changeDrawableColorIfNeed(backDrawable);
+        toolbar.setNavigationIcon(backDrawable);
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {
