@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
+import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.superapps.util.Dimensions;
@@ -59,6 +60,7 @@ public class ChooseFontItemView extends FrameLayout {
         mDownloadBtn = root.findViewById(R.id.font_choose_item_download);
         mPreviewView = root.findViewById(R.id.font_choose_item_font_name_iv);
         mProgressBar = root.findViewById(R.id.font_choose_item_progress_bar);
+        TextView previewTextView = root.findViewById(R.id.font_choose_item_font_name_tv);
 
         ColorStateList colorStateList = ColorStateList.valueOf(0xffcdd2de);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -66,11 +68,16 @@ public class ChooseFontItemView extends FrameLayout {
         }
         mRadioBtn.setClickable(false);
         mFontFamily = mFontInfo.getFontName();
+
         if (mFontInfo != null) {
-            mPreviewView.setImageDrawable(FontDownloadManager.getDrawableByName(mFontFamily));
-            if (!mFontInfo.isFontDownloaded()) {
-                mDownloadBtn.setVisibility(VISIBLE);
-                mPreviewView.setImageAlpha((int) (0.5 * 256));
+            if (FontUtils.MESSAGE_FONT_SYSTEM.equals(mFontInfo.getFontName())) {
+                previewTextView.setText(R.string.system_font_display_name);
+            } else {
+                mPreviewView.setImageDrawable(FontDownloadManager.getDrawableByName(mFontFamily));
+                if (!mFontInfo.isFontDownloaded()) {
+                    mDownloadBtn.setVisibility(VISIBLE);
+                    mPreviewView.setImageAlpha((int) (0.5 * 256));
+                }
             }
         }
     }

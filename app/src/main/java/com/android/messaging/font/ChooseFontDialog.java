@@ -136,14 +136,8 @@ public class ChooseFontDialog {
         lp.bottomMargin = Dimensions.pxFromDp(32);
         v.setLayoutParams(lp);
 
-        //  List<String> choicesList = Arrays.asList(FontUtils.sSupportGoogleFonts);
-
         List<FontInfo> fontList = new ArrayList<>();
         List<FontInfo> configList = FontDownloadManager.getFontList();
-//        for (String fontName : choicesList) {
-//            FontInfo local = new FontInfo(FontInfo.LOCAL_FONT, fontName);
-//            fontList.add(local);
-//        }
 
         for (FontInfo info : configList) {
             if (info.isLocalFont()) {
@@ -154,6 +148,7 @@ public class ChooseFontDialog {
                 }
             }
         }
+        fontList.add(1, new FontInfo(FontUtils.MESSAGE_FONT_SYSTEM, new ArrayList<>(), true));
 
         for (FontInfo info : configList) {
             if (!info.isLocalFont()) {
