@@ -1124,6 +1124,8 @@
     <string name="menu_privacy_box">Private Box</string>
 
     <string name="customize_guide_title">Customization is here!</string>
+    <string name="customize_new_guide_title">Cool Features</string>
+    <string name="customize_new_guide_content">Customize your chat to make it special!</string>
     <string name="signature">Signature</string>
 
     <string name="create_shortcut_has_been_create">Created successfully</string>

@@ -274,4 +274,5 @@
     <color name="pickerview_wheelview_textcolor_center">#000000</color>
     <color name="pickerview_wheelview_textcolor_divider">#a8a8a8</color>
     <color name="button_pressed_bg">#0d000000</color>
+    <color name="customize_guide_button_stroke_color">#313131</color>
 </resources>

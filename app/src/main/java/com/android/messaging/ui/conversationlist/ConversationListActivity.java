@@ -176,10 +176,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final int DRAWER_INDEX_BUBBLE = 2;
     private static final int DRAWER_INDEX_CHAT_BACKGROUND = 3;
     private static final int DRAWER_INDEX_SETTING = 4;
-    private static final int DRAWER_INDEX_RATE = 5;
     private static final int DRAWER_INDEX_CHANGE_FONT = 6;
     private static final int DRAWER_INDEX_PRIVACY_BOX = 7;
-    private static final int DRAWER_INDEX_INVITE_FRIENDS = 8;
     private static final int DRAWER_INDEX_BACKUP_RESTORE = 9;
     private static final int DRAWER_INDEX_EMOJI_STORE = 10;
     private static final int DRAWER_INDEX_REMOVE_ADS = 11;
@@ -206,6 +204,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private boolean mIsMessageMoving;
     private ConstraintLayout mExitAppAnimationViewContainer;
     private LottieAnimationView mLottieAnimationView;
+    private CustomizeGuideController mCustomizeGuideController;
     private final BuglePrefs mPrefs = Factory.get().getApplicationPrefs();
 
     @Override
@@ -629,16 +628,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                     new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PERMISSION_CODE);
                         }
                         break;
-                    case DRAWER_INDEX_INVITE_FRIENDS:
-                        BugleAnalytics.logEvent("Menu_InviteFriends_Click");
-                        Intent inviteFriendsIntent = new Intent(ConversationListActivity.this, InviteFriendsActivity.class);
-                        inviteFriendsIntent.putExtra(INTENT_KEY_FROM, "menu");
-                        startActivity(inviteFriendsIntent, TransitionUtils.getTransitionInBundle(ConversationListActivity.this));
-                        break;
-                    case DRAWER_INDEX_RATE:
-                        FiveStarRateDialog.showFiveStarFromSetting(ConversationListActivity.this);
-                        BugleAnalytics.logEvent("Menu_FiveStart_Click", true, true);
-                        break;
                     case DRAWER_INDEX_REMOVE_ADS:
                         Intent goSmsProIntent = new Intent(ConversationListActivity.this, BillingActivity.class);
                         ActivityOptionsCompat options =
@@ -700,8 +689,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_chat_background).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_change_font).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_setting).setOnClickListener(this);
-        navigationContent.findViewById(R.id.navigation_item_rate).setOnClickListener(this);
-        navigationContent.findViewById(R.id.navigation_item_invite_friends).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_emoji_store).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_chat_list).setOnClickListener(this);
 
@@ -802,6 +789,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
         if (isInConversationListSelectMode()) {
             exitMultiSelectState();
             return;
+        }
+
+        if (mCustomizeGuideController != null) {
+            if (mCustomizeGuideController.onBackPressed()) {
+                mCustomizeGuideController.closeCustomizeGuide();
+                return;
+            }
         }
 
         if (!Preferences.getDefault().contains(PREF_KEY_CREATE_SHORTCUT_GUIDE_SHOWN)
@@ -1180,14 +1174,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 drawerClickIndex = DRAWER_INDEX_BACKUP_RESTORE;
                 drawerLayout.closeDrawer(navigationView);
                 break;
-            case R.id.navigation_item_invite_friends:
-                drawerClickIndex = DRAWER_INDEX_INVITE_FRIENDS;
-                drawerLayout.closeDrawer(navigationView);
-                break;
-            case R.id.navigation_item_rate:
-                drawerClickIndex = DRAWER_INDEX_RATE;
-                drawerLayout.closeDrawer(navigationView);
-                break;
             case R.id.navigation_item_privacy_box:
                 drawerClickIndex = DRAWER_INDEX_PRIVACY_BOX;
                 drawerLayout.closeDrawer(navigationView);
@@ -1212,11 +1198,17 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 break;
             case SHOW_EMOJI:
                 WeakReference<AppCompatActivity> activity = new WeakReference<>(this);
-                Threads.postOnMainThreadDelayed(() -> {
-                    if (!isFinishing() && activity.get() != null) {
-                        CustomizeGuideController.showGuideIfNeed(activity.get());
-                    }
-                }, 1000);
+                if (mCustomizeGuideController == null) {
+                    Threads.postOnMainThreadDelayed(() -> {
+                        if (!isFinishing() && activity.get() != null) {
+                            mCustomizeGuideController = new CustomizeGuideController();
+                            mCustomizeGuideController.setMenuShowCallback(() -> {
+                                drawerLayout.openDrawer(navigationView);
+                            });
+                            mCustomizeGuideController.showGuideIfNeed(activity.get());
+                        }
+                    }, 1000);
+                }
                 break;
             case FIRST_LOAD:
                 if (!sIsRecreate && hsBundle != null) {
