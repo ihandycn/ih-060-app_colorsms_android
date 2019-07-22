@@ -135,7 +135,7 @@
 				</dict>
 				<dict>
 					<key>MessagePattern</key>
-					<string>Attempt to invoke virtual method ‘java.lang.String android.content.Context.getOpPackageName()’ on a null object reference</string>
+					<string>Attempt to invoke virtual method 'java.lang.String android.content.Context.getOpPackageName()' on a null object reference</string>
 				</dict>
 			</array>
 			<key>PrivateBox</key>
