@@ -211,11 +211,11 @@ public class ChatListDrawableManager {
             }
 
             if (toolbar != null) {
-                saveBitmapToLocal(toolbar, customToolbarFile);
+                CommonUtils.saveBitmapToFile(toolbar, customToolbarFile);
             }
 
             if (wallpaper != null) {
-                saveBitmapToLocal(wallpaper, customWallpaperFile);
+                CommonUtils.saveBitmapToFile(wallpaper, customWallpaperFile);
             }
         } else {
             Bitmap bgBitmap = BitmapFactory.decodeFile(wallpaperPath);
@@ -258,12 +258,12 @@ public class ChatListDrawableManager {
                     (Dimensions.pxFromDp(56) + Dimensions.getStatusBarHeight(HSApplication.getContext())) / width);
 
             Bitmap toolbar = Bitmap.createBitmap(resizedBitmap, 0, 0, resizedBitmap.getWidth(), cutPointY);
-            saveBitmapToLocal(toolbar, customToolbarFile);
+            CommonUtils.saveBitmapToFile(toolbar, customToolbarFile);
 
             cutPointY++;
             Bitmap wallpaper = Bitmap.createBitmap(resizedBitmap, 0, cutPointY, resizedBitmap.getWidth(),
                     resizedBitmap.getHeight() - cutPointY);
-            saveBitmapToLocal(wallpaper, customWallpaperFile);
+            CommonUtils.saveBitmapToFile(wallpaper, customWallpaperFile);
         }
 
         if (!useThemeColor) {
@@ -278,23 +278,5 @@ public class ChatListDrawableManager {
         sPref.putFloat(PREF_KEY_CHAT_LIST_MASK_OPACITY, opacity);
         sPref.putString(PREF_KEY_CONVERSATION_LIST_WALLPAPER_PATH, wallpaperPath);
         sHasCustomWallpaper = true;
-    }
-
-    private static void saveBitmapToLocal(Bitmap bitmap, File file) {
-        FileOutputStream out;
-        try {
-            out = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-        try {
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 }

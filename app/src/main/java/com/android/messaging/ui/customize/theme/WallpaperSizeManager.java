@@ -78,12 +78,12 @@ public class WallpaperSizeManager {
             //resize toolbar bitmap
             Bitmap resizedToolbarBitmap = Bitmap.createBitmap(toolbarBitmap, Math.max(0, startX), toolbarStartY,
                     resizedWidth, resizedToolbarHeight);
-            saveBitmapToLocal(resizedToolbarBitmap, toolbarFile);
+            CommonUtils.saveBitmapToFile(resizedToolbarBitmap, toolbarFile);
 
             //resize wallpaper
             Bitmap resizedWallpaper = Bitmap.createBitmap(wallpaperBitmap, Math.max(0, startX), 0,
                     resizedWidth, Math.min(resizedWallpaperHeight, wallpaperBitmap.getHeight()));
-            saveBitmapToLocal(resizedWallpaper, wallpaperFile);
+            CommonUtils.saveBitmapToFile(resizedWallpaper, wallpaperFile);
 
             //resize and replace wallpaper for list activity
             Bitmap listWallpaperBitmap = null;
@@ -98,25 +98,7 @@ public class WallpaperSizeManager {
             }
             Bitmap resizedListWallpaper = Bitmap.createBitmap(listWallpaperBitmap, Math.max(0, startX), 0,
                     resizedWidth, Math.min(resizedWallpaperHeight, listWallpaperBitmap.getHeight()));
-            saveBitmapToLocal(resizedListWallpaper, listWallpaperFile);
-        }
-    }
-
-    private static void saveBitmapToLocal(Bitmap bitmap, File file) {
-        FileOutputStream out;
-        try {
-            out = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-        try {
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
+            CommonUtils.saveBitmapToFile(resizedListWallpaper, listWallpaperFile);
         }
     }
 }

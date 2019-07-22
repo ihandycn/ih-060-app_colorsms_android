@@ -104,7 +104,5 @@ public class CenterTopImageView extends AppCompatImageView {
         mPath.addRoundRect(mDrawRect, mRadii, Path.Direction.CW);
         canvas.clipPath(mPath);
         super.onDraw(canvas);
-
     }
-
 }

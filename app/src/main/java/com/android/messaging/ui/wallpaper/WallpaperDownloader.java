@@ -105,30 +105,12 @@ public class WallpaperDownloader {
                 (Dimensions.pxFromDp(56) + Dimensions.getStatusBarHeight(HSApplication.getContext())) / width);
 
         Bitmap toolbar = Bitmap.createBitmap(resizedBitmap, 0, 0, resizedBitmap.getWidth(), cutPointY);
-        saveBitmapToLocal(toolbar, customToolbarFile);
+        CommonUtils.saveBitmapToFile(toolbar, customToolbarFile);
 
         cutPointY++;
         Bitmap wallpaper = Bitmap.createBitmap(resizedBitmap, 0, cutPointY, resizedBitmap.getWidth(),
                 resizedBitmap.getHeight() - cutPointY);
-        saveBitmapToLocal(wallpaper, customWallpaperFile);
-    }
-
-    private static void saveBitmapToLocal(Bitmap bitmap, File file) {
-        FileOutputStream out;
-        try {
-            out = new FileOutputStream(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-        try {
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        CommonUtils.saveBitmapToFile(wallpaper, customWallpaperFile);
     }
 
     private static String getWallpaperPathString(String url) {
