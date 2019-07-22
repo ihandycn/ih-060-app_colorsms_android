@@ -36,6 +36,7 @@ public class ThemePreviewPagerView extends ConstraintLayout {
     private Choreographer mChoreographer;
     private final float[] mSpeed = {0};
     private boolean mDownloadCompleted = false;
+    private boolean mIsThemeAppling;
 
     public ThemePreviewPagerView(Context context) {
         super(context);
@@ -197,6 +198,10 @@ public class ThemePreviewPagerView extends ConstraintLayout {
             mButton.setText(R.string.sms_show_apply);
             mButton.setEnabled(true);
             mButton.setOnClickListener(v -> {
+                if (mIsThemeAppling) {
+                    return;
+                }
+                mIsThemeAppling = true;
                 if (mApplyClickListener != null) {
                     mApplyClickListener.onClick(mButton);
                 }

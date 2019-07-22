@@ -16,6 +16,7 @@ import com.superapps.util.Preferences;
 public class WelcomeChooseThemeActivity extends AppCompatActivity {
 
     public static final String PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN = "pref_key_welcome_choose_theme_shown";
+    private boolean mIsThemeAppling;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,13 +25,18 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
         setContentView(R.layout.welcome_choose_theme_activity);
 
         ChooseThemePagerView chooseThemePagerView = findViewById(R.id.choose_theme_pager_view);
-        chooseThemePagerView.setOnApplyClickListener(themeInfo ->
-                ThemeUtils.applyThemeFirstTime(themeInfo, () -> {
-                    BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
-                    UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
-                    finish();
-                    BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, true, "theme", themeInfo.mThemeKey);
-                }));
+        chooseThemePagerView.setOnApplyClickListener(themeInfo -> {
+            if (mIsThemeAppling) {
+                return;
+            }
+            mIsThemeAppling = true;
+            ThemeUtils.applyThemeFirstTime(themeInfo, () -> {
+                BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
+                UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
+                finish();
+                BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, true, "theme", themeInfo.mThemeKey);
+            });
+        });
 
         BugleAnalytics.logEvent("Start_ChooseTheme_Show", true, true);
         Preferences.getDefault().putBoolean(PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN, true);
@@ -38,6 +44,10 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if (mIsThemeAppling) {
+            return;
+        }
+        mIsThemeAppling = true;
         BugleAnalytics.logEvent("Start_ChooseTheme_Back", true);
         BugleActivityUtil.cancelAdaptScreen(this);
 
