@@ -38,11 +38,10 @@ import com.android.messaging.ui.conversationlist.ConversationListItemView;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.WallpaperDrawables;
-import com.android.messaging.ui.customize.mainpage.ChatListDrawableManager;
+import com.android.messaging.ui.customize.mainpage.ChatListCustomizeManager;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ImeUtil;
-import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
 import com.google.common.annotations.VisibleForTesting;
 import com.superapps.util.BackgroundDrawables;
@@ -142,7 +141,7 @@ public class PrivateConversationListFragment extends Fragment
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.private_conversation_list_fragment,
                 container, false);
         ImageView conversationListBg = rootView.findViewById(R.id.private_conversation_list_bg);
-        Drawable customDrawable = ChatListDrawableManager.getWallpaperDrawable();
+        Drawable customDrawable = ChatListCustomizeManager.getWallpaperDrawable();
         Drawable bgDrawable = customDrawable != null ? customDrawable : WallpaperDrawables.getConversationListWallpaperDrawable();
         conversationListBg.setImageDrawable(bgDrawable);
         mEmptyListMessageView = rootView.findViewById(R.id.private_box_empty_container);
@@ -336,7 +335,7 @@ public class PrivateConversationListFragment extends Fragment
             });
             TextView descriptionView = mEmptyListMessageView.findViewById(R.id.private_box_empty_view_description);
             descriptionView.setTextColor(ConversationColors.get().getListTitleColor());
-            ChatListDrawableManager.changeViewColorIfNeed(descriptionView);
+            ChatListCustomizeManager.changeViewColorIfNeed(descriptionView);
         } else {
             mEmptyListMessageView.setVisibility(View.GONE);
         }

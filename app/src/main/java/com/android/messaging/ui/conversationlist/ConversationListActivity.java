@@ -74,7 +74,7 @@ import com.android.messaging.ui.customize.CustomBubblesActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.customize.mainpage.ChatListCustomizeActivity;
-import com.android.messaging.ui.customize.mainpage.ChatListDrawableManager;
+import com.android.messaging.ui.customize.mainpage.ChatListCustomizeManager;
 import com.android.messaging.ui.customize.theme.ThemeSelectActivity;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
@@ -85,7 +85,6 @@ import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.ui.smspro.BillingActivity;
-import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
 import com.android.messaging.ui.wallpaper.WallpaperDownloader;
 import com.android.messaging.ui.wallpaper.WallpaperInfos;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
@@ -770,7 +769,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
             drawable = AppCompatDrawableManager.get().getDrawable(this, R.drawable.ic_navigation_drawer_dot);
         } else {
             drawable = AppCompatDrawableManager.get().getDrawable(this, R.drawable.ic_navigation_drawer);
-            ChatListDrawableManager.changeDrawableColorIfNeed(drawable);
+            ChatListCustomizeManager.changeDrawableColorIfNeed(drawable);
         }
         getSupportActionBar().setHomeAsUpIndicator(drawable);
     }
@@ -1083,7 +1082,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         ViewGroup.LayoutParams layoutParams = accessoryContainer.getLayoutParams();
         layoutParams.height = Dimensions.getStatusBarHeight(ConversationListActivity.this) + Dimensions.pxFromDp(56);
         accessoryContainer.setLayoutParams(layoutParams);
-        Drawable customToolBar = ChatListDrawableManager.getToolbarDrawable();
+        Drawable customToolBar = ChatListCustomizeManager.getToolbarDrawable();
         if (customToolBar != null) {
             ImageView ivAccessoryBg = accessoryContainer.findViewById(R.id.accessory_bg);
             ivAccessoryBg.setVisibility(View.VISIBLE);
@@ -1106,7 +1105,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         toolbar.setTitle("");
         toolbar.setContentInsetsRelative(0, 0);
         LayoutInflater.from(this).inflate(R.layout.conversation_list_toolbar_layout, toolbar, true);
-        ChatListDrawableManager.changeViewColorIfNeed(toolbar.findViewById(R.id.toolbar_title));
+        ChatListCustomizeManager.changeViewColorIfNeed(toolbar.findViewById(R.id.toolbar_title));
         setSupportActionBar(toolbar);
         invalidateActionBar();
         setupToolbarUI();
@@ -1249,7 +1248,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                 "emojiskintone", String.valueOf(EmojiManager.getSkinDefault() + 1));
 
                         String bgString;
-                        String path = ChatListDrawableManager.getListWallpaperPath();
+                        String path = ChatListCustomizeManager.getListWallpaperPath();
                         if (TextUtils.isEmpty(path)) {
                             bgString = "theme";
                         } else if (path.contains("list_wallpapers")) {
@@ -1258,7 +1257,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             bgString = "recommend";
                         }
                         String opacityStr;
-                        float alpha = ChatListDrawableManager.getMaskOpacity();
+                        float alpha = 1 - ChatListCustomizeManager.getMaskOpacity();
                         if (alpha < 0.1f) {
                             opacityStr = "<10%";
                         } else {

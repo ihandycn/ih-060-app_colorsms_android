@@ -16,7 +16,7 @@ import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.customize.WallpaperDrawables;
-import com.android.messaging.ui.customize.mainpage.ChatListDrawableManager;
+import com.android.messaging.ui.customize.mainpage.ChatListCustomizeManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.ihs.app.framework.HSApplication;
@@ -84,7 +84,7 @@ public class ThemeUtils {
         if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
             BubbleDrawables.setSelectedIdentifier(-1);
         }
-        ChatListDrawableManager.resetAllCustomData();
+        ChatListCustomizeManager.resetAllCustomData();
         FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
 
         ThemeDownloadManager.getInstance().copyFileFromAssetsSync(themeInfo,
@@ -140,7 +140,7 @@ public class ThemeUtils {
             BubbleDrawables.setSelectedIdentifier(-1);
         }
 
-        ChatListDrawableManager.resetAllCustomData();
+        ChatListCustomizeManager.resetAllCustomData();
 
         FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
 

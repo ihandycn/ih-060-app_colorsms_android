@@ -50,7 +50,7 @@ import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
-import com.android.messaging.ui.customize.mainpage.ChatListDrawableManager;
+import com.android.messaging.ui.customize.mainpage.ChatListCustomizeManager;
 import com.android.messaging.ui.customize.mainpage.ChatListUtils;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
@@ -187,7 +187,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mTimestampColor = ConversationColors.get().getListTimeColor();
 
         mContactBackground = findViewById(R.id.conversation_icon_bg);
-        mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg(false, ChatListDrawableManager.hasCustomWallpaper()));
+        mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg(false, ChatListCustomizeManager.hasCustomWallpaper()));
 
         LayoutTransition layoutTransition = new LayoutTransition();
         layoutTransition.setDuration(200);
@@ -218,7 +218,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
     private void setConversationName() {
         mConversationNameView.setTextColor(mConversationNameColor);
-        ChatListDrawableManager.changeViewColorIfNeed(mConversationNameView);
+        ChatListCustomizeManager.changeViewColorIfNeed(mConversationNameView);
         ChatListUtils.changeTextViewShadow(mConversationNameView);
         if (mData.getIsRead() || mData.getShowDraft()) {
             mConversationNameView.setTypeface(FontUtils.getTypeface(FontUtils.MEDIUM));
@@ -264,10 +264,10 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             if (AvatarUriUtil.TYPE_LOCAL_RESOURCE_URI.equals(iconType)) {
                 mContactBackground.setImageDrawable(null);
             } else {
-                mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg(false, ChatListDrawableManager.hasCustomWallpaper()));
+                mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg(false, ChatListCustomizeManager.hasCustomWallpaper()));
             }
         } else {
-            mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg(false, ChatListDrawableManager.hasCustomWallpaper()));
+            mContactBackground.setImageDrawable(AvatarBgDrawables.getAvatarBg(false, ChatListCustomizeManager.hasCustomWallpaper()));
         }
         mContactIconView.setImageResourceUri(iconUri, mData.getParticipantContactId(),
                 mData.getParticipantLookupKey(), mData.getOtherParticipantNormalizedDestination(), Color.TRANSPARENT);
@@ -318,7 +318,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mRippleBackgroundView.setOnLongClickListener(this);
         mPinView.setVisibility(mData.isPinned() ? VISIBLE : GONE);
         if (mData.isPinned()) {
-            ChatListDrawableManager.changeViewColorIfNeed(mPinView);
+            ChatListCustomizeManager.changeViewColorIfNeed(mPinView);
         }
 
         if (mIsFirstBind) {
@@ -351,14 +351,14 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             maxLines = TextUtils.isEmpty(snippetText) ? 0 : SNIPPET_LINE_COUNT;
             color = mSnippetColor;
             mSnippetTextView.setTextColor(color);
-            ChatListDrawableManager.changeViewColorIfNeed(mSnippetTextView);
+            ChatListCustomizeManager.changeViewColorIfNeed(mSnippetTextView);
             ChatListUtils.changeTextViewShadow(mSnippetTextView);
         }
 
         mSnippetTextView.setMaxLines(maxLines);
 
         mTimestampTextView.setTextColor(mTimestampColor);
-        ChatListDrawableManager.changeViewColorIfNeed(mTimestampTextView);
+        ChatListCustomizeManager.changeViewColorIfNeed(mTimestampTextView);
         ChatListUtils.changeTextViewShadow(mTimestampTextView);
 
         setSnippet();
@@ -433,7 +433,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         final int notificationBellVisibility = mData.getNotificationEnabled() ? GONE : VISIBLE;
         mNotificationBellView.setVisibility(notificationBellVisibility);
         if (!mData.getNotificationEnabled()) {
-           ChatListDrawableManager.changeViewColorIfNeed(mNotificationBellView);
+           ChatListCustomizeManager.changeViewColorIfNeed(mNotificationBellView);
         }
     }
 

@@ -32,7 +32,7 @@ import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
-import com.android.messaging.ui.customize.mainpage.ChatListDrawableManager;
+import com.android.messaging.ui.customize.mainpage.ChatListCustomizeManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.superapps.util.Dimensions;
 
@@ -58,7 +58,7 @@ public class ArchivedConversationListActivity extends AbstractConversationListAc
         ViewGroup.LayoutParams layoutParams = accessoryContainer.getLayoutParams();
         layoutParams.height = Dimensions.getStatusBarHeight(this) + Dimensions.pxFromDp(56);
         accessoryContainer.setLayoutParams(layoutParams);
-        Drawable customToolBar = ChatListDrawableManager.getToolbarDrawable();
+        Drawable customToolBar = ChatListCustomizeManager.getToolbarDrawable();
         if (customToolBar != null) {
             ImageView ivAccessoryBg = accessoryContainer.findViewById(R.id.accessory_bg);
             ivAccessoryBg.setVisibility(View.VISIBLE);
@@ -82,8 +82,8 @@ public class ArchivedConversationListActivity extends AbstractConversationListAc
         toolbar.setContentInsetsRelative(0, 0);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(getString(R.string.archived_conversations));
-        ChatListDrawableManager.changeViewColorIfNeed(title);
-        ChatListDrawableManager.changeDrawableColorIfNeed(toolbar.getNavigationIcon());
+        ChatListCustomizeManager.changeViewColorIfNeed(title);
+        ChatListCustomizeManager.changeDrawableColorIfNeed(toolbar.getNavigationIcon());
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {

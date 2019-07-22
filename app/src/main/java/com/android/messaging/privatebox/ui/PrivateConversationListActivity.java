@@ -31,7 +31,7 @@ import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
-import com.android.messaging.ui.customize.mainpage.ChatListDrawableManager;
+import com.android.messaging.ui.customize.mainpage.ChatListCustomizeManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
@@ -166,7 +166,7 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
 
         if (mActionMode == null && getSupportActionBar() != null) {
             Drawable drawable = getDrawable(R.drawable.ic_back);
-            ChatListDrawableManager.changeDrawableColorIfNeed(drawable);
+            ChatListCustomizeManager.changeDrawableColorIfNeed(drawable);
             getSupportActionBar().setHomeAsUpIndicator(drawable);
         }
     }
@@ -178,7 +178,7 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         }
         getMenuInflater().inflate(R.menu.private_list_conversation_list_menu, menu);
         for (int i = 0; i < menu.size(); i++) {
-            ChatListDrawableManager.changeDrawableColorIfNeed(menu.getItem(i).getIcon());
+            ChatListCustomizeManager.changeDrawableColorIfNeed(menu.getItem(i).getIcon());
         }
         if (!Preferences.getDefault().getBoolean(PREF_KEY_ADD_BUTTON_CLICKED, false)) {
             Drawable drawable = menu.findItem(R.id.private_action_add).getIcon();
@@ -261,7 +261,7 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         ViewGroup.LayoutParams lp = accessoryContainer.getLayoutParams();
         lp.height = Dimensions.getStatusBarHeight(PrivateConversationListActivity.this) + Dimensions.pxFromDp(56);
         accessoryContainer.setLayoutParams(lp);
-        Drawable customToolBar = ChatListDrawableManager.getToolbarDrawable();
+        Drawable customToolBar = ChatListCustomizeManager.getToolbarDrawable();
         if (customToolBar != null) {
             ImageView ivAccessoryBg = accessoryContainer.findViewById(R.id.accessory_bg);
             ivAccessoryBg.setVisibility(View.VISIBLE);
@@ -283,7 +283,7 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         mTitle = findViewById(R.id.private_conversation_title);
-        ChatListDrawableManager.changeViewColorIfNeed(mTitle);
+        ChatListCustomizeManager.changeViewColorIfNeed(mTitle);
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {

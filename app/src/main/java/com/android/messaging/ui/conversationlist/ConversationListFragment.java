@@ -24,9 +24,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Telephony;
@@ -72,9 +70,8 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.WallpaperDrawables;
-import com.android.messaging.ui.customize.mainpage.ChatListDrawableManager;
+import com.android.messaging.ui.customize.mainpage.ChatListCustomizeManager;
 import com.android.messaging.ui.customize.theme.CreateIconDrawable;
-import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.AccessibilityUtil;
@@ -267,7 +264,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mEmptyListMessageView.setImageHint(R.drawable.ic_oobe_conv_list);
         mBackupBannerGuideContainer = rootView.findViewById(R.id.backup_banner_guide_container);
         ImageView conversationListBg = rootView.findViewById(R.id.conversation_list_bg);
-        Drawable customDrawable = ChatListDrawableManager.getWallpaperDrawable();
+        Drawable customDrawable = ChatListCustomizeManager.getWallpaperDrawable();
         Drawable bgDrawable = customDrawable != null ? customDrawable : WallpaperDrawables.getConversationListWallpaperDrawable();
         getActivity().getWindow().getDecorView().setBackground(null);
         if (bgDrawable == null) {
@@ -613,17 +610,17 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         mAdContentView.setAdIconView(icon);
         TextView title = ViewUtils.findViewById(adView, R.id.banner_title);
         title.setTextColor(ConversationColors.get().getListTitleColor());
-        ChatListDrawableManager.changeViewColorIfNeed(title);
+        ChatListCustomizeManager.changeViewColorIfNeed(title);
         mAdContentView.setAdTitleView(title);
         TextView description = ViewUtils.findViewById(adView, R.id.banner_des);
         description.setTextColor(ConversationColors.get().getListSubtitleColor());
-        ChatListDrawableManager.changeViewColorIfNeed(description);
+        ChatListCustomizeManager.changeViewColorIfNeed(description);
         mAdContentView.setAdBodyView(description);
 
         TextView actionBtn = ViewUtils.findViewById(adView, R.id.banner_action);
         mAdContentView.setAdActionView(actionBtn);
         actionBtn.setTextColor(Color.parseColor(ThemeUtils.getCurrentTheme().listTimeColor));
-        ChatListDrawableManager.changeViewColorIfNeed(actionBtn);
+        ChatListCustomizeManager.changeViewColorIfNeed(actionBtn);
 
         FrameLayout choice = ViewUtils.findViewById(adView, R.id.ad_choice);
         mAdContentView.setAdChoiceView(choice);
@@ -632,7 +629,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
         ImageView ivAdPreview = adView.findViewById(R.id.icon_ad_preview);
         ivAdPreview.getDrawable().setColorFilter(ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
-        ChatListDrawableManager.changeDrawableColorIfNeed(ivAdPreview.getDrawable(), false);
+        ChatListCustomizeManager.changeDrawableColorIfNeed(ivAdPreview.getDrawable(), false);
 
         mAdContentView.hideAdCorner();
         mAdContentView.fillNativeAd(mNativeAd);

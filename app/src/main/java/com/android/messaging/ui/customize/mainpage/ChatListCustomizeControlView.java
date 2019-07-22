@@ -43,8 +43,6 @@ import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
 import com.android.messaging.ui.wallpaper.WallpaperChooserItemView;
 import com.android.messaging.ui.wallpaper.WallpaperDownloader;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
-import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
-import com.android.messaging.util.BugleAnalytics;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
@@ -330,7 +328,7 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
 
             }
         });
-        mOpacitySeekBar.setProgress((int) ((1 - ChatListDrawableManager.getMaskOpacity()) * maxProgressValue));
+        mOpacitySeekBar.setProgress((int) ((1 - ChatListCustomizeManager.getMaskOpacity()) * maxProgressValue));
     }
 
     private void onWallpaperChanged(String path) {
@@ -349,7 +347,7 @@ public class ChatListCustomizeControlView extends ConstraintLayout {
         private Context mContext;
         private int mItemViewLength;
         private int mItemPadding;
-        private String mWallpaperPath = ChatListDrawableManager.getListWallpaperPath();
+        private String mWallpaperPath = ChatListCustomizeManager.getListWallpaperPath();
 
         WallpaperChooserAdapter(Context context, List<WallpaperChooserItem> wallpaperInfos) {
             mContext = context;

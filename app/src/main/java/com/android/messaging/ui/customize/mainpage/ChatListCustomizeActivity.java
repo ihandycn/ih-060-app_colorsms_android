@@ -64,6 +64,7 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
     private int mCurrentRecommendColor;
     private String mPreviousPath;
     private boolean mUseThemeColor;
+    private boolean mIsActivityExiting;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -96,7 +97,7 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
         mThemeViewGroup = findViewById(R.id.chat_list_theme_group);
 
         //set custom wallpaper
-        mPreviousPath = mCurrentSelectedWallpaperPath = ChatListDrawableManager.getListWallpaperPath();
+        mPreviousPath = mCurrentSelectedWallpaperPath = ChatListCustomizeManager.getListWallpaperPath();
         if (!TextUtils.isEmpty(mCurrentSelectedWallpaperPath)) {
             mThemeViewGroup.setVisibility(View.INVISIBLE);
             //setPreviewImage(mCurrentSelectedWallpaperPath, false);
@@ -104,13 +105,13 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
             mCustomBackground.setImageDrawable(drawable);
         }
         //set mask opacity
-        mBgMaskView.setAlpha(ChatListDrawableManager.getMaskOpacity());
+        mBgMaskView.setAlpha(ChatListCustomizeManager.getMaskOpacity());
         //set text color
-        if (ChatListDrawableManager.shouldUseThemeColor()) {
+        if (ChatListCustomizeManager.shouldUseThemeColor()) {
             useThemeTextColor();
             mUseThemeColor = true;
         } else {
-            mCurrentSelectedColor = ChatListDrawableManager.getTextColor();
+            mCurrentRecommendColor = mCurrentSelectedColor = ChatListCustomizeManager.getTextColor();
             mUseThemeColor = false;
             setTextColor(mCurrentSelectedColor);
         }
@@ -154,14 +155,18 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
 
             @Override
             public void onApplyBtnClick() {
+                if (mIsActivityExiting) {
+                    return;
+                }
+                mIsActivityExiting = true;
                 Threads.postOnThreadPoolExecutor(() -> {
                     BugleAnalytics.logEvent("Customize_ChatList_Save_Click");
                     //this event must log before apply
                     logApplyEvent();
-                    ChatListDrawableManager.saveChatListCustomizeInfo(mCurrentSelectedWallpaperPath, mBgMaskView.getAlpha(), mUseThemeColor, mCurrentSelectedColor);
+                    ChatListCustomizeManager.saveChatListCustomizeInfo(mCurrentSelectedWallpaperPath, mBgMaskView.getAlpha(), mUseThemeColor, mCurrentSelectedColor);
                     Threads.postOnMainThread(() -> {
                         HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
-                        Threads.postOnMainThreadDelayed(()->finish(), 100);
+                        Threads.postOnMainThreadDelayed(() -> finish(), 100);
                     });
                 });
             }
@@ -194,7 +199,7 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
     }
 
     private void handleBackEvent() {
-        if (ChatListDrawableManager.isCustomInfoChanged(mCurrentSelectedWallpaperPath,
+        if (ChatListCustomizeManager.isCustomInfoChanged(mCurrentSelectedWallpaperPath,
                 mBgMaskView.getAlpha(), mUseThemeColor, mCurrentSelectedColor)) {
             BaseAlertDialog.Builder builder = new BaseAlertDialog.Builder(this);
             builder.setTitle(R.string.chat_list_confirm_dialog_title);
@@ -202,8 +207,12 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
             builder.setNegativeButton(R.string.cancel, (dialog, which) -> finish());
             builder.setPositiveButton(R.string.bubble_customize_save, ((dialog, which) -> {
                 //this event must log before apply
+                if (mIsActivityExiting) {
+                    return;
+                }
+                mIsActivityExiting = true;
                 logApplyEvent();
-                ChatListDrawableManager.saveChatListCustomizeInfo(mCurrentSelectedWallpaperPath, mBgMaskView.getAlpha(), mUseThemeColor, mCurrentSelectedColor);
+                ChatListCustomizeManager.saveChatListCustomizeInfo(mCurrentSelectedWallpaperPath, mBgMaskView.getAlpha(), mUseThemeColor, mCurrentSelectedColor);
                 HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
                 BugleAnalytics.logEvent("Customize_ChatList_Alert_Click");
                 Threads.postOnMainThreadDelayed(this::finish, 100);
@@ -383,35 +392,50 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
     }
 
     private void logApplyEvent() {
-        String textColorStr;
-        if (mUseThemeColor) {
-            textColorStr = "theme";
-        } else if (mCurrentRecommendColor == Color.WHITE) {
-            textColorStr = "white";
-        } else {
-            textColorStr = "colored";
-        }
-        String bgString;
-        String path = mCurrentSelectedWallpaperPath;
-        if (TextUtils.isEmpty(path)) {
-            bgString = "theme";
-        } else if (path.contains("list_wallpapers")) {
-            bgString = "customize";
-        } else {
-            bgString = "recommend";
-        }
-        BugleAnalytics.logEvent("Customize_ChatList_Background_Change",
-                true, false, "type", bgString, "text", textColorStr);
+        float oldOpacity = ChatListCustomizeManager.getMaskOpacity();
 
-        String opacityStr;
+        boolean isWallpaperChanged = TextUtils.isEmpty(mPreviousPath) && !TextUtils.isEmpty(mCurrentSelectedWallpaperPath)
+                || !TextUtils.isEmpty(mPreviousPath) && !mPreviousPath.equals(mCurrentSelectedWallpaperPath);
+        boolean isTextColorChangedByUser = !mUseThemeColor && mCurrentSelectedColor != mCurrentRecommendColor;
         float alpha = mBgMaskView.getAlpha();
-        if (alpha < 0.1f) {
-            opacityStr = "<10%";
-        } else {
-            int tensNum = Math.min((int) (alpha * 10), 9);
-            opacityStr = tensNum + "0%-" + (tensNum + 1) + "0%";
+        boolean isOpacityChangedByUser = isWallpaperChanged && Math.abs(alpha) > 0.0000001
+                || !isWallpaperChanged && Math.abs(oldOpacity - alpha) > 0.0000001;
+
+        if (isWallpaperChanged) {
+            String bgString;
+            String path = mCurrentSelectedWallpaperPath;
+            if (TextUtils.isEmpty(path)) {
+                bgString = "theme";
+            } else if (path.contains("list_wallpapers")) {
+                bgString = "customize";
+            } else {
+                bgString = "recommend";
+            }
+
+            String textColorStr;
+            if (mUseThemeColor) {
+                textColorStr = "theme";
+            } else if (mCurrentRecommendColor == Color.WHITE) {
+                textColorStr = "white";
+            } else {
+                textColorStr = "colored";
+            }
+
+            BugleAnalytics.logEvent("Customize_ChatList_Background_Change",
+                    true, false, "type", bgString, "text", textColorStr);
         }
-        BugleAnalytics.logEvent("Customize_ChatList_BackgroundOpacity_Change", "type", opacityStr);
+
+        if (isOpacityChangedByUser) {
+            String opacityStr;
+            float opacityValue = 1 - alpha;
+            if (opacityValue < 0.1f) {
+                opacityStr = "<10%";
+            } else {
+                int tensNum = Math.min((int) (opacityValue * 10), 9);
+                opacityStr = tensNum + "0%-" + (tensNum + 1) + "0%";
+            }
+            BugleAnalytics.logEvent("Customize_ChatList_BackgroundOpacity_Change", "type", opacityStr);
+        }
 
         String colorStr = null;
         if (mUseThemeColor) {
@@ -433,33 +457,25 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
             colorStr = "advance";
         }
         Preferences.getDefault().putString(PREF_KEY_EVENT_CHANGE_COLOR_TYPE, colorStr);
-        BugleAnalytics.logEvent("Customize_ChatList_TextColor_Change", "type", colorStr);
+
+        if (isTextColorChangedByUser) {
+            BugleAnalytics.logEvent("Customize_ChatList_TextColor_Change", "type", colorStr);
+        }
 
         StringBuilder changeStr = new StringBuilder();
-        if (TextUtils.isEmpty(mCurrentSelectedWallpaperPath)) {
-            if (!TextUtils.isEmpty(mPreviousPath)) {
-                changeStr.append("background ");
-            }
-        } else if (!mCurrentSelectedWallpaperPath.equals(mPreviousPath)) {
+        if (isWallpaperChanged) {
             changeStr.append("background ");
         }
-
-        if (mUseThemeColor) {
-            if (!ChatListDrawableManager.shouldUseThemeColor()) {
-                changeStr.append("text ");
-            }
-        } else {
-            if (ChatListDrawableManager.shouldUseThemeColor()) {
-                changeStr.append("text ");
-            } else if (mCurrentSelectedColor != ChatListDrawableManager.getTextColor()) {
-                changeStr.append("text ");
-            }
+        if (isTextColorChangedByUser) {
+            changeStr.append("text ");
         }
-
-        if (Math.abs(mBgMaskView.getAlpha() - ChatListDrawableManager.getMaskOpacity()) > 0.0000001) {
+        if (isOpacityChangedByUser) {
             changeStr.append("opacity");
         }
-        BugleAnalytics.logEvent("Customize_ChatList_Change",
-                true, false, "type", changeStr.toString());
+
+        if (isWallpaperChanged || isOpacityChangedByUser || isTextColorChangedByUser) {
+            BugleAnalytics.logEvent("Customize_ChatList_Change",
+                    true, false, "type", changeStr.toString());
+        }
     }
 }
