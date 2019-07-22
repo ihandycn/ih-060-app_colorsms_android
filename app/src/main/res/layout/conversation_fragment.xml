@@ -23,8 +23,14 @@
         android:id="@+id/conversation_fragment_theme_wallpaper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scaleType="fitXY" />
+
+    <com.android.messaging.ui.view.CenterTopImageView
+        android:id="@+id/conversation_fragment_wallpaper"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_above="@+id/message_compose_view_container"
-        android:scaleType="fitStart" />
+        android:visibility="gone"/>
 
     <!-- Message list -->
     <android.support.v7.widget.RecyclerView

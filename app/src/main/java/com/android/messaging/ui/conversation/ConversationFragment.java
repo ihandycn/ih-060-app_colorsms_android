@@ -128,8 +128,8 @@ import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
-import com.superapps.util.Compats;
 import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Compats;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
@@ -212,6 +212,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     private ConversationMessageAdapter mAdapter;
     private ConversationFastScroller mFastScroller;
     private ImageView mWallpaperView;
+    private ImageView mOldRecommendImageView;
 
     private View mConversationComposeDivider;
     private ChangeDefaultSmsAppHelper mChangeDefaultSmsAppHelper;
@@ -916,6 +917,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         mMediaLayout = view.findViewById(R.id.camera_photo_layout);
         mWallpaperView = view.findViewById(R.id.conversation_fragment_theme_wallpaper);
+        mOldRecommendImageView = view.findViewById(R.id.conversation_fragment_wallpaper);
 
         mComposeMessageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -1029,7 +1031,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public void onResume() {
         super.onResume();
-        WallpaperManager.setConversationWallPaper(mWallpaperView, mConversationId);
+        WallpaperManager.setConversationWallPaper(mWallpaperView, mConversationId, mOldRecommendImageView);
 
         if (mIncomingDraft == null) {
             mComposeMessageView.requestDraftMessage(mClearLocalDraft);

@@ -82,21 +82,33 @@ public class WallpaperManager {
         view.setImageDrawable(wallpaperDrawable);
     }
 
-    public static void setConversationWallPaper(ImageView themeBgView, String conversationId) {
+    public static void setConversationWallPaper(ImageView wallpaperView, String conversationId, ImageView oldRecommendWallpaperView) {
+        String wallpaperPath;
         if (TextUtils.isEmpty(conversationId)) {
-            String wallpaperPath = sPrefs.getString(PREF_KEY_WALLPAPER_PATH, "");
-
-            if (!isWallpaperPathEmpty(wallpaperPath)) {
-                themeBgView.setImageDrawable(new BitmapDrawable(wallpaperPath));
-                return;
+            wallpaperPath = sPrefs.getString(PREF_KEY_WALLPAPER_PATH, "");
+            if (isWallpaperPathEmpty(wallpaperPath)) {
+                wallpaperPath = null;
             }
-        } else if (!TextUtils.isEmpty(WallpaperManager.getWallpaperPathByConversationId(conversationId))) {
-            themeBgView.setImageDrawable(new BitmapDrawable(WallpaperManager.getWallpaperPathByConversationId(conversationId)));
+        } else {
+            wallpaperPath = WallpaperManager.getWallpaperPathByConversationId(conversationId);
+        }
+
+        if (!TextUtils.isEmpty(wallpaperPath)) {
+            // the old recommend wallpapers is display in CenterTopImageView,
+            for (String oldUrl : WallpaperInfos.sOldRemoteUrl) {
+                if (WallpaperDownloader.getSourceLocalPath(oldUrl).equals(wallpaperPath)) {
+                    oldRecommendWallpaperView.setVisibility(View.VISIBLE);
+                    wallpaperView.setVisibility(View.GONE);
+                    oldRecommendWallpaperView.setImageDrawable(new BitmapDrawable(wallpaperPath));
+                    return;
+                }
+            }
+            wallpaperView.setImageDrawable(new BitmapDrawable(wallpaperPath));
             return;
         }
 
         Drawable wallpaperDrawable = WallpaperDrawables.getConversationWallpaperBg();
-        themeBgView.setImageDrawable(wallpaperDrawable);
+        wallpaperView.setImageDrawable(wallpaperDrawable);
     }
 
     //if has theme wallpaper or custom wallpaper
