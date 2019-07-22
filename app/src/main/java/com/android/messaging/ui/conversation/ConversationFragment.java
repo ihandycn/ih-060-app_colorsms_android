@@ -154,6 +154,9 @@ import java.util.List;
 
 import hugo.weaving.DebugLog;
 
+import static com.android.messaging.ui.senddelaymessages.SendDelayMessagesManager.BUNDLE_KEY_CONVERSATION_ID;
+import static com.android.messaging.ui.senddelaymessages.SendDelayMessagesManager.DELAYED_SENDING_MESSAGE_COMPLETE;
+
 /**
  * Shows a list of messages/parts comprising a conversation.
  */
@@ -667,6 +670,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         HSGlobalNotificationCenter.addObserver(EVENT_HIDE_MEDIA_PICKER, this);
         HSGlobalNotificationCenter.addObserver(RESET_ITEM, this);
         HSGlobalNotificationCenter.addObserver(EVENT_UPDATE_BUBBLE_DRAWABLE, this);
+        HSGlobalNotificationCenter.addObserver(DELAYED_SENDING_MESSAGE_COMPLETE, this);
         BugleAnalytics.logEvent("SMS_DetailsPage_Show", true, true);
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "detailspage_show");
     }
@@ -1297,27 +1301,15 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         super.onDestroy();
         mIsDestroyed = true;
         // Unbind all the views that we bound to data
-
         if (mComposeMessageView != null) {
-            // if we have message to send in a delay time, unbind data until message is sent
-            String conversationId = mBinding.getData().getConversationId();
-            if (!mComposeMessageView.getIsWaitingToSendMessageFlag()) {
-                SendDelayMessagesManager.remove(conversationId);
-                mComposeMessageView.unbind();
-                mBinding.unbind();
-            } else {
-                mComposeMessageView.setOnActionEndListener(new SendDelayActionCompletedCallBack() {
-                    @Override
-                    public void onSendDelayActionEnd() {
-                        mComposeMessageView.unbind();
-                        mBinding.unbind();
-                    }
-                });
-            }
             mComposeMessageView.getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
+            mComposeMessageView.unbind();
         }
-
         mRecyclerView.setAdapter(null);
+
+        // And unbind this fragment from its data
+        mBinding.unbind();
+        mConversationId = null;
 
         if (mNativeAd != null) {
             mNativeAd.release();
@@ -1386,12 +1378,14 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 // Merge the caption text from attachments into the text body of the messages
                 message.consolidateText();
 
-
                 final String deliveryReportsKey = getString(R.string.delivery_reports_pref_key);
                 message.setIsDeliveryReportOpen(Preferences.getDefault().getBoolean(deliveryReportsKey,
                         getResources().getBoolean(R.bool.delivery_reports_pref_default)));
 
-                mBinding.getData().sendMessage(mBinding, message);
+                boolean isDefaultSelf = mBinding.getData().isDefaultSelf(message.getSelfId());
+
+                SendDelayMessagesManager.sendMessageWithDelay(message, mBinding.getData().getConversationId(),
+                        isDefaultSelf);
 
                 mHasSentMessages = true;
             } else {
@@ -2020,6 +2014,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             case EVENT_UPDATE_BUBBLE_DRAWABLE:
                 // update all drawables
                 mAdapter.notifyDataSetChanged();
+                break;
+            case DELAYED_SENDING_MESSAGE_COMPLETE:
+                if (hsBundle != null && TextUtils.equals(mConversationId, hsBundle.getString(BUNDLE_KEY_CONVERSATION_ID))) {
+                    mComposeMessageView.onSendMessageActionTriggered();
+                }
                 break;
         }
     }

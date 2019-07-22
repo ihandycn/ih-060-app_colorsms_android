@@ -222,6 +222,11 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
         return message;
     }
 
+    public void clearLocalDraftAndNotifyChanged() {
+        clearLocalDraftCopy();
+        dispatchChanged(ALL_CHANGED);
+    }
+
     private void clearLocalDraftCopy() {
         mIsDraftCachedCopy = false;
         mAttachments.clear();
@@ -640,7 +645,7 @@ public class DraftMessageData extends BindableData implements ReadDraftDataActio
         // Assembles the message to send and empty working draft data.
         // If self id is null then message is sent with conversation's self id.
         final MessageData messageToSend =
-                createMessageWithCurrentAttachments(true /* clearLocalCopy */);
+                createMessageWithCurrentAttachments(false /* clearLocalCopy */);
         // Note sending message will empty the draft data in DB.
         mSending = false;
         return messageToSend;

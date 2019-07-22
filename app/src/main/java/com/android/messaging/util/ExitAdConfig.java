@@ -17,7 +17,6 @@ public class ExitAdConfig {
 
     private static final BuglePrefs mPrefs = Factory.get().getApplicationPrefs();
     public static void preLoadExitAd() {
-
         if (!BillingManager.isPremiumUser()
                 && HSConfig.optBoolean(true, "Application", "SMSAd", "SMSExitAd", "Enabled")
                 && ExitAdAutopilotUtils.getIsExitAdSwitchOn()

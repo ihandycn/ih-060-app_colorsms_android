@@ -17,6 +17,10 @@ public class SendDelaySettings {
         return sPrefs.getInt(PREF_KEY_SEND_DELAY, NO_DELAY);
     }
 
+    public static long getSendDelayInMills() {
+        return 1000L * sPrefs.getInt(PREF_KEY_SEND_DELAY, NO_DELAY);
+    }
+
     public static void setSendDelay(int timeInSecs) {
         sPrefs.putInt(PREF_KEY_SEND_DELAY, timeInSecs);
         BugleAnalytics.logEvent("Settings_SendDelay_Choose", "SendDelay", "" + timeInSecs);
