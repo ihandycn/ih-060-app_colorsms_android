@@ -16,7 +16,7 @@
 					<key>DownloadUrl</key>
 					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/Twitter.zip</string>
 					<key>DownloadSize</key>
-					<string>7.0</string>
+					<string>4.5</string>
 				</dict>
 				<dict>
 					<key>name</key>
@@ -24,9 +24,9 @@
 					<key>PreViewPicUrl</key>
 					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/androidpie.png</string>
 					<key>DownloadUrl</key>
-					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/Pie.zip</string>
+					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/AndroidPie.zip</string>
 					<key>DownloadSize</key>
-					<string>7.1</string>
+					<string>7.4</string>
 				</dict>
 				<dict>
 					<key>name</key>
@@ -34,9 +34,9 @@
 					<key>PreViewPicUrl</key>
 					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/androidblob.png</string>
 					<key>DownloadUrl</key>
-					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/Blob.zip</string>
+					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/AndroidBlob.zip</string>
 					<key>DownloadSize</key>
-					<string>7.3</string>
+					<string>6.1</string>
 				</dict>
 			</array>
 			<key>PrivateBox</key>
