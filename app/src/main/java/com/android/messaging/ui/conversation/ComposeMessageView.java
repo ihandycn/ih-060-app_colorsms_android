@@ -507,15 +507,13 @@ public class ComposeMessageView extends LinearLayout
     }
 
     private void startDelayedSendingMessageIndicatorAnimation(long sendDelayAnimationStartTime) {
-        long timePast = System.currentTimeMillis() - sendDelayAnimationStartTime;
-
-        if (timePast > 1000 * SendDelaySettings.getSendDelayInSecs()) {
-            timePast = 1000 * SendDelaySettings.getSendDelayInSecs() * 9 / 10;
-        }
-
-        mSendDelayProgressBar.setProgress(100 - (float) ((timePast * 100) / (1000 * SendDelaySettings.getSendDelayInSecs())));
-
         if (SendDelaySettings.getSendDelayInSecs() != 0) {
+            long timePast = System.currentTimeMillis() - sendDelayAnimationStartTime;
+
+            if (timePast > 1000 * SendDelaySettings.getSendDelayInSecs()) {
+                timePast = 1000 * SendDelaySettings.getSendDelayInSecs() * 9 / 10;
+            }
+            mSendDelayProgressBar.setProgress(100 - (float) ((timePast * 100) / (1000 * SendDelaySettings.getSendDelayInSecs())));
             mDelayCloseButton.setVisibility(View.VISIBLE);
             mSendDelayProgressBar.setVisibility(View.VISIBLE);
             mSendButton.setVisibility(View.GONE);
@@ -524,7 +522,7 @@ public class ComposeMessageView extends LinearLayout
             Interpolator scaleStartInterpolator =
                     PathInterpolatorCompat.create(0.0f, 0.0f, 0.58f, 1.0f);
             mSendDelayProgressBar.animate().alpha(1.0f).scaleX(1.0f).scaleY(1.0f).setDuration(160).setStartDelay(80).setInterpolator(scaleStartInterpolator).start();
-            mSendDelayProgressBar.startAnimation(SendDelaySettings.getSendDelayInSecs());
+            mSendDelayProgressBar.startAnimation(SendDelaySettings.getSendDelayInMills() - timePast);
         }
     }
 
