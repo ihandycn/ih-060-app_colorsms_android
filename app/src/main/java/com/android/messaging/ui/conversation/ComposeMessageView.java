@@ -867,7 +867,7 @@ public class ComposeMessageView extends LinearLayout
                                             }
                                         }, 1600);
 
-//                                        playSentSound();
+                                        playSentSound();
                                         mHost.sendMessage(message);
                                         if (!TextUtils.isEmpty(mSignatureStr)) {
                                             BugleAnalytics.logEvent("SMS_WithSignature_Send", true,

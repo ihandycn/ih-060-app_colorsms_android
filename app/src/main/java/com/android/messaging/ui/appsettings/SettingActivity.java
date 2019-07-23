@@ -57,7 +57,7 @@ public class SettingActivity extends BaseActivity {
     private GeneralSettingItemView mSyncSettingsView;
     private GeneralSettingItemView mSendDelayView;
     private GeneralSettingItemView mSMSDeliveryReports;
-
+    private GeneralSettingItemView mOutgoingSoundView;
 
     private View mNotificationChildrenGroup;
 
@@ -212,6 +212,9 @@ public class SettingActivity extends BaseActivity {
             overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
             BugleAnalytics.logEvent("SMS_Settings_BlockedContacts_Click", true);
         });
+
+        //outgoing message sounds
+        setUpOutgoingSoundView();
 
         //archived conversations
         GeneralSettingItemView archivedConversations = findViewById(R.id.setting_item_archive);
@@ -429,6 +432,19 @@ public class SettingActivity extends BaseActivity {
 
     private void updateSendDelaySummary() {
         mSendDelayView.setSummary(SendDelaySettings.getSendDelayDescription());
+    }
+
+    private void setUpOutgoingSoundView() {
+        mOutgoingSoundView = findViewById(R.id.setting_advanced_outgoing_sounds);
+        final String prefKey = getString(R.string.send_sound_pref_key);
+        final boolean defaultValue = getResources().getBoolean(
+                R.bool.send_sound_pref_default);
+        mOutgoingSoundView.setChecked(prefs.getBoolean(prefKey, defaultValue));
+        mOutgoingSoundView.setOnItemClickListener(() -> {
+            prefs.putBoolean(prefKey, mOutgoingSoundView.isChecked());
+            GeneralSettingSyncManager.uploadOutgoingMessageSoundsSwitchToServer(mOutgoingSoundView.isChecked());
+            BugleAnalytics.logEvent("SMS_Settings_MessageSounds_Click", true);
+        });
     }
 
     private void onSoundItemClick() {
