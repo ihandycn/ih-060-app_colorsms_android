@@ -9,8 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:alpha="0"
-        android:background="@color/black_70_transparent">
-    </FrameLayout>
+        android:background="@color/black_70_transparent"/>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/customize_guide_container"
@@ -18,7 +17,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal">
 
-    <ImageView
+        <ImageView
             android:id="@+id/customize_guide_homepage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

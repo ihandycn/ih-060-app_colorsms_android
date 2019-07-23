@@ -28,14 +28,10 @@ import com.superapps.util.Threads;
 
 import static com.android.messaging.ui.conversationlist.ConversationListActivity.PREF_KEY_MAIN_DRAWER_OPENED;
 
-class CustomizeGuideController {
-    interface MenuShowCallback {
-        void showMenu();
-    }
+class CustomizeGuideController implements CustomizeGuide {
 
-    private MenuShowCallback mMenuShowCallback;
-    private boolean mIsMenuShouldShow;
-    private boolean mIsCustomizeGuideShowing;
+    private ConversationListActivity mHost;
+
     private ObjectAnimator mDismissXAnim;
     private ObjectAnimator mDismissYAnim;
     private ObjectAnimator mDismissAlphaAnim;
@@ -44,7 +40,8 @@ class CustomizeGuideController {
     private static final String PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE = "pref_show_customize_guide";
 
     @SuppressLint("ClickableViewAccessibility")
-    void showGuideIfNeed(AppCompatActivity activity) {
+    public void showGuideIfNeed(ConversationListActivity activity) {
+        mHost = activity;
         if (!Preferences.getDefault().getBoolean(PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE, true)) {
             return;
         }
@@ -162,15 +159,6 @@ class CustomizeGuideController {
             @Override
             public void onAnimationEnd(Animator animation) {
                 customizeGuideView.setVisibility(View.GONE);
-                if (mIsMenuShouldShow) {
-                    Threads.postOnMainThreadDelayed(() -> {
-                        if (mMenuShowCallback != null) {
-                            mMenuShowCallback.showMenu();
-                            mMenuShowCallback = null;
-                            mIsMenuShouldShow = false;
-                        }
-                    }, 120);
-                }
             }
         });
 
@@ -182,10 +170,8 @@ class CustomizeGuideController {
         mMenuFocusDismissAlphaAnim.setDuration(120);
         mMenuFocusDismissAlphaAnim.setStartDelay(40);
 
-
         guideButton.setOnClickListener(v -> {
-            closeCustomizeGuide();
-            mIsMenuShouldShow = true;
+            closeCustomizeGuide(true);
         });
 
         guideContainer.setOnClickListener(v -> {
@@ -197,8 +183,7 @@ class CustomizeGuideController {
                 shrinkYAnimator.cancel();
                 alphaAnimator.cancel();
             } else {
-                closeCustomizeGuide();
-                mIsMenuShouldShow = true;
+                closeCustomizeGuide(true);
             }
         });
 
@@ -212,7 +197,7 @@ class CustomizeGuideController {
                 alphaAnimator.cancel();
                 return false;
             }
-            closeCustomizeGuide();
+            closeCustomizeGuide(false);
             return false;
         });
 
@@ -222,26 +207,41 @@ class CustomizeGuideController {
         alphaAnimator.start();
         enlargeXAnimator.start();
         enlargeYAnimator.start();
-        mIsCustomizeGuideShowing = true;
+        logGuideShow();
     }
 
-    void setMenuShowCallback(MenuShowCallback callback) {
-        mMenuShowCallback = callback;
+
+    @Override
+    public void logGuideShow() {
+        NavigationViewGuideTest.logGuideShow();
+        BugleAnalytics.logEvent("Menu_Guide_Show");
     }
 
-    void closeCustomizeGuide () {
+    @Override
+    public boolean closeCustomizeGuide(boolean openDrawer) {
+        if (mDismissXAnim == null) {
+            return false;
+        }
+
+        if (mDismissXAnim.isRunning()) {
+            return false;
+        }
+
         mDismissXAnim.start();
         mDismissYAnim.start();
         mDismissAlphaAnim.start();
         mBackgroundDismissAlphaAnim.start();
         mMenuFocusDismissAlphaAnim.start();
-        mIsCustomizeGuideShowing = false;
-    }
 
-    boolean onBackPressed () {
-        if (mIsCustomizeGuideShowing) {
-            mIsMenuShouldShow = true;
+        if (openDrawer) {
+            mDismissAlphaAnim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mHost.openDrawer();
+                    BugleAnalytics.logEvent("Menu_Show_AfterGuide");
+                }
+            });
         }
-        return mIsCustomizeGuideShowing;
+        return true;
     }
 }

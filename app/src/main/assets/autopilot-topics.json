@@ -83,6 +83,52 @@
       ],
       "topic_id": "topic-74oxuasmo"
     },
+    "topic-771b35ehc": {
+      "topic_type": "life_time",
+      "topic_name": "Menu Guide Test",
+      "variations": {
+        "guide_type": {
+          "values": [
+            {
+              "value": "default"
+            }
+          ],
+          "type": "string",
+          "value": "default",
+          "strategy": "sole"
+        }
+      },
+      "events": [
+        {
+          "name": "test"
+        },
+        {
+          "name": "homepage_show"
+        },
+        {
+          "name": "guide_show"
+        },
+        {
+          "name": "menu_show"
+        },
+        {
+          "name": "menu_theme_click"
+        },
+        {
+          "name": "menu_font_click"
+        },
+        {
+          "name": "menu_bubble_click"
+        },
+        {
+          "name": "menu_chatbackground_click"
+        },
+        {
+          "name": "menu_chat_list_click"
+        }
+      ],
+      "topic_id": "topic-771b35ehc"
+    },
     "topic-rp-73fiu9zuo": {
       "topic_type": "one_time",
       "topic_name": "RTOT Popup",
@@ -442,7 +488,7 @@
   "autopilot_id": 10104,
   "service_url": "https://ap.appcloudbox.net",
   "other_app_events": [],
-  "json_id": "048db107-cc36-4309-a30f-d31913c70ede",
+  "json_id": "9d0e1f47-c34d-42ff-8654-4c26db36abc7",
   "autopilot_name": "Bubble_A",
   "autopilot_type": "app"
 }

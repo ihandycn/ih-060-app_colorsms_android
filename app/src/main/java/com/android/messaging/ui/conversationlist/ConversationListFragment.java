@@ -837,7 +837,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             // stop loading animation
             mEmptyListMessageView.setIsLoadingAnimationVisible(false);
             mEmptyListMessageView.setVisibility(View.GONE);
-            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.SHOW_EMOJI);
+
+            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.SHOW_MENU_GUIDE);
         }
     }
 

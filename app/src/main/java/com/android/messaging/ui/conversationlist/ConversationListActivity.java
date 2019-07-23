@@ -16,7 +16,6 @@ import android.support.v4.content.pm.ShortcutManagerCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatDrawableManager;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -81,7 +80,6 @@ import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiStoreActivity;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
-import com.android.messaging.ui.invitefriends.InviteFriendsActivity;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
@@ -98,7 +96,6 @@ import com.android.messaging.util.CreateShortcutUtils;
 import com.android.messaging.util.ExitAdAutopilotUtils;
 import com.android.messaging.util.ExitAdConfig;
 import com.android.messaging.util.PhoneUtils;
-import com.android.messaging.util.TransitionUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -121,7 +118,6 @@ import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
 import net.appcloudbox.ads.nativead.AcbNativeAdManager;
 import net.appcloudbox.autopilot.AutopilotEvent;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -135,7 +131,6 @@ import static com.android.messaging.ad.BillingManager.BILLING_VERIFY_SUCCESS;
 import static com.android.messaging.ui.conversation.ConversationActivity.PREF_KEY_WIRE_AD_SHOW_TIME_FOR_EXIT_WIRE_AD;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.DESKTOP_PREFS;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME;
-import static com.android.messaging.ui.invitefriends.InviteFriendsActivity.INTENT_KEY_FROM;
 import static com.ihs.app.framework.HSApplication.getContext;
 
 public class ConversationListActivity extends AbstractConversationListActivity
@@ -145,7 +140,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final boolean DEBUGGING_MESSAGE_BOX = false && BuildConfig.DEBUG;
 
     public static final String EVENT_MAINPAGE_RECREATE = "event_mainpage_recreate";
-    public static final String SHOW_EMOJI = "show_emoj";
+    public static final String SHOW_MENU_GUIDE = "show_menu_guide";
     public static final String FIRST_LOAD = "first_load";
     public static final String HAS_PIN_CONVERSATION = "has_pin_conversation";
 
@@ -201,11 +196,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private long mLastAdClickTime = 0;
     private boolean mIsExitAdShown;
     private boolean mHasInflatedDrawer;
+    private boolean isDrawerAutoOpened;
 
     private boolean mIsMessageMoving;
     private ConstraintLayout mExitAppAnimationViewContainer;
     private LottieAnimationView mLottieAnimationView;
-    private CustomizeGuideController mCustomizeGuideController;
+    private CustomizeGuide mCustomizeGuideController;
     private final BuglePrefs mPrefs = Factory.get().getApplicationPrefs();
 
     @Override
@@ -255,7 +251,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
 
         HSGlobalNotificationCenter.addObserver(EVENT_MAINPAGE_RECREATE, this);
-        HSGlobalNotificationCenter.addObserver(SHOW_EMOJI, this);
+        HSGlobalNotificationCenter.addObserver(SHOW_MENU_GUIDE, this);
         HSGlobalNotificationCenter.addObserver(FIRST_LOAD, this);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_NAME_MESSAGES_MOVE_END, this);
         HSGlobalNotificationCenter.addObserver(BILLING_VERIFY_SUCCESS, this);
@@ -529,6 +525,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     BugleAnalytics.logEvent("Menu_Show_NewUser", true);
                     BugleAnalytics.logEvent("Menu_Show_NewUser_Backup", true);
                 }
+                NavigationViewGuideTest.logNavigationViewShow();
                 super.onDrawerOpened(drawerView);
             }
 
@@ -536,12 +533,18 @@ public class ConversationListActivity extends AbstractConversationListActivity
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
 
+                if (isDrawerAutoOpened) {
+                    BugleAnalytics.logEvent("Menu_Click_AfterGuide");
+                    isDrawerAutoOpened = false;
+                }
+
                 switch (drawerClickIndex) {
                     case DRAWER_INDEX_THEME:
                         BugleAnalytics.logEvent("Menu_Theme_Click");
                         Navigations.startActivity(ConversationListActivity.this, ThemeSelectActivity.class);
                         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_theme_new_text).setVisibility(View.GONE);
+                        NavigationViewGuideTest.logMenuThemeClick();
                         break;
 
                     case DRAWER_INDEX_THEME_COLOR:
@@ -566,6 +569,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             Navigations.startActivity(ConversationListActivity.this, CustomBubblesActivity.class);
                             overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         }
+                        NavigationViewGuideTest.logMenuBubbleClick();
                         break;
                     case DRAWER_INDEX_CHAT_BACKGROUND:
                         BugleAnalytics.logEvent("Menu_ChatBackground_Click", true, true);
@@ -575,16 +579,19 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         WallpaperPreviewActivity.startWallpaperPreview(ConversationListActivity.this);
                         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_background_new_text).setVisibility(View.GONE);
+                        NavigationViewGuideTest.logMenuBackgroundClick();
                         break;
                     case DRAWER_INDEX_CHAT_LIST:
                         Navigations.startActivitySafely(ConversationListActivity.this, ChatListCustomizeActivity.class);
                         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
+                        NavigationViewGuideTest.logMenuChatListClick();
                         break;
                     case DRAWER_INDEX_CHANGE_FONT:
                         BugleAnalytics.logEvent("Menu_ChangeFont_Click");
                         Navigations.startActivity(ConversationListActivity.this, ChangeFontActivity.class);
                         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_font_new_text).setVisibility(View.GONE);
+                        NavigationViewGuideTest.logMenuFontClick();
                         break;
                     case DRAWER_INDEX_EMOJI_STORE:
                         BugleAnalytics.logEvent("Menu_EmojiStore_Click", true);
@@ -793,11 +800,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
             return;
         }
 
-        if (mCustomizeGuideController != null) {
-            if (mCustomizeGuideController.onBackPressed()) {
-                mCustomizeGuideController.closeCustomizeGuide();
-                return;
-            }
+        if (mCustomizeGuideController != null
+                && mCustomizeGuideController.closeCustomizeGuide(false)) {
+            mCustomizeGuideController = null;
+            return;
         }
 
         if (!Preferences.getDefault().contains(PREF_KEY_CREATE_SHORTCUT_GUIDE_SHOWN)
@@ -1017,6 +1023,11 @@ public class ConversationListActivity extends AbstractConversationListActivity
         return super.startActionMode(callback);
     }
 
+    void openDrawer() {
+        isDrawerAutoOpened = true;
+        drawerLayout.openDrawer(navigationView);
+    }
+
     @Override
     public boolean isArchiveMode() {
         return false;
@@ -1198,16 +1209,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 sIsRecreate = true;
                 recreate();
                 break;
-            case SHOW_EMOJI:
-                WeakReference<AppCompatActivity> activity = new WeakReference<>(this);
+            case SHOW_MENU_GUIDE:
                 if (mCustomizeGuideController == null) {
                     Threads.postOnMainThreadDelayed(() -> {
-                        if (!isFinishing() && activity.get() != null) {
-                            mCustomizeGuideController = new CustomizeGuideController();
-                            mCustomizeGuideController.setMenuShowCallback(() -> {
-                                drawerLayout.openDrawer(navigationView);
-                            });
-                            mCustomizeGuideController.showGuideIfNeed(activity.get());
+                        if (!isFinishing()) {
+                            if ("default".equals(NavigationViewGuideTest.getDefaultType())) {
+                                mCustomizeGuideController = new LightWeightCustomizeGuideController();
+                            } else {
+                                mCustomizeGuideController = new CustomizeGuideController();
+                            }
+                            mCustomizeGuideController.showGuideIfNeed(this);
                         }
                     }, 1000);
                 }
