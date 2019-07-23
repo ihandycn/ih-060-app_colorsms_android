@@ -78,10 +78,7 @@ public class MessageBoxConversationView extends FrameLayout {
     private String mSelfId;
     private String mParticipantId;
 
-    private boolean mHasSentMessages;
     private int mInputEmojiCount;
-    private Handler mSendDelayHandler;
-    private Runnable mSendDelayRunnable;
 
     public MessageBoxConversationView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -100,11 +97,6 @@ public class MessageBoxConversationView extends FrameLayout {
 
         mInputEditText = mInputActionView.getComposeEditText();
         initInputAction();
-        mSendDelayHandler = new Handler();
-        mSendDelayRunnable = () -> {
-            mInputActionView.resetDelaySendAnimation();
-            sendMessage();
-        };
     }
 
     void bind(MessageBoxItemData data) {
@@ -181,29 +173,14 @@ public class MessageBoxConversationView extends FrameLayout {
         return mParticipantId;
     }
 
-    boolean hasSentMessage() {
-        return mHasSentMessages;
-    }
-
     void replyMessage() {
         if (TextUtils.isEmpty(mInputActionView.getMessage())) {
             return;
         }
         BugleAnalytics.logEvent("Popups_BtnSend_Click", "SendDelay", "" + SendDelaySettings.getSendDelayInSecs());
-        mHasSentMessages = true;
 
-        if (SendDelaySettings.getSendDelayInSecs() != 0) {
-            mInputActionView.sendDelayAnimation();
-            mSendDelayHandler.postDelayed(mSendDelayRunnable, 1000 * SendDelaySettings.getSendDelayInSecs());
-            mInputActionView.setOnCancelSmsSendingClickListener(clickedView -> {
-                BugleAnalytics.logEvent("Popups_BtnCancel_Click");
-                mSendDelayHandler.removeCallbacks(mSendDelayRunnable);
-                mInputActionView.resetDelaySendAnimation();
-            });
-        } else {
-            sendMessage();
-            mInputActionView.performReply();
-        }
+        sendMessage();
+        mInputActionView.performReply();
     }
 
     private void sendMessage() {

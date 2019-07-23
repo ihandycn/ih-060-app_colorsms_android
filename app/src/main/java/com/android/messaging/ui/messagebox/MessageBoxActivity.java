@@ -356,10 +356,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
     private void removeCurrentPage(String source) {
         int position = mPager.getCurrentItem();
-        if (!mCurrentConversationView.hasSentMessage()) {
-            return;
-        }
-
         if (position >= mPagerAdapter.getCount() - 1) {
             finish(source);
         } else {
@@ -370,7 +366,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             mCurrentConversationView.requestEditTextFocus();
         }
     }
-
 
     @Override
     public void onReceive(String s, HSBundle hsBundle) {
