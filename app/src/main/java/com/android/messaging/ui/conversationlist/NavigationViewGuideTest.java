@@ -40,12 +40,16 @@ class NavigationViewGuideTest {
 
     static void logMenuBackgroundClick() {
         makeSureInTest();
-        AutopilotEvent.logTopicEvent(TOPIC_ID, "menu_chat_background_click");
+        AutopilotEvent.logTopicEvent(TOPIC_ID, "menu_chatbackground_click");
     }
 
     static void logMenuChatListClick() {
         makeSureInTest();
         AutopilotEvent.logTopicEvent(TOPIC_ID, "menu_chat_list_click");
+    }
+
+    static void logHomePageShow() {
+        AutopilotEvent.logTopicEvent(TOPIC_ID, "homepage_show");
     }
 
     private static void makeSureInTest() {

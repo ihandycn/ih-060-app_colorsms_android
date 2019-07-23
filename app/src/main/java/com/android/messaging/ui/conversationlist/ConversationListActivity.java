@@ -345,6 +345,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 navigationView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
+
+        NavigationViewGuideTest.logHomePageShow();
     }
 
     private void onPostPageVisible() {
