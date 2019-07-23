@@ -17,14 +17,17 @@ import com.android.messaging.ui.emoji.GiphyInfo;
 import com.android.messaging.ui.emoji.StickerInfo;
 import com.android.messaging.ui.emoji.utils.emoispan.EmojiCache;
 import com.android.messaging.ui.emoji.utils.emoispan.EmojiSpannableWorker;
+import com.android.messaging.util.BugleAnalytics;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.ihs.commons.config.HSConfig;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Preferences;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -57,6 +60,8 @@ public class EmojiManager {
 
     private static final String PREF_EMOJI_STYLE = "pref_emoji_style";
     public static final String EMOJI_STYLE_SYSTEM = "System";
+
+    public final static String NOTIFICATION_EMOJI_STYLE_CHANGE = "notification_emoji_style_change";
 
     static List<String> getTabSticker() {
         return Preferences.get(PREF_FILE_NAME).getStringList(PREF_TAB_STICKER);
@@ -341,10 +346,14 @@ public class EmojiManager {
 
     public static void setEmojiStyle(String style) {
         if(!style.equals(getEmojiStyle())) {
+            Map<String, String> log = new HashMap<>();
+            log.put("type", style);
+            BugleAnalytics.logEvent("Settings_EmojiStyle_Change", log);
             Preferences.get(PREF_FILE_NAME).putString(PREF_EMOJI_STYLE, style);
             EmojiCache.getInstance().flush();
             LoadEmojiManager.getInstance().flush();
             EmojiSpannableWorker.install();
+            HSGlobalNotificationCenter.sendNotification(NOTIFICATION_EMOJI_STYLE_CHANGE);
         }
     }
 

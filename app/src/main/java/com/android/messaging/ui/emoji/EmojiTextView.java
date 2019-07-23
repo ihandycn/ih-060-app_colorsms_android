@@ -9,9 +9,12 @@ import android.view.MotionEvent;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.emoji.utils.emoispan.EmojiSpannableWorker;
 import com.android.messaging.ui.view.MessagesTextView;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.notificationcenter.INotificationObserver;
+import com.ihs.commons.utils.HSBundle;
 
 
-public class EmojiTextView extends MessagesTextView {
+public class EmojiTextView extends MessagesTextView implements INotificationObserver {
     public boolean linkHit;
     public boolean useSystemEmoji;
     public float emojiSize;
@@ -29,7 +32,6 @@ public class EmojiTextView extends MessagesTextView {
 
         FontMetrics fontMetrics = getPaint().getFontMetrics();
         emojiSize = fontMetrics.descent - fontMetrics.ascent;
-
         setText(getText());
     }
 
@@ -42,6 +44,7 @@ public class EmojiTextView extends MessagesTextView {
         if (charSequence == null) {
             charSequence = "";
         }
+
         SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(charSequence);
         EmojiSpannableWorker.replaceWithImages(spannableStringBuilder, this.emojiSize);
         super.setText(spannableStringBuilder, bufferType);
@@ -60,5 +63,23 @@ public class EmojiTextView extends MessagesTextView {
     public boolean onTouchEvent(MotionEvent motionEvent) {
         this.linkHit = false;
         return super.onTouchEvent(motionEvent);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        HSGlobalNotificationCenter.addObserver(EmojiManager.NOTIFICATION_EMOJI_STYLE_CHANGE, this);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        HSGlobalNotificationCenter.removeObserver(this);
+        super.onDetachedFromWindow();
+    }
+
+    @Override
+    public void onReceive(String s, HSBundle hsBundle) {
+        useSystemEmoji = EmojiManager.isSystemEmojiStyle();
+        setText(getText());
     }
 }

@@ -102,6 +102,7 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
                 mLastItem = holder.getAdapterPosition();
                 notifyItemChanged(holder.getAdapterPosition());
                 notifyItemChanged(lastPos);
+                // callback for download, when the emoji is downloaded, it's useless.
                 mListener.onItemSelected(item, new EmojiStyleDownloadManager.DownloadCallback() {
                     @Override
                     public void onFail(EmojiStyleDownloadManager.EmojiStyleDownloadTask task, String msg) {

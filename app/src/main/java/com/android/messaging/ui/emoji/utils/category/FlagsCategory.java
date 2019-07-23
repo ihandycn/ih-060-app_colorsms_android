@@ -251,8 +251,8 @@ public final class FlagsCategory implements EmojiCategory {
             new Emoji(new int[]{127486, 127466}, "emoji_1f1fe_1f1ea"),
             new Emoji(new int[]{127487, 127474}, "emoji_1f1ff_1f1f2"),
             new Emoji(new int[]{127487, 127484}, "emoji_1f1ff_1f1fc"),
-            new Emoji(new int[]{127462, 127464}, "emoji_1f1e6_1f1e8"),
-            new Emoji(new int[]{127482, 127475}, "emoji_1f1fa_1f1f3")};
+            new Emoji(new int[]{127462, 127464}, "emoji_1f1e6_1f1e8")
+    };
 
     public Emoji[] getEmojis() {
         return DATA;

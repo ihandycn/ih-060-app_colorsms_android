@@ -10,6 +10,7 @@ import android.os.Parcel;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.emoji.utils.EmojiStyleDownloadManager;
 import com.android.messaging.ui.emoji.utils.emoji.Emoji;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Dimensions;
 
 import java.io.File;
@@ -142,7 +143,8 @@ public class EmojiInfo extends BaseEmojiInfo {
     private Drawable getDrawableFromFile() {
         File dir = new File(EmojiStyleDownloadManager.getBaseDir(), mEmojiStyle);
         if (!dir.exists()) {
-            throw new RuntimeException("getDrawableFromFile: the resource file of " + mEmojiStyle + " not exists");
+            HSLog.e("getDrawableFromFile: the resource file of " + mEmojiStyle + " not exists : " + mResource);
+            return getDrawable();
         }
         File file = new File(dir.getAbsolutePath(), mResource + ".png");
         return Drawable.createFromPath(file.getAbsolutePath());

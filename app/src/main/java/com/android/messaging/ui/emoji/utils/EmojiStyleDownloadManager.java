@@ -143,7 +143,7 @@ public class EmojiStyleDownloadManager {
         public EmojiStyleDownloadTask(String url, String name) {
             mName = name;
             mUrl = url;
-            file = new File(dir, url.substring(url.lastIndexOf("/") + 1));
+            file = new File(dir, mName + ".zip");
         }
 
         @Override
@@ -381,6 +381,7 @@ public class EmojiStyleDownloadManager {
                 out.close();
             }
         }
+
         inZip.close();
     }
 

@@ -210,6 +210,13 @@ public class BugleApplication extends HSApplication implements UncaughtException
         });
 
         prepareEmoji();
+
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                checkEmoji();
+//            }
+//        }).start();
     }
 
     @DebugLog
@@ -221,15 +228,39 @@ public class BugleApplication extends HSApplication implements UncaughtException
     }
 
     private void checkEmoji(){
+        File dir = new File(getContext().getFilesDir(), "emoji");
+        dir = new File(dir, "" + "Pie");
+        ArrayList<String> files = new ArrayList<>();
+        for(File file : dir.listFiles()){
+            files.add(file.getName());
+        }
+        ArrayList<String> emojiResource = new ArrayList<>();
+
         EmojiCategory[] categories = EmojiProvider.getCategories();
         String emojiStyle = EmojiManager.getEmojiStyle();
         for(EmojiCategory category : categories){
             for (Emoji emoji : category.getEmojis()){
                 EmojiInfo info = EmojiInfo.convert(emoji, emojiStyle);
+                emojiResource.add(info.mResource);
                 if(info.getDrawable() == null){
                     HSLog.d("emoji_resource_check", info.mResource);
                 }
+                for(Emoji variant : emoji.getVariants()){
+                    EmojiInfo variantInfo = EmojiInfo.convert(variant, emojiStyle);
+                    emojiResource.add(variantInfo.mResource);
+                    if(variantInfo.getDrawable() == null){
+                        HSLog.d("emoji_resource_check", variantInfo.mResource);
+                    }
+                }
             }
+        }
+
+        for(String emoji : emojiResource){
+            files.remove(emoji);
+        }
+
+        for(String file : files){
+            HSLog.d("emoji_unuse: ", file);
         }
     }
 

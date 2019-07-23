@@ -60,7 +60,7 @@ public class SettingActivity extends BaseActivity {
     private GeneralSettingItemView mSendDelayView;
     private GeneralSettingItemView mSMSDeliveryReports;
 
-    private SettingEmojiStyleItemView settingEmojiStyleItemView;
+    private SettingEmojiStyleItemView mSettingEmojiStyleItemView;
 
 
     private View mNotificationChildrenGroup;
@@ -183,23 +183,25 @@ public class SettingActivity extends BaseActivity {
         setUpNotificationView();
 
         //emoji
-        settingEmojiStyleItemView = findViewById(R.id.setting_item_emoji_style);
-        settingEmojiStyleItemView.setOnClickListener(new View.OnClickListener() {
+        mSettingEmojiStyleItemView = findViewById(R.id.setting_item_emoji_style);
+        mSettingEmojiStyleItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                BugleAnalytics.logEvent("Settings_EmojiStyle_Click");
                 Intent intent = new Intent(SettingActivity.this, EmojiStyleSetActivity.class);
                 startActivityForResult(intent, EMOJI_STYLE_SET);
             }
         });
-        SettingEmojiItemView settingEmojiItemView = findViewById(R.id.setting_item_emoji_skin);
+
+        SettingEmojiSkinItemView settingEmojiSkinItemView = findViewById(R.id.setting_item_emoji_skin);
         if (Build.VERSION.SDK_INT >= 24) {
-            settingEmojiItemView.setDefault(EmojiManager.EMOJI_SKINS[EmojiManager.getSkinDefault()]);
-            settingEmojiItemView.setOnItemClickListener(() -> {
+            settingEmojiSkinItemView.setDefault(EmojiManager.EMOJI_SKINS[EmojiManager.getSkinDefault()]);
+            settingEmojiSkinItemView.setOnItemClickListener(() -> {
                 ChooseEmojiSkinDialog dialog = new ChooseEmojiSkinDialog();
                 dialog.setOnDismissOrCancelListener(new BaseDialogFragment.OnDismissOrCancelListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        settingEmojiItemView.updateSkin(EmojiManager.EMOJI_SKINS[EmojiManager.getSkinDefault()]);
+                        settingEmojiSkinItemView.updateSkin(EmojiManager.EMOJI_SKINS[EmojiManager.getSkinDefault()]);
                     }
 
                     @Override
@@ -208,12 +210,11 @@ public class SettingActivity extends BaseActivity {
                     }
                 });
 
-
                 UiUtils.showDialogFragment(this, dialog);
                 BugleAnalytics.logEvent("Settings_EmojiSkintone_Click");
             });
         } else {
-            settingEmojiItemView.setVisibility(GONE);
+            settingEmojiSkinItemView.setVisibility(GONE);
             findViewById(R.id.setting_title_emoji).setVisibility(GONE);
         }
 
@@ -504,7 +505,7 @@ public class SettingActivity extends BaseActivity {
             if (resultCode == RESULT_OK) {
                 String name = data.getStringExtra("name");
                 String url = data.getStringExtra("url");
-                settingEmojiStyleItemView.update(name, url);
+                mSettingEmojiStyleItemView.update(name, url);
             }
         }
     }
