@@ -30,6 +30,8 @@ import static com.android.messaging.ui.conversationlist.ConversationListActivity
 
 class CustomizeGuideController implements CustomizeGuide {
 
+    private static final String PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE = "pref_show_customize_guide";
+
     private ConversationListActivity mHost;
 
     private ObjectAnimator mDismissXAnim;
@@ -37,7 +39,8 @@ class CustomizeGuideController implements CustomizeGuide {
     private ObjectAnimator mDismissAlphaAnim;
     private ObjectAnimator mBackgroundDismissAlphaAnim;
     private ObjectAnimator mMenuFocusDismissAlphaAnim;
-    private static final String PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE = "pref_show_customize_guide";
+
+    private boolean mBackPressed;
 
     @SuppressLint("ClickableViewAccessibility")
     public void showGuideIfNeed(ConversationListActivity activity) {
@@ -219,6 +222,10 @@ class CustomizeGuideController implements CustomizeGuide {
 
     @Override
     public boolean closeCustomizeGuide(boolean openDrawer) {
+        if (mBackPressed) {
+            return false;
+        }
+
         if (mDismissXAnim == null) {
             return false;
         }
@@ -242,6 +249,7 @@ class CustomizeGuideController implements CustomizeGuide {
                 }
             });
         }
+        mBackPressed = true;
         return true;
     }
 }

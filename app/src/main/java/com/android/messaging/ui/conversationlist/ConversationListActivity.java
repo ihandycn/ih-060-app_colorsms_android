@@ -804,7 +804,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         if (mCustomizeGuideController != null
                 && mCustomizeGuideController.closeCustomizeGuide(false)) {
-            mCustomizeGuideController = null;
             return;
         }
 
@@ -1212,8 +1211,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 recreate();
                 break;
             case SHOW_MENU_GUIDE:
-                if (mCustomizeGuideController == null) {
-                    Threads.postOnMainThreadDelayed(() -> {
+                Threads.postOnMainThreadDelayed(() -> {
+                    if (mCustomizeGuideController == null) {
                         if (!isFinishing()) {
                             if ("default".equals(NavigationViewGuideTest.getDefaultType())) {
                                 mCustomizeGuideController = new LightWeightCustomizeGuideController();
@@ -1222,8 +1221,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             }
                             mCustomizeGuideController.showGuideIfNeed(this);
                         }
-                    }, 1000);
-                }
+                    }
+                }, 1200);
                 break;
             case FIRST_LOAD:
                 if (!sIsRecreate && hsBundle != null) {
