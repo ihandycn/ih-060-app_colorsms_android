@@ -49,6 +49,7 @@ import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.DataModelImpl;
 import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
+import com.android.messaging.datamodel.action.GetUnreadMessageCountAction;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.font.ChangeFontActivity;
 import com.android.messaging.font.FontStyleManager;
@@ -219,6 +220,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         mIsRealCreate = true;
         setLayout();
         onCreateLogics();
+        GetUnreadMessageCountAction.refreshUnreadMessageCount();
     }
 
     @DebugLog
