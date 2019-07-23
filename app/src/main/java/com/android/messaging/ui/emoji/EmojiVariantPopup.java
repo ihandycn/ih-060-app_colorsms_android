@@ -93,7 +93,8 @@ public class EmojiVariantPopup {
         LinearLayout linearLayout = (LinearLayout) inflate.findViewById(R.id.container);
         EmojiInfo[] variants = emojiInfo.mVariants;
         LayoutInflater from = LayoutInflater.from(context);
-        for (final EmojiInfo item : variants) {
+        for (int i = 0; i < variants.length; i++) {
+            EmojiInfo item = variants[i];
             View container = from.inflate(R.layout.emoji_item_layout, linearLayout, false);
             ImageView view = container.findViewById(R.id.emoji_view);
             MarginLayoutParams marginLayoutParams = (MarginLayoutParams) view.getLayoutParams();
@@ -101,20 +102,21 @@ public class EmojiVariantPopup {
             marginLayoutParams.width = width;
             marginLayoutParams.setMargins(dpToPx, dpToPx, dpToPx, dpToPx);
             view.setImageDrawable(item.getDrawable());
+            int finalI = i;
             view.setOnClickListener(new OnClickListener() {
                 public void onClick(View view) {
                     if (mListener != null) {
                         item.isRecent = emojiInfo.isRecent;
-                        if(emojiInfo.isRecent) {
+                        if (emojiInfo.isRecent) {
                             mListener.emojiClick(item, false);
-                        }else{
+                        } else {
                             mListener.emojiClick(item, true);
                         }
                     }
-                    EmojiManager.addSkinSingleRecord(item.getUnicode(), item.mEmoji);
+                    EmojiManager.addSkinSingleRecord(item.getUnicode(), finalI);
                     emojiInfo.mEmoji = item.mEmoji;
                     emojiInfo.mResource = item.mResource;
-                    ((ImageView)mAnchorView).setImageDrawable(emojiInfo.getDrawable());
+                    ((ImageView) mAnchorView).setImageDrawable(emojiInfo.getDrawable());
                     mPopupWindow.dismiss();
                 }
             });

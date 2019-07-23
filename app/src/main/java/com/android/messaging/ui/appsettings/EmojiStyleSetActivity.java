@@ -105,9 +105,9 @@ public class EmojiStyleSetActivity extends BaseActivity {
             return;
         }
         String name = null;
-        if (Build.VERSION.SDK_INT < 25) {
+        if (Build.VERSION.SDK_INT <= 25) {
             name = "Android Blob";
-        } else if (Build.VERSION.SDK_INT > 26) {
+        } else {
             name = "Android Pie";
         }
         if (name == null) {
@@ -144,7 +144,7 @@ public class EmojiStyleSetActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        if(newStyle != null) {
+        if (newStyle != null) {
             EmojiManager.setEmojiStyle(newStyle);
         }
         super.onDestroy();

@@ -126,7 +126,7 @@ public class EmojiDataProducer {
         String emojiStyle = EmojiManager.getEmojiStyle();
 
         List<EmojiInfo> result = new ArrayList<>();
-        for (BaseEmojiInfo item :recentEmojis) {
+        for (BaseEmojiInfo item : recentEmojis) {
             EmojiInfo info = (EmojiInfo) item;
             info.mEmojiStyle = emojiStyle;
             changeSkin(info);
@@ -143,7 +143,7 @@ public class EmojiDataProducer {
     public static List<StickerInfo> loadStickerRecentData() {
         List<BaseEmojiInfo> recentInfos = EmojiManager.getRecentInfo(EmojiPackageType.STICKER);
         List<StickerInfo> results = new ArrayList<>();
-        for(BaseEmojiInfo info : recentInfos){
+        for (BaseEmojiInfo info : recentInfos) {
             results.add((StickerInfo) info);
         }
         return results;
@@ -153,13 +153,15 @@ public class EmojiDataProducer {
     private static void changeSkin(EmojiInfo info) {
         if (info.hasVariant()) {
             // get skin record
-            String record = EmojiManager.getSkinSingleRecord(info.getUnicode());
-            if (record != null) {
-                info.mEmoji = record;
+            int record = EmojiManager.getSkinSingleRecord(info.getUnicode());
+            if (record != -1) {
+                info.mEmoji = info.mVariants[record].mEmoji;
+                info.mResource = info.mVariants[record].mResource;
             } else {
                 int index = EmojiManager.getSkinDefault();
                 if (index >= 0 && index < info.mVariants.length) {
                     info.mEmoji = info.mVariants[index].mEmoji;
+                    info.mResource = info.mVariants[index].mResource;
                 }
             }
         }

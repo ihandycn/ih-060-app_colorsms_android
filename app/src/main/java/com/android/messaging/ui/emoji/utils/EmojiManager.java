@@ -308,12 +308,12 @@ public class EmojiManager {
         void onSuccess(@NonNull File file);
     }
 
-    public static String getSkinSingleRecord(String unicode) {
-        return Preferences.get(PREF_SKIN_FILE_NAME).getString(unicode, null);
+    public static int getSkinSingleRecord(String unicode) {
+        return Preferences.get(PREF_SKIN_FILE_NAME).getInt(unicode, -1);
     }
 
-    public static void addSkinSingleRecord(String unicode, String msg) {
-        Preferences.get(PREF_SKIN_FILE_NAME).putString(unicode, msg);
+    public static void addSkinSingleRecord(String unicode, int index) {
+        Preferences.get(PREF_SKIN_FILE_NAME).putInt(unicode, index);
     }
 
     public static int getSkinDefault() {
@@ -345,7 +345,7 @@ public class EmojiManager {
     }
 
     public static void setEmojiStyle(String style) {
-        if(!style.equals(getEmojiStyle())) {
+        if (!style.equals(getEmojiStyle())) {
             Map<String, String> log = new HashMap<>();
             log.put("type", style);
             BugleAnalytics.logEvent("Settings_EmojiStyle_Change", log);
