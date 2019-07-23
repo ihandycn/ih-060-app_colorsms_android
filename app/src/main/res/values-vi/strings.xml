@@ -785,4 +785,13 @@
 	<string name="private_box_remove_from_box">Xóa khỏi hộp tin riêng</string>
 	<string name="private_box_move_to_box">Chuyển sang hộp tin riêng</string>
 	<string name="private_box_add_private_contacts">Vui lòng thêm liên hệ riêng tư!</string>
+
+	<string name="remove_ad">Xóa quảng cáo</string>
+	<string name="purchase">MUA</string>
+	<string name="life_time">TRỌN ĐỜI</string>
+	<string name="purchase_description">Mua phiên bản KHÔNG QUẢNG CÁO. Không còn quảng cáo.</string>
+
+
+	<string name="emoji_skin_tone_setting">Màu da Emoji </string>
+
 </resources>

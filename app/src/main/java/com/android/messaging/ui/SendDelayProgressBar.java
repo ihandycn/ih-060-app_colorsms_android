@@ -109,9 +109,9 @@ public class SendDelayProgressBar extends View {
 
     }
 
-    public void startAnimation(long duration){
-        if (duration != 0) {
-            mSendDelayCircleBarAnimator.setDuration(1000 * duration);
+    public void startAnimation(long durationInMills) {
+        if (durationInMills > 0) {
+            mSendDelayCircleBarAnimator.setDuration(durationInMills);
             mSendDelayCircleBarAnimator.start();
         }
     }

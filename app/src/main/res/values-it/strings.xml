@@ -785,4 +785,13 @@
 	<string name="private_box_remove_from_box">Rimuovi dalla casella privata</string>
 	<string name="private_box_move_to_box">Sposta nella casella privata</string>
 	<string name="private_box_add_private_contacts">Aggiungi contatti privati!</string>
+
+	<string name="remove_ad">Elimina gli annunci</string>
+	<string name="purchase">ACQUISTA</string>
+	<string name="life_time">PER SEMPRE</string>
+	<string name="purchase_description">Acquista la versione SENZA PUBBLICITÀ. Mai più pubblicità.</string>
+
+
+	<string name="emoji_skin_tone_setting">Colore pelle emoji </string>
+
 </resources>

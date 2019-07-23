@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
@@ -24,27 +23,12 @@ public class ThemePagerAdapter extends PagerAdapter {
 
     private final List<View> mItemList;
     private final List<ThemeInfo> mShuffledThemeItemList;
-    private ThemeInfo mCurrentTheme;
     private OnPageClickedListener mPageClickListener;
 
     public ThemePagerAdapter(Context context) {
-        List<ThemeInfo> themeInfos = ThemeInfo.getLocalThemes();
-        mCount = themeInfos.size();
-
+        mShuffledThemeItemList = ThemeInfo.getLocalThemes();
+        mCount = mShuffledThemeItemList.size();
         mItemList = new ArrayList<>(mCount);
-        mShuffledThemeItemList = new ArrayList<>(mCount - 1);
-
-        mCurrentTheme = themeInfos.get(0);
-
-        String currentThemeName = ThemeUtils.getCurrentThemeName();
-
-        for (ThemeInfo themeInfo : themeInfos) {
-            if (currentThemeName.equals(themeInfo.mThemeKey)) {
-                mCurrentTheme = themeInfo;
-            } else {
-                mShuffledThemeItemList.add(themeInfo);
-            }
-        }
 
         if (context instanceof WelcomeChooseThemeActivity) {
             Collections.sort(mShuffledThemeItemList, (t1, t2) -> t1.mLocalIndex - t2.mLocalIndex);
@@ -54,15 +38,9 @@ public class ThemePagerAdapter extends PagerAdapter {
             View item = LayoutInflater.from(context).inflate(R.layout.choose_theme_pager_item, null);
 
             ImageView imageView = item.findViewById(R.id.theme_preview_image);
-            TextView currentThemeTag = item.findViewById(R.id.current_theme_tag);
-            if (i == 0) {
-                imageView.setImageDrawable(ThemeUtils.getLocalThemeDrawableFromPath(
-                        mCurrentTheme.mThemeKey + "/" + mCurrentTheme.mPreviewList.get(0)));
-            } else {
-                imageView.setImageDrawable(ThemeUtils.getLocalThemeDrawableFromPath(
-                        mShuffledThemeItemList.get(i - 1).mThemeKey
-                                + "/" + mShuffledThemeItemList.get(i - 1).mPreviewList.get(0)));
-            }
+            imageView.setImageDrawable(ThemeUtils.getLocalThemeDrawableFromPath(
+                    mShuffledThemeItemList.get(i).mThemeKey
+                            + "/" + mShuffledThemeItemList.get(i).mPreviewList.get(0)));
             mItemList.add(item);
             final int position = i;
             item.setOnClickListener(v -> {
@@ -84,11 +62,7 @@ public class ThemePagerAdapter extends PagerAdapter {
     }
 
     public ThemeInfo getThemeInfo(int index) {
-        if (index == 0) {
-            return mCurrentTheme;
-        } else {
-            return mShuffledThemeItemList.get(index - 1);
-        }
+        return mShuffledThemeItemList.get(index);
     }
 
     @Override

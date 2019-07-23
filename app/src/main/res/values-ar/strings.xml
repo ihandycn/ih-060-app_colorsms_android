@@ -878,4 +878,11 @@
 	<string name="private_box_remove_from_box">إزالة من الصندوق الخاص</string>
 	<string name="private_box_move_to_box">نقل إلى الصندوق الخاص</string>
 	<string name="private_box_add_private_contacts">يرجى إضافة جهات اتصال خاصة!</string>
+
+	<string name="remove_ad">احذف الإعلانات</string>
+	<string name="purchase">شراء</string>
+	<string name="life_time">مدى الحياة</string>
+	<string name="purchase_description">اشتر النسخة الخالية من الإعلانات. لا إعلانات بعد الآن نهائياً.</string>
+	<string name="emoji_skin_tone_setting">ثيم الرموز التعبيرية </string>
+
 </resources>

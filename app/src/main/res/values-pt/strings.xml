@@ -791,4 +791,13 @@
 	<string name="private_box_move_to_box">Mover para caixa privada</string>
 	<string name="private_box_add_private_contacts">Adicione contatos privados!</string>
 
+
+	<string name="remove_ad">Remover Anúncios</string>
+	<string name="purchase">COMPRAR</string>
+	<string name="life_time">VITALÍCIO</string>
+	<string name="purchase_description">Compre a versão SEM ANÚNCIOS. Nenhum anúncio, nunca mais.</string>
+
+
+	<string name="emoji_skin_tone_setting">Tom de pele do emoji </string>
+
 </resources>

@@ -16,10 +16,12 @@
 
 package com.android.messaging.receiver;
 
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.provider.Telephony;
 import android.telephony.SmsMessage;
 
 import com.android.messaging.datamodel.action.ProcessDeliveryReportAction;
@@ -85,14 +87,11 @@ public class SendStatusReceiver extends BroadcastReceiver {
                 LogUtil.e(LogUtil.BUGLE_TAG, "SendStatusReceiver: empty report message");
                 return;
             }
-            int status = 0;
-            try {
-                status = smsMessage.getStatus();
-            } catch (final NullPointerException e) {
-                // Sometimes, SmsMessage.mWrappedSmsMessage is null causing NPE when we access
-                // the methods on it although the SmsMessage itself is not null.
-                LogUtil.e(LogUtil.BUGLE_TAG, "SendStatusReceiver: NPE inside SmsMessage");
-                return;
+            int status;
+            if (resultCode == Activity.RESULT_OK) {
+                status = Telephony.Sms.STATUS_COMPLETE;
+            } else {
+                status = Telephony.Sms.STATUS_FAILED;
             }
             ProcessDeliveryReportAction.deliveryReportReceived(smsMessageUri, status);
         }

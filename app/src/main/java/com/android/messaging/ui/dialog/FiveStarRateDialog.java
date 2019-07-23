@@ -37,6 +37,7 @@ import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
+import java.util.HashMap;
 import java.util.concurrent.RejectedExecutionException;
 
 import static android.view.View.GONE;
@@ -243,6 +244,7 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
             BugleAnalytics.logEvent("Alert_FiveStar_Submit_BtnClicked", false, true, "type", (mCurrentPosition + 1) + "star");
             if (mCurrentPosition >= MAX_POSITION) {
                 HSMarketUtils.browseAPP();
+                BugleAnalytics.logEventToFirebase("SMS_Satisfied", new HashMap<>());
                 PermissionGuideManager.getInstance().showPermissionGuide(HSApplication.getContext(),
                         PermissionGuideManager.PermissionGuideType.FIVE_STAR_RATE, false);
                 logGuideShown();

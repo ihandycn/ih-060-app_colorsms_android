@@ -21,12 +21,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ConversationMessageData;
 import com.android.messaging.ui.AsyncImageView.AsyncImageViewDelayLoader;
 import com.android.messaging.ui.conversation.ConversationMessageView.ConversationMessageViewHost;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -40,13 +42,14 @@ import java.util.List;
 public class ConversationMessageAdapter extends
         RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private static final int ITEM_WITH_ATTACHMENTS = 0;
-    private static final int ITEM_WITHOUT_ATTACHMENTS = 1;
+    private static final int ITEM_WITH_ATTACHMENTS_WITH_AVATAR = 0;
+    private static final int ITEM_WITHOUT_ATTACHMENTS_WITH_AVATAR = 1;
+    private static final int ITEM_WITH_ATTACHMENTS_WITHOUT_AVATAR = 2;
+    private static final int ITEM_WITHOUT_ATTACHMENTS_WITHOUT_AVATAR = 3;
 
     private final ConversationMessageViewHost mHost;
     private final AsyncImageViewDelayLoader mImageViewDelayLoader;
     private final ConversationMessageClickListener mViewClickListener;
-    private boolean mOneOnOne;
     private static boolean multiSelectMode;
     public static final int NORMAL = 1000;
     public static final int SLIDE = 2000;
@@ -80,12 +83,7 @@ public class ConversationMessageAdapter extends
     }
 
     public void setOneOnOne(final boolean oneOnOne, final boolean invalidate) {
-        if (mOneOnOne != oneOnOne) {
-            mOneOnOne = oneOnOne;
-            if (invalidate) {
-                notifyDataSetChanged();
-            }
-        }
+        // do nothing
     }
 
     public void setMultiSelectMode(boolean multiSelectMode) {
@@ -99,68 +97,94 @@ public class ConversationMessageAdapter extends
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            final LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-            ConversationMessageView conversationMessageView;
-            switch (viewType) {
-                case ITEM_WITH_ATTACHMENTS:
-                    conversationMessageView = (ConversationMessageView)
-                            layoutInflater.inflate(R.layout.conversation_message_view, null);
-                    break;
+        final LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        ConversationMessageView conversationMessageView;
+        switch (viewType) {
+            case ITEM_WITH_ATTACHMENTS_WITH_AVATAR:
+                conversationMessageView = (ConversationMessageView)
+                        layoutInflater.inflate(R.layout.conversation_message_view_with_attachments_with_avatar, null);
+                break;
+            case ITEM_WITHOUT_ATTACHMENTS_WITH_AVATAR:
+                conversationMessageView = (ConversationMessageView)
+                        layoutInflater.inflate(R.layout.conversation_message_view_without_attachments_with_avatar, null);
+                break;
+            case ITEM_WITH_ATTACHMENTS_WITHOUT_AVATAR:
+                conversationMessageView = (ConversationMessageView)
+                        layoutInflater.inflate(R.layout.conversation_message_view_with_attachments_without_avatar, null);
+                break;
+            case ITEM_WITHOUT_ATTACHMENTS_WITHOUT_AVATAR:
+            default:
+                conversationMessageView = (ConversationMessageView)
+                        layoutInflater.inflate(R.layout.conversation_message_view_without_attachments_without_avatar, null);
+                break;
 
-                case ITEM_WITHOUT_ATTACHMENTS:
-                    default:
-                    conversationMessageView = (ConversationMessageView)
-                            layoutInflater.inflate(R.layout.conversation_message_view_without_attachments, null);
-                    break;
-            }
-            conversationMessageView.setHost(mHost);
-            conversationMessageView.setImageViewDelayLoader(mImageViewDelayLoader);
-            return new ConversationMessageViewHolder(conversationMessageView);
+        }
+
+        HSLog.d("ConversationMessageAdapter", "createHolder : " + viewType);
+
+        conversationMessageView.setHost(mHost);
+        conversationMessageView.setImageViewDelayLoader(mImageViewDelayLoader);
+        return new ConversationMessageViewHolder(conversationMessageView);
+
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            final ConversationMessageView conversationMessageView =
-                    (ConversationMessageView) ((ConversationMessageViewHolder) holder).mView;
-            ImageView checkbox = conversationMessageView.findViewById(R.id.check_box);
-            conversationMessageView.bind((ConversationMessageData) mDataList.get(position), mOneOnOne, multiSelectMode);
-            ConversationMessageData data = conversationMessageView.getData();
+        final ConversationMessageView conversationMessageView =
+                (ConversationMessageView) ((ConversationMessageViewHolder) holder).mView;
+        ImageView checkbox = conversationMessageView.findViewById(R.id.check_box);
+        conversationMessageView.bind((ConversationMessageData) mDataList.get(position), multiSelectMode);
+        ConversationMessageData data = conversationMessageView.getData();
 
-            conversationMessageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    checkbox.setSelected(!checkbox.isSelected());
-                    mViewClickListener.onConversationMessageClick((ConversationMessageData) mDataList.get(position));
-                }
-            });
-            conversationMessageView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    checkbox.setSelected(true);
-                    mViewClickListener.onConversationMessageLongClick((ConversationMessageData) mDataList.get(position));
-                    return true;
-                }
-            });
-            if (multiSelectMode && !ConversationFragment.getSelectMessageIds().isEmpty()) {
-                checkbox.setVisibility(View.VISIBLE);
-                if (ConversationFragment.getSelectMessageIds().contains(data.getMessageId())) {
-                    checkbox.setImageResource(R.drawable.conversation_check);
-                    checkbox.setBackground(BackgroundDrawables.createBackgroundDrawable(
-                            PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(20), false));
-                } else {
-                    checkbox.setImageDrawable(null);
-                    checkbox.setBackground(BackgroundDrawables.createBackgroundDrawable(0, 0, 4,
-                            0xffbdc2c9, Dimensions.pxFromDp(20), false, false));
-                }
-            } else {
-                checkbox.setVisibility(View.GONE);
+        conversationMessageView.setOnClickListener(v -> {
+            int adapterPosition = holder.getAdapterPosition();
+            if (adapterPosition != -1 && adapterPosition < getItemCount()) {
+                checkbox.setSelected(!checkbox.isSelected());
+                mViewClickListener.onConversationMessageClick(mDataList.get(adapterPosition));
             }
+        });
+
+        conversationMessageView.setOnLongClickListener(v -> {
+            int adapterPosition = holder.getAdapterPosition();
+            if (adapterPosition != -1 && adapterPosition < getItemCount()) {
+                checkbox.setSelected(true);
+                mViewClickListener.onConversationMessageLongClick(mDataList.get(adapterPosition));
+            }
+            return true;
+        });
+
+        if (multiSelectMode && !ConversationFragment.getSelectMessageIds().isEmpty()) {
+            checkbox.setVisibility(View.VISIBLE);
+            if (ConversationFragment.getSelectMessageIds().contains(data.getMessageId())) {
+                checkbox.setImageResource(R.drawable.conversation_check);
+                checkbox.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                        PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(20), false));
+            } else {
+                checkbox.setImageDrawable(null);
+                checkbox.setBackground(BackgroundDrawables.createBackgroundDrawable(0, 0, 4,
+                        0xffbdc2c9, Dimensions.pxFromDp(20), false, false));
+            }
+        } else {
+            checkbox.setVisibility(View.GONE);
+        }
         ((ConversationMessageViewHolder) holder).bind();
     }
 
     @Override
     public int getItemViewType(int position) {
-        return mDataList.get(position).hasAttachments() ? ITEM_WITH_ATTACHMENTS : ITEM_WITHOUT_ATTACHMENTS;
+        ConversationMessageData data = mDataList.get(position);
+        boolean hasAttachments = data.hasAttachments();
+        boolean showAvatar = data.getIsIncoming() && !data.getCanClusterWithPreviousMessage();
+        if (hasAttachments && showAvatar) {
+            return ITEM_WITH_ATTACHMENTS_WITH_AVATAR;
+        } else if (hasAttachments) {
+            return ITEM_WITH_ATTACHMENTS_WITHOUT_AVATAR;
+        } else if (showAvatar) {
+            return ITEM_WITHOUT_ATTACHMENTS_WITH_AVATAR;
+        } else {
+            return ITEM_WITHOUT_ATTACHMENTS_WITHOUT_AVATAR;
+        }
+
     }
 
     @Override
@@ -202,8 +226,9 @@ public class ConversationMessageAdapter extends
         }
     }
 
-    public interface ConversationMessageClickListener{
+    public interface ConversationMessageClickListener {
         void onConversationMessageClick(ConversationMessageData data);
+
         void onConversationMessageLongClick(ConversationMessageData data);
     }
 }

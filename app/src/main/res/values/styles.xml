@@ -61,7 +61,7 @@
         </item>
     </style>
 
-    <style name="BugleTheme.DialogActivity" parent="@style/Theme.AppCompat.Light.Dialog" />
+    <style name="BugleTheme.DialogActivity" parent="@style/Theme.AppCompat.Light.Dialog"/>
 
     <style name="BugleTheme.ConversationListActivity" parent="BugleTheme">
         <item name="windowActionBar">false</item>
@@ -313,7 +313,8 @@
     </style>
 
     <style name="ConversationListItemViewConversationNameStyle" parent="ConversationListItemViewTextStyle">
-        <item name="android:textSize">@dimen/conversation_list_item_conversation_name_text_size</item>
+        <item name="android:textSize">@dimen/conversation_list_item_conversation_name_text_size
+        </item>
         <item name="android:textColor">@color/conversation_list_name</item>
     </style>
 
@@ -391,7 +392,7 @@
     </style>
 
     <style name="SmsDeliverdBadge">
-        <item name="android:layout_marginStart">4dp</item>
+        <item name="android:layout_marginStart">2.3dp</item>
     </style>
 
     <style name="ChipDeleteIconStyle">

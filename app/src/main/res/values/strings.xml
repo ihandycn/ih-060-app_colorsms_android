@@ -945,10 +945,10 @@
     <string name="sms_emoji_add_more">More emojis</string>
     <string name="sms_emoji_recent_empty_description">No Recent</string>
 
+
     <!--sms show-->
     <string name="sms_show_apply">APPLY</string>
     <string name="sms_show_current_theme">CURRENT THEME</string>
-
 
     <!-- Welcome-->
     <string name="sms_welcome_start_button">START</string>
@@ -1118,7 +1118,7 @@
     <string name="emoji_style_download_failed">Network error</string>
     <string name="emoji_style_download_success"> emoji downloaded successfully.</string>
     <string name="emoji_style_default">Default</string>
-
+    <string name="emoji_long_click">Skin tone for all emojis can be set in Settings.</string>
 
     <string name="privacy_mode_settings">Privacy Mode</string>
     <string name="privacy_mode_disable">None</string>
@@ -1318,6 +1318,13 @@
     <string name="backup_local_summary">Back up to local storage</string>
     <string name="backup_free_success">Free Up Space Successfully</string>
 
+    <string name="life_time">LIFETIME</string>
+    <string name="purchase">PURCHASE</string>
+    <string name="remove_ad">Remove Ads</string>
+    <string name="purchase_description">Purchase the AD-FREE version. No ads ever again.</string>
+    <string name="purchase_failed">failed</string>
     <string name="switch_sim">Switch SIM</string>
+    
+    
 </resources>
 

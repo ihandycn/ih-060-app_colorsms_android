@@ -83,6 +83,5 @@ public class EmojiLottieDetailActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        BaseStickerItemRecyclerAdapter.releaseListener();
     }
 }

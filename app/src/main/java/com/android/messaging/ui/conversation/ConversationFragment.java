@@ -74,6 +74,7 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
+import com.android.messaging.ad.BillingManager;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.MessagingContentProvider;
@@ -152,6 +153,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
+import hugo.weaving.DebugLog;
+
+import static com.android.messaging.ui.senddelaymessages.SendDelayMessagesManager.BUNDLE_KEY_CONVERSATION_ID;
+import static com.android.messaging.ui.senddelaymessages.SendDelayMessagesManager.DELAYED_SENDING_MESSAGE_COMPLETE;
 
 /**
  * Shows a list of messages/parts comprising a conversation.
@@ -666,12 +672,17 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         HSGlobalNotificationCenter.addObserver(EVENT_HIDE_MEDIA_PICKER, this);
         HSGlobalNotificationCenter.addObserver(RESET_ITEM, this);
         HSGlobalNotificationCenter.addObserver(EVENT_UPDATE_BUBBLE_DRAWABLE, this);
+        HSGlobalNotificationCenter.addObserver(DELAYED_SENDING_MESSAGE_COMPLETE, this);
         BugleAnalytics.logEvent("SMS_DetailsPage_Show", true, true);
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "detailspage_show");
     }
 
 
     private void loadTopBannerAd() {
+        if (BillingManager.isPremiumUser()) {
+            return;
+        }
+
         BugleAnalytics.logEvent("Detailspage_TopAd_Should_Show", true, true);
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "topad_chance");
 
@@ -830,7 +841,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mComposeMessageView.setInputManager(inputManager);
         mComposeMessageView.setConversationDataModel(BindingBase.createBindingReference(mBinding));
         mComposeMessageView.getComposeEditText().getViewTreeObserver().addOnGlobalLayoutListener(globalLayoutListener);
-        mHost.invalidateActionBar();
 
         mDraftMessageDataModel =
                 BindingBase.createBindingReference(mComposeMessageView.getDraftDataModel());
@@ -881,6 +891,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     /**
      * {@inheritDoc} from Fragment
      */
+    @DebugLog
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
@@ -1242,8 +1253,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 clearScrollToMessagePosition();
             }
         }
-
-        mHost.invalidateActionBar();
     }
 
     /**
@@ -1295,27 +1304,15 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         super.onDestroy();
         mIsDestroyed = true;
         // Unbind all the views that we bound to data
-
         if (mComposeMessageView != null) {
-            // if we have message to send in a delay time, unbind data until message is sent
-            String conversationId = mBinding.getData().getConversationId();
-            if (!mComposeMessageView.getIsWaitingToSendMessageFlag()) {
-                SendDelayMessagesManager.remove(conversationId);
-                mComposeMessageView.unbind();
-                mBinding.unbind();
-            } else {
-                mComposeMessageView.setOnActionEndListener(new SendDelayActionCompletedCallBack() {
-                    @Override
-                    public void onSendDelayActionEnd() {
-                        mComposeMessageView.unbind();
-                        mBinding.unbind();
-                    }
-                });
-            }
             mComposeMessageView.getViewTreeObserver().removeOnGlobalLayoutListener(globalLayoutListener);
+            mComposeMessageView.unbind();
         }
-
         mRecyclerView.setAdapter(null);
+
+        // And unbind this fragment from its data
+        mBinding.unbind();
+        mConversationId = null;
 
         if (mNativeAd != null) {
             mNativeAd.release();
@@ -1384,7 +1381,14 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 // Merge the caption text from attachments into the text body of the messages
                 message.consolidateText();
 
-                mBinding.getData().sendMessage(mBinding, message);
+                final String deliveryReportsKey = getString(R.string.delivery_reports_pref_key);
+                message.setIsDeliveryReportOpen(Preferences.getDefault().getBoolean(deliveryReportsKey,
+                        getResources().getBoolean(R.bool.delivery_reports_pref_default)));
+
+                boolean isDefaultSelf = mBinding.getData().isDefaultSelf(message.getSelfId());
+
+                SendDelayMessagesManager.sendMessageWithDelay(message, mBinding.getData().getConversationId(),
+                        isDefaultSelf);
 
                 mHasSentMessages = true;
             } else {
@@ -1831,12 +1835,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     @Override
-    public void selectSim(final SubscriptionListEntry subscriptionData) {
-        mComposeMessageView.selectSim(subscriptionData);
-        mHost.onStartComposeMessage();
-    }
-
-    @Override
     public void onStartComposeMessage() {
         mHost.onStartComposeMessage();
     }
@@ -1850,10 +1848,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 excludeDefault);
     }
 
-    @Override
-    public SimSelectorView getSimSelectorView() {
-        return (SimSelectorView) getView().findViewById(R.id.sim_selector);
-    }
 
     @Override
     public MediaPickerFragment createMediaPicker() {
@@ -1961,16 +1955,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     @Override
-    public void showHideSimSelector(final boolean show) {
-        // no-op for now
-    }
-
-    @Override
-    public int getSimSelectorItemLayoutId() {
-        return R.layout.sim_selector_item_view;
-    }
-
-    @Override
     public void onAttachmentsChanged(final boolean haveAttachments) {
         // no-op for now
     }
@@ -2033,6 +2017,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             case EVENT_UPDATE_BUBBLE_DRAWABLE:
                 // update all drawables
                 mAdapter.notifyDataSetChanged();
+                break;
+            case DELAYED_SENDING_MESSAGE_COMPLETE:
+                if (hsBundle != null && TextUtils.equals(mConversationId, hsBundle.getString(BUNDLE_KEY_CONVERSATION_ID))) {
+                    mComposeMessageView.onSendMessageActionTriggered();
+                }
                 break;
         }
     }

@@ -165,6 +165,15 @@
                 app:title="@string/delivery_reports_pref_title"
                 app:type="switchView" />
 
+            <!--Outgoing sounds-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_advanced_outgoing_sounds"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hideDivideLine="true"
+                app:title="@string/send_sound_pref_title"
+                app:type="switchView" />
+
             <View style="@style/SettingDividerStyle" />
 
             <com.android.messaging.ui.view.MessagesTextView

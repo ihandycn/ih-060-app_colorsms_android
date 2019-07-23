@@ -582,6 +582,10 @@ public class ConversationData extends BindableData {
         return mSelfParticipantsData.getSelfParticipantById(selfId);
     }
 
+    public boolean isDefaultSelf(final String selfId) {
+        return mSelfParticipantsData.isDefaultSelf(selfId);
+    }
+
     /**
      * For a 1:1 conversation return the other (not self) participant (else null)
      */

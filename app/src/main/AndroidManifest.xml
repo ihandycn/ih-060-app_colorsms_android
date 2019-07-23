@@ -38,6 +38,9 @@
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
     <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT"/>
 
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"
+        tools:node="remove"/>
+
     <!-- Optional features -->
     <uses-feature
         android:name="android.hardware.camera"
@@ -824,6 +827,15 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/WelcomeChooseThemeActivity"/>
+
+        <activity
+            android:name=".ui.smspro.BillingActivity"
+            android:configChanges="orientation|screenSize"
+            android:excludeFromRecents="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Translucent" />
+
 
         <receiver
             android:name="com.superapps.phonestate.PhoneStateReceiver2"

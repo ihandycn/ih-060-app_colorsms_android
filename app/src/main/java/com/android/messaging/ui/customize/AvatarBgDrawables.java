@@ -49,18 +49,6 @@ public class AvatarBgDrawables {
             }
         }
 
-        // try to use asset file
-        if (info.mIsLocalTheme) {
-            try {
-                InputStream ims = HSApplication.getContext().getAssets().open("themes/" + info.mThemeKey + "/"
-                        + info.avatarUrl);
-                Bitmap bitmap = BitmapFactory.decodeStream(ims);
-                sAvatarBg = new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
-                return sAvatarBg;
-            } catch (IOException ignored) {
-            }
-        }
-
         //try to use local file
         File file = new File(CommonUtils.getDirectory(
                 ThemeBubbleDrawables.THEME_BASE_PATH + info.mThemeKey),
@@ -73,6 +61,18 @@ public class AvatarBgDrawables {
                 return sAvatarBg;
             } catch (Exception ignored) {
 
+            }
+        }
+
+        // try to use asset file
+        if (info.mIsLocalTheme) {
+            try {
+                InputStream ims = HSApplication.getContext().getAssets().open("themes" + File.separator + info.mThemeKey + File.separator
+                        + info.avatarUrl);
+                Bitmap bitmap = BitmapFactory.decodeStream(ims);
+                sAvatarBg = new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
+                return sAvatarBg;
+            } catch (IOException ignored) {
             }
         }
 
@@ -103,21 +103,6 @@ public class AvatarBgDrawables {
         File file = new File(CommonUtils.getDirectory(ThemeBubbleDrawables.THEME_BASE_PATH + info.mThemeKey),
                 ThemeBubbleDrawables.SOLID_AVATAR_FILE_NAME);
 
-        if (info.mIsLocalTheme) {
-            try {
-                String assetFileName = "themes/" + info.mThemeKey + "/" + info.mSolidAvatarUrl;
-                InputStream ims = HSApplication.getContext().getAssets().open(assetFileName);
-                Bitmap bitmap = BitmapFactory.decodeStream(ims);
-
-                if (bitmap != null) {
-                    sSolidAvatarBg = new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
-                    ThemeDownloadManager.getInstance().copyAssetFileAsync(file, assetFileName);
-                    return sSolidAvatarBg;
-                }
-            } catch (Exception ignored) {
-            }
-        }
-
         if (file.exists()) {
             try {
                 Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
@@ -128,6 +113,22 @@ public class AvatarBgDrawables {
             } catch (Exception ignored) {
             }
         }
+
+        if (info.mIsLocalTheme) {
+            try {
+                String assetFileName = "themes" + File.separator + info.mThemeKey + File.separator + info.mSolidAvatarUrl;
+                InputStream ims = HSApplication.getContext().getAssets().open(assetFileName);
+                Bitmap bitmap = BitmapFactory.decodeStream(ims);
+
+                if (bitmap != null) {
+                    sSolidAvatarBg = new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
+                    //ThemeDownloadManager.getInstance().copyAssetFileAsync(file, assetFileName);
+                    return sSolidAvatarBg;
+                }
+            } catch (Exception ignored) {
+            }
+        }
+
         return null;
     }
 }

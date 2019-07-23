@@ -783,4 +783,13 @@
 	<string name="private_box_remove_from_box">비공개 상자에서 제거</string>
 	<string name="private_box_move_to_box">비공개 상자로 이동</string>
 	<string name="private_box_add_private_contacts">비공개 연락처를 추가하세요!</string>
+
+	<string name="remove_ad">광고 제거</string>
+	<string name="purchase">구매</string>
+	<string name="life_time">평생</string>
+	<string name="purchase_description">광고 없는 버전을 구매하세요. 다시는 광고가 표시되지 않음.</string>
+
+
+	<string name="emoji_skin_tone_setting">이모지 스킨 톤 </string>
+
 </resources>

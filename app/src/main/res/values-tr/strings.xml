@@ -777,4 +777,13 @@
 	<string name="private_box_remove_from_box">Özel kutudan kaldır</string>
 	<string name="private_box_move_to_box">Özel kutuya taşı</string>
 	<string name="private_box_add_private_contacts">Lütfen özel kişileri ekleyin!</string>
+
+	<string name="remove_ad">Reklamları Kaldır</string>
+	<string name="purchase">SATIN AL</string>
+	<string name="life_time">ÖMÜR BOYU</string>
+	<string name="purchase_description">REKLAMSIZ sürümü satın alın. Bir daha reklam görmeyin.</string>
+
+
+	<string name="emoji_skin_tone_setting">Emoji Dış Görünüm Rengi </string>
+
 </resources>
