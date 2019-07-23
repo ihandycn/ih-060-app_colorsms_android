@@ -15,7 +15,6 @@ import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.EmojiPackageType;
 import com.android.messaging.ui.emoji.GiphyInfo;
 import com.android.messaging.ui.emoji.StickerInfo;
-
 import com.android.messaging.ui.emoji.utils.emoispan.EmojiCache;
 import com.android.messaging.ui.emoji.utils.emoispan.EmojiSpannableWorker;
 import com.android.messaging.util.BugleAnalytics;
@@ -28,7 +27,6 @@ import com.superapps.util.Preferences;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -350,9 +348,7 @@ public class EmojiManager {
 
     public static void setEmojiStyle(String style) {
         if (!style.equals(getEmojiStyle())) {
-            Map<String, String> log = new HashMap<>();
-            log.put("type", style);
-            BugleAnalytics.logEvent("Settings_EmojiStyle_Change", log);
+            BugleAnalytics.logEvent("Settings_EmojiStyle_Change", "type", style);
             Preferences.get(PREF_FILE_NAME).putString(PREF_EMOJI_STYLE, style);
             EmojiCache.getInstance().flush();
             LoadEmojiManager.getInstance().flush();
@@ -371,6 +367,10 @@ public class EmojiManager {
 
     public static void setEmojiStyleDownloaded(String name) {
         Preferences.get(PREF_FILE_NAME).putBoolean(name, true);
+    }
+
+    public static boolean isEmojiStyleDownloaded(String name) {
+        return Preferences.get(PREF_FILE_NAME).getBoolean(name, false);
     }
 
     public static boolean isFirstEmojiVariantClick(){

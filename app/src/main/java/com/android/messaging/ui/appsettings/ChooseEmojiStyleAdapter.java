@@ -58,7 +58,7 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
         int position = holder.getAdapterPosition();
         EmojiStyleItem item = mDataList.get(position);
         holder.nameText.setText(item.name);
-        holder.itemView.setBackground(BackgroundDrawables.createBackgroundDrawable(0x00ffffff, 0, true));
+        holder.itemView.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff, 0, true));
         if (OsUtil.isAtLeastL()) {
             holder.radioButton.setButtonTintList(colorStateList); // Applying tint to drawable at left. '0' to get drawable at bottom
         }
