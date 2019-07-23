@@ -12,7 +12,7 @@
 					<key>name</key>
 					<string>Twitter</string>
 					<key>PreViewPicUrl</key>
-					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/twitter.jpg</string>
+					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/twitter.png</string>
 					<key>DownloadUrl</key>
 					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/Twitter.zip</string>
 					<key>DownloadSize</key>
@@ -20,9 +20,9 @@
 				</dict>
 				<dict>
 					<key>name</key>
-					<string>Pie</string>
+					<string>Android Pie</string>
 					<key>PreViewPicUrl</key>
-					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/androidpie.jpg</string>
+					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/androidpie.png</string>
 					<key>DownloadUrl</key>
 					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/Pie.zip</string>
 					<key>DownloadSize</key>
@@ -30,9 +30,9 @@
 				</dict>
 				<dict>
 					<key>name</key>
-					<string>Blob</string>
+					<string>Android Blob</string>
 					<key>PreViewPicUrl</key>
-					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/androidblob.jpg</string>
+					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/androidblob.png</string>
 					<key>DownloadUrl</key>
 					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/Blob.zip</string>
 					<key>DownloadSize</key>

@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/name"
         android:layout_alignStart="@+id/name"
-        android:layout_marginTop="2.7dp"
+        android:layout_marginTop="0.7dp"
         android:text="@string/emoji_style_current_set"
         android:textColor="#858b92"
         android:textSize="11.3sp"

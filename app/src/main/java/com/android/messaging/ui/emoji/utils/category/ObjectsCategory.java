@@ -112,7 +112,7 @@ public final class ObjectsCategory implements EmojiCategory {
         r0[i++] = new Emoji(128682, "emoji_1f6aa");
         r0[i++] = new Emoji(128715, "emoji_1f6cb");
         r0[i++] = new Emoji(128719, "emoji_1f6cf");
-        r0[i++] = new Emoji(128716, "emoji_1f6cc", new Emoji(new int[]{128716, 127995}, "emoji_1f6cc_1f3fb"), new Emoji(new int[]{128716, 127996}, "emoji_1f6cc_1f3fc"), new Emoji(new int[]{128716, 127997}, "emoji_1f6cc_1f3fd"), new Emoji(new int[]{128716, 127998}, "emoji_1f6cc_1f3fe"), new Emoji(new int[]{128716, 127999}, "emoji_1f6cc_1f3ff"));
+        r0[i++] = new Emoji(128716, "emoji_1f6cc");
         r0[i++] = new Emoji(128444, "emoji_1f5bc");
         r0[i++] = new Emoji(128717, "emoji_1f6cd");
         r0[i++] = new Emoji(128722, "emoji_1f6d2");

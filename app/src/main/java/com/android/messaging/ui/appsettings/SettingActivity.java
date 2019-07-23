@@ -33,6 +33,7 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.PhoneUtils;
+import com.android.messaging.util.TransitionUtils;
 import com.android.messaging.util.UiUtils;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -189,7 +190,7 @@ public class SettingActivity extends BaseActivity {
             public void onClick(View v) {
                 BugleAnalytics.logEvent("Settings_EmojiStyle_Click");
                 Intent intent = new Intent(SettingActivity.this, EmojiStyleSetActivity.class);
-                startActivityForResult(intent, EMOJI_STYLE_SET);
+                startActivityForResult(intent, EMOJI_STYLE_SET, TransitionUtils.getTransitionInBundle(SettingActivity.this));
             }
         });
 

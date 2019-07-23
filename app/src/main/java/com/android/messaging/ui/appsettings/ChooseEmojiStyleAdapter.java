@@ -19,6 +19,7 @@ import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.emoji.utils.EmojiStyleDownloadManager;
 import com.android.messaging.util.OsUtil;
 import com.ihs.commons.utils.HSLog;
+import com.superapps.util.BackgroundDrawables;
 
 import java.util.List;
 
@@ -57,6 +58,7 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
         int position = holder.getAdapterPosition();
         EmojiStyleItem item = mDataList.get(position);
         holder.nameText.setText(item.name);
+        holder.itemView.setBackground(BackgroundDrawables.createBackgroundDrawable(0x00ffffff, 0, true));
         if (OsUtil.isAtLeastL()) {
             holder.radioButton.setButtonTintList(colorStateList); // Applying tint to drawable at left. '0' to get drawable at bottom
         }
@@ -131,7 +133,12 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
             }
         };
         holder.itemView.setOnClickListener(clickListener);
-        holder.radioButton.setOnClickListener(clickListener);
+        holder.radioButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                holder.itemView.callOnClick();
+            }
+        });
     }
 
     @Override

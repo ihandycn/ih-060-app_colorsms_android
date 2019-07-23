@@ -112,8 +112,10 @@ import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import hugo.weaving.DebugLog;
@@ -227,41 +229,49 @@ public class BugleApplication extends HSApplication implements UncaughtException
         EmojiCache.getInstance();
     }
 
-    private void checkEmoji(){
+    // use for debug
+    private void checkEmoji() {
         File dir = new File(getContext().getFilesDir(), "emoji");
-        dir = new File(dir, "" + "Pie");
+        dir = new File(dir, "" + EmojiManager.getEmojiStyle());
+        HSLog.d("emoji_resource_check", dir.getAbsolutePath());
         ArrayList<String> files = new ArrayList<>();
-        for(File file : dir.listFiles()){
+        for (File file : dir.listFiles()) {
             files.add(file.getName());
         }
-        ArrayList<String> emojiResource = new ArrayList<>();
+        Set<String> emojiResource = new HashSet<>();
 
         EmojiCategory[] categories = EmojiProvider.getCategories();
         String emojiStyle = EmojiManager.getEmojiStyle();
-        for(EmojiCategory category : categories){
-            for (Emoji emoji : category.getEmojis()){
+        for (EmojiCategory category : categories) {
+            for (Emoji emoji : category.getEmojis()) {
                 EmojiInfo info = EmojiInfo.convert(emoji, emojiStyle);
                 emojiResource.add(info.mResource);
-                if(info.getDrawable() == null){
+                if (info.getDrawable() == null) {
                     HSLog.d("emoji_resource_check", info.mResource);
                 }
-                for(Emoji variant : emoji.getVariants()){
-                    EmojiInfo variantInfo = EmojiInfo.convert(variant, emojiStyle);
+                for (EmojiInfo variantInfo : info.mVariants) {
                     emojiResource.add(variantInfo.mResource);
-                    if(variantInfo.getDrawable() == null){
+                    if (variantInfo.getDrawable() == null) {
                         HSLog.d("emoji_resource_check", variantInfo.mResource);
                     }
                 }
             }
         }
 
-        for(String emoji : emojiResource){
-            files.remove(emoji);
+        HSLog.d("emoji_unuse: ", "files: " + files.size());
+        for (String emoji : emojiResource) {
+            int i = files.indexOf(emoji + ".png");
+            if (i != -1) {
+                files.remove(i);
+            }
         }
 
-        for(String file : files){
-            HSLog.d("emoji_unuse: ", file);
+        HSLog.d("emoji_unuse: ", "emojiResource: " + emojiResource.size());
+        for (String file : files) {
+            File f = new File(dir, file);
+            f.delete();
         }
+        HSLog.d("emoji_unuse", "files: " + files.size());
     }
 
     private void initAd() {

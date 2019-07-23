@@ -353,38 +353,52 @@ public class EmojiStyleDownloadManager {
             }
         }
 
-    }
-
-    public void unZipFolder(String zipFileString, String outPathString) throws IOException {
-        ZipInputStream inZip = new ZipInputStream(new FileInputStream(zipFileString));
-        ZipEntry zipEntry;
-        String szName = "";
-        while ((zipEntry = inZip.getNextEntry()) != null) {
-            szName = zipEntry.getName();
-            if (zipEntry.isDirectory()) {
-                szName = szName.substring(0, szName.length() - 1);
-                File folder = new File(outPathString + File.separator + szName);
-                folder.mkdirs();
-            } else {
-                File file = new File(outPathString + File.separator + szName);
-                if (!file.exists()) {
-                    file.getParentFile().mkdirs();
-                    file.createNewFile();
+        private void unZipFolder(String zipFileString, String outputPathDir) throws IOException {
+            String tempPath = outputPathDir + File.separator + "temp";
+            ZipInputStream inZip = new ZipInputStream(new FileInputStream(zipFileString));
+            ZipEntry zipEntry;
+            String szName = "";
+            while ((zipEntry = inZip.getNextEntry()) != null) {
+                szName = zipEntry.getName();
+                if (zipEntry.isDirectory()) {
+                    szName = szName.substring(0, szName.length() - 1);
+                    File folder = new File(tempPath + File.separator + szName);
+                    folder.mkdirs();
+                } else {
+                    File file = new File(tempPath + File.separator + szName);
+                    if (!file.exists()) {
+                        file.getParentFile().mkdirs();
+                        file.createNewFile();
+                    }
+                    FileOutputStream out = new FileOutputStream(file);
+                    int len;
+                    byte[] buffer = new byte[1024];
+                    while ((len = inZip.read(buffer)) != -1) {
+                        out.write(buffer, 0, len);
+                        out.flush();
+                    }
+                    out.close();
                 }
-                FileOutputStream out = new FileOutputStream(file);
-                int len;
-                byte[] buffer = new byte[1024];
-                while ((len = inZip.read(buffer)) != -1) {
-                    out.write(buffer, 0, len);
-                    out.flush();
-                }
-                out.close();
             }
+
+            File dir = new File(tempPath);
+            File file = null;
+            for (File f : dir.listFiles()) {
+                if (f.isDirectory()) {
+                    if (file == null) {
+                        file = f;
+                        continue;
+                    }
+                    if (f.length() > file.length()) {
+                        file = f;
+                    }
+                }
+            }
+            file.renameTo(new File(outputPathDir, mName));
+            inZip.close();
         }
 
-        inZip.close();
     }
-
 
     public interface DownloadCallback {
         void onFail(EmojiStyleDownloadTask task, String msg);

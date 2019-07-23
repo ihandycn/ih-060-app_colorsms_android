@@ -1115,7 +1115,7 @@
     <string name="emoji_style_downloaded">Downloaded</string>
     <string name="emoji_style_downloading">Downloading</string>
     <string name="emoji_style_download">Download</string>
-    <string name="emoji_style_download_failed">Download Failed</string>
+    <string name="emoji_style_download_failed">Network error</string>
     <string name="emoji_style_download_success"> emoji downloaded successfully.</string>
     <string name="emoji_style_default">Default</string>
 
