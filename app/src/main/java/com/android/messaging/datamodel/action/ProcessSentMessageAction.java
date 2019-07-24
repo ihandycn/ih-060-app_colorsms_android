@@ -42,6 +42,7 @@ import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -222,7 +223,8 @@ public class ProcessSentMessageAction extends Action {
             params.put("mcc&mnc", PhoneUtils.getMccMncString(PhoneUtils.get(subId).getMccMnc()));
         }
         params.put("isSms", String.valueOf(isSms));
-        BugleAnalytics.logEvent("Send_Mms_Analytics", true, true, params);
+        BugleAnalytics.logEvent("Send_Mms_Analytics", true, params);
+        BugleFirebaseAnalytics.logEvent("Send_Mms_Analytics", params);
     }
 
     static void processResult(final String messageId, Uri updatedMessageUri, int status,

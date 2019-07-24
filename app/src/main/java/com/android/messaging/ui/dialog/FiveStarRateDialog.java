@@ -27,6 +27,7 @@ import com.android.messaging.R;
 import com.android.messaging.feedback.FeedbackActivity;
 import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.TransitionUtils;
 import com.android.messaging.util.ViewUtils;
@@ -241,7 +242,8 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
     @Override
     protected void onClickPositiveButton(View v) {
         if (mCurrentPosition >= 0) {
-            BugleAnalytics.logEvent("Alert_FiveStar_Submit_BtnClicked", false, true, "type", (mCurrentPosition + 1) + "star");
+            BugleAnalytics.logEvent("Alert_FiveStar_Submit_BtnClicked", "type", (mCurrentPosition + 1) + "star");
+            BugleFirebaseAnalytics.logEvent("Alert_FiveStar_Submit_BtnClicked", "type", (mCurrentPosition + 1) + "star");
             if (mCurrentPosition >= MAX_POSITION) {
                 HSMarketUtils.browseAPP();
                 BugleAnalytics.logEventToFirebase("SMS_Satisfied", new HashMap<>());
@@ -460,7 +462,9 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
     }
 
     private void logStarClick(int position) {
-        BugleAnalytics.logEvent("Alert_FiveStar_Star_Clicked", false, true, "type", (position + 1) + "star",
+        BugleAnalytics.logEvent("Alert_FiveStar_Star_Clicked", "type", (position + 1) + "star",
+                "from", sFiveStarRateTipFrom);
+        BugleFirebaseAnalytics.logEvent("Alert_FiveStar_Star_Clicked", "type", (position + 1) + "star",
                 "from", sFiveStarRateTipFrom);
     }
 
@@ -476,7 +480,8 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
         if (from != null) {
             sFiveStarRateTipFrom = from;
         }
-        BugleAnalytics.logEvent("Alert_FiveStar_ViewedFrom", false, true, "from", sFiveStarRateTipFrom);
+        BugleAnalytics.logEvent("Alert_FiveStar_ViewedFrom", "from", sFiveStarRateTipFrom);
+        BugleFirebaseAnalytics.logEvent("Alert_FiveStar_ViewedFrom", "from", sFiveStarRateTipFrom);
     }
 
     private static boolean isHadFiveStarRate() {

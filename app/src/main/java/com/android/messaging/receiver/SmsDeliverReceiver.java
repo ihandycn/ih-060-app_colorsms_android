@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.DefaultSMSUtils;
 
 /**
@@ -31,7 +32,8 @@ public final class SmsDeliverReceiver extends BroadcastReceiver {
     public void onReceive(final Context context, final Intent intent) {
         if (DefaultSMSUtils.isDefaultSmsApp()) {
             SmsReceiver.deliverSmsIntent(context, intent);
-            BugleAnalytics.logEvent("SMS_Received_Default", false, true);
+            BugleAnalytics.logEvent("SMS_Received_Default");
+            BugleFirebaseAnalytics.logEvent("SMS_Received_Default");
         }
     }
 }

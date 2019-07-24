@@ -89,6 +89,7 @@ import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.CreateShortcutUtils;
@@ -246,7 +247,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
 
         if (getIntent() != null && getIntent().getBooleanExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, false)) {
-            BugleAnalytics.logEvent("SMS_Notifications_Clicked", true, true);
+            BugleAnalytics.logEvent("SMS_Notifications_Clicked", true);
+            BugleFirebaseAnalytics.logEvent("SMS_Notifications_Clicked");
             AutopilotEvent.logTopicEvent("topic-768lyi3sp", "notification_clicked");
         }
 
@@ -278,7 +280,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     backgroundStr = "colorsms_" + wallpaperIndex;
                 }
 
-                BugleAnalytics.logEvent("SMS_Messages_Create", true, true,
+                BugleAnalytics.logEvent("SMS_Messages_Create", true,
+                        "themeColor", String.valueOf(ChooseThemeColorRecommendViewHolder.getPrimaryColorType()),
+                        "background", backgroundStr,
+                        "bubbleStyle", String.valueOf(BubbleDrawables.getSelectedIdentifier()),
+                        "received_bubble_color", ConversationColors.get().getConversationColorEventType(true, true),
+                        "sent_bubble_color", ConversationColors.get().getConversationColorEventType(true, false),
+                        "received_text_color", ConversationColors.get().getConversationColorEventType(false, true),
+                        "sent_text_color", ConversationColors.get().getConversationColorEventType(false, false),
+                        "theme", ThemeUtils.getCurrentThemeName());
+                BugleFirebaseAnalytics.logEvent("SMS_Messages_Create",
                         "themeColor", String.valueOf(ChooseThemeColorRecommendViewHolder.getPrimaryColorType()),
                         "background", backgroundStr,
                         "bubbleStyle", String.valueOf(BubbleDrawables.getSelectedIdentifier()),
@@ -325,13 +336,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                 getResources().getBoolean(R.bool.delivery_reports_pref_default))));
 
                 if (Compats.IS_HUAWEI_DEVICE) {
-                    BugleAnalytics.logEventToFirebase("Device_HUAWEI", new HashMap<>());
+                    BugleFirebaseAnalytics.logEvent("Device_HUAWEI", new HashMap<>());
                 } else if (Compats.IS_MOTOROLA_DEVICE || Compats.IS_LGE_DEVICE) {
-                    BugleAnalytics.logEventToFirebase("Device_MOTOLG", new HashMap<>());
+                    BugleFirebaseAnalytics.logEvent("Device_MOTOLG", new HashMap<>());
                 } else if (Compats.IS_SAMSUNG_DEVICE) {
-                    BugleAnalytics.logEventToFirebase("Device_Samsung", new HashMap<>());
+                    BugleFirebaseAnalytics.logEvent("Device_Samsung", new HashMap<>());
                 } else if (Compats.IS_VIVO_DEVICE) {
-                    BugleAnalytics.logEventToFirebase("Device_Vivo", new HashMap<>());
+                    BugleFirebaseAnalytics.logEvent("Device_Vivo", new HashMap<>());
                 }
             });
         }
@@ -397,10 +408,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
         int todayShowCount = Preferences.getDefault().incrementAndGetInt(PREF_KEY_TODAY_SHOW_COUNT);
         Preferences.getDefault().putLong(PREF_KEY_LAST_SHOW_TIME, System.currentTimeMillis());
         if (todayShowCount > 20) {
-            BugleAnalytics.logEventToFirebase("SMS_Messages_Show_Positive", new HashMap<>());
+            BugleFirebaseAnalytics.logEvent("SMS_Messages_Show_Positive", new HashMap<>());
         }
 
-        BugleAnalytics.logEvent("SMS_Messages_Show_Corrected", true, true);
+
+        BugleAnalytics.logEvent("SMS_Messages_Show_Corrected", true);
+        BugleFirebaseAnalytics.logEvent("SMS_Messages_Show_Corrected");
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "homepage_show");
         showThemeUpgradeDialog();
 
@@ -517,7 +530,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 Preferences.getDefault().putBoolean(PREF_KEY_MAIN_DRAWER_OPENED, true);
                 setDrawerMenuIcon();
                 BugleAnalytics.logEvent("Menu_Show_NewVersion", true);
-                BugleAnalytics.logEvent("Menu_Show", true, true);
+                BugleAnalytics.logEvent("Menu_Show", true);
+                BugleFirebaseAnalytics.logEvent("Menu_Show");
                 BackupAutopilotUtils.logMenuShow();
                 if (CommonUtils.isNewUser()
                         && Calendars.isSameDay(CommonUtils.getAppInstallTimeMillis(), System.currentTimeMillis())) {
@@ -549,7 +563,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         navigationContent.findViewById(R.id.navigation_item_theme_color_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_BUBBLE:
-                        BugleAnalytics.logEvent("Menu_Bubble_Click", true, true);
+                        BugleAnalytics.logEvent("Menu_Bubble_Click", true);
+                        BugleFirebaseAnalytics.logEvent("Menu_Bubble_Click");
                         if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                             BugleAnalytics.logEvent("Menu_Bubble_Click_NewUser", true);
                         }
@@ -563,7 +578,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         }
                         break;
                     case DRAWER_INDEX_CHAT_BACKGROUND:
-                        BugleAnalytics.logEvent("Menu_ChatBackground_Click", true, true);
+                        BugleAnalytics.logEvent("Menu_ChatBackground_Click", true);
+                        BugleFirebaseAnalytics.logEvent("Menu_ChatBackground_Click");
                         if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                             BugleAnalytics.logEvent("Menu_ChatBackground_Click_NewUser", true);
                         }
@@ -615,7 +631,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                 Manifest.permission.READ_PHONE_STATE) == RuntimePermissions.PERMISSION_GRANTED;
                         if (granted) {
                             UIIntents.get().launchSettingsActivity(ConversationListActivity.this);
-                            BugleAnalytics.logEvent("Menu_Settings_Click", true, true);
+                            BugleAnalytics.logEvent("Menu_Settings_Click", true);
+                            BugleFirebaseAnalytics.logEvent("Menu_Settings_Click");
                         } else {
                             RuntimePermissions.requestPermissions(ConversationListActivity.this,
                                     new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PERMISSION_CODE);
@@ -629,17 +646,18 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         break;
                     case DRAWER_INDEX_RATE:
                         FiveStarRateDialog.showFiveStarFromSetting(ConversationListActivity.this);
-                        BugleAnalytics.logEvent("Menu_FiveStart_Click", true, true);
+                        BugleAnalytics.logEvent("Menu_FiveStart_Click", true);
+                        BugleFirebaseAnalytics.logEvent("Menu_FiveStart_Click");
                         break;
                     case DRAWER_INDEX_REMOVE_ADS:
                         Intent goSmsProIntent = new Intent(ConversationListActivity.this, BillingActivity.class);
                         ActivityOptionsCompat options =
                                 ActivityOptionsCompat.makeCustomAnimation(ConversationListActivity.this, R.anim.fade_in, R.anim.anim_null);
                         startActivity(goSmsProIntent, options.toBundle());
-                        BugleAnalytics.logEvent("SMS_Menu_Subscription_Click", true, false);
+                        BugleAnalytics.logEvent("SMS_Menu_Subscription_Click", true);
 
-                        BugleAnalytics.logEvent("Subscription_Analysis",
-                                false, true, "Menu_Subscription_Click", "true");
+                        BugleAnalytics.logEvent("Subscription_Analysis", "Menu_Subscription_Click", "true");
+                        BugleFirebaseAnalytics.logEvent("Subscription_Analysis", "Menu_Subscription_Click", "true");
                         break;
                     case DRAWER_INDEX_NONE:
                     default:
@@ -892,7 +910,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
         BugleAnalytics.logEvent("SMS_Messages_Back", true, "type", "exitadchance");
         BugleAnalytics.logEvent("SMS_ExitAd_Chance", true);
-        BugleAnalytics.logEvent("SMS_Ad", false, true, "type", "exitad_chance");
+
+        BugleFirebaseAnalytics.logEvent("SMS_Ad", "type", "exitad_chance");
         ExitAdAutopilotUtils.logExitAdChance();
         List<AcbInterstitialAd> ads = AcbInterstitialAdManager.fetch(AdPlacement.AD_EXIT_WIRE, 1);
         if (ads.size() > 0) {
@@ -925,7 +944,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     long currentTime = Calendar.getInstance().getTimeInMillis();
                     if (currentTime - mLastAdClickTime > MIN_AD_CLICK_DELAY_TIME) {
                         BugleAnalytics.logEvent("SMS_ExitAd_Click", true);
-                        BugleAnalytics.logEvent("SMS_Ad", false, true, "type", "exitad_click");
+                        BugleAnalytics.logEvent("SMS_Ad", "type", "exitad_click");
+                        BugleFirebaseAnalytics.logEvent("SMS_Ad", "type", "exitad_click");
                         ExitAdAutopilotUtils.logExitAdClick();
                         mLastAdClickTime = currentTime;
                     }
@@ -967,7 +987,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
             mInterstitialAd.setSoundEnable(false);
             mInterstitialAd.show();
             BugleAnalytics.logEvent("SMS_ExitAd_Show", true);
-            BugleAnalytics.logEvent("SMS_Ad", false, true, "type", "exitad_show");
+            BugleAnalytics.logEvent("SMS_Ad", "type", "exitad_show");
+            BugleFirebaseAnalytics.logEvent("SMS_Ad", "type", "exitad_show");
+
             ExitAdAutopilotUtils.logExitAdShow();
             mPrefs.putInt(PREF_KEY_EXIT_WIRE_AD_SHOW_COUNT_IN_ONE_DAY, exitAdShownCountInOneDay + 1);
             mPrefs.putLong(PREF_KEY_EXIT_WIRE_AD_SHOW_TIME, System.currentTimeMillis());
@@ -1002,7 +1024,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
     public ActionMode startActionMode(ActionMode.Callback callback) {
         mTitleTextView.setVisibility(View.GONE);
         findViewById(R.id.selection_mode_bg).setVisibility(View.VISIBLE);
-        BugleAnalytics.logEvent("SMS_EditMode_Show", true, true);
+        BugleAnalytics.logEvent("SMS_EditMode_Show", true);
+        BugleFirebaseAnalytics.logEvent("SMS_EditMode_Show");
         return super.startActionMode(callback);
     }
 
@@ -1101,7 +1124,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
         Preferences.getDefault().doOnce(new Runnable() {
             @Override
             public void run() {
-                BugleAnalytics.logEvent("SMS_Messages_First_Click", true, true, "type", type);
+                BugleAnalytics.logEvent("SMS_Messages_First_Click", true, "type", type);
+                BugleFirebaseAnalytics.logEvent("SMS_Messages_First_Click",  "type", type);
             }
         }, "pref_first_come_in_click_event");
     }

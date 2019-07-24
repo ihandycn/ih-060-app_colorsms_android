@@ -13,6 +13,7 @@ import com.android.messaging.ui.customize.CustomMessagePreviewView;
 import com.android.messaging.ui.view.LevelSeekBar;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.UiUtils;
 
 public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnLevelChangeListener {
@@ -74,7 +75,8 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
             new ChooseFontDialog(ChangeFontActivity.this).show();
             BugleAnalytics.logEvent("Customize_TextFont_Click", true, "request", "success");
         });
-        BugleAnalytics.logEvent("Customize_Font_Show", true, true);
+        BugleAnalytics.logEvent("Customize_Font_Show", true);
+        BugleFirebaseAnalytics.logEvent("Customize_Font_Show");
     }
 
     @Override
@@ -101,7 +103,8 @@ public class ChangeFontActivity extends BaseActivity implements LevelSeekBar.OnL
                 default:
                     size = "Default";
             }
-            BugleAnalytics.logEvent("Customize_TextSize_Change", true, true, "size", size);
+            BugleAnalytics.logEvent("Customize_TextSize_Change", true, "size", size);
+            BugleFirebaseAnalytics.logEvent("Customize_TextSize_Change", "size", size);
         }
     }
 

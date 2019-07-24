@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 

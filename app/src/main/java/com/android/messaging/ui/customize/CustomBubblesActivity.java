@@ -26,6 +26,7 @@ import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.BackgroundDrawables;
@@ -92,7 +93,8 @@ public class CustomBubblesActivity extends BaseActivity implements CustomMessage
         customHeaderViewPager.setViewPagerTabHeight(CustomViewPager.DEFAULT_TAB_STRIP_SIZE);
         customHeaderViewPager.setCurrentItem(0);
 
-        BugleAnalytics.logEvent("Customize_Bubble_Show", true, true, "from", getOpenSourceType());
+        BugleAnalytics.logEvent("Customize_Bubble_Show", true, "from", getOpenSourceType());
+        BugleFirebaseAnalytics.logEvent("Customize_Bubble_Show", "from", getOpenSourceType() );
     }
 
     @Override

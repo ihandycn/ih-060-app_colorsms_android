@@ -41,6 +41,7 @@ import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.Dates;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.UiUtils;
@@ -212,7 +213,10 @@ public class MessageBoxConversationView extends FrameLayout {
             type += "emoji";
         }
 
-        BugleAnalytics.logEvent("SMS_PopUp_Reply_BtnClick_Multifunction", false, true,
+        BugleAnalytics.logEvent("SMS_PopUp_Reply_BtnClick_Multifunction",
+                "type", type, "type2", MessageBoxAnalytics.getConversationType(),
+                "withTheme", String.valueOf(!ThemeUtils.isDefaultTheme()));
+        BugleFirebaseAnalytics.logEvent("SMS_PopUp_Reply_BtnClick_Multifunction",
                 "type", type, "type2", MessageBoxAnalytics.getConversationType(),
                 "withTheme", String.valueOf(!ThemeUtils.isDefaultTheme()));
     }

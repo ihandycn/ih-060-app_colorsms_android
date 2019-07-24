@@ -10,6 +10,7 @@ import com.android.messaging.BugleApplication;
 import com.android.messaging.R;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleApplicationPrefs;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.Toasts;
 
@@ -84,8 +85,8 @@ public class BillingManager {
                 BugleApplicationPrefs.getApplicationPrefs().putBoolean(PREF_KEY_USER_HAS_VERIFIED_SUCCESS, true);
 
                 BugleAnalytics.logEvent("SMS_Subscription_Purchase_Success", true);
-                BugleAnalytics.logEvent("Subscription_Analysis",
-                        false, true, "Subscription_Purchase_Success", "true");
+                BugleAnalytics.logEvent("Subscription_Analysis", "Subscription_Purchase_Success", "true");
+                BugleFirebaseAnalytics.logEvent("Subscription_Analysis", "Subscription_Purchase_Success", "true");
 
             }
 

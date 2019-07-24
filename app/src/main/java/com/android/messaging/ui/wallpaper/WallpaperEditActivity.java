@@ -28,6 +28,7 @@ import com.android.messaging.ui.wallpaper.crop.CropImageOptions;
 import com.android.messaging.ui.wallpaper.crop.CropOverlayView;
 import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.ViewUtils;
 import com.bumptech.glide.request.target.ImageViewTarget;
@@ -397,10 +398,14 @@ public class WallpaperEditActivity extends BaseActivity implements View.OnClickL
                 apply();
                 WallpaperManager.onWallpaperChanged();
                 finish();
-                BugleAnalytics.logEvent("SMS_ChatBackground_CutPage_Applied", true, true,
+                BugleAnalytics.logEvent("SMS_ChatBackground_CutPage_Applied", true,
                         "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
-                BugleAnalytics.logEvent("SMS_ChatBackground_Change", true, true,
+                BugleFirebaseAnalytics.logEvent("SMS_ChatBackground_CutPage_Applied",
                         "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
+                BugleAnalytics.logEvent("SMS_ChatBackground_Change", true,
+                        "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options");
+                BugleFirebaseAnalytics.logEvent("SMS_ChatBackground_Change",
+                        "from", TextUtils.isEmpty(mThreadId) ? "Menu" : "Options" );
                 break;
             case R.id.wallpaper_view_return:
                 cancel();

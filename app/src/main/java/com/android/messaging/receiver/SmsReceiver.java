@@ -40,6 +40,7 @@ import com.android.messaging.datamodel.media.BugleNotificationChannelUtil;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.BugleGservices;
 import com.android.messaging.util.BugleGservicesKeys;
 import com.android.messaging.util.DebugUtils;
@@ -196,7 +197,8 @@ public final class SmsReceiver extends BroadcastReceiver {
         // Always convert negative subIds into -1
         int subId = PhoneUtils.getDefault().getEffectiveIncomingSubIdFromSystem(
                 intent, EXTRA_SUB_ID);
-        BugleAnalytics.logEvent("SMS_Send_Failed", false, true, "SmsReceiveSubId", String.valueOf(subId));
+        BugleAnalytics.logEvent("SMS_Send_Failed", "SmsReceiveSubId", String.valueOf(subId));
+        BugleFirebaseAnalytics.logEvent("SMS_Send_Failed",  "SmsReceiveSubId", String.valueOf(subId));
         deliverSmsMessages(context, subId, errorCode, messages);
         if (MmsUtils.isDumpSmsEnabled()) {
             final String format = null;
@@ -252,7 +254,8 @@ public final class SmsReceiver extends BroadcastReceiver {
             }
         } else if (PhoneUtils.getDefault().isSmsCapable() && isSmsReceiverEnabledWhenDefaultCleared()) {
             // sms supported and default not set, we use SmsReceiver to handle this action
-            BugleAnalytics.logEvent("SMS_Received_NoDefault", false, true);
+            BugleAnalytics.logEvent("SMS_Received_NoDefault");
+            BugleFirebaseAnalytics.logEvent("SMS_Received_NoDefault");
         }
     }
 

@@ -24,6 +24,7 @@ import com.android.messaging.R;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.ViewUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSLog;
@@ -255,7 +256,8 @@ public class ChooseFontDialog {
         if (activity != null && !activity.isDestroyed()) {
             activity.onFontChange();
         }
-        BugleAnalytics.logEvent("Customize_TextFont_Change", true, true, "font", font);
+        BugleAnalytics.logEvent("Customize_TextFont_Change", true, "font", font);
+        BugleFirebaseAnalytics.logEvent("Customize_TextFont_Change", "font", font);
     }
 
     private void dismissSafely() {

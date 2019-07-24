@@ -59,6 +59,7 @@ import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.Toasts;
@@ -126,7 +127,8 @@ public class PeopleAndOptionsFragment extends Fragment
             final String pickedUri = pick == null ? "" : pick.toString();
             mBinding.getData().setConversationNotificationSound(mBinding, pickedUri);
             if (pickedUri != null && !pickedUri.equals(mRingtone)) {
-                BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, true, "from", "chat");
+                BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, "from", "chat");
+                BugleFirebaseAnalytics.logEvent("Customize_Notification_Sound_Change",  "from", "chat");
             }
         }
     }

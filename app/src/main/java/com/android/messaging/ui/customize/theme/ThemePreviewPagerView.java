@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
@@ -201,7 +202,9 @@ public class ThemePreviewPagerView extends ConstraintLayout {
                     mApplyClickListener.onClick(mButton);
                 }
                 ThemeUtils.applyTheme(mThemeInfo, 0);
-                BugleAnalytics.logEvent("Customize_ThemeCenter_Theme_Apply", true, true,
+                BugleAnalytics.logEvent("Customize_ThemeCenter_Theme_Apply", true,
+                        "theme", mThemeInfo.mThemeKey, "from", "detail");
+                BugleFirebaseAnalytics.logEvent("Customize_ThemeCenter_Theme_Apply",
                         "theme", mThemeInfo.mThemeKey, "from", "detail");
             });
         } else {

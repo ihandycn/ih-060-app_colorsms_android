@@ -16,6 +16,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
@@ -204,7 +205,9 @@ public class ThemeSelectItemView extends ConstraintLayout implements ThemeUtils.
                 mIsSelectAnimationPlaying = false;
             }
         }).start();
-        BugleAnalytics.logEvent("Customize_ThemeCenter_Theme_Apply", true, true,
+        BugleAnalytics.logEvent("Customize_ThemeCenter_Theme_Apply", true,
+                "theme", mThemeInfo.mThemeKey, "from", "list");
+        BugleFirebaseAnalytics.logEvent("Customize_ThemeCenter_Theme_Apply",
                 "theme", mThemeInfo.mThemeKey, "from", "list");
     }
 

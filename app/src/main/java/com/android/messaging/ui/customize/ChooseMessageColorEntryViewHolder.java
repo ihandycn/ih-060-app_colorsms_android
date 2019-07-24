@@ -15,6 +15,7 @@ import com.android.messaging.R;
 import com.android.messaging.ui.BasePagerViewHolder;
 import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.ImageUtils;
 import com.superapps.util.BackgroundDrawables;
 
@@ -159,6 +160,7 @@ public class ChooseMessageColorEntryViewHolder extends BasePagerViewHolder imple
 
     @Override
     public void onPageSelected() {
-        BugleAnalytics.logEvent("Customize_Bubble_Color_Show", false, true);
+        BugleAnalytics.logEvent("Customize_Bubble_Color_Show");
+        BugleFirebaseAnalytics.logEvent("Customize_Bubble_Color_Show");
     }
 }
