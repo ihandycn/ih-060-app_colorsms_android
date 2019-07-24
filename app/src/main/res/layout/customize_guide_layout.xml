@@ -4,12 +4,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
-        android:id="@+id/black_background_transparent"
+    <com.android.messaging.ui.conversationlist.CustomizeGuideBackgroundView
+        android:id="@+id/custom_guide_background_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:alpha="0"
-        android:background="@color/black_70_transparent"/>
+        android:layout_height="match_parent" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/customize_guide_container"
@@ -79,12 +77,5 @@
 
         </LinearLayout>
     </android.support.constraint.ConstraintLayout>
-
-    <ImageView
-        android:id="@+id/customize_guide_menu_focus"
-        android:layout_width="43.3dp"
-        android:layout_height="43.3dp"
-        android:layout_marginStart="6.3dp"
-        android:src="@drawable/customize_guide_menu_focus" />
 
 </FrameLayout>

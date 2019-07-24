@@ -1222,7 +1222,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             mCustomizeGuideController.showGuideIfNeed(this);
                         }
                     }
-                }, 1200);
+                }, 80);
                 break;
             case FIRST_LOAD:
                 if (!sIsRecreate && hsBundle != null) {

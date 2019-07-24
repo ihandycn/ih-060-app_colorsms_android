@@ -7,24 +7,20 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.animation.PathInterpolatorCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.UiUtils;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
-import com.superapps.util.Threads;
 
 import static com.android.messaging.ui.conversationlist.ConversationListActivity.PREF_KEY_MAIN_DRAWER_OPENED;
 
@@ -37,9 +33,8 @@ class CustomizeGuideController implements CustomizeGuide {
     private ObjectAnimator mDismissXAnim;
     private ObjectAnimator mDismissYAnim;
     private ObjectAnimator mDismissAlphaAnim;
-    private ObjectAnimator mBackgroundDismissAlphaAnim;
-    private ObjectAnimator mMenuFocusDismissAlphaAnim;
 
+    private CustomizeGuideBackgroundView mCustomizeGuideBackgroundView;
     private boolean mBackPressed;
 
     @SuppressLint("ClickableViewAccessibility")
@@ -59,7 +54,6 @@ class CustomizeGuideController implements CustomizeGuide {
         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
 
-        FrameLayout transparentBackground = customizeGuideView.findViewById(R.id.black_background_transparent);
         TextView guideButton = customizeGuideView.findViewById(R.id.customize_guide_confirm_button);
         guideButton.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE, UiUtils.getColorDark(Color.WHITE), Dimensions.pxFromDp(1.3f),
                 activity.getApplicationContext().getResources().getColor(R.color.customize_guide_button_stroke_color), Dimensions.pxFromDp(19.8f),
@@ -71,47 +65,15 @@ class CustomizeGuideController implements CustomizeGuide {
         if (activity.getSupportActionBar() != null) {
             actionBarHeight = activity.getSupportActionBar().getHeight();
         }
-        param.topMargin = actionBarHeight + Dimensions.getStatusBarHeight(activity) + Dimensions.pxFromDp(25);
+        param.topMargin = actionBarHeight + Dimensions.getStatusBarHeight(activity) + Dimensions.pxFromDp(10);
         guideContainer.setLayoutParams(param);
         guideContainer.setAlpha(0);
 
-        ImageView guideMenuFocus = customizeGuideView.findViewById(R.id.customize_guide_menu_focus);
-        FrameLayout.LayoutParams guideMenuFocusParam = (FrameLayout.LayoutParams) guideMenuFocus.getLayoutParams();
-        guideMenuFocusParam.topMargin = (int) (Dimensions.getStatusBarHeight(activity) + (actionBarHeight - Dimensions.pxFromDp(43.3f)) * 0.5);
-        guideMenuFocus.setLayoutParams(guideMenuFocusParam);
+        mCustomizeGuideBackgroundView = customizeGuideView.findViewById(R.id.custom_guide_background_view);
 
         activity.addContentView(customizeGuideView, params);
         Preferences.getDefault().putBoolean(PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE, false);
         BugleAnalytics.logEvent("SMS_MenuGuide_Show", true);
-
-
-        //Background disappear animation
-        ObjectAnimator backgroundAlphaAnimator = ObjectAnimator.ofFloat(transparentBackground, "alpha", 0, 1);
-        backgroundAlphaAnimator.setDuration(240);
-
-        Interpolator backgroundInterpolator = PathInterpolatorCompat.create(0.32f, 0.66f, 0.6f, 1);
-
-        ObjectAnimator menuFocusShrinkXAnimator = ObjectAnimator.ofFloat(guideMenuFocus, "scaleX", 16.53f, 0.75f);
-        menuFocusShrinkXAnimator.setDuration(240);
-        menuFocusShrinkXAnimator.setInterpolator(backgroundInterpolator);
-
-        ObjectAnimator menuFocusShrinkYAnimator = ObjectAnimator.ofFloat(guideMenuFocus, "scaleY", 16.53f, 0.75f);
-        menuFocusShrinkYAnimator.setDuration(240);
-        menuFocusShrinkYAnimator.setInterpolator(backgroundInterpolator);
-
-        ObjectAnimator menuFocusEnlargeXAnimator = ObjectAnimator.ofFloat(guideMenuFocus, "scaleX", 0.75f, 1);
-        menuFocusEnlargeXAnimator.setDuration(120);
-
-        ObjectAnimator menuFocusEnlargeYAnimator = ObjectAnimator.ofFloat(guideMenuFocus, "scaleY", 0.75f, 1);
-        menuFocusEnlargeYAnimator.setDuration(120);
-
-        menuFocusShrinkXAnimator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                menuFocusEnlargeXAnimator.start();
-                menuFocusEnlargeYAnimator.start();
-            }
-        });
 
         //Dialog appear animation
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(guideContainer, "alpha", 0, 1);
@@ -148,7 +110,7 @@ class CustomizeGuideController implements CustomizeGuide {
         });
 
         //Dialog dismiss animation
-        mDismissXAnim = ObjectAnimator.ofFloat(transparentBackground, "scaleX", 1, 0.4f);
+        mDismissXAnim = ObjectAnimator.ofFloat(guideContainer, "scaleX", 1, 0.4f);
         mDismissXAnim.setDuration(200);
         mDismissYAnim = ObjectAnimator.ofFloat(guideContainer, "scaleY", 1, 0.4f);
         mDismissYAnim.setDuration(200);
@@ -160,16 +122,9 @@ class CustomizeGuideController implements CustomizeGuide {
             @Override
             public void onAnimationEnd(Animator animation) {
                 customizeGuideView.setVisibility(View.GONE);
+                mCustomizeGuideBackgroundView.setVisibility(View.GONE);
             }
         });
-
-        //Background dismiss animation
-        mBackgroundDismissAlphaAnim = ObjectAnimator.ofFloat(transparentBackground, "alpha", 1, 0);
-        mBackgroundDismissAlphaAnim.setDuration(120);
-        mBackgroundDismissAlphaAnim.setStartDelay(40);
-        mMenuFocusDismissAlphaAnim = ObjectAnimator.ofFloat(guideMenuFocus, "alpha", 1, 0);
-        mMenuFocusDismissAlphaAnim.setDuration(120);
-        mMenuFocusDismissAlphaAnim.setStartDelay(40);
 
         guideButton.setOnClickListener(v -> {
             closeCustomizeGuide(true);
@@ -202,9 +157,7 @@ class CustomizeGuideController implements CustomizeGuide {
             return false;
         });
 
-        backgroundAlphaAnimator.start();
-        menuFocusShrinkXAnimator.start();
-        menuFocusShrinkYAnimator.start();
+        mCustomizeGuideBackgroundView.startCustomizeGuideBackgroundAppearAnimation();
         alphaAnimator.start();
         enlargeXAnimator.start();
         enlargeYAnimator.start();
@@ -235,8 +188,7 @@ class CustomizeGuideController implements CustomizeGuide {
         mDismissXAnim.start();
         mDismissYAnim.start();
         mDismissAlphaAnim.start();
-        mBackgroundDismissAlphaAnim.start();
-        mMenuFocusDismissAlphaAnim.start();
+        mCustomizeGuideBackgroundView.startCustomizeGuideBackgroundDismissAnimation();
 
         if (openDrawer) {
             mDismissAlphaAnim.addListener(new AnimatorListenerAdapter() {
