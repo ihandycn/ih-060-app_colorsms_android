@@ -77,6 +77,7 @@ class FireBaseEventIdMap {
         EVENTS_MAP.put("Customize_Font_Show", true);
         EVENTS_MAP.put("Customize_Bubble_Color_Show", true);
         EVENTS_MAP.put("Customize_ThemeCenter_Show", true);
+        EVENTS_MAP.put("Customize_ThemeColor_Change", true);
         EVENTS_MAP.put("Customize_TextSize_Change", true);
         EVENTS_MAP.put("Customize_TextFont_Change", true);
         EVENTS_MAP.put("Customize_Bubble_Show", true);
@@ -120,6 +121,7 @@ class FireBaseEventIdMap {
         EVENTS_MAP.put("Send_Mms_Analytics", true);
 
         EVENTS_MAP.put("SMS_Ad", true);
+        EVENTS_MAP.put("SMS_Satisfied", true);
     }
 
     static boolean getIsValidEventId(String eventId) {
