@@ -906,22 +906,18 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 @Override
                 public void onAdDisplayed() {
 
-                    Threads.postOnMainThreadDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            if (mExitAppAnimationViewContainer == null) {
-                                mExitAppAnimationViewStub = findViewById(R.id.exit_app_stub);
-                                mExitAppAnimationViewContainer = (ConstraintLayout) mExitAppAnimationViewStub.inflate();
-                                mLottieAnimationView = findViewById(R.id.exit_app_lottie);
-                                mLottieAnimationView.useHardwareAcceleration();
-                                loadAnimation();
-                            } else {
-                                mExitAppAnimationViewContainer.setVisibility(View.VISIBLE);
-                            }
+                    Threads.postOnMainThreadDelayed(() -> {
+                        if (mExitAppAnimationViewContainer == null) {
+                            mExitAppAnimationViewStub = findViewById(R.id.exit_app_stub);
+                            mExitAppAnimationViewContainer = (ConstraintLayout) mExitAppAnimationViewStub.inflate();
+                            mLottieAnimationView = findViewById(R.id.exit_app_lottie);
+                            mLottieAnimationView.useHardwareAcceleration();
+                            loadAnimation();
+                        } else {
+                            mExitAppAnimationViewContainer.setVisibility(View.VISIBLE);
                         }
+                        mIsExitAdShown = true;
                     }, 200);
-
-                    mIsExitAdShown = true;
                 }
 
                 @Override
