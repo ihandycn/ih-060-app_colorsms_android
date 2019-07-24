@@ -116,13 +116,16 @@ public class ThemeColorSelectActivity extends BaseActivity implements OnColorCha
     public void onBackPressed() {
         super.onBackPressed();
         if (mPrePrimaryColor != PrimaryColors.getPrimaryColor()) {
-
             // clear media caches
             Factory.get().reclaimMemory();
             // update drawable color cache
             ConversationDrawables.get().updateDrawables();
-            BugleAnalytics.logEvent("Customize_ThemeColor_Change", true, true, "color",
+            BugleAnalytics.logEvent("Customize_ThemeColor_Change", true, "color",
                     String.valueOf(getPrimaryColorType()), "withTheme", String.valueOf(!ThemeUtils.isDefaultTheme()));
+
+            BugleFirebaseAnalytics.logEvent("Customize_ThemeColor_Change","color",
+                    String.valueOf(getPrimaryColorType()), "withTheme", String.valueOf(!ThemeUtils.isDefaultTheme()));
+
             HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
         }
     }

@@ -246,7 +246,7 @@ public class FiveStarRateDialog extends DefaultButtonDialog2 implements View.OnC
             BugleFirebaseAnalytics.logEvent("Alert_FiveStar_Submit_BtnClicked", "type", (mCurrentPosition + 1) + "star");
             if (mCurrentPosition >= MAX_POSITION) {
                 HSMarketUtils.browseAPP();
-                BugleAnalytics.logEventToFirebase("SMS_Satisfied", new HashMap<>());
+                BugleFirebaseAnalytics.logEvent("SMS_Satisfied", new HashMap<>());
                 PermissionGuideManager.getInstance().showPermissionGuide(HSApplication.getContext(),
                         PermissionGuideManager.PermissionGuideType.FIVE_STAR_RATE, false);
                 logGuideShown();
