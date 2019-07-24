@@ -408,7 +408,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         int todayShowCount = Preferences.getDefault().incrementAndGetInt(PREF_KEY_TODAY_SHOW_COUNT);
         Preferences.getDefault().putLong(PREF_KEY_LAST_SHOW_TIME, System.currentTimeMillis());
         if (todayShowCount > 20) {
-            BugleFirebaseAnalytics.logEvent("SMS_Messages_Show_Positive", new HashMap<>());
+            BugleFirebaseAnalytics.logEvent("SMS_Messages_Show_Positive");
         }
 
 

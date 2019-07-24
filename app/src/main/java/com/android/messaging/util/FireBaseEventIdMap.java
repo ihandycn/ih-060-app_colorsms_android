@@ -125,6 +125,8 @@ class FireBaseEventIdMap {
 
         EVENTS_MAP.put("SMS_Ad", true);
         EVENTS_MAP.put("SMS_Satisfied", true);
+
+        EVENTS_MAP.put("SMS_Messages_Show_Positive", true);
     }
 
     static boolean getIsValidEventId(String eventId) {

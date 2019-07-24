@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import com.android.messaging.R;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -81,7 +82,8 @@ public class EmojiPagerFragment extends Fragment {
             addBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(
                     context.getResources().getColor(R.color.white), 0, true));
             addBtn.setOnClickListener(v -> {
-                BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Store_Click", true, true, "type", "chat_tab");
+                BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Store_Click", true, "type", "chat_tab");
+                BugleFirebaseAnalytics.logEvent("SMSEmoji_ChatEmoji_Store_Click", "type", "chat_tab");
                 EmojiStoreActivity.start(container.getContext());
             });
 

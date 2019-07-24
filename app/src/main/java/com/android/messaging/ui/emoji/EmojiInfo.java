@@ -144,7 +144,7 @@ public class EmojiInfo extends BaseEmojiInfo {
         File dir = new File(EmojiStyleDownloadManager.getBaseDir(), mEmojiStyle);
         if (!dir.exists()) {
             HSLog.e("getDrawableFromFile: the resource file of " + mEmojiStyle + " not exists : " + mResource);
-            return getDrawable();
+            return new EmojiDrawable(mEmoji);
         }
         File file = new File(dir.getAbsolutePath(), mResource + ".png");
         return Drawable.createFromPath(file.getAbsolutePath());
