@@ -14,6 +14,9 @@ class FireBaseEventIdMap {
         EVENTS_MAP.put("Device_High_Retention", true);
         EVENTS_MAP.put("Device_ExtraHigh_Retention", true);
         EVENTS_MAP.put("Device_HUAWEI", true);
+        EVENTS_MAP.put("Device_MOTOLG", true);
+        EVENTS_MAP.put("Device_Samsung", true);
+        EVENTS_MAP.put("Device_Vivo", true);
 
         EVENTS_MAP.put("SMS_Messages_Create", true);
         EVENTS_MAP.put("SMS_Messages_Show_Corrected", true);
