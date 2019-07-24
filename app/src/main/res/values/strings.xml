@@ -1110,6 +1110,14 @@
     <string name="message_box_indicator" translatable="false">%1$d \/ %2$d</string>
 
     <string name="emoji_skin_tone_setting">Emoji Skin Tone</string>
+    <string name="emoji_style_setting">Emoji Style</string>
+    <string name="emoji_style_current_set">Current Set</string>
+    <string name="emoji_style_downloaded">Downloaded</string>
+    <string name="emoji_style_downloading">Downloading</string>
+    <string name="emoji_style_download">Download</string>
+    <string name="emoji_style_download_failed">Network error</string>
+    <string name="emoji_style_download_success"> emoji downloaded successfully.</string>
+    <string name="emoji_style_default">Default</string>
     <string name="emoji_long_click">Skin tone for all emojis can be set in Settings.</string>
 
     <string name="privacy_mode_settings">Privacy Mode</string>

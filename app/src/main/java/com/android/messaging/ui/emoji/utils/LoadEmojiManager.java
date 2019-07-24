@@ -30,7 +30,7 @@ public class LoadEmojiManager{
         Threads.postOnThreadPoolExecutor(new Runnable() {
             @Override
             public void run() {
-                mEmojiData = EmojiDataProducer.loadEmojiData();
+                mEmojiData = EmojiDataProducer.loadEmojiData(EmojiManager.getEmojiStyle());
                 mStickerData = EmojiDataProducer.loadStickerData();
                 Threads.postOnMainThread(new Runnable() {
                     @Override

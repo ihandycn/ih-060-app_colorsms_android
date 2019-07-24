@@ -6,6 +6,41 @@
 	<dict>
 		<key>Application</key>
 		<dict>
+			<key>EmojiStyle</key>
+			<array>
+				<dict>
+					<key>name</key>
+					<string>Twitter</string>
+					<key>PreViewPicUrl</key>
+					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/twitter.png</string>
+					<key>DownloadUrl</key>
+					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/Twitter.zip</string>
+					<key>DownloadSize</key>
+					<string>4.5</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>Android Pie</string>
+					<key>PreViewPicUrl</key>
+					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/androidpie.png</string>
+					<key>DownloadUrl</key>
+					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/AndroidPie.zip</string>
+					<key>DownloadSize</key>
+					<string>7.4</string>
+				</dict>
+				<dict>
+					<key>name</key>
+					<string>Android Blob</string>
+					<key>PreViewPicUrl</key>
+					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/androidblob.png</string>
+					<key>DownloadUrl</key>
+					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/AndroidBlob.zip</string>
+					<key>DownloadSize</key>
+					<string>6.1</string>
+				</dict>
+			</array>
+			<key>PrivateBox</key>
+			<true/>
 			<key>BackupRestore</key>
 			<dict>
 				<key>FreeUpOldmsg</key>

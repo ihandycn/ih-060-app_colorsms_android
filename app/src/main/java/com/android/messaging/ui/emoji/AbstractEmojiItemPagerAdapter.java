@@ -5,6 +5,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.view.View;
 
+import java.util.List;
+
 public abstract class AbstractEmojiItemPagerAdapter extends PagerAdapter {
 
     private int mNeedUpdatePagePosition = -1;
@@ -29,4 +31,6 @@ public abstract class AbstractEmojiItemPagerAdapter extends PagerAdapter {
     public abstract void setTabLayout(TabLayout tabLayout);
     public abstract void updateRecentItem();
     public abstract void updateTabView();
+    // lazy load
+    public abstract void loadData(List<EmojiPackageInfo> infoList);
 }

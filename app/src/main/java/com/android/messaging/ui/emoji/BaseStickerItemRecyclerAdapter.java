@@ -28,7 +28,6 @@ import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import pl.droidsonroids.gif.GifDrawable;
 import pl.droidsonroids.gif.GifImageView;

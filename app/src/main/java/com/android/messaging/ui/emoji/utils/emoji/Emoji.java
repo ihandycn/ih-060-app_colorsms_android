@@ -52,6 +52,10 @@ public final class Emoji implements Serializable {
         return this.unicode;
     }
 
+    public String getResource(){
+        return this.resource;
+    }
+
     public List<Emoji> getVariants() {
         return this.variants;
     }

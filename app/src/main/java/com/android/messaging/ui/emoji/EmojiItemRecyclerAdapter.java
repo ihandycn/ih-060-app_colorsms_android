@@ -1,10 +1,6 @@
 package com.android.messaging.ui.emoji;
 
 import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.ColorFilter;
-import android.graphics.Paint;
-import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -14,25 +10,25 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.emoji.utils.emoispan.EmojiCache;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
+import com.android.messaging.ui.emoji.EmojiPagerFragment.OnEmojiClickListener;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private static final int TYPE_IMAGE = 1;
     private static final int TYPE_TEXT = 2;
     private Context mContext;
-    private Map<String, EmojiDrawable> cache = new HashMap<>();
+    private int mItemHeight = -1;
 
     private List<BaseEmojiInfo> mData;
-    private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
+    private OnEmojiClickListener mOnEmojiClickListener;
 
-    EmojiItemRecyclerAdapter(List<BaseEmojiInfo> data, EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener) {
+    EmojiItemRecyclerAdapter(List<BaseEmojiInfo> data, OnEmojiClickListener emojiClickListener) {
         mData = data;
         mOnEmojiClickListener = emojiClickListener;
     }
@@ -51,75 +47,57 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
     @SuppressWarnings("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof EmojiImageViewHolder) {
-            ((EmojiImageViewHolder) holder).imageView.setOnClickListener(v -> {
-                if (mOnEmojiClickListener != null) {
-                    mOnEmojiClickListener.deleteEmoji();
-                }
-            });
-        } else if (holder instanceof EmojiViewHolder) {
-            final EmojiViewHolder emojiHolder = (EmojiViewHolder) holder;
-            final BaseEmojiInfo info = mData.get(position);
-            if (info.mEmojiType == EmojiType.EMOJI_EMPTY) {
-                emojiHolder.emojiView.setVisibility(View.INVISIBLE);
-            } else {
-                final EmojiInfo emojiInfo = (EmojiInfo) info;
-                emojiHolder.itemView.setTag(emojiInfo);
 
-                if (cache.containsKey(emojiInfo.mEmoji)) {
-                    emojiHolder.emojiView.setImageDrawable(cache.get(emojiInfo.mEmoji));
-                } else {
-                    Threads.postOnThreadPoolExecutor(new Runnable() {
+        final EmojiViewHolder emojiHolder = (EmojiViewHolder) holder;
+        final BaseEmojiInfo info = mData.get(position);
+        if (info.mEmojiType == EmojiType.EMOJI_EMPTY) {
+            emojiHolder.emojiView.setVisibility(View.INVISIBLE);
+        } else {
+            final EmojiInfo emojiInfo = (EmojiInfo) info;
+            emojiHolder.itemView.setTag(emojiInfo);
+
+            Threads.postOnThreadPoolExecutor(new Runnable() {
+                @Override
+                public void run() {
+                    Drawable emojiDrawable = EmojiCache.getInstance().getFromCache(emojiInfo);
+                    Threads.postOnMainThread(new Runnable() {
                         @Override
                         public void run() {
-                            EmojiDrawable emojiDrawable = new EmojiDrawable(((EmojiInfo) info).mEmoji);
-                            Threads.postOnMainThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    cache.put(emojiInfo.mEmoji, emojiDrawable);
-                                    emojiHolder.emojiView.setImageDrawable(emojiDrawable);
-                                }
-                            });
+                            emojiHolder.emojiView.setImageDrawable(emojiDrawable);
                         }
                     });
                 }
-                emojiHolder.itemContainer.setBackground(BackgroundDrawables.createBackgroundDrawable(
-                        mContext.getResources().getColor(android.R.color.white), Dimensions.pxFromDp(21), true));
+            });
+            if (mItemHeight == -1) {
+                mItemHeight = Dimensions.getPhoneWidth(mContext) / 9;
+            }
+            emojiHolder.itemContainer.getLayoutParams().height = mItemHeight;
 
-                emojiHolder.itemContainer.setOnClickListener(v -> {
-                    if (mOnEmojiClickListener != null) {
-                        mOnEmojiClickListener.emojiClick(emojiInfo, !emojiInfo.isRecent);
+            emojiHolder.itemContainer.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                    mContext.getResources().getColor(android.R.color.white), Dimensions.pxFromDp(21), true));
+
+            emojiHolder.itemContainer.setOnClickListener(v -> {
+                if (mOnEmojiClickListener != null) {
+                    mOnEmojiClickListener.emojiClick(emojiInfo, !emojiInfo.isRecent);
+                }
+            });
+
+            if (emojiInfo.hasVariant()) {
+                emojiHolder.itemContainer.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        if (mOnEmojiClickListener != null) {
+                            EmojiInfo info = (EmojiInfo) emojiHolder.itemView.getTag();
+                            mOnEmojiClickListener.emojiLongClick(emojiHolder.emojiView, info);
+                        }
+                        return true;
                     }
                 });
-
-                if (emojiInfo.hasVariant()) {
-                    emojiHolder.itemContainer.setOnLongClickListener(new View.OnLongClickListener() {
-                        @Override
-                        public boolean onLongClick(View v) {
-                            if (mOnEmojiClickListener != null) {
-                                EmojiInfo info = (EmojiInfo) emojiHolder.itemView.getTag();
-                                mOnEmojiClickListener.emojiLongClick(emojiHolder.emojiView, info);
-                            }
-                            return true;
-                        }
-                    });
-                    emojiHolder.moreView.setVisibility(View.VISIBLE);
-                } else {
-                    emojiHolder.itemContainer.setOnLongClickListener(null);
-                    emojiHolder.moreView.setVisibility(View.GONE);
-                }
+                emojiHolder.moreView.setVisibility(View.VISIBLE);
+            } else {
+                emojiHolder.itemContainer.setOnLongClickListener(null);
+                emojiHolder.moreView.setVisibility(View.GONE);
             }
-        }
-    }
-
-
-    @Override
-    public int getItemViewType(int position) {
-        BaseEmojiInfo info = mData.get(position);
-        if (info.mEmojiType == EmojiType.EMOJI_DELETE) {
-            return TYPE_IMAGE;
-        } else {
-            return TYPE_TEXT;
         }
     }
 
@@ -147,41 +125,6 @@ public class EmojiItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.
         EmojiImageViewHolder(View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.emoji_delete_btn);
-        }
-    }
-
-    public static class EmojiDrawable extends Drawable {
-
-        private Paint mPaint;
-        private String mUnicode;
-
-        public EmojiDrawable(String unicode) {
-            mPaint = new Paint();
-            mUnicode = unicode;
-        }
-
-        @Override
-        public void draw(Canvas canvas) {
-            mPaint.setTextAlign(Paint.Align.LEFT);
-            mPaint.setTextSize(Dimensions.pxFromDp(25));
-//            Rect bounds = new Rect();
-//            mPaint.getTextBounds(mUnicode, 0, mUnicode.length(), bounds);
-            canvas.drawText(mUnicode, Dimensions.pxFromDp(1f), Dimensions.pxFromDp(25), mPaint);
-        }
-
-        @Override
-        public void setAlpha(int alpha) {
-            mPaint.setAlpha(alpha);
-        }
-
-        @Override
-        public void setColorFilter(ColorFilter colorFilter) {
-            mPaint.setColorFilter(colorFilter);
-        }
-
-        @Override
-        public int getOpacity() {
-            return PixelFormat.TRANSLUCENT;
         }
     }
 

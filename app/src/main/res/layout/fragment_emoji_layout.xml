@@ -7,12 +7,11 @@
     android:background="#ffffff"
     android:orientation="vertical">
 
-    <com.android.messaging.ui.emoji.ViewPagerWithoutAnim
-        android:id="@+id/emoji_pager"
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/bottom_tab_layout"
-        />
+        android:layout_above="@+id/bottom_tab_layout" />
 
     <RelativeLayout
         android:id="@+id/bottom_tab_layout"
@@ -26,21 +25,13 @@
             android:layout_height="2px"
             android:background="#dae0e5" />
 
-        <android.support.design.widget.TabLayout
+        <com.android.messaging.ui.emoji.MainTabViewLayout
             android:id="@+id/emoji_tab_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/line_view"
             android:layout_toStartOf="@id/emoji_delete_btn"
-            app:tabBackground="@color/transparent"
-            app:tabIndicatorHeight="0dp"
-            app:tabMaxWidth="0dp"
-            app:tabMinWidth="0dp"
-            app:tabMode="scrollable"
-            app:tabPaddingBottom="0dp"
-            app:tabPaddingEnd="0dp"
-            app:tabPaddingStart="0dp"
-            app:tabPaddingTop="0dp" />
+            android:orientation="horizontal"/>
 
         <FrameLayout
             android:id="@+id/emoji_delete_btn"

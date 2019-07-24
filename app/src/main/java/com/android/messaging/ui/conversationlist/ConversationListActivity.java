@@ -1003,17 +1003,18 @@ public class ConversationListActivity extends AbstractConversationListActivity
         return mIsExitAdShown;
     }
 
-    @Override protected void onRestart() {
+    @Override
+    protected void onRestart() {
         super.onRestart();
         if (mIsExitAdShown) {
             Intent intent = new Intent(this, ConversationListActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
-            if (mInterstitialAd != null){
+            if (mInterstitialAd != null) {
                 mInterstitialAd.release();
             }
             mIsExitAdShown = false;
-            if (mExitAppAnimationViewContainer != null){
+            if (mExitAppAnimationViewContainer != null) {
                 mExitAppAnimationViewContainer.setVisibility(View.GONE);
             }
 
@@ -1247,7 +1248,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                 "emojiskintone", String.valueOf(EmojiManager.getSkinDefault() + 1));
 
                         BugleAnalytics.logEvent("SMS_Messages_Show_2", true,
-                                "subscription", String.valueOf(BillingManager.isPremiumUser()));
+                                "subscription", String.valueOf(BillingManager.isPremiumUser()),
+                                "type", EmojiManager.getEmojiStyle());
 
                     });
                 }

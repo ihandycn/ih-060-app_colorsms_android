@@ -23,6 +23,7 @@ import com.android.messaging.feedback.FeedbackActivity;
 import com.android.messaging.smsshow.SmsShowUtils;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.BaseDialogFragment;
+import com.android.messaging.ui.SettingEmojiStyleItemView;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
@@ -33,6 +34,7 @@ import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.PhoneUtils;
+import com.android.messaging.util.TransitionUtils;
 import com.android.messaging.util.UiUtils;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,6 +49,7 @@ import static android.view.View.GONE;
 public class SettingActivity extends BaseActivity {
     private static final int REQUEST_CODE_START_RINGTONE_PICKER = 1;
     private static final int RC_SIGN_IN = 12;
+    private static final int EMOJI_STYLE_SET = 13;
 
     private GeneralSettingItemView mSmsShowView;
     private GeneralSettingItemView mNotificationView;
@@ -58,6 +61,9 @@ public class SettingActivity extends BaseActivity {
     private GeneralSettingItemView mSyncSettingsView;
     private GeneralSettingItemView mSendDelayView;
     private GeneralSettingItemView mSMSDeliveryReports;
+
+    private SettingEmojiStyleItemView mSettingEmojiStyleItemView;
+
     private GeneralSettingItemView mOutgoingSoundView;
 
     private View mNotificationChildrenGroup;
@@ -180,15 +186,25 @@ public class SettingActivity extends BaseActivity {
         setUpNotificationView();
 
         //emoji
-        SettingEmojiItemView settingEmojiItemView = findViewById(R.id.setting_item_emoji);
+        mSettingEmojiStyleItemView = findViewById(R.id.setting_item_emoji_style);
+        mSettingEmojiStyleItemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BugleAnalytics.logEvent("Settings_EmojiStyle_Click");
+                Intent intent = new Intent(SettingActivity.this, EmojiStyleSetActivity.class);
+                startActivityForResult(intent, EMOJI_STYLE_SET, TransitionUtils.getTransitionInBundle(SettingActivity.this));
+            }
+        });
+
+        SettingEmojiSkinItemView settingEmojiSkinItemView = findViewById(R.id.setting_item_emoji_skin);
         if (Build.VERSION.SDK_INT >= 24) {
-            settingEmojiItemView.setDefault(EmojiManager.EMOJI_SKINS[EmojiManager.getSkinDefault()]);
-            settingEmojiItemView.setOnItemClickListener(() -> {
+            settingEmojiSkinItemView.setDefault(EmojiManager.EMOJI_SKINS[EmojiManager.getSkinDefault()]);
+            settingEmojiSkinItemView.setOnItemClickListener(() -> {
                 ChooseEmojiSkinDialog dialog = new ChooseEmojiSkinDialog();
                 dialog.setOnDismissOrCancelListener(new BaseDialogFragment.OnDismissOrCancelListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        settingEmojiItemView.updateSkin(EmojiManager.EMOJI_SKINS[EmojiManager.getSkinDefault()]);
+                        settingEmojiSkinItemView.updateSkin(EmojiManager.EMOJI_SKINS[EmojiManager.getSkinDefault()]);
                     }
 
                     @Override
@@ -197,12 +213,11 @@ public class SettingActivity extends BaseActivity {
                     }
                 });
 
-
                 UiUtils.showDialogFragment(this, dialog);
                 BugleAnalytics.logEvent("Settings_EmojiSkintone_Click");
             });
         } else {
-            settingEmojiItemView.setVisibility(GONE);
+            settingEmojiSkinItemView.setVisibility(GONE);
             findViewById(R.id.setting_title_emoji).setVisibility(GONE);
         }
 
@@ -505,6 +520,12 @@ public class SettingActivity extends BaseActivity {
                 mSyncSettingsView.setSummary(getString(R.string.firebase_sync_desktop_settings_description_logged_in));
             } else {
                 Toasts.showToast(R.string.firebase_login_failed);
+            }
+        } else if (requestCode == EMOJI_STYLE_SET) {
+            if (resultCode == RESULT_OK) {
+                String name = data.getStringExtra("name");
+                String url = data.getStringExtra("url");
+                mSettingEmojiStyleItemView.update(name, url);
             }
         }
     }

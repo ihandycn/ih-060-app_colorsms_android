@@ -20,14 +20,15 @@ import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.DisplayUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.android.messaging.ui.emoji.EmojiPagerFragment.OnEmojiClickListener;
 
 public class EmojiVariantPopup {
-    private final EmojiPackagePagerAdapter.OnEmojiClickListener mListener;
+    private final OnEmojiClickListener mListener;
     private PopupWindow mPopupWindow;
     private View mAnchorView;
     private final View mRootView;
 
-    public EmojiVariantPopup(View rootView, EmojiPackagePagerAdapter.OnEmojiClickListener onEmojiInfoClickListener) {
+    public EmojiVariantPopup(View rootView, OnEmojiClickListener onEmojiInfoClickListener) {
         this.mRootView = rootView;
         this.mListener = onEmojiInfoClickListener;
     }
@@ -93,14 +94,16 @@ public class EmojiVariantPopup {
         LinearLayout linearLayout = (LinearLayout) inflate.findViewById(R.id.container);
         EmojiInfo[] variants = emojiInfo.mVariants;
         LayoutInflater from = LayoutInflater.from(context);
-        for (final EmojiInfo item : variants) {
+        for (int i = 0; i < variants.length; i++) {
+            EmojiInfo item = variants[i];
             View container = from.inflate(R.layout.emoji_item_layout, linearLayout, false);
             ImageView view = container.findViewById(R.id.emoji_view);
             MarginLayoutParams marginLayoutParams = (MarginLayoutParams) view.getLayoutParams();
             int dpToPx = (int) DisplayUtils.dpToPx(context, 2.0f);
             marginLayoutParams.width = width;
             marginLayoutParams.setMargins(dpToPx, dpToPx, dpToPx, dpToPx);
-            view.setImageDrawable(new EmojiItemRecyclerAdapter.EmojiDrawable(item.mEmoji));
+            view.setImageDrawable(item.getDrawable());
+            int finalI = i;
             view.setOnClickListener(new OnClickListener() {
                 public void onClick(View view) {
                     if (mListener != null) {
@@ -111,9 +114,10 @@ public class EmojiVariantPopup {
                             mListener.emojiClick(item, true);
                         }
                     }
-                    EmojiManager.addSkinSingleRecord(item.getUnicode(), item.mEmoji);
+                    EmojiManager.addSkinSingleRecord(item.getUnicode(), finalI);
                     emojiInfo.mEmoji = item.mEmoji;
-                    ((ImageView) mAnchorView).setImageDrawable(new EmojiItemRecyclerAdapter.EmojiDrawable(emojiInfo.mEmoji));
+                    emojiInfo.mResource = item.mResource;
+                    ((ImageView) mAnchorView).setImageDrawable(emojiInfo.getDrawable());
                     mPopupWindow.dismiss();
                     if (EmojiManager.isFirstEmojiVariantClick()) {
                         Toast.makeText(context, context.getResources().getString(R.string.emoji_long_click), Toast.LENGTH_LONG).show();

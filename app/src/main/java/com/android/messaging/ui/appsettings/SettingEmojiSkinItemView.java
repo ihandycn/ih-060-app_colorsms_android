@@ -10,16 +10,16 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.superapps.util.Dimensions;
 
-public class SettingEmojiItemView extends BaseItemView {
-    public SettingEmojiItemView(Context context) {
+public class SettingEmojiSkinItemView extends BaseItemView {
+    public SettingEmojiSkinItemView(Context context) {
         super(context);
     }
 
-    public SettingEmojiItemView(Context context, @Nullable AttributeSet attrs) {
+    public SettingEmojiSkinItemView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public SettingEmojiItemView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public SettingEmojiSkinItemView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
     }

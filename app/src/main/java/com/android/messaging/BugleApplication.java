@@ -51,7 +51,14 @@ import com.android.messaging.sms.BugleUserAgentInfoLoader;
 import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SetAsDefaultGuideActivity;
+import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
+import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.android.messaging.ui.emoji.utils.emoispan.EmojiCache;
+import com.android.messaging.ui.emoji.utils.emoispan.EmojiSpannableWorker;
+import com.android.messaging.ui.emoji.utils.emoji.Emoji;
+import com.android.messaging.ui.emoji.utils.emoji.EmojiCategory;
+import com.android.messaging.ui.emoji.utils.emoji.EmojiProvider;
 import com.android.messaging.upgrader.Upgrader;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
@@ -114,10 +121,13 @@ import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+import hugo.weaving.DebugLog;
 import io.fabric.sdk.android.Fabric;
 
 import static android.content.IntentFilter.SYSTEM_HIGH_PRIORITY;
@@ -213,6 +223,68 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 AcbService.setGDPRConsentGranted(false);
             }
         });
+
+        prepareEmoji();
+
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                checkEmoji();
+//            }
+//        }).start();
+    }
+
+    @DebugLog
+    private void prepareEmoji() {
+        EmojiSpannableWorker.install();
+
+        // initialize emoji cache
+        EmojiCache.getInstance();
+    }
+
+    // use for debug
+    private void checkEmoji() {
+        File dir = new File(getContext().getFilesDir(), "emoji");
+        dir = new File(dir, "" + EmojiManager.getEmojiStyle());
+        HSLog.d("emoji_resource_check", dir.getAbsolutePath());
+        ArrayList<String> files = new ArrayList<>();
+        for (File file : dir.listFiles()) {
+            files.add(file.getName());
+        }
+        Set<String> emojiResource = new HashSet<>();
+
+        EmojiCategory[] categories = EmojiProvider.getCategories();
+        String emojiStyle = EmojiManager.getEmojiStyle();
+        for (EmojiCategory category : categories) {
+            for (Emoji emoji : category.getEmojis()) {
+                EmojiInfo info = EmojiInfo.convert(emoji, emojiStyle);
+                emojiResource.add(info.mResource);
+                if (info.getDrawable() == null) {
+                    HSLog.d("emoji_resource_check", info.mResource);
+                }
+                for (EmojiInfo variantInfo : info.mVariants) {
+                    emojiResource.add(variantInfo.mResource);
+                    if (variantInfo.getDrawable() == null) {
+                        HSLog.d("emoji_resource_check", variantInfo.mResource);
+                    }
+                }
+            }
+        }
+
+        HSLog.d("emoji_unuse: ", "files: " + files.size());
+        for (String emoji : emojiResource) {
+            int i = files.indexOf(emoji + ".png");
+            if (i != -1) {
+                files.remove(i);
+            }
+        }
+
+        HSLog.d("emoji_unuse: ", "emojiResource: " + emojiResource.size());
+        for (String file : files) {
+            File f = new File(dir, file);
+            f.delete();
+        }
+        HSLog.d("emoji_unuse", "files: " + files.size());
     }
 
     private void initAd() {

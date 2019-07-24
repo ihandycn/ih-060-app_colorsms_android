@@ -7,6 +7,7 @@ import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.EmojiPackageInfo;
 import com.android.messaging.ui.emoji.EmojiPackageType;
+import com.android.messaging.ui.emoji.StickerInfo;
 import com.android.messaging.ui.emoji.utils.emoji.Emoji;
 import com.android.messaging.ui.emoji.utils.emoji.EmojiCategory;
 import com.android.messaging.ui.emoji.utils.emoji.EmojiProvider;
@@ -34,7 +35,7 @@ public class EmojiDataProducer {
         result.add(recentInfo);
 
         List<EmojiPackageInfo> addInfo = EmojiConfig.getInstance().getAddedEmojiFromConfig();
-        for (EmojiPackageInfo info : addInfo){      // clear data, on retain tab info. Keep fluency during view initialisation
+        for (EmojiPackageInfo info : addInfo) {      // clear data, on retain tab info. Keep fluency during view initialisation
             info.mEmojiInfoList = new ArrayList<>();
         }
         result.addAll(addInfo);
@@ -81,7 +82,7 @@ public class EmojiDataProducer {
                 context.getResources().getIdentifier("emoji_category_recent", "drawable", packageName)).toString();
         recentInfo.mTabIconSelectedUrl = Uri.parse("android.resource://" + packageName + "/" +
                 context.getResources().getIdentifier("emoji_category_recent_selected", "drawable", packageName)).toString();
-        recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.EMOJI);
+        recentInfo.mEmojiInfoList = new ArrayList<>(loadEmojiRecentData());
         result.add(recentInfo);
 
         for (EmojiCategory category : categoryList) {
@@ -97,17 +98,19 @@ public class EmojiDataProducer {
         return result;
     }
 
-    public static List<EmojiPackageInfo> loadEmojiData(){
+    // load emoji don't include recent emoji
+    public static List<EmojiPackageInfo> loadEmojiData(String emojiStyle) {
+        boolean useSystemStyle = EmojiManager.isSystemEmojiStyle();
         List<EmojiPackageInfo> result = new ArrayList<>();
         EmojiCategory[] categoryList = EmojiProvider.getCategories();
         for (EmojiCategory category : categoryList) {
             List<BaseEmojiInfo> emojiList = new ArrayList<>();
             for (Emoji emoji : category.getEmojis()) {
                 // skip the emoji unicode which system not support
-                if (!emoji.isSupport()) {
+                if (useSystemStyle && (!emoji.isSupport())) {
                     continue;
                 }
-                EmojiInfo itemInfo = EmojiInfo.convert(emoji);
+                EmojiInfo itemInfo = EmojiInfo.convert(emoji, emojiStyle);
                 changeSkin(itemInfo);
                 emojiList.add(itemInfo);
             }
@@ -118,39 +121,47 @@ public class EmojiDataProducer {
         return result;
     }
 
-    public static EmojiPackageInfo loadEmojiRecentData(){
-        EmojiPackageInfo recentInfo = new EmojiPackageInfo();
-        recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.EMOJI);
-        for(BaseEmojiInfo item : recentInfo.mEmojiInfoList){
-            EmojiInfo info = (EmojiInfo)item;
+    public static List<EmojiInfo> loadEmojiRecentData() {
+        List<BaseEmojiInfo> recentEmojis = EmojiManager.getRecentInfo(EmojiPackageType.EMOJI);
+        String emojiStyle = EmojiManager.getEmojiStyle();
+
+        List<EmojiInfo> result = new ArrayList<>();
+        for (BaseEmojiInfo item : recentEmojis) {
+            EmojiInfo info = (EmojiInfo) item;
+            info.mEmojiStyle = emojiStyle;
             changeSkin(info);
+            result.add(info);
         }
-        return recentInfo;
+        return result;
     }
 
-    public static List<EmojiPackageInfo> loadStickerData(){
+    // load sticker don't include recent sticker
+    public static List<EmojiPackageInfo> loadStickerData() {
         return EmojiConfig.getInstance().getAddedEmojiFromConfig();
     }
 
-    public static EmojiPackageInfo loadStickerRecentData(){
-        EmojiPackageInfo recentInfo = new EmojiPackageInfo();
-        recentInfo.mEmojiInfoList = EmojiManager.getRecentInfo(EmojiPackageType.STICKER);
-        return recentInfo;
+    public static List<StickerInfo> loadStickerRecentData() {
+        List<BaseEmojiInfo> recentInfos = EmojiManager.getRecentInfo(EmojiPackageType.STICKER);
+        List<StickerInfo> results = new ArrayList<>();
+        for (BaseEmojiInfo info : recentInfos) {
+            results.add((StickerInfo) info);
+        }
+        return results;
     }
 
 
-
-
-    private static void changeSkin(EmojiInfo info){
+    private static void changeSkin(EmojiInfo info) {
         if (info.hasVariant()) {
             // get skin record
-            String record = EmojiManager.getSkinSingleRecord(info.getUnicode());
-            if (record != null) {
-                info.mEmoji = record;
+            int record = EmojiManager.getSkinSingleRecord(info.getUnicode());
+            if (record != -1) {
+                info.mEmoji = info.mVariants[record].mEmoji;
+                info.mResource = info.mVariants[record].mResource;
             } else {
                 int index = EmojiManager.getSkinDefault();
                 if (index >= 0 && index < info.mVariants.length) {
                     info.mEmoji = info.mVariants[index].mEmoji;
+                    info.mResource = info.mVariants[index].mResource;
                 }
             }
         }

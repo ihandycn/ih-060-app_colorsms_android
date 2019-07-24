@@ -79,8 +79,7 @@
                     app:type="withTriangle" />
             </LinearLayout>
 
-            <View
-                style="@style/SettingDividerStyle" />
+            <View style="@style/SettingDividerStyle" />
 
             <com.android.messaging.ui.view.MessagesTextView
                 android:id="@+id/setting_title_emoji"
@@ -90,8 +89,15 @@
                 android:text="@string/emoji"
                 app:typeface="@string/custom_font_regular" />
 
-            <com.android.messaging.ui.appsettings.SettingEmojiItemView
-                android:id="@+id/setting_item_emoji"
+            <com.android.messaging.ui.SettingEmojiStyleItemView
+                android:id="@+id/setting_item_emoji_style"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/emoji_style_setting"
+                app:typeface="@string/custom_font_regular" />
+
+            <com.android.messaging.ui.appsettings.SettingEmojiSkinItemView
+                android:id="@+id/setting_item_emoji_skin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:hideDivideLine="true"

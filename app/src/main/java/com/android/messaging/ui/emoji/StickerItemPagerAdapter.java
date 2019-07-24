@@ -2,6 +2,7 @@ package com.android.messaging.ui.emoji;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -14,11 +15,14 @@ import android.widget.ImageView;
 
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
+import com.android.messaging.glide.GlideRequest;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.emoji.EmojiPagerFragment.OnEmojiClickListener;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.UiUtils;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Threads;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +36,11 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
     private TabLayout mTabLayout;
 
     private List<EmojiPackageInfo> mData;
-    private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
+    private OnEmojiClickListener mOnEmojiClickListener;
     private Context mContext;
     private boolean mIsFirst = true;
 
-    StickerItemPagerAdapter(List<EmojiPackageInfo> data, Context context, EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener) {
+    StickerItemPagerAdapter(List<EmojiPackageInfo> data, Context context, OnEmojiClickListener emojiClickListener) {
         mOnEmojiClickListener = emojiClickListener;
         mData = new ArrayList<>();
         if (data != null) {
@@ -78,7 +82,8 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
         return view;
     }
 
-    public void initData(List<EmojiPackageInfo> infoList) {
+    @Override
+    public void loadData(List<EmojiPackageInfo> infoList) {
         for (int i = 1; i < mData.size(); i++) {
             mData.get(i).mEmojiInfoList.clear();
             mData.get(i).mEmojiInfoList.addAll(infoList.get(i - 1).mEmojiInfoList);
@@ -119,7 +124,19 @@ public class StickerItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
                 newTabView.setVisibility(View.GONE);
             }
             // cancel cache to avoid showing wrong image
-            GlideApp.with(mContext).load(info.mTabIconUrl).diskCacheStrategy(DiskCacheStrategy.NONE).placeholder(R.drawable.emoji_tab_normal_icon).into(tabIconView);
+//            GlideApp.with(mContext).load(info.mTabIconUrl).diskCacheStrategy(DiskCacheStrategy.NONE).placeholder(R.drawable.emoji_tab_normal_icon).into(tabIconView);
+            Threads.postOnThreadPoolExecutor(new Runnable() {
+                @Override
+                public void run() {
+                    GlideRequest<Drawable> requests = GlideApp.with(mContext).load(info.mTabIconUrl);
+                    Threads.postOnMainThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            requests.diskCacheStrategy(DiskCacheStrategy.NONE).placeholder(R.drawable.emoji_tab_normal_icon).into(tabIconView);
+                        }
+                    });
+                }
+            });
             if (tab != null) {
                 tab.setCustomView(view);
                 tab.setTag(info);

@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import com.android.messaging.ui.emoji.EmojiPagerFragment.OnEmojiClickListener;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.customize.PrimaryColors;
@@ -32,9 +33,9 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
     private boolean mIsFirst = true;
 
     private List<EmojiPackageInfo> mData;
-    private EmojiPackagePagerAdapter.OnEmojiClickListener mOnEmojiClickListener;
+    private OnEmojiClickListener mOnEmojiClickListener;
 
-    public GiphyItemPagerAdapter(Context context, List<EmojiPackageInfo> data, EmojiPackagePagerAdapter.OnEmojiClickListener emojiClickListener) {
+    public GiphyItemPagerAdapter(Context context, List<EmojiPackageInfo> data, OnEmojiClickListener emojiClickListener) {
         if (data == null || data.isEmpty()) {
             return;
         }
@@ -298,5 +299,10 @@ public class GiphyItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
             }
         }
         mTabLayout.getTabAt(mTabLayout.getSelectedTabPosition()).select();
+    }
+
+    @Override
+    public void loadData(List<EmojiPackageInfo> infoList) {
+
     }
 }
