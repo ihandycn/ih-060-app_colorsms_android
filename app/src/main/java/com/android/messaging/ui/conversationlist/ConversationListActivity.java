@@ -803,7 +803,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
 
         if (mCustomizeGuideController != null
-                && mCustomizeGuideController.closeCustomizeGuide(false)) {
+                && mCustomizeGuideController.closeCustomizeGuide(true)) {
             return;
         }
 

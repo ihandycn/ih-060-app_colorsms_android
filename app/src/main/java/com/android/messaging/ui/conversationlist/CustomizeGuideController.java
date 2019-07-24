@@ -79,8 +79,6 @@ class CustomizeGuideController implements CustomizeGuide {
         FrameLayout.LayoutParams guideMenuFocusParam = (FrameLayout.LayoutParams) guideMenuFocus.getLayoutParams();
         guideMenuFocusParam.topMargin = (int) (Dimensions.getStatusBarHeight(activity) + (actionBarHeight - Dimensions.pxFromDp(43.3f)) * 0.5);
         guideMenuFocus.setLayoutParams(guideMenuFocusParam);
-        guideMenuFocus.setScaleX(16.53f);
-        guideMenuFocus.setScaleY(16.53f);
 
         activity.addContentView(customizeGuideView, params);
         Preferences.getDefault().putBoolean(PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE, false);
@@ -91,7 +89,7 @@ class CustomizeGuideController implements CustomizeGuide {
         ObjectAnimator backgroundAlphaAnimator = ObjectAnimator.ofFloat(transparentBackground, "alpha", 0, 1);
         backgroundAlphaAnimator.setDuration(240);
 
-        Interpolator backgroundInterpolator = PathInterpolatorCompat.create(0.32f, -0.66f, 0.6f, 1);
+        Interpolator backgroundInterpolator = PathInterpolatorCompat.create(0.32f, 0.66f, 0.6f, 1);
 
         ObjectAnimator menuFocusShrinkXAnimator = ObjectAnimator.ofFloat(guideMenuFocus, "scaleX", 16.53f, 0.75f);
         menuFocusShrinkXAnimator.setDuration(240);

@@ -10,7 +10,7 @@ class NavigationViewGuideTest {
     private static final String TOPIC_ID = "topic-771b35ehc";
 
     static String getDefaultType() {
-        return AutopilotConfig.getStringToTestNow(TOPIC_ID, "guide_type", "default");
+        return AutopilotConfig.getStringToTestNow(TOPIC_ID, "guide_type", "black");
     }
 
     static void logGuideShow() {
@@ -54,7 +54,7 @@ class NavigationViewGuideTest {
 
     private static void makeSureInTest() {
         if (BuildConfig.DEBUG) {
-            AutopilotConfig.getStringToTestNow(TOPIC_ID, "guide_type", "default");
+            AutopilotConfig.getStringToTestNow(TOPIC_ID, "guide_type", "black");
         }
     }
 }
