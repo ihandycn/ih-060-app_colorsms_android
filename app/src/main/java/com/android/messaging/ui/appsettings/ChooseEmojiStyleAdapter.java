@@ -18,6 +18,7 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.emoji.utils.EmojiStyleDownloadManager;
 import com.android.messaging.util.OsUtil;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 
@@ -58,7 +59,12 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
         int position = holder.getAdapterPosition();
         EmojiStyleItem item = mDataList.get(position);
         holder.nameText.setText(item.name);
-        holder.itemView.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff, 0, true));
+        if(!item.isInit) {
+            holder.itemView.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff,
+                    HSApplication.getContext().getResources().getColor(com.superapps.R.color.ripples_ripple_color),
+                    0, true, true));
+            item.isInit = true;
+        }
         if (OsUtil.isAtLeastL()) {
             holder.radioButton.setButtonTintList(colorStateList); // Applying tint to drawable at left. '0' to get drawable at bottom
         }
@@ -192,6 +198,7 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
         String sampleImageUrl;
         String downloadUrl;
         int downloadPercent;
+        boolean isInit;
 
         public EmojiStyleItem(String name, String downloadSize, String sampleImageUrl, String downloadUrl) {
             this.name = name;
