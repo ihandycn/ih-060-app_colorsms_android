@@ -106,13 +106,14 @@ public class WallpaperChooserItemView extends FrameLayout {
         if (mCheckedLottie.isAnimating()) {
             mCheckedLottie.cancelAnimation();
         }
+        mIsDownloadAnimationPlaying = false;
         if (item.isItemDownloading()) {
             mIsDownloadAnimationPlaying = true;
             mCheckedLottie.setVisibility(GONE);
             mLoadingBg.setVisibility(VISIBLE);
             mLoadingBg.setAlpha(1);
             mLoadingIv.setVisibility(VISIBLE);
-            mLoadingIv.setAlpha(255);
+            ((View)mLoadingIv).setAlpha(1);
             mDownloadingAnimator.start();
         } else if (item.isItemChecked()) {
             mCheckedLottie.setProgress(1);
