@@ -131,6 +131,7 @@ import hugo.weaving.DebugLog;
 
 import static com.android.messaging.ad.BillingManager.BILLING_VERIFY_SUCCESS;
 import static com.android.messaging.ui.conversation.ConversationActivity.PREF_KEY_WIRE_AD_SHOW_TIME_FOR_EXIT_WIRE_AD;
+import static com.android.messaging.ui.conversationlist.CustomizeGuideController.PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.DESKTOP_PREFS;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME;
 import static com.ihs.app.framework.HSApplication.getContext;
@@ -142,7 +143,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final boolean DEBUGGING_MESSAGE_BOX = false && BuildConfig.DEBUG;
 
     public static final String EVENT_MAINPAGE_RECREATE = "event_mainpage_recreate";
-    public static final String SHOW_MENU_GUIDE = "show_menu_guide";
+    public static final String CONVERSATION_LIST_DISPLAYED = "conversation_list_displayed";
     public static final String FIRST_LOAD = "first_load";
     public static final String HAS_PIN_CONVERSATION = "has_pin_conversation";
 
@@ -254,13 +255,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
 
         HSGlobalNotificationCenter.addObserver(EVENT_MAINPAGE_RECREATE, this);
-        HSGlobalNotificationCenter.addObserver(SHOW_MENU_GUIDE, this);
+        HSGlobalNotificationCenter.addObserver(CONVERSATION_LIST_DISPLAYED, this);
         HSGlobalNotificationCenter.addObserver(FIRST_LOAD, this);
         HSGlobalNotificationCenter.addObserver(NOTIFICATION_NAME_MESSAGES_MOVE_END, this);
         HSGlobalNotificationCenter.addObserver(BILLING_VERIFY_SUCCESS, this);
 
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
-        Threads.postOnMainThreadDelayed(ExitAdConfig::preLoadExitAd, 2000);
         if (!sIsRecreate) {
             Threads.postOnThreadPoolExecutor(() -> {
                 String bgPath = WallpaperManager.getWallpaperPathByConversationId(null);
@@ -369,16 +369,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
         mHasInflatedDrawer = true;
 
         setupDrawer();
-
-        if (AdConfig.isHomepageBannerAdEnabled()) {
-            AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
-        }
-
-        Threads.postOnMainThreadDelayed(() -> {
-            if (AdConfig.isDetailpageTopAdEnabled()) {
-                AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
-            }
-        }, 1000);
     }
 
     @DebugLog
@@ -1210,6 +1200,23 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
     }
 
+    private void preloadAds(long delay) {
+        Threads.postOnMainThreadDelayed(() -> {
+            if (AdConfig.isHomepageBannerAdEnabled()) {
+                AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
+            }
+
+            if (AdConfig.isDetailpageTopAdEnabled()) {
+                AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
+            }
+
+            // preload exit ad
+            ExitAdConfig.preLoadExitAd();
+
+        }, delay);
+    }
+
+
     @Override
     public void onReceive(String s, HSBundle hsBundle) {
         switch (s) {
@@ -1217,19 +1224,24 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 sIsRecreate = true;
                 recreate();
                 break;
-            case SHOW_MENU_GUIDE:
-                Threads.postOnMainThreadDelayed(() -> {
-                    if (mCustomizeGuideController == null) {
-                        if (!isFinishing()) {
-                            if ("default".equals(NavigationViewGuideTest.getDefaultType())) {
-                                mCustomizeGuideController = new LightWeightCustomizeGuideController();
-                            } else {
-                                mCustomizeGuideController = new CustomizeGuideController();
+            case CONVERSATION_LIST_DISPLAYED:
+                if (Preferences.getDefault().getBoolean(PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE, true)) {
+                    preloadAds(2 * DateUtils.SECOND_IN_MILLIS);
+                    Threads.postOnMainThreadDelayed(() -> {
+                        if (mCustomizeGuideController == null) {
+                            if (!isFinishing()) {
+                                if ("default".equals(NavigationViewGuideTest.getDefaultType())) {
+                                    mCustomizeGuideController = new LightWeightCustomizeGuideController();
+                                } else {
+                                    mCustomizeGuideController = new CustomizeGuideController();
+                                }
+                                mCustomizeGuideController.showGuideIfNeed(this);
                             }
-                            mCustomizeGuideController.showGuideIfNeed(this);
                         }
-                    }
-                }, 200);
+                    }, 200);
+                } else {
+                    preloadAds(0L);
+                }
                 break;
             case FIRST_LOAD:
                 if (!sIsRecreate && hsBundle != null) {

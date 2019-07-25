@@ -7,12 +7,10 @@ import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
-import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
-import static com.android.messaging.ui.conversationlist.CustomizeGuideController.PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE;
-
 public class ConversationListRecyclerView extends RecyclerView {
+    private boolean mDisplayed;
 
     public ConversationListRecyclerView(Context context) {
         super(context);
@@ -29,8 +27,9 @@ public class ConversationListRecyclerView extends RecyclerView {
     @Override
     public void onDraw(Canvas c) {
         super.onDraw(c);
-        if (getAdapter() != null && getAdapter().getItemCount() > 0 && Preferences.getDefault().getBoolean(PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE, true)) {
-            Threads.postOnMainThread(() -> HSGlobalNotificationCenter.sendNotification(ConversationListActivity.SHOW_MENU_GUIDE));
+        if (getAdapter() != null && getAdapter().getItemCount() > 0 && !mDisplayed) {
+            Threads.postOnMainThread(() -> HSGlobalNotificationCenter.sendNotification(ConversationListActivity.CONVERSATION_LIST_DISPLAYED));
         }
+        mDisplayed = true;
     }
 }
