@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.R;
@@ -71,6 +72,11 @@ class CustomizeGuideController implements CustomizeGuide {
 
         mCustomizeGuideBackgroundView = customizeGuideView.findViewById(R.id.custom_guide_background_view);
 
+        ImageView menuButtonView = customizeGuideView.findViewById(R.id.menu_button);
+        ConstraintLayout.LayoutParams menuButtonViewParam = (ConstraintLayout.LayoutParams) menuButtonView.getLayoutParams();
+        menuButtonViewParam.topMargin = (int)(actionBarHeight * 0.5f + Dimensions.getStatusBarHeight(activity) - Dimensions.pxFromDp(21.7f));
+        menuButtonView.setLayoutParams(menuButtonViewParam);
+
         activity.addContentView(customizeGuideView, params);
         Preferences.getDefault().putBoolean(PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE, false);
         BugleAnalytics.logEvent("SMS_MenuGuide_Show", true);
@@ -126,10 +132,8 @@ class CustomizeGuideController implements CustomizeGuide {
             }
         });
 
-        guideButton.setOnClickListener(v -> {
-            closeCustomizeGuide(true);
-        });
-
+        guideButton.setOnClickListener(v -> closeCustomizeGuide(true));
+        menuButtonView.setOnClickListener(v -> closeCustomizeGuide(true));
         guideContainer.setOnClickListener(v -> {
             if (enlargeXAnimator.isRunning() || shrinkXAnimator.isRunning()) {
                 customizeGuideView.setVisibility(View.GONE);
