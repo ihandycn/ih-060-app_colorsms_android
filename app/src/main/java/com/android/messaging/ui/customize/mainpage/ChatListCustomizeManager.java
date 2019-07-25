@@ -51,7 +51,9 @@ public class ChatListCustomizeManager {
     }
 
     public static boolean hasCustomWallpaper() {
-        return sHasCustomInfo && !TextUtils.isEmpty(sPref.getString(PREF_KEY_CONVERSATION_LIST_WALLPAPER_PATH, null));
+        return sHasCustomInfo &&
+                (!TextUtils.isEmpty(sPref.getString(PREF_KEY_CONVERSATION_LIST_WALLPAPER_PATH, null)) ||
+                        Math.abs(sPref.getFloat(PREF_KEY_CHAT_LIST_MASK_OPACITY, 0)) > 0.0000001);
     }
 
     public static String getListWallpaperPath() {
