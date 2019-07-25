@@ -17,6 +17,7 @@ import com.android.messaging.ui.customize.theme.ThemeDownloadManager;
 import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.customize.theme.WallpaperSizeManager;
+import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
 import com.android.messaging.ui.welcome.WelcomeStartActivity;
 import com.android.messaging.util.BuglePrefs;
@@ -77,6 +78,7 @@ public class Upgrader extends BaseUpgrader {
 
         if (oldVersion < 68 && newVersion >= 68) {
             resizeLocalThemeAndWallpaperResource();
+            EmojiManager.upgradeEmojiRecentForEmojiStylePattern();
         }
 
         FontDownloadManager.copyFontsFromAssetsAsync();
