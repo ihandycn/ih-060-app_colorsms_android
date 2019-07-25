@@ -810,4 +810,6 @@
     <string name="emoji_style_default">Default</string>
 
 	<string name="emoji_skin_tone_setting">Warna Kulit Emoji </string>
+    <string name="customize_new_guide_title">Fitur Keren</string>
+    <string name="customize_new_guide_content">Kustomisasi obrolan Anda untuk menjadikannya istimewa!</string>
 </resources>

@@ -809,5 +809,7 @@
     <string name="emoji_skin_tone_setting">Tom de pele do emoji </string>
     <string name="emoji_style_downloading">Baixando</string>
     <string name="emoji_style_default">Padrão</string>
+    <string name="customize_new_guide_title">Recursos legais</string>
+    <string name="customize_new_guide_content">Personalize seu bate-papo para torná-lo especial!</string>
 
 </resources>
