@@ -612,6 +612,11 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         if (mAdContainer == null) {
             mAdContainer = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout.conversation_list_header, mRecyclerView, false);
         }
+
+        if (getActivity() == null || UiUtils.isDestroyed(getActivity())) {
+            return;
+        }
+
         final View adView = LayoutInflater.from(getActivity()).inflate(R.layout.item_conversation_list_ad, mAdContainer, false);
 
         AcbNativeAdContainerView mAdContentView = new AcbNativeAdContainerView(mAdContainer.getContext());
