@@ -338,7 +338,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                         }
                         onItemSelected(item);
                         if (item.isItemChecked()) {
-                            setPreviewImage(item.getSourceLocalPath());
+                            setPreviewImage(item.getWallpaperLocalPath());
                             WallpaperManager.setWallpaperPath(mConversationId, item.getWallpaperLocalPath());
                             WallpaperManager.onOnlineWallpaperChanged();
                             BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied", true,
