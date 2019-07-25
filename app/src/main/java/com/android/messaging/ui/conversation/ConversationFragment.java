@@ -124,6 +124,7 @@ import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
 import com.android.messaging.util.ViewUtils;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
@@ -1386,9 +1387,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 // Merge the caption text from attachments into the text body of the messages
                 message.consolidateText();
 
-                final String deliveryReportsKey = getString(R.string.delivery_reports_pref_key);
+                final String deliveryReportsKey = HSApplication.getContext().getString(R.string.delivery_reports_pref_key);
                 message.setIsDeliveryReportOpen(Preferences.getDefault().getBoolean(deliveryReportsKey,
-                        getResources().getBoolean(R.bool.delivery_reports_pref_default)));
+                        HSApplication.getContext().getResources().getBoolean(R.bool.delivery_reports_pref_default)));
 
                 boolean isDefaultSelf = mBinding.getData().isDefaultSelf(message.getSelfId());
 
