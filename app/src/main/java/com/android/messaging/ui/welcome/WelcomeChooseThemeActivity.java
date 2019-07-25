@@ -13,6 +13,7 @@ import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.superapps.util.Preferences;
+import com.superapps.util.Threads;
 
 public class WelcomeChooseThemeActivity extends AppCompatActivity {
 
@@ -31,13 +32,15 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
                 return;
             }
             mIsThemeAppling = true;
-            ThemeUtils.applyThemeFirstTime(themeInfo, () -> {
-                BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
-                UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
-                finish();
+            Threads.postOnThreadPoolExecutor(() -> ThemeUtils.applyThemeFirstTime(themeInfo, () -> {
+                Threads.postOnMainThread(() -> {
+                    BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
+                    UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
+                    finish();
+                });
                 BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, "theme", themeInfo.mThemeKey);
                 BugleFirebaseAnalytics.logEvent("Start_ChooseTheme_Apply", "theme", themeInfo.mThemeKey);
-            });
+            }));
         });
 
         BugleAnalytics.logEvent("Start_ChooseTheme_Show", true);

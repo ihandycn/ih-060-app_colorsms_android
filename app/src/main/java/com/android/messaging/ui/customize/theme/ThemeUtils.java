@@ -96,7 +96,7 @@ public class ThemeUtils {
                         WallpaperSizeManager.resizeThemeBitmap(themeInfo);
 
                         if (endRunnable != null) {
-                            endRunnable.run();
+                            Threads.postOnMainThread(endRunnable);
                         }
                     }
 
@@ -110,65 +110,67 @@ public class ThemeUtils {
     }
 
     private static void applyTheme(ThemeInfo themeInfo) {
-        if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
-            ConversationColors.get().setBubbleBackgroundColor(false, Color.parseColor(themeInfo.outgoingBubbleBgColor));
-        } else {
-            ConversationColors.get().setBubbleBackgroundColor(false, Color.parseColor(themeInfo.themeColor));
-        }
-        // change theme color should be after bubble color set
-        PrimaryColors.changePrimaryColor(Color.parseColor(themeInfo.themeColor));
+        Threads.postOnThreadPoolExecutor(() -> {
+            if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
+                ConversationColors.get().setBubbleBackgroundColor(false, Color.parseColor(themeInfo.outgoingBubbleBgColor));
+            } else {
+                ConversationColors.get().setBubbleBackgroundColor(false, Color.parseColor(themeInfo.themeColor));
+            }
+            // change theme color should be after bubble color set
+            PrimaryColors.changePrimaryColor(Color.parseColor(themeInfo.themeColor));
 
-        ConversationColors.get().setBubbleBackgroundColor(true, Color.parseColor(themeInfo.incomingBubbleBgColor));
-        ConversationColors.get().setMessageTextColor(true, Color.parseColor(themeInfo.incomingBubbleTextColor));
-        ConversationColors.get().setMessageTextColor(false, Color.parseColor(themeInfo.outgoingBubbleTextColor));
-        ConversationColors.get().setListTitleColor(Color.parseColor(themeInfo.listTitleColor));
-        ConversationColors.get().setListSubTitleColor(Color.parseColor(themeInfo.listSubtitleColor));
-        ConversationColors.get().setListTimeColor(Color.parseColor(themeInfo.listTimeColor));
-        ConversationColors.get().setAdActionColor(Color.parseColor(themeInfo.bubbleAdColor));
+            ConversationColors.get().setBubbleBackgroundColor(true, Color.parseColor(themeInfo.incomingBubbleBgColor));
+            ConversationColors.get().setMessageTextColor(true, Color.parseColor(themeInfo.incomingBubbleTextColor));
+            ConversationColors.get().setMessageTextColor(false, Color.parseColor(themeInfo.outgoingBubbleTextColor));
+            ConversationColors.get().setListTitleColor(Color.parseColor(themeInfo.listTitleColor));
+            ConversationColors.get().setListSubTitleColor(Color.parseColor(themeInfo.listSubtitleColor));
+            ConversationColors.get().setListTimeColor(Color.parseColor(themeInfo.listTimeColor));
+            ConversationColors.get().setAdActionColor(Color.parseColor(themeInfo.bubbleAdColor));
 
-        ToolbarDrawables.sToolbarBitmap = null;
-        WallpaperDrawables.sListWallpaperBitmap = null;
-        WallpaperDrawables.sWallpaperBitmap = null;
-        WallpaperDrawables.applyWallpaperBg(themeInfo.wallpaperUrl);
-        AvatarBgDrawables.sAvatarBg = null;
-        AvatarBgDrawables.sSolidAvatarBg = null;
-        CreateIconDrawable.sCreateIconBitmap = null;
+            ToolbarDrawables.sToolbarBitmap = null;
+            WallpaperDrawables.sListWallpaperBitmap = null;
+            WallpaperDrawables.sWallpaperBitmap = null;
+            WallpaperDrawables.applyWallpaperBg(themeInfo.wallpaperUrl);
+            AvatarBgDrawables.sAvatarBg = null;
+            AvatarBgDrawables.sSolidAvatarBg = null;
+            CreateIconDrawable.sCreateIconBitmap = null;
 
-        ThemeBubbleDrawables.getInstance().clearCacheDrawable();
+            ThemeBubbleDrawables.getInstance().clearCacheDrawable();
 
-        if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
-            BubbleDrawables.setSelectedIdentifier(-1);
-        }
+            if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
+                BubbleDrawables.setSelectedIdentifier(-1);
+            }
 
-        ChatListCustomizeManager.resetAllCustomData();
+            ChatListCustomizeManager.resetAllCustomData();
 
-        FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
+            FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
 
-        if (themeInfo.mIsLocalTheme) {
-            ThemeDownloadManager.getInstance().copyFileFromAssetsSync(themeInfo,
-                    new ThemeDownloadManager.IThemeMoveListener() {
-                        @Override
-                        public void onMoveSuccess() {
-                            WallpaperSizeManager.resizeThemeBitmap(themeInfo);
-                            FontUtils.onFontTypefaceChanged();
+            if (themeInfo.mIsLocalTheme) {
+                ThemeDownloadManager.getInstance().copyFileFromAssetsSync(themeInfo,
+                        new ThemeDownloadManager.IThemeMoveListener() {
+                            @Override
+                            public void onMoveSuccess() {
+                                WallpaperSizeManager.resizeThemeBitmap(themeInfo);
+                                FontUtils.onFontTypefaceChanged();
 
-                            Threads.postOnMainThread(() ->
-                                    HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
-                        }
+                                Threads.postOnMainThread(() ->
+                                        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
+                            }
 
-                        @Override
-                        public void onMoveFailed() {
+                            @Override
+                            public void onMoveFailed() {
 
-                        }
-                    });
-        } else {
-            FontUtils.onFontTypefaceChanged();
+                            }
+                        });
+            } else {
+                FontUtils.onFontTypefaceChanged();
 
-            Threads.postOnMainThread(() ->
-                    HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
-        }
+                Threads.postOnMainThread(() ->
+                        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
+            }
 
-        Factory.get().reclaimMemory();
+            Factory.get().reclaimMemory();
+        });
     }
 
     public static String getCurrentThemeName() {
