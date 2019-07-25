@@ -12,19 +12,19 @@
 					<key>name</key>
 					<string>Twitter</string>
 					<key>PreViewPicUrl</key>
-					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/twitter.png</string>
+					<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/emoji/twitter.png</string>
 					<key>DownloadUrl</key>
-					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/Twitter.zip</string>
+					<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/emoji/Twitter.zip</string>
 					<key>DownloadSize</key>
-					<string>4.5</string>
+					<string>4.6</string>
 				</dict>
 				<dict>
 					<key>name</key>
 					<string>Android Pie</string>
 					<key>PreViewPicUrl</key>
-					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/androidpie.png</string>
+					<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/emoji/pie.png</string>
 					<key>DownloadUrl</key>
-					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/AndroidPie.zip</string>
+					<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/emoji/AndroidPie.zip</string>
 					<key>DownloadSize</key>
 					<string>7.4</string>
 				</dict>
@@ -32,9 +32,9 @@
 					<key>name</key>
 					<string>Android Blob</string>
 					<key>PreViewPicUrl</key>
-					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/androidblob.png</string>
+					<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/emoji/blob.png</string>
 					<key>DownloadUrl</key>
-					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/AndroidBlob.zip</string>
+					<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/emoji/AndroidBlob.zip</string>
 					<key>DownloadSize</key>
 					<string>6.1</string>
 				</dict>
