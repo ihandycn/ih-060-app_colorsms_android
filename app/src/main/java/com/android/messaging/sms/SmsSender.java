@@ -147,10 +147,11 @@ public class SmsSender {
                     + " resultCode=" + resultCode + " errorCode=" + errorCode);
             String carrierName = PhoneUtils.get(subId).getCarrierName();
             BugleAnalytics.logEvent("SMS_Send_Failed",
-                    "SmsSendResult", "False", "FailCarrierName", carrierName);
+                    "SmsSendResult", "False", "FailCarrierName", TextUtils.isEmpty(carrierName) ? "empty" : carrierName);
             BugleFirebaseAnalytics.logEvent("SMS_Send_Failed",
                     "SmsSendResult", "False",
-                    "FailCarrierName", (carrierName == null || carrierName.length() < 40) ? carrierName : carrierName.substring(0, 39));
+                    "FailCarrierName", carrierName == null ? "empty" :
+                            (carrierName.length() < 40 ? carrierName : carrierName.substring(0, 39)));
             if (errorCode != SendStatusReceiver.NO_ERROR_CODE) {
                 final Context context = Factory.get().getApplicationContext();
                 UiUtils.showToastAtBottom(getSendErrorToastMessage(context, subId, errorCode));
