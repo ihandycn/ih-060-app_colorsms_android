@@ -111,11 +111,11 @@ class CustomizeGuideController implements CustomizeGuide {
 
         //Dialog dismiss animation
         mDismissXAnim = ObjectAnimator.ofFloat(guideContainer, "scaleX", 1, 0.4f);
-        mDismissXAnim.setDuration(300);
+        mDismissXAnim.setDuration(200);
         mDismissYAnim = ObjectAnimator.ofFloat(guideContainer, "scaleY", 1, 0.4f);
-        mDismissYAnim.setDuration(300);
+        mDismissYAnim.setDuration(200);
         mDismissAlphaAnim = ObjectAnimator.ofFloat(guideContainer, "alpha", 1, 0);
-        mDismissAlphaAnim.setDuration(180);
+        mDismissAlphaAnim.setDuration(120);
         mDismissAlphaAnim.setStartDelay(80);
 
         mDismissAlphaAnim.addListener(new AnimatorListenerAdapter() {

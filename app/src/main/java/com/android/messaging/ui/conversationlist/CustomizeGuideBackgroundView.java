@@ -27,11 +27,11 @@ public class CustomizeGuideBackgroundView extends FrameLayout {
     private Paint mCirclePaint;
     private Paint mRingPaint;
     private float mCirclePaintAlpha;
+    private float mRingPaintAlpha;
     private ArgbEvaluator mColorEvaluator;
     private ValueAnimator mCustomizeGuideBackgroundDimmedAnimator;
     private ValueAnimator mCustomizeGuideMenuFocusShrinkAnimator;
     private ValueAnimator mCustomizeGuideMenuFocusEnlargeAnimator;
-    private ValueAnimator mCustomizeGuideMenuFocusDismissAnimator;
     private ValueAnimator mCustomizeGuideBackgroundDimmedDismissAnimator;
     private static final @ColorInt
     int DIMMED_BACKGROUND_COLOR = 0xcc000000;
@@ -72,9 +72,10 @@ public class CustomizeGuideBackgroundView extends FrameLayout {
         mRingPaint.setStyle(Paint.Style.STROKE);
         mRingPaint.setStrokeWidth(Dimensions.pxFromDp(1.3f));
         mRingPaint.setColor(RING_COLOR);
+        mRingPaintAlpha = 1.0f;
 
         mCustomizeGuideBackgroundDimmedAnimator = ValueAnimator.ofFloat(0, 1);
-        mCustomizeGuideBackgroundDimmedAnimator.setDuration(140);
+        mCustomizeGuideBackgroundDimmedAnimator.setDuration(200);
         mCustomizeGuideBackgroundDimmedAnimator.setInterpolator(backgroundInterpolator);
         mCustomizeGuideBackgroundDimmedAnimator.addUpdateListener(animation -> {
             mDimmedBackgroundProgress = (float) mCustomizeGuideBackgroundDimmedAnimator.getAnimatedValue();
@@ -82,7 +83,7 @@ public class CustomizeGuideBackgroundView extends FrameLayout {
         });
 
         mCustomizeGuideMenuFocusShrinkAnimator = ValueAnimator.ofFloat(16.53f, 0.75f);
-        mCustomizeGuideMenuFocusShrinkAnimator.setDuration(140);
+        mCustomizeGuideMenuFocusShrinkAnimator.setDuration(200);
         mCustomizeGuideMenuFocusShrinkAnimator.setInterpolator(backgroundInterpolator);
         mCustomizeGuideMenuFocusShrinkAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -103,14 +104,6 @@ public class CustomizeGuideBackgroundView extends FrameLayout {
             invalidate();
         });
 
-        mCustomizeGuideMenuFocusDismissAnimator = ValueAnimator.ofFloat(1, 0);
-        mCustomizeGuideMenuFocusDismissAnimator.setDuration(120);
-        mCustomizeGuideMenuFocusDismissAnimator.setStartDelay(40);
-        mCustomizeGuideMenuFocusDismissAnimator.addUpdateListener(animation -> {
-            mCirclePaintAlpha = (float) mCustomizeGuideMenuFocusDismissAnimator.getAnimatedValue();
-            invalidate();
-        });
-
         mCustomizeGuideBackgroundDimmedDismissAnimator = ValueAnimator.ofFloat(1, 0);
         mCustomizeGuideBackgroundDimmedDismissAnimator.setDuration(120);
         mCustomizeGuideBackgroundDimmedDismissAnimator.setStartDelay(40);
@@ -124,6 +117,9 @@ public class CustomizeGuideBackgroundView extends FrameLayout {
     protected void dispatchDraw(Canvas canvas) {
         canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);
         mCirclePaint.setAlpha((int) (mCirclePaintAlpha * 255));
+        if (mRingPaintAlpha == 0) {
+            mRingPaint.setAlpha(0);
+        }
         canvas.drawColor((Integer) mColorEvaluator.evaluate(mDimmedBackgroundProgress,
                 Color.TRANSPARENT, DIMMED_BACKGROUND_COLOR));
         canvas.drawCircle(Dimensions.pxFromDp(26f), mCenterY,
@@ -139,7 +135,9 @@ public class CustomizeGuideBackgroundView extends FrameLayout {
     }
 
     public void startCustomizeGuideBackgroundDismissAnimation() {
-        mCustomizeGuideMenuFocusDismissAnimator.start();
+        mCirclePaintAlpha = 0;
+        mRingPaintAlpha = 0;
+        invalidate();
         mCustomizeGuideBackgroundDimmedDismissAnimator.start();
     }
 }
