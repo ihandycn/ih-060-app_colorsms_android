@@ -795,10 +795,14 @@
     <string name="purchase_failed">失敗</string>
     <string name="chat_list_confirm_dialog_title">変更を保存</string>
 
+
 	<string name="menu_chat_list">チャットリスト</string>
 	<string name="chat_list_background_opacity">背景の透明度</string>
 	<string name="chat_list_change_background">背景を変更</string>
 	<string name="chat_list_config_dialog_message">チャットリストが変わりました、変更をキープしますか？</string>
 
 	<string name="emoji_skin_tone_setting">絵文字スキントーン</string>
+    <string name="emoji_style_downloading">ダウンロード中</string>
+    <string name="emoji_style_default">デフォルト</string>
+
 </resources>

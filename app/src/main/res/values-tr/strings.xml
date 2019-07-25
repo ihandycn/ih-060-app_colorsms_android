@@ -793,4 +793,7 @@
 	<string name="chat_list_config_dialog_message">Sohbet listesi değiştirildi, değişiklikleri kaydetmek ister misin?</string>
 
 	<string name="emoji_skin_tone_setting">Emoji Dış Görünüm Rengi </string>
+    <string name="emoji_style_downloading">İndiriliyor</string>
+    <string name="emoji_style_default">Varsayılan</string>
+
 </resources>

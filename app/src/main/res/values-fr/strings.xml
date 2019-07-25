@@ -798,4 +798,7 @@
 
     <string name="emoji_long_click"> La tonalité de peau par défaut peut être définie dans les paramètres. </string>
 	<string name="emoji_skin_tone_setting">Couleur de peau emoji</string>
+    <string name="emoji_style_default">Par défaut</string>
+    <string name="emoji_style_downloading">Téléchargement</string>
+
 </resources>

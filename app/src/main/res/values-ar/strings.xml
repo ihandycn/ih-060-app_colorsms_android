@@ -884,6 +884,8 @@
 	<string name="life_time">مدى الحياة</string>
 	<string name="purchase_description">اشتر النسخة الخالية من الإعلانات. لا إعلانات بعد الآن نهائياً.</string>
 	<string name="emoji_skin_tone_setting">ثيم الرموز التعبيرية </string>
+    <string name="emoji_style_downloading">التنزيل جارٍ</string>
+    <string name="emoji_style_default">افتراضي</string>
 
 
     <string name="chat_list_text_color">لون النص</string>

@@ -801,4 +801,6 @@
 	<string name="chat_list_config_dialog_message">L\'elenco della chat è stato modificato. Vuoi salvare le modifiche?</string>
 
 	<string name="emoji_skin_tone_setting">Colore pelle emoji </string>
+    <string name="emoji_style_downloading">Download in corso</string>
+    <string name="emoji_style_default">Predefinito</string>
 </resources>

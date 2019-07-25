@@ -807,4 +807,7 @@
 	<string name="chat_list_config_dialog_message">A lista de conversas foi modificada, deseja manter as alterações?</string>
 
     <string name="emoji_skin_tone_setting">Tom de pele do emoji </string>
+    <string name="emoji_style_downloading">Baixando</string>
+    <string name="emoji_style_default">Padrão</string>
+
 </resources>

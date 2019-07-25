@@ -806,6 +806,8 @@
 	<string name="chat_list_background_opacity">Opasitas latar belakang</string>
 	<string name="chat_list_change_background">Ubah latar belakang</string>
 	<string name="chat_list_config_dialog_message">Daftar obrolan sudah diubah, ingin menyimpan perubahan?</string>
+    <string name="emoji_style_downloading">Mengunduh</string>
+    <string name="emoji_style_default">Default</string>
 
 	<string name="emoji_skin_tone_setting">Warna Kulit Emoji </string>
 </resources>

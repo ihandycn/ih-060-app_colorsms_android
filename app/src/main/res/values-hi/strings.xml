@@ -801,4 +801,6 @@
 	<string name="chat_list_change_background">पृष्</string>
 	<string name="chat_list_config_dialog_message">चैट सूची को संशोधित किया गया है, क्या आप बदलाव रखना चाहेंगे?</string>
 	<string name="emoji_skin_tone_setting">इमोजी स्किन टोन </string>
+    <string name="emoji_style_downloading">डाउनलोड हो रही है</string>
+    <string name="emoji_style_default">डिफॉल्‍ट</string>
 </resources>
