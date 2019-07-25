@@ -16,12 +16,11 @@
 
 package android.support.v7.mms;
 
-import android.text.TextUtils;
 import android.util.Log;
 
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.Phonenumber;
+import com.android.i18n.phonenumbers.NumberParseException;
+import com.android.i18n.phonenumbers.PhoneNumberUtil;
+import com.android.i18n.phonenumbers.Phonenumber;
 
 /**
  * Helper methods for phone number formatting
@@ -31,24 +30,36 @@ public class PhoneNumberHelper {
     /**
      * Given a phone number, get its national part without country code
      *
-     * @param number the original number
+     * @param number  the original number
      * @param country the country ISO code
      * @return the national number
      */
     static String getNumberNoCountryCode(final String number, final String country) {
-        if (!TextUtils.isEmpty(number)) {
-            final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
-            try {
-                final Phonenumber.PhoneNumber phoneNumber = phoneNumberUtil.parse(number, country);
-                if (phoneNumber != null && phoneNumberUtil.isValidNumber(phoneNumber)) {
-                    return phoneNumberUtil
-                            .format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.NATIONAL)
-                            .replaceAll("\\D", "");
-                }
-            } catch (final NumberParseException e) {
-                Log.w(MmsService.TAG, "getNumberNoCountryCode: invalid number " + e);
-            }
+        final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
+        final Phonenumber.PhoneNumber parsed = getParsedNumber(phoneNumberUtil, number, country);
+        if (parsed == null) {
+            return number;
         }
-        return number;
+        return phoneNumberUtil
+                .format(parsed, PhoneNumberUtil.PhoneNumberFormat.NATIONAL)
+                .replaceAll("\\D", "");
+    }
+
+    // Parse the input number into internal format
+    private static Phonenumber.PhoneNumber getParsedNumber(PhoneNumberUtil phoneNumberUtil,
+                                                           String phoneText, String country) {
+        try {
+            final Phonenumber.PhoneNumber phoneNumber = phoneNumberUtil.parse(phoneText, country);
+            if (phoneNumberUtil.isValidNumber(phoneNumber)) {
+                return phoneNumber;
+            } else {
+                Log.e("PhoneNumbnerHelper", "getParsedNumber: not a valid phone number"
+                        + " for country " + country);
+                return null;
+            }
+        } catch (final NumberParseException e) {
+            Log.e("PhoneNumbnerHelper", "getParsedNumber: Not able to parse phone number");
+            return null;
+        }
     }
 }
