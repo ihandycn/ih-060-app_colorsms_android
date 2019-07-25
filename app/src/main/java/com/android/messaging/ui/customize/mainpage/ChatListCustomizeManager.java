@@ -47,6 +47,7 @@ public class ChatListCustomizeManager {
         sPref.remove(PREF_KEY_HAS_CHAT_LIST_CUSTOM);
         sPref.remove(ChatListCustomizeActivity.PREF_KEY_EVENT_CHANGE_COLOR_TYPE);
         sHasCustomInfo = false;
+        sUseThemeColor = true;
     }
 
     public static boolean hasCustomWallpaper() {
