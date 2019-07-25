@@ -21,10 +21,14 @@ import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.text.BidiFormatter;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.ImageSpan;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -75,6 +79,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private int mTimestampColor;
     private static String sPlusOneString;
     private static String sPlusNString;
+    private boolean isLastMutiMode = false;
 
     public interface HostInterface {
         boolean isConversationSelected(final String conversationId);
@@ -132,8 +137,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private TextView mTimestampTextView;
     private ContactIconView mContactIconView;
     private ImageView mContactBackground;
-    private ImageView mNotificationBellView;
-    private ImageView mPinView;
     private ImageView mFailedStatusIconView;
 
     private View mCrossSwipeArchiveLeftContainer;
@@ -141,7 +144,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private View mCrossSwipeBg;
     private HostInterface mHostInterface;
     private TextView mUnreadMessagesCountView;
-    private View mRippleBackgroundView;
 
     private boolean mIsFirstBind = true;
 
@@ -155,18 +157,11 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     protected void onFinishInflate() {
         super.onFinishInflate();
         mSwipeableContainer = findViewById(R.id.conversation_item_swipeable_container);
-        mRippleBackgroundView = findViewById(R.id.conversation_item_ripple_view);
         mConversationNameView = findViewById(R.id.conversation_name);
         mSnippetTextView = findViewById(R.id.conversation_snippet);
         mWorkProfileIconView = findViewById(R.id.work_profile_icon);
         mTimestampTextView = findViewById(R.id.conversation_timestamp);
         mContactIconView = findViewById(R.id.conversation_icon);
-        mNotificationBellView = findViewById(R.id.conversation_notification_bell);
-        mNotificationBellView.getDrawable().setColorFilter(
-                ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
-        mPinView = findViewById(R.id.conversation_pin);
-        mPinView.getDrawable().setColorFilter(
-                ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
         mFailedStatusIconView = findViewById(R.id.conversation_failed_status_icon);
 
         mCrossSwipeArchiveLeftContainer = findViewById(R.id.cross_swipe_archive_left_container);
@@ -204,6 +199,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                                final int oldBottom) {
         if (v == mConversationNameView) {
             setConversationName();
+            addSpannable();
             setContactImage();
         } else if (v == mSnippetTextView) {
             setSnippet();
@@ -211,7 +207,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     }
 
     private void setWorkProfileIcon() {
-        mWorkProfileIconView.setVisibility(mData.isEnterprise() ? View.VISIBLE : View.GONE);
+        mWorkProfileIconView.setVisibility(mData.isEnterprise() ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void setConversationName() {
@@ -310,9 +306,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         resetAnimatingState();
 
-        mRippleBackgroundView.setOnClickListener(this);
-        mRippleBackgroundView.setOnLongClickListener(this);
-        mPinView.setVisibility(mData.isPinned() ? VISIBLE : GONE);
+        this.setOnClickListener(this);
+        this.setOnLongClickListener(this);
 
         if (mIsFirstBind) {
             if (!mHostInterface.isArchived()) {
@@ -351,6 +346,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         setSnippet();
         setConversationName();
         setWorkProfileIcon();
+        addSpannable();
+
 
         if (mData.getShowDraft()
                 || mData.getMessageStatus() == MessageData.BUGLE_STATUS_OUTGOING_DRAFT
@@ -389,6 +386,10 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             }
             mTimestampTextView.setVisibility(GONE);
             mUnreadMessagesCountView.setVisibility(GONE);
+
+            if(!isLastMutiMode){
+                isLastMutiMode = true;
+            }
         } else {
             checkbox.setVisibility(View.GONE);
             mTimestampTextView.setVisibility(VISIBLE);
@@ -416,9 +417,41 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mContactIconView.clearColorFilter();
 
         mFailedStatusIconView.setVisibility(failStatusVisibility);
+    }
 
-        final int notificationBellVisibility = mData.getNotificationEnabled() ? GONE : VISIBLE;
-        mNotificationBellView.setVisibility(notificationBellVisibility);
+    private void addSpannable() {
+        Drawable pinDrawable = getResources().getDrawable(R.drawable.ic_small_pin);
+        Drawable muteDrawable = getResources().getDrawable(R.drawable.ic_small_mute);
+        muteDrawable.setBounds(0, 0, muteDrawable.getIntrinsicWidth(), muteDrawable.getIntrinsicHeight());
+        pinDrawable.setBounds(0, 0, pinDrawable.getIntrinsicWidth(), pinDrawable.getIntrinsicHeight());
+
+        muteDrawable.setColorFilter(
+                ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
+        pinDrawable.setColorFilter(
+                ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
+
+        SpannableString sp = new SpannableString(mConversationNameView.getText());
+        int bj = 0;
+        if (mData.isPinned()) {
+            sp = new SpannableString("  " + sp);
+            bj++;
+        }
+        if (!mData.getNotificationEnabled()) {
+            sp = new SpannableString("  " + sp);
+            bj++;
+        }
+        // multiple imageSpans must be set at a invariable spannable
+        if (mData.isPinned()) {
+            ImageSpan span = new ImageSpan(pinDrawable, ImageSpan.ALIGN_BASELINE);
+            sp.setSpan(span, bj * 2 - 2, bj * 2 - 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            bj--;
+        }
+        if (!mData.getNotificationEnabled()) {
+            ImageSpan span = new ImageSpan(muteDrawable, ImageSpan.ALIGN_BASELINE);
+            sp.setSpan(span, bj * 2 - 2, bj * 2 - 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
+            bj--;
+        }
+        mConversationNameView.setText(sp);
     }
 
     public boolean isSwipeAnimatable() {
@@ -567,7 +600,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     }
 
     private boolean processClick(final View v, final boolean isLongClick) {
-        Assert.isTrue(v == mRippleBackgroundView);
         Assert.notNull(mData.getName());
 
         if (mHostInterface != null) {

@@ -36,9 +36,11 @@
     <dimen name="conversation_list_contact_icon_size">40dp</dimen>
     <dimen name="conversation_list_contact_bg_size">66dp</dimen>
     <dimen name="conversation_list_error_icon_size">18.7dp</dimen>
+    <dimen name="conversation_list_error_icon_margin_start">35.3dp</dimen>
     <dimen name="conversation_list_item_conversation_name_text_size">16sp</dimen>
     <dimen name="conversation_list_item_snippet_text_size">13sp</dimen>
     <dimen name="conversation_list_item_height">@dimen/conversation_list_contact_bg_size</dimen>
+    <dimen name="conversation_list_item_content_margin_start">68dp</dimen>
     <dimen name="conversation_message_bubble_incoming_simple_style_top_padding">10dp</dimen>
     <dimen name="conversation_message_bubble_incoming_top_padding">20dp</dimen>
     <dimen name="conversation_message_contact_icon_container_size">66dp</dimen>
@@ -48,6 +50,9 @@
     <dimen name="conversation_message_photo_min_size">96dp</dimen>
     <dimen name="conversation_list_notification_bell_padding">4dp</dimen>
     <dimen name="conversation_list_empty_text_bottom_margin">30dp</dimen>
+    <dimen name="conversation_name_margin_start">68dp</dimen>
+    <dimen name="work_profile_icon_margin_start">291dp</dimen>
+    <dimen name="conversation_timestamp_margin_start">309dp</dimen>
     <dimen name="blocked_participant_list_item_view_padding">16dp</dimen>
 
     <dimen name="message_bubble_arrow_width">9dp</dimen>
