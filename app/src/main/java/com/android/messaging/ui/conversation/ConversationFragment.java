@@ -54,7 +54,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -105,7 +104,6 @@ import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
-import com.android.messaging.ui.emoji.utils.EmojiStyleDownloadManager;
 import com.android.messaging.ui.mediapicker.CameraGalleryFragment;
 import com.android.messaging.ui.mediapicker.MediaPickerFragment;
 import com.android.messaging.ui.senddelaymessages.SendDelayMessagesManager;
@@ -620,7 +618,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             }
         }
     };
-
+    private boolean isFirstOpen = false;
 
     /**
      * {@inheritDoc} from Fragment
@@ -675,6 +673,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         BugleAnalytics.logEvent("SMS_DetailsPage_Show", true);
         BugleFirebaseAnalytics.logEvent("SMS_DetailsPage_Show");
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "detailspage_show");
+
+        if (!Preferences.getDefault().contains("pref_key_conversation_detail_first_open")) {
+            isFirstOpen = true;
+            Preferences.getDefault().putBoolean("pref_key_conversation_detail_first_open", true);
+        }
     }
 
 
@@ -887,11 +890,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         intent.putExtra(UIIntents.UI_INTENT_EXTRA_MESSAGE_POSITION, -1);
     }
 
-    private final Handler mHandler = new Handler();
-
-    /**
-     * {@inheritDoc} from Fragment
-     */
     @DebugLog
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -1107,6 +1105,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             case R.id.action_menu:
                 BugleAnalytics.logEvent("SMS_DetailsPage_IconSettings_Click", true);
                 BugleFirebaseAnalytics.logEvent("SMS_DetailsPage_IconSettings_Click");
+                if (isFirstOpen) {
+                    BugleAnalytics.logEvent("SMS_Detailspage_Settings_Click_FirstShow", true);
+                }
                 if (!mAdapter.isMultiSelectMode()) {
                     UIIntents.get().launchPeopleAndOptionsActivity(getActivity(), mConversationId);
                 }
