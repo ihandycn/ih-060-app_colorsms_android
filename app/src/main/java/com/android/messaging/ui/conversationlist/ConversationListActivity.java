@@ -1297,6 +1297,13 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                         .getString(ChatListCustomizeActivity.PREF_KEY_EVENT_CHANGE_COLOR_TYPE, "theme"),
                                 "chat_list_opacity", opacityStr);
 
+                        BugleFirebaseAnalytics.logEvent("SMS_Messages_Show_2",
+                                "subscription", String.valueOf(BillingManager.isPremiumUser()),
+                                "type", EmojiManager.getEmojiStyle(),
+                                "chat_list_background", bgString,
+                                "chat_list_text_color", Preferences.getDefault()
+                                        .getString(ChatListCustomizeActivity.PREF_KEY_EVENT_CHANGE_COLOR_TYPE, "theme"),
+                                "chat_list_opacity", opacityStr);
                     });
                 }
                 break;
