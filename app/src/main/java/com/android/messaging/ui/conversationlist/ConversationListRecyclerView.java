@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.Preferences;
+import com.superapps.util.Threads;
 
 import static com.android.messaging.ui.conversationlist.CustomizeGuideController.PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE;
 
@@ -29,7 +30,7 @@ public class ConversationListRecyclerView extends RecyclerView {
     public void onDraw(Canvas c) {
         super.onDraw(c);
         if (getAdapter() != null && getAdapter().getItemCount() > 0 && Preferences.getDefault().getBoolean(PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE, true)) {
-            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.SHOW_MENU_GUIDE);
+            Threads.postOnMainThread(() -> HSGlobalNotificationCenter.sendNotification(ConversationListActivity.SHOW_MENU_GUIDE));
         }
     }
 }
