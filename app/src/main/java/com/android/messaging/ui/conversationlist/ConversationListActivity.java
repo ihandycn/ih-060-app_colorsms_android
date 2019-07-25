@@ -2,6 +2,7 @@ package com.android.messaging.ui.conversationlist;
 
 import android.Manifest;
 import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
@@ -458,35 +459,22 @@ public class ConversationListActivity extends AbstractConversationListActivity
         if (mInterstitialAd != null) {
             mInterstitialAd.release();
         }
-        mLottieAnimationView.addAnimatorListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                finishWithoutOverridePendingTransition();
-                overridePendingTransition(0, 0);
-                int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
-                if (mainActivityCreateTime >= 2) {
-                    Preferences.getDefault().doOnce(
-                            () -> UIIntentsImpl.get().launchDragHotSeatActivity(ConversationListActivity.this),
-                            DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
+        if (mLottieAnimationView != null) {
+            mLottieAnimationView.addAnimatorListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    finishWithoutOverridePendingTransition();
+                    overridePendingTransition(0, 0);
+                    int mainActivityCreateTime = Preferences.get(DESKTOP_PREFS).getInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME, 0);
+                    if (mainActivityCreateTime >= 2) {
+                        Preferences.getDefault().doOnce(
+                                () -> UIIntentsImpl.get().launchDragHotSeatActivity(ConversationListActivity.this),
+                                DragHotSeatActivity.SHOW_DRAG_HOTSEAT);
+                    }
                 }
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        mLottieAnimationView.playAnimation();
+            });
+            mLottieAnimationView.playAnimation();
+        }
     }
 
     @Override
