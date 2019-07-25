@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.android.messaging.R;
@@ -21,6 +20,7 @@ import com.android.messaging.util.UiUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
+import com.superapps.util.Threads;
 
 import static com.android.messaging.ui.conversationlist.ConversationListActivity.PREF_KEY_MAIN_DRAWER_OPENED;
 
@@ -51,7 +51,7 @@ class CustomizeGuideController implements CustomizeGuide {
         }
 
         @SuppressLint("InflateParams") View customizeGuideView = LayoutInflater.from(activity).inflate(R.layout.customize_guide_layout, null, false);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
 
         TextView guideButton = customizeGuideView.findViewById(R.id.customize_guide_confirm_button);
@@ -60,7 +60,7 @@ class CustomizeGuideController implements CustomizeGuide {
                 false, true));
 
         ConstraintLayout guideContainer = customizeGuideView.findViewById(R.id.customize_guide_container);
-        FrameLayout.LayoutParams param = (FrameLayout.LayoutParams) guideContainer.getLayoutParams();
+        ConstraintLayout.LayoutParams param = (ConstraintLayout.LayoutParams) guideContainer.getLayoutParams();
         int actionBarHeight = 0;
         if (activity.getSupportActionBar() != null) {
             actionBarHeight = activity.getSupportActionBar().getHeight();
@@ -77,7 +77,7 @@ class CustomizeGuideController implements CustomizeGuide {
 
         //Dialog appear animation
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(guideContainer, "alpha", 0, 1);
-        alphaAnimator.setDuration(240);
+        alphaAnimator.setDuration(340);
         alphaAnimator.setStartDelay(440);
 
         guideContainer.setPivotX(Dimensions.pxFromDp(0));
@@ -86,12 +86,12 @@ class CustomizeGuideController implements CustomizeGuide {
         Interpolator dialogInterpolator = PathInterpolatorCompat.create(0.32f, 0.66f, 0.6f, 1);
 
         ObjectAnimator enlargeXAnimator = ObjectAnimator.ofFloat(guideContainer, "scaleX", 0.5f, 1.01f);
-        enlargeXAnimator.setDuration(240);
+        enlargeXAnimator.setDuration(340);
         enlargeXAnimator.setInterpolator(dialogInterpolator);
         enlargeXAnimator.setStartDelay(440);
 
         ObjectAnimator enlargeYAnimator = ObjectAnimator.ofFloat(guideContainer, "scaleY", 0.5f, 1.01f);
-        enlargeYAnimator.setDuration(240);
+        enlargeYAnimator.setDuration(340);
         enlargeYAnimator.setInterpolator(dialogInterpolator);
         enlargeYAnimator.setStartDelay(440);
 
@@ -151,10 +151,10 @@ class CustomizeGuideController implements CustomizeGuide {
                 shrinkXAnimator.cancel();
                 shrinkYAnimator.cancel();
                 alphaAnimator.cancel();
-                return false;
+                return true;
             }
             closeCustomizeGuide(false);
-            return false;
+            return true;
         });
 
         mCustomizeGuideBackgroundView.startCustomizeGuideBackgroundAppearAnimation();
@@ -194,8 +194,10 @@ class CustomizeGuideController implements CustomizeGuide {
             mDismissAlphaAnim.addListener(new AnimatorListenerAdapter() {
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    mHost.openDrawer();
-                    BugleAnalytics.logEvent("Menu_Show_AfterGuide");
+                    Threads.postOnMainThreadDelayed(() -> {
+                        mHost.openDrawer();
+                        BugleAnalytics.logEvent("Menu_Show_AfterGuide");
+                    }, 120);
                 }
             });
         }

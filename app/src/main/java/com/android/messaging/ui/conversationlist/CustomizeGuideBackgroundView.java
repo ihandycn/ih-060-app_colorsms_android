@@ -33,7 +33,7 @@ public class CustomizeGuideBackgroundView extends FrameLayout {
     private ValueAnimator mCustomizeGuideMenuFocusDismissAnimator;
     private ValueAnimator mCustomizeGuideBackgroundDimmedDismissAnimator;
     private static final @ColorInt
-    int DIMMED_BACKGROUND_COLOR = 0xb3000000;
+    int DIMMED_BACKGROUND_COLOR = 0xcc000000;
 
     public CustomizeGuideBackgroundView(Context context) {
         this(context, null);
@@ -67,7 +67,7 @@ public class CustomizeGuideBackgroundView extends FrameLayout {
                 0.66f, 0.6f, 1);
 
         mCustomizeGuideBackgroundDimmedAnimator = ValueAnimator.ofFloat(0, 1);
-        mCustomizeGuideBackgroundDimmedAnimator.setDuration(240);
+        mCustomizeGuideBackgroundDimmedAnimator.setDuration(190);
         mCustomizeGuideBackgroundDimmedAnimator.setInterpolator(backgroundInterpolator);
         mCustomizeGuideBackgroundDimmedAnimator.addUpdateListener(animation -> {
             mDimmedBackgroundProgress = (float) mCustomizeGuideBackgroundDimmedAnimator.getAnimatedValue();
@@ -75,7 +75,7 @@ public class CustomizeGuideBackgroundView extends FrameLayout {
         });
 
         mCustomizeGuideMenuFocusShrinkAnimator = ValueAnimator.ofFloat(16.53f, 0.75f);
-        mCustomizeGuideMenuFocusShrinkAnimator.setDuration(240);
+        mCustomizeGuideMenuFocusShrinkAnimator.setDuration(190);
         mCustomizeGuideMenuFocusShrinkAnimator.setInterpolator(backgroundInterpolator);
         mCustomizeGuideMenuFocusShrinkAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
