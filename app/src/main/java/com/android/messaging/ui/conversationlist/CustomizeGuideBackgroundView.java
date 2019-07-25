@@ -26,7 +26,6 @@ public class CustomizeGuideBackgroundView extends FrameLayout {
     private float mCenterY;
     private Paint mCirclePaint;
     private Paint mRingPaint;
-    private float mCirclePaintAlpha;
     private float mRingPaintAlpha;
     private ArgbEvaluator mColorEvaluator;
     private ValueAnimator mCustomizeGuideBackgroundDimmedAnimator;
@@ -65,6 +64,7 @@ public class CustomizeGuideBackgroundView extends FrameLayout {
 
         mCirclePaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
         mCirclePaint.setStyle(Paint.Style.FILL);
+        mCirclePaint.setAlpha(0);
         Interpolator backgroundInterpolator = PathInterpolatorCompat.create(0.32f,
                 0.66f, 0.6f, 1);
 
@@ -116,7 +116,6 @@ public class CustomizeGuideBackgroundView extends FrameLayout {
     @Override
     protected void dispatchDraw(Canvas canvas) {
         canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);
-        mCirclePaint.setAlpha((int) (mCirclePaintAlpha * 255));
         if (mRingPaintAlpha == 0) {
             mRingPaint.setAlpha(0);
         }
@@ -135,7 +134,6 @@ public class CustomizeGuideBackgroundView extends FrameLayout {
     }
 
     public void startCustomizeGuideBackgroundDismissAnimation() {
-        mCirclePaintAlpha = 0;
         mRingPaintAlpha = 0;
         invalidate();
         mCustomizeGuideBackgroundDimmedDismissAnimator.start();

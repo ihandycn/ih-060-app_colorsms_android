@@ -103,8 +103,8 @@
         android:layout_height="45dp"
         android:layout_width="45dp"
         android:layout_marginStart="4.3dp"
+        android:background="@drawable/menu_guide_menu_button_bg"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
