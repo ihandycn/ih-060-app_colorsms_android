@@ -59,7 +59,6 @@ class FireBaseEventIdMap {
         EVENTS_MAP.put("SMS_DetailsPage_IconPlus_Click", true);
 
         EVENTS_MAP.put("SMS_Received_Default", true);
-        EVENTS_MAP.put("SMS_Received_NoDefault", true);
         EVENTS_MAP.put("SMS_Received", true);
 
         EVENTS_MAP.put("SMS_Notifications_Pushed", true);
