@@ -31,6 +31,7 @@ import android.os.Build;
 import android.provider.Settings;
 import android.provider.Telephony;
 import android.support.v4.util.ArrayMap;
+import android.support.v7.mms.PhoneNumberHelper;
 import android.telephony.PhoneNumberUtils;
 import android.telephony.SmsManager;
 import android.telephony.SubscriptionInfo;
@@ -38,15 +39,14 @@ import android.telephony.SubscriptionManager;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
+import com.android.i18n.phonenumbers.NumberParseException;
+import com.android.i18n.phonenumbers.PhoneNumberUtil;
+import com.android.i18n.phonenumbers.Phonenumber;
 import com.android.messaging.BuildConfig;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.sms.MmsSmsUtils;
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
-import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.superapps.util.Toasts;
 
 import java.lang.reflect.Method;
@@ -762,9 +762,9 @@ public abstract class PhoneUtils {
     private static String getValidE164Number(final String phoneText, final String country) {
         final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
         try {
-            final PhoneNumber phoneNumber = phoneNumberUtil.parse(phoneText, country);
+            final Phonenumber.PhoneNumber phoneNumber = PhoneNumberHelper.parse(phoneNumberUtil, phoneText, country);
             if (phoneNumber != null && phoneNumberUtil.isValidNumber(phoneNumber)) {
-                return phoneNumberUtil.format(phoneNumber, PhoneNumberFormat.E164);
+                return phoneNumberUtil.format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.E164);
             }
         } catch (final NumberParseException e) {
             LogUtil.e(TAG, "PhoneUtils.getValidE164Number(): Not able to parse phone number "
@@ -857,10 +857,10 @@ public abstract class PhoneUtils {
         final String country = getSimCountry();
         final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
         try {
-            final PhoneNumber phoneNumber = phoneNumberUtil.parse(selfNumber, country);
+            final Phonenumber.PhoneNumber phoneNumber = phoneNumberUtil.parse(selfNumber, country);
             if (phoneNumber != null && phoneNumberUtil.isValidNumber(phoneNumber)) {
                 return phoneNumberUtil
-                        .format(phoneNumber, PhoneNumberFormat.NATIONAL)
+                        .format(phoneNumber, PhoneNumberUtil.PhoneNumberFormat.NATIONAL)
                         .replaceAll("\\D", "");
             }
         } catch (final NumberParseException e) {
@@ -889,10 +889,10 @@ public abstract class PhoneUtils {
         final String systemCountry = getLocaleCountry();
         final int systemCountryCode = phoneNumberUtil.getCountryCodeForRegion(systemCountry);
         try {
-            final PhoneNumber parsedNumber = phoneNumberUtil.parse(phoneText, systemCountry);
-            final PhoneNumberFormat phoneNumberFormat =
+            final Phonenumber.PhoneNumber parsedNumber = PhoneNumberHelper.parse(phoneNumberUtil, phoneText, systemCountry);
+            final PhoneNumberUtil.PhoneNumberFormat phoneNumberFormat =
                     (systemCountryCode > 0 && parsedNumber.getCountryCode() == systemCountryCode) ?
-                            PhoneNumberFormat.NATIONAL : PhoneNumberFormat.INTERNATIONAL;
+                            PhoneNumberUtil.PhoneNumberFormat.NATIONAL : PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL;
             return phoneNumberUtil.format(parsedNumber, phoneNumberFormat);
         } catch (NumberParseException e) {
             LogUtil.e(TAG, "PhoneUtils.formatForDisplay: invalid phone number "

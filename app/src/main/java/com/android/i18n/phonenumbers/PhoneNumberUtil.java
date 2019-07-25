@@ -27,12 +27,20 @@ public class PhoneNumberUtil {
         return null;
     }
 
-    public Phonenumber.PhoneNumber parse(String s, String s2) throws NumberParseException {
+    public Phonenumber.PhoneNumber parse(String phoneText, String  country) throws NumberParseException {
+        return new Phonenumber.PhoneNumber();
+    }
+
+    public Phonenumber.PhoneNumber parse(CharSequence phoneText, String country) throws NumberParseException {
         return new Phonenumber.PhoneNumber();
     }
 
     public boolean isValidNumber(Phonenumber.PhoneNumber phoneNumber) {
         return true;
+    }
+
+    public int getCountryCodeForRegion(String countryCode) {
+        return 0;
     }
 
     public enum PhoneNumberFormat {

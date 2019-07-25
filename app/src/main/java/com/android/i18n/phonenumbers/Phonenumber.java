@@ -18,5 +18,8 @@ package com.android.i18n.phonenumbers;
 
 public class Phonenumber {
     public static class PhoneNumber {
+        public int getCountryCode() {
+            return 0;
+        }
     }
 }

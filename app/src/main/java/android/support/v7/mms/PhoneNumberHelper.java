@@ -16,6 +16,7 @@
 
 package android.support.v7.mms;
 
+import android.os.Build;
 import android.util.Log;
 
 import com.android.i18n.phonenumbers.NumberParseException;
@@ -49,7 +50,7 @@ public class PhoneNumberHelper {
     private static Phonenumber.PhoneNumber getParsedNumber(PhoneNumberUtil phoneNumberUtil,
                                                            String phoneText, String country) {
         try {
-            final Phonenumber.PhoneNumber phoneNumber = phoneNumberUtil.parse(phoneText, country);
+            final Phonenumber.PhoneNumber phoneNumber = parse(phoneNumberUtil, phoneText, country);
             if (phoneNumberUtil.isValidNumber(phoneNumber)) {
                 return phoneNumber;
             } else {
@@ -60,6 +61,15 @@ public class PhoneNumberHelper {
         } catch (final NumberParseException e) {
             Log.e("PhoneNumbnerHelper", "getParsedNumber: Not able to parse phone number");
             return null;
+        }
+    }
+
+    public static Phonenumber.PhoneNumber parse(PhoneNumberUtil phoneNumberUtil,
+                             String phoneText, String country) throws NumberParseException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            return phoneNumberUtil.parse((CharSequence) phoneText,country);
+        } else {
+            return phoneNumberUtil.parse(phoneText,country);
         }
     }
 }
