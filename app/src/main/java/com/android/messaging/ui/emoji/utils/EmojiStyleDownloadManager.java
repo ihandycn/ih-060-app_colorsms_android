@@ -39,6 +39,15 @@ public class EmojiStyleDownloadManager {
         return INSTANCE;
     }
 
+    public void rebindDownloadTask(String name, DownloadCallback callback) {
+        for (EmojiStyleDownloadTask task : mConnections) {
+            if (task.mName.equals(name)) {
+                task.setCallback(callback);
+                break;
+            }
+        }
+    }
+
     public void downloadEmojiStyle(String url, String name, final DownloadCallback callback) {
         HSLog.i("emoji_download", url);
         synchronized (mConnections) {
@@ -289,6 +298,7 @@ public class EmojiStyleDownloadManager {
             mMainHandler.post(new Runnable() {
                 @Override
                 public void run() {
+                    EmojiManager.setEmojiStyleDownloaded(mName);
                     if (callback != null) {
                         callback.onSuccess(EmojiStyleDownloadTask.this);
                     }

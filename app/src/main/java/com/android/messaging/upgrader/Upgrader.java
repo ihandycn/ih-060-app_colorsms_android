@@ -17,8 +17,6 @@ import com.android.messaging.ui.customize.theme.ThemeDownloadManager;
 import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.customize.theme.WallpaperSizeManager;
-import com.android.messaging.ui.wallpaper.WallpaperDownloader;
-import com.android.messaging.ui.wallpaper.WallpaperInfos;
 import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
 import com.android.messaging.ui.welcome.WelcomeStartActivity;
 import com.android.messaging.util.BuglePrefs;

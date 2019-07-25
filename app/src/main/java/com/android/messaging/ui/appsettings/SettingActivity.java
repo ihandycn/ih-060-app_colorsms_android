@@ -64,6 +64,7 @@ public class SettingActivity extends BaseActivity {
     private GeneralSettingItemView mSyncSettingsView;
     private GeneralSettingItemView mSendDelayView;
     private GeneralSettingItemView mSMSDeliveryReports;
+    private SettingEmojiSkinItemView mSettingEmojiSkinItemView;
 
     private SettingEmojiStyleItemView mSettingEmojiStyleItemView;
 
@@ -200,30 +201,8 @@ public class SettingActivity extends BaseActivity {
             }
         });
 
-        SettingEmojiSkinItemView settingEmojiSkinItemView = findViewById(R.id.setting_item_emoji_skin);
-        if (Build.VERSION.SDK_INT >= 24) {
-            settingEmojiSkinItemView.setDefault(EmojiManager.EMOJI_SKINS[EmojiManager.getSkinDefault()]);
-            settingEmojiSkinItemView.setOnItemClickListener(() -> {
-                ChooseEmojiSkinDialog dialog = new ChooseEmojiSkinDialog();
-                dialog.setOnDismissOrCancelListener(new BaseDialogFragment.OnDismissOrCancelListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        settingEmojiSkinItemView.updateSkin(EmojiManager.EMOJI_SKINS[EmojiManager.getSkinDefault()]);
-                    }
-
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-
-                    }
-                });
-
-                UiUtils.showDialogFragment(this, dialog);
-                BugleAnalytics.logEvent("Settings_EmojiSkintone_Click");
-            });
-        } else {
-            settingEmojiSkinItemView.setVisibility(GONE);
-            findViewById(R.id.setting_title_emoji).setVisibility(GONE);
-        }
+        mSettingEmojiSkinItemView = findViewById(R.id.setting_item_emoji_skin);
+        updateEmojiSkinItemView(EmojiManager.isSystemEmojiStyle());
 
         //blocked contacts
         GeneralSettingItemView mBlockedContactsView = findViewById(R.id.setting_item_blocked_contacts);
@@ -301,6 +280,33 @@ public class SettingActivity extends BaseActivity {
 
         if (!DefaultSMSUtils.isDefaultSmsApp()) {
             mSMSDeliveryReports.setChecked(false);
+        }
+    }
+
+    private void updateEmojiSkinItemView(boolean isSystemStyle){
+        if (Build.VERSION.SDK_INT < 24 && isSystemStyle) {
+            mSettingEmojiSkinItemView.setVisibility(GONE);
+        } else {
+            mSettingEmojiSkinItemView.setVisibility(View.VISIBLE);
+
+            mSettingEmojiSkinItemView.setDefault(EmojiManager.getSkinDefault());
+            mSettingEmojiSkinItemView.setOnItemClickListener(() -> {
+                ChooseEmojiSkinDialog dialog = new ChooseEmojiSkinDialog();
+                dialog.setOnDismissOrCancelListener(new BaseDialogFragment.OnDismissOrCancelListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        mSettingEmojiSkinItemView.updateSkin(EmojiManager.getSkinDefault());
+                    }
+
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+
+                    }
+                });
+
+                UiUtils.showDialogFragment(this, dialog);
+                BugleAnalytics.logEvent("Settings_EmojiSkintone_Click");
+            });
         }
     }
 
@@ -541,6 +547,8 @@ public class SettingActivity extends BaseActivity {
                 String name = data.getStringExtra("name");
                 String url = data.getStringExtra("url");
                 mSettingEmojiStyleItemView.update(name, url);
+
+                updateEmojiSkinItemView(name.equals(EmojiManager.EMOJI_STYLE_SYSTEM));
             }
         }
     }

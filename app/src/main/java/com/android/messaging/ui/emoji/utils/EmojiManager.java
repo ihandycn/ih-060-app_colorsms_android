@@ -186,6 +186,10 @@ public class EmojiManager {
         }
     }
 
+    public static void deleteEmojiRecent(){
+        Preferences.get(PREF_FILE_NAME).putStringList(PREF_RECENT_EMOJI, new ArrayList<>());
+    }
+
     public static boolean isTabSticker(String name) {
         return getTabSticker().contains(name);
     }

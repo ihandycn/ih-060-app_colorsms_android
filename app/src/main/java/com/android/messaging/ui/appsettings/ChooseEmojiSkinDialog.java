@@ -13,7 +13,6 @@ import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.emoji.utils.LoadEmojiManager;
 import com.android.messaging.util.BugleAnalytics;
-import com.superapps.util.Threads;
 
 public class ChooseEmojiSkinDialog extends BaseDialogFragment {
 
@@ -21,16 +20,6 @@ public class ChooseEmojiSkinDialog extends BaseDialogFragment {
     private ChooseEmojiSkinAdapter mAdapter;
 
     private final String BASE_EMOJI = new String(Character.toChars(0x1f590));
-
-    private String[] mEmojiSkins = new String[]{
-            BASE_EMOJI,
-            BASE_EMOJI + EmojiManager.EMOJI_SKINS[1],
-            BASE_EMOJI + EmojiManager.EMOJI_SKINS[2],
-            BASE_EMOJI + EmojiManager.EMOJI_SKINS[3],
-            BASE_EMOJI + EmojiManager.EMOJI_SKINS[4],
-            BASE_EMOJI + EmojiManager.EMOJI_SKINS[5]
-    };
-
 
     public ChooseEmojiSkinDialog() {
     }
@@ -58,7 +47,7 @@ public class ChooseEmojiSkinDialog extends BaseDialogFragment {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.dialog_choose_emoji_skin, null);
         mRecyclerView = view.findViewById(R.id.recycler_view);
 
-        mAdapter = new ChooseEmojiSkinAdapter(mEmojiSkins, EmojiManager.getSkinDefault(), index -> {
+        mAdapter = new ChooseEmojiSkinAdapter(SettingEmojiSkinItemView.getSkinResource(), EmojiManager.getSkinDefault(), index -> {
             EmojiManager.setSkinDefault(index);
             LoadEmojiManager.getInstance().flush();
             dismissAllowingStateLoss();

@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.customize.PrimaryColors;
@@ -17,7 +17,7 @@ import com.superapps.util.Dimensions;
 public class ChooseEmojiSkinAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     private class ChooseEmojiSkinViewHolder extends RecyclerView.ViewHolder {
-        TextView mSkin;
+        ImageView mSkin;
         ViewGroup mContainer;
 
         ChooseEmojiSkinViewHolder(View itemView) {
@@ -31,14 +31,14 @@ public class ChooseEmojiSkinAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         void onSkinChooseListener(int index);
     }
 
-    private String[] mEmojiSkins;
+    private int[] mEmojiSkins;
 
     private SkinChooseListener mListener;
 
     private int mChoose = 0;
     private Context mContext;
 
-    public ChooseEmojiSkinAdapter(String[] mEmojiSkins, int choose, SkinChooseListener listener) {
+    public ChooseEmojiSkinAdapter(int[] mEmojiSkins, int choose, SkinChooseListener listener) {
         this.mEmojiSkins = mEmojiSkins;
         this.mListener = listener;
         this.mChoose = choose;
@@ -54,9 +54,9 @@ public class ChooseEmojiSkinAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
-        TextView skin = ((ChooseEmojiSkinViewHolder) holder).mSkin;
+        ImageView skin = ((ChooseEmojiSkinViewHolder) holder).mSkin;
         ViewGroup container = ((ChooseEmojiSkinViewHolder) holder).mContainer;
-        skin.setText(mEmojiSkins[position]);
+        skin.setImageResource(mEmojiSkins[position]);
         if (position != mChoose) {
             GradientDrawable drawable = new GradientDrawable();
             drawable.setShape(GradientDrawable.OVAL);

@@ -4,8 +4,8 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.superapps.util.Dimensions;
@@ -24,8 +24,15 @@ public class SettingEmojiSkinItemView extends BaseItemView {
 
     }
 
-    private TextView mEmojiView;
-    private String mBaseEmoji = String.valueOf(Character.toChars(Integer.parseInt("1f590", 16)));
+    private ImageView mEmojiView;
+    private static int[] mSkinResource = new int[]{
+            R.drawable.emoji_1f590,
+            R.drawable.emoji_1f590_1f3fb,
+            R.drawable.emoji_1f590_1f3fc,
+            R.drawable.emoji_1f590_1f3fd,
+            R.drawable.emoji_1f590_1f3fe,
+            R.drawable.emoji_1f590_1f3ff,
+    };
 
     @Override
     protected void initView(Context context, AttributeSet attrs) {
@@ -33,14 +40,10 @@ public class SettingEmojiSkinItemView extends BaseItemView {
 
         final ViewGroup widgetFrame = mRootView.findViewById(R.id.widget_frame);
         if (widgetFrame != null) {
-            mEmojiView = new TextView(getContext());
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
+            mEmojiView = new ImageView(getContext());
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(Dimensions.pxFromDp(25f), Dimensions.pxFromDp(25f));
             params.setMarginEnd(Dimensions.pxFromDp(7));
             widgetFrame.addView(mEmojiView, params);
-            mEmojiView.setTextSize(22f);
-            mEmojiView.setText(mBaseEmoji);
-            mEmojiView.setTextColor(getResources().getColor(android.R.color.black));
         }
 
         setOnClickListener(v -> {
@@ -50,14 +53,18 @@ public class SettingEmojiSkinItemView extends BaseItemView {
         });
     }
 
-    public void updateSkin(String skin) {
-        if (mEmojiView != null)
-            mEmojiView.setText(mBaseEmoji + skin);
+    public static int[] getSkinResource(){
+        return mSkinResource;
     }
 
-    public void setDefault(String skin) {
+    public void updateSkin(int pos) {
+        if (mEmojiView != null)
+            mEmojiView.setImageResource(mSkinResource[pos]);
+    }
+
+    public void setDefault(int pos) {
         if (mEmojiView != null) {
-            mEmojiView.setText(mBaseEmoji + skin);
+            mEmojiView.setImageResource(mSkinResource[pos]);
         }
     }
 

@@ -80,12 +80,19 @@ public class EmojiStyleSetActivity extends BaseActivity {
                 break;
             }
         }
+
         mAdapter.setDataList(dataList);
+        for (int i = 0; i < dataList.size(); i++) {
+            ChooseEmojiStyleAdapter.EmojiStyleItem item = dataList.get(i);
+            EmojiStyleDownloadManager.getInstance().rebindDownloadTask(item.name,
+                    new SettingDownloadCallback(item, new ChooseEmojiStyleAdapter.UiDownloadCallback(mAdapter, item, i), this));
+        }
         mAdapter.setItemSelectListener(new ChooseEmojiStyleAdapter.EmojiStyleItemSelectListener() {
             @Override
             public void onItemSelected(ChooseEmojiStyleAdapter.EmojiStyleItem item, EmojiStyleDownloadManager.DownloadCallback callback) {
                 if (!item.isDownloaded && !item.isSystem) {
-                    EmojiStyleDownloadManager.getInstance().downloadEmojiStyle(item.downloadUrl, item.name, new SettingDownloadCallback(item, callback, EmojiStyleSetActivity.this));
+                    EmojiStyleDownloadManager.getInstance().downloadEmojiStyle(item.downloadUrl, item.name,
+                            new SettingDownloadCallback(item, callback, EmojiStyleSetActivity.this));
                 } else {
                     setNewEmojiStyle(item);
                 }
@@ -109,9 +116,6 @@ public class EmojiStyleSetActivity extends BaseActivity {
             name = "Android Blob";
         } else {
             name = "Android Pie";
-        }
-        if (name == null) {
-            return;
         }
         ChooseEmojiStyleAdapter.EmojiStyleItem removeItem = null;
         for (ChooseEmojiStyleAdapter.EmojiStyleItem item : dataList) {
