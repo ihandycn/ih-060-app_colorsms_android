@@ -96,7 +96,7 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
                 if (item.isDownloaded) {
                     holder.downloadText.setText(mContext.getResources().getString(R.string.emoji_style_downloaded));
                 } else {
-                    String text = mContext.getResources().getString(R.string.emoji_style_download);
+                    String text = mContext.getResources().getString(R.string.action_download);
                     text += " " + item.downloadSize + " MB";
                     holder.downloadText.setText(text);
                 }
@@ -115,7 +115,7 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
                     @Override
                     public void onFail(EmojiStyleDownloadManager.EmojiStyleDownloadTask task, String msg) {
                         HSLog.e("emoji_download", msg);
-                        Toast.makeText(mContext, mContext.getResources().getString(R.string.emoji_style_download_failed), Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, mContext.getResources().getString(R.string.sms_network_error), Toast.LENGTH_LONG).show();
                     }
 
                     @Override
