@@ -1285,6 +1285,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         float alpha = 1 - ChatListCustomizeManager.getMaskOpacity();
                         if (alpha < 0.1f) {
                             opacityStr = "<10%";
+                        } else if (Math.abs(1 - alpha) < 0.0000001) {
+                            opacityStr = "100%";
                         } else {
                             int tensNum = Math.min((int) (alpha * 10), 9);
                             opacityStr = tensNum + "0%-" + (tensNum + 1) + "0%";
