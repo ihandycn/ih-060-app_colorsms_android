@@ -107,6 +107,8 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.android.messaging.ui.conversationlist.CustomizeGuideController.PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE;
+
 
 /**
  * Shows a list of conversations.
@@ -150,7 +152,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     }
 
     private ConversationListFragmentHost mHost;
-    private RecyclerView mRecyclerView;
+    private ConversationListRecyclerView mRecyclerView;
     private ImageView mStartNewConversationButton;
     private ListEmptyView mEmptyListMessageView;
     private ConversationListAdapter mAdapter;
@@ -768,7 +770,11 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         HSLog.d("conversation list has : " + dataList.size());
         if (adFirstPrepared && !dataList.isEmpty()) {
             if (mBackupBannerGuideContainer.getVisibility() == View.GONE) {
-                tryShowTopNativeAd();
+                if (Preferences.getDefault().getBoolean(PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE, true)) {
+                    Threads.postOnMainThreadDelayed(this::tryShowTopNativeAd, 2000);
+                } else {
+                    tryShowTopNativeAd();
+                }
                 adFirstPrepared = false;
             }
         }
@@ -850,8 +856,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             // stop loading animation
             mEmptyListMessageView.setIsLoadingAnimationVisible(false);
             mEmptyListMessageView.setVisibility(View.GONE);
-
-            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.SHOW_MENU_GUIDE);
         }
     }
 

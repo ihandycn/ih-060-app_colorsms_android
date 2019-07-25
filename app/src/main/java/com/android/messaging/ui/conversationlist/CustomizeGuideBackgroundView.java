@@ -25,6 +25,7 @@ public class CustomizeGuideBackgroundView extends FrameLayout {
     private float mDimmedBackgroundProgress;
     private float mCenterY;
     private Paint mCirclePaint;
+    private Paint mRingPaint;
     private float mCirclePaintAlpha;
     private ArgbEvaluator mColorEvaluator;
     private ValueAnimator mCustomizeGuideBackgroundDimmedAnimator;
@@ -34,6 +35,7 @@ public class CustomizeGuideBackgroundView extends FrameLayout {
     private ValueAnimator mCustomizeGuideBackgroundDimmedDismissAnimator;
     private static final @ColorInt
     int DIMMED_BACKGROUND_COLOR = 0xcc000000;
+    int RING_COLOR = 0x66FFFFFF;
 
     public CustomizeGuideBackgroundView(Context context) {
         this(context, null);
@@ -66,8 +68,13 @@ public class CustomizeGuideBackgroundView extends FrameLayout {
         Interpolator backgroundInterpolator = PathInterpolatorCompat.create(0.32f,
                 0.66f, 0.6f, 1);
 
+        mRingPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mRingPaint.setStyle(Paint.Style.STROKE);
+        mRingPaint.setStrokeWidth(Dimensions.pxFromDp(1.3f));
+        mRingPaint.setColor(RING_COLOR);
+
         mCustomizeGuideBackgroundDimmedAnimator = ValueAnimator.ofFloat(0, 1);
-        mCustomizeGuideBackgroundDimmedAnimator.setDuration(190);
+        mCustomizeGuideBackgroundDimmedAnimator.setDuration(140);
         mCustomizeGuideBackgroundDimmedAnimator.setInterpolator(backgroundInterpolator);
         mCustomizeGuideBackgroundDimmedAnimator.addUpdateListener(animation -> {
             mDimmedBackgroundProgress = (float) mCustomizeGuideBackgroundDimmedAnimator.getAnimatedValue();
@@ -75,7 +82,7 @@ public class CustomizeGuideBackgroundView extends FrameLayout {
         });
 
         mCustomizeGuideMenuFocusShrinkAnimator = ValueAnimator.ofFloat(16.53f, 0.75f);
-        mCustomizeGuideMenuFocusShrinkAnimator.setDuration(190);
+        mCustomizeGuideMenuFocusShrinkAnimator.setDuration(140);
         mCustomizeGuideMenuFocusShrinkAnimator.setInterpolator(backgroundInterpolator);
         mCustomizeGuideMenuFocusShrinkAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -121,6 +128,8 @@ public class CustomizeGuideBackgroundView extends FrameLayout {
                 Color.TRANSPARENT, DIMMED_BACKGROUND_COLOR));
         canvas.drawCircle(Dimensions.pxFromDp(26f), mCenterY,
                 Dimensions.pxFromDp(21.7f) * mHighlightCircleProgress, mCirclePaint);
+        canvas.drawCircle(Dimensions.pxFromDp(26f), mCenterY,
+                Dimensions.pxFromDp(21.7f) * mHighlightCircleProgress, mRingPaint);
         super.dispatchDraw(canvas);
     }
 

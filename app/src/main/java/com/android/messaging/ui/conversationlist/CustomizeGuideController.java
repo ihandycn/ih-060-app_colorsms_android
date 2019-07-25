@@ -26,7 +26,7 @@ import static com.android.messaging.ui.conversationlist.ConversationListActivity
 
 class CustomizeGuideController implements CustomizeGuide {
 
-    private static final String PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE = "pref_show_customize_guide";
+    public static final String PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE = "pref_show_customize_guide";
 
     private ConversationListActivity mHost;
 
@@ -77,7 +77,7 @@ class CustomizeGuideController implements CustomizeGuide {
 
         //Dialog appear animation
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(guideContainer, "alpha", 0, 1);
-        alphaAnimator.setDuration(340);
+        alphaAnimator.setDuration(210);
         alphaAnimator.setStartDelay(440);
 
         guideContainer.setPivotX(Dimensions.pxFromDp(0));
@@ -86,12 +86,12 @@ class CustomizeGuideController implements CustomizeGuide {
         Interpolator dialogInterpolator = PathInterpolatorCompat.create(0.32f, 0.66f, 0.6f, 1);
 
         ObjectAnimator enlargeXAnimator = ObjectAnimator.ofFloat(guideContainer, "scaleX", 0.5f, 1.01f);
-        enlargeXAnimator.setDuration(340);
+        enlargeXAnimator.setDuration(210);
         enlargeXAnimator.setInterpolator(dialogInterpolator);
         enlargeXAnimator.setStartDelay(440);
 
         ObjectAnimator enlargeYAnimator = ObjectAnimator.ofFloat(guideContainer, "scaleY", 0.5f, 1.01f);
-        enlargeYAnimator.setDuration(340);
+        enlargeYAnimator.setDuration(210);
         enlargeYAnimator.setInterpolator(dialogInterpolator);
         enlargeYAnimator.setStartDelay(440);
 
@@ -111,11 +111,11 @@ class CustomizeGuideController implements CustomizeGuide {
 
         //Dialog dismiss animation
         mDismissXAnim = ObjectAnimator.ofFloat(guideContainer, "scaleX", 1, 0.4f);
-        mDismissXAnim.setDuration(200);
+        mDismissXAnim.setDuration(300);
         mDismissYAnim = ObjectAnimator.ofFloat(guideContainer, "scaleY", 1, 0.4f);
-        mDismissYAnim.setDuration(200);
+        mDismissYAnim.setDuration(300);
         mDismissAlphaAnim = ObjectAnimator.ofFloat(guideContainer, "alpha", 1, 0);
-        mDismissAlphaAnim.setDuration(80);
+        mDismissAlphaAnim.setDuration(180);
         mDismissAlphaAnim.setStartDelay(80);
 
         mDismissAlphaAnim.addListener(new AnimatorListenerAdapter() {
