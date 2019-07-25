@@ -785,6 +785,14 @@
 	<string name="purchase_description">Kaufen Sie die Version OHNE WERBUNG.Nie wieder Werbung.</string>
 
 
-	<string name="emoji_skin_tone_setting">Emoji-Hautfarbe </string>
+    <string name="chat_list_text_color">Schriftfarbe</string>
+    <string name="purchase_failed">fehlgeschlagen</string>
+    <string name="chat_list_confirm_dialog_title">Änderungen speichern</string>
 
+	<string name="menu_chat_list">Chat-Liste</string>
+	<string name="chat_list_background_opacity">Hintergrunddeckkraft</string>
+	<string name="chat_list_change_background">Hintergrund ändern</string>
+	<string name="chat_list_config_dialog_message">Die Chat-Liste wurde verändert, möchtest du die Änderungen behalten?</string>
+
+	<string name="emoji_skin_tone_setting">Emoji-Hautfarbe </string>
 </resources>

@@ -4,28 +4,42 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
+import android.graphics.Color;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.animation.PathInterpolatorCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
-import android.widget.FrameLayout;
+import android.widget.TextView;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
+import com.android.messaging.util.UiUtils;
+import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
+import com.superapps.util.Threads;
 
 import static com.android.messaging.ui.conversationlist.ConversationListActivity.PREF_KEY_MAIN_DRAWER_OPENED;
 
-public class CustomizeGuideController {
+class CustomizeGuideController implements CustomizeGuide {
+
     private static final String PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE = "pref_show_customize_guide";
 
+    private ConversationListActivity mHost;
+
+    private ObjectAnimator mDismissXAnim;
+    private ObjectAnimator mDismissYAnim;
+    private ObjectAnimator mDismissAlphaAnim;
+
+    private CustomizeGuideBackgroundView mCustomizeGuideBackgroundView;
+    private boolean mBackPressed;
+
     @SuppressLint("ClickableViewAccessibility")
-    public static void showGuideIfNeed(AppCompatActivity activity) {
+    public void showGuideIfNeed(ConversationListActivity activity) {
+        mHost = activity;
         if (!Preferences.getDefault().getBoolean(PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE, true)) {
             return;
         }
@@ -37,45 +51,54 @@ public class CustomizeGuideController {
         }
 
         @SuppressLint("InflateParams") View customizeGuideView = LayoutInflater.from(activity).inflate(R.layout.customize_guide_layout, null, false);
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        ConstraintLayout.LayoutParams params = new ConstraintLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
 
-        FrameLayout guideContainer = customizeGuideView.findViewById(R.id.customize_guide_container);
-        FrameLayout.LayoutParams param = (FrameLayout.LayoutParams) guideContainer.getLayoutParams();
-        param.setMarginStart(Dimensions.pxFromDp(31 - 12.7f));
+        TextView guideButton = customizeGuideView.findViewById(R.id.customize_guide_confirm_button);
+        guideButton.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE, UiUtils.getColorDark(Color.WHITE), Dimensions.pxFromDp(1.3f),
+                activity.getApplicationContext().getResources().getColor(R.color.customize_guide_button_stroke_color), Dimensions.pxFromDp(19.8f),
+                false, true));
+
+        ConstraintLayout guideContainer = customizeGuideView.findViewById(R.id.customize_guide_container);
+        ConstraintLayout.LayoutParams param = (ConstraintLayout.LayoutParams) guideContainer.getLayoutParams();
         int actionBarHeight = 0;
         if (activity.getSupportActionBar() != null) {
             actionBarHeight = activity.getSupportActionBar().getHeight();
         }
-        param.topMargin = actionBarHeight + Dimensions.getStatusBarHeight(activity) - Dimensions.pxFromDp(25);
+        param.topMargin = actionBarHeight + Dimensions.getStatusBarHeight(activity) + Dimensions.pxFromDp(10);
         guideContainer.setLayoutParams(param);
         guideContainer.setAlpha(0);
+
+        mCustomizeGuideBackgroundView = customizeGuideView.findViewById(R.id.custom_guide_background_view);
 
         activity.addContentView(customizeGuideView, params);
         Preferences.getDefault().putBoolean(PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE, false);
         BugleAnalytics.logEvent("SMS_MenuGuide_Show", true);
 
-        LottieAnimationView guideLottie = customizeGuideView.findViewById(R.id.customize_guide_lottie);
-
+        //Dialog appear animation
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(guideContainer, "alpha", 0, 1);
-        alphaAnimator.setDuration(120);
+        alphaAnimator.setDuration(340);
+        alphaAnimator.setStartDelay(440);
 
-        guideContainer.setPivotX(Dimensions.pxFromDp(12.7f));
-        guideContainer.setPivotY(Dimensions.pxFromDp(12.7f));
+        guideContainer.setPivotX(Dimensions.pxFromDp(0));
+        guideContainer.setPivotY(Dimensions.pxFromDp(0));
 
-        Interpolator interpolator = PathInterpolatorCompat.create(0.17f, 0.12f, 0.67f, 1);
+        Interpolator dialogInterpolator = PathInterpolatorCompat.create(0.32f, 0.66f, 0.6f, 1);
 
-        ObjectAnimator enlargeXAnimator = ObjectAnimator.ofFloat(guideContainer, "scaleX", 0.5f, 1.1f);
-        enlargeXAnimator.setDuration(200);
-        enlargeXAnimator.setInterpolator(interpolator);
+        ObjectAnimator enlargeXAnimator = ObjectAnimator.ofFloat(guideContainer, "scaleX", 0.5f, 1.01f);
+        enlargeXAnimator.setDuration(340);
+        enlargeXAnimator.setInterpolator(dialogInterpolator);
+        enlargeXAnimator.setStartDelay(440);
 
-        ObjectAnimator enlargeYAnimator = ObjectAnimator.ofFloat(guideContainer, "scaleY", 0.5f, 1.1f);
-        enlargeYAnimator.setDuration(200);
-        enlargeYAnimator.setInterpolator(interpolator);
+        ObjectAnimator enlargeYAnimator = ObjectAnimator.ofFloat(guideContainer, "scaleY", 0.5f, 1.01f);
+        enlargeYAnimator.setDuration(340);
+        enlargeYAnimator.setInterpolator(dialogInterpolator);
+        enlargeYAnimator.setStartDelay(440);
 
-        ObjectAnimator shrinkXAnimator = ObjectAnimator.ofFloat(guideContainer, "scaleX", 1.1f, 1);
+        ObjectAnimator shrinkXAnimator = ObjectAnimator.ofFloat(guideContainer, "scaleX", 1.01f, 1);
         shrinkXAnimator.setDuration(120);
-        ObjectAnimator shrinkYAnimator = ObjectAnimator.ofFloat(guideContainer, "scaleY", 1.1f, 1);
+
+        ObjectAnimator shrinkYAnimator = ObjectAnimator.ofFloat(guideContainer, "scaleY", 1.01f, 1);
         shrinkYAnimator.setDuration(120);
 
         enlargeXAnimator.addListener(new AnimatorListenerAdapter() {
@@ -86,44 +109,28 @@ public class CustomizeGuideController {
             }
         });
 
-        shrinkXAnimator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                guideLottie.playAnimation();
-            }
-        });
+        //Dialog dismiss animation
+        mDismissXAnim = ObjectAnimator.ofFloat(guideContainer, "scaleX", 1, 0.4f);
+        mDismissXAnim.setDuration(200);
+        mDismissYAnim = ObjectAnimator.ofFloat(guideContainer, "scaleY", 1, 0.4f);
+        mDismissYAnim.setDuration(200);
+        mDismissAlphaAnim = ObjectAnimator.ofFloat(guideContainer, "alpha", 1, 0);
+        mDismissAlphaAnim.setDuration(80);
+        mDismissAlphaAnim.setStartDelay(80);
 
-        ObjectAnimator dismissEnlargeXAnimator = ObjectAnimator.ofFloat(guideContainer, "scaleX", 1, 1.1f);
-        dismissEnlargeXAnimator.setDuration(80);
-        dismissEnlargeXAnimator.setInterpolator(interpolator);
-        ObjectAnimator dismissEnlargeYAnimator = ObjectAnimator.ofFloat(guideContainer, "scaleY", 1, 1.1f);
-        dismissEnlargeYAnimator.setDuration(80);
-        dismissEnlargeYAnimator.setInterpolator(interpolator);
-
-        ObjectAnimator dismissShrinkXAnim = ObjectAnimator.ofFloat(guideContainer, "scaleX", 1.1f, 0.5f);
-        dismissShrinkXAnim.setDuration(120);
-        dismissShrinkXAnim.setStartDelay(80);
-        ObjectAnimator dismissShrinkYAnim = ObjectAnimator.ofFloat(guideContainer, "scaleY", 1.1f, 0.5f);
-        dismissShrinkYAnim.setDuration(120);
-        dismissShrinkYAnim.setStartDelay(80);
-
-        ObjectAnimator dismissAlphaAnim = ObjectAnimator.ofFloat(guideContainer, "alpha", 1, 0);
-        dismissAlphaAnim.setDuration(80);
-        dismissAlphaAnim.setStartDelay(120);
-
-        dismissAlphaAnim.addListener(new AnimatorListenerAdapter() {
+        mDismissAlphaAnim.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(Animator animation) {
                 customizeGuideView.setVisibility(View.GONE);
+                mCustomizeGuideBackgroundView.setVisibility(View.GONE);
             }
         });
 
-        customizeGuideView.findViewById(R.id.customize_guide_clickable_container).setOnClickListener(v -> {
-            if (guideLottie.isAnimating()) {
-                guideLottie.setProgress(1);
-                guideLottie.cancelAnimation();
-            }
+        guideButton.setOnClickListener(v -> {
+            closeCustomizeGuide(true);
+        });
 
+        guideContainer.setOnClickListener(v -> {
             if (enlargeXAnimator.isRunning() || shrinkXAnimator.isRunning()) {
                 customizeGuideView.setVisibility(View.GONE);
                 enlargeXAnimator.cancel();
@@ -132,20 +139,11 @@ public class CustomizeGuideController {
                 shrinkYAnimator.cancel();
                 alphaAnimator.cancel();
             } else {
-                dismissEnlargeXAnimator.start();
-                dismissEnlargeYAnimator.start();
-                dismissShrinkXAnim.start();
-                dismissShrinkYAnim.start();
-                dismissAlphaAnim.start();
+                closeCustomizeGuide(true);
             }
         });
 
         customizeGuideView.setOnTouchListener((v, event) -> {
-            if (guideLottie.isAnimating()) {
-                guideLottie.setProgress(1);
-                guideLottie.cancelAnimation();
-            }
-
             if (enlargeXAnimator.isRunning() || shrinkXAnimator.isRunning()) {
                 customizeGuideView.setVisibility(View.GONE);
                 enlargeXAnimator.cancel();
@@ -153,19 +151,57 @@ public class CustomizeGuideController {
                 shrinkXAnimator.cancel();
                 shrinkYAnimator.cancel();
                 alphaAnimator.cancel();
-                return false;
+                return true;
             }
-
-            dismissEnlargeXAnimator.start();
-            dismissEnlargeYAnimator.start();
-            dismissShrinkXAnim.start();
-            dismissShrinkYAnim.start();
-            dismissAlphaAnim.start();
-            return false;
+            closeCustomizeGuide(false);
+            return true;
         });
 
+        mCustomizeGuideBackgroundView.startCustomizeGuideBackgroundAppearAnimation();
         alphaAnimator.start();
         enlargeXAnimator.start();
         enlargeYAnimator.start();
+        logGuideShow();
+    }
+
+
+    @Override
+    public void logGuideShow() {
+        NavigationViewGuideTest.logGuideShow();
+        BugleAnalytics.logEvent("Menu_Guide_Show");
+    }
+
+    @Override
+    public boolean closeCustomizeGuide(boolean openDrawer) {
+        if (mBackPressed) {
+            return false;
+        }
+
+        if (mDismissXAnim == null) {
+            return false;
+        }
+
+        if (mDismissXAnim.isRunning()) {
+            return false;
+        }
+
+        mDismissXAnim.start();
+        mDismissYAnim.start();
+        mDismissAlphaAnim.start();
+        mCustomizeGuideBackgroundView.startCustomizeGuideBackgroundDismissAnimation();
+
+        if (openDrawer) {
+            mDismissAlphaAnim.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    Threads.postOnMainThreadDelayed(() -> {
+                        mHost.openDrawer();
+                        BugleAnalytics.logEvent("Menu_Show_AfterGuide");
+                    }, 120);
+                }
+            });
+        }
+        mBackPressed = true;
+        return true;
     }
 }

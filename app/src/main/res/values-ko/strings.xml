@@ -789,7 +789,14 @@
 	<string name="life_time">평생</string>
 	<string name="purchase_description">광고 없는 버전을 구매하세요. 다시는 광고가 표시되지 않음.</string>
 
+    <string name="chat_list_text_color">텍스트 색깔</string>
+    <string name="purchase_failed">실패</string>
+    <string name="chat_list_confirm_dialog_title">변경 사항 저장</string>
+
+	<string name="menu_chat_list">채팅 목록</string>
+	<string name="chat_list_background_opacity">배경 투명도</string>
+	<string name="chat_list_change_background">배경 변경</string>
+	<string name="chat_list_config_dialog_message">채팅 목록이 수정되었습니다. 변경 사항을 유지하시겠습니까?</string>
 
 	<string name="emoji_skin_tone_setting">이모지 스킨 톤 </string>
-
 </resources>

@@ -797,7 +797,14 @@
 	<string name="life_time">VITALÍCIO</string>
 	<string name="purchase_description">Compre a versão SEM ANÚNCIOS. Nenhum anúncio, nunca mais.</string>
 
+    <string name="chat_list_text_color">Cor do texto</string>
+    <string name="purchase_failed">falha</string>
+    <string name="chat_list_confirm_dialog_title">Salvar Alterações</string>
 
-	<string name="emoji_skin_tone_setting">Tom de pele do emoji </string>
+	<string name="menu_chat_list">Lista de conversas</string>
+	<string name="chat_list_background_opacity">Opacidade do fundo</string>
+	<string name="chat_list_change_background">Alterar fundo</string>
+	<string name="chat_list_config_dialog_message">A lista de conversas foi modificada, deseja manter as alterações?</string>
 
+    <string name="emoji_skin_tone_setting">Tom de pele do emoji </string>
 </resources>

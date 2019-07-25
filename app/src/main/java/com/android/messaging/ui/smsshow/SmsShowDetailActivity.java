@@ -135,6 +135,7 @@ public class SmsShowDetailActivity extends HSAppCompatActivity {
             mApplyBtnContainer.setBackground(BackgroundDrawables.createBackgroundDrawable(
                     getResources().getColor(R.color.sms_show_detail_apply_button_bg_color), Dimensions.pxFromDp(29), true));
             mApplyTextView.setTextColor(getResources().getColor(R.color.sms_show_detail_apply_button_text_color));
+            mApplyTextView.setAllCaps(true);
             mApplyTextView.setText(R.string.sms_show_apply);
             mCheckMark.setVisibility(View.GONE);
             mApplyBtnContainer.setOnClickListener(v -> {

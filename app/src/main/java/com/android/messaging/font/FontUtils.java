@@ -18,6 +18,7 @@ import java.util.Map;
 public class FontUtils {
     private static final String LOCAL_DIRECTORY = "fonts" + File.separator;
     public static final String MESSAGE_FONT_FAMILY_DEFAULT_VALUE = "default";
+    public static final String MESSAGE_FONT_SYSTEM = "system";
 
     private static Map<String, Typeface> sTypefaceMap = new HashMap<>();
     private static Map<String, Typeface> sDefaultTypefaceMap = new HashMap<>();
@@ -109,6 +110,9 @@ public class FontUtils {
     }
 
     public static Typeface loadTypeface(String typefaceName, String weightName) {
+        if (MESSAGE_FONT_SYSTEM.equalsIgnoreCase(typefaceName)) {
+            return getSystemTypeface(weightName);
+        }
         FontInfo info = FontDownloadManager.getFont(typefaceName);
         if (info == null) {
             return getAssetTypeface(typefaceName, weightName);
@@ -117,6 +121,14 @@ public class FontUtils {
             return getAssetTypeface(typefaceName, weightName);
         } else {
             return getRemoteTypeface(typefaceName, weightName);
+        }
+    }
+
+    private static Typeface getSystemTypeface(String weightName) {
+        if (weightName.equals("Regular")) {
+            return Typeface.defaultFromStyle(Typeface.NORMAL);
+        } else {
+            return Typeface.defaultFromStyle(Typeface.BOLD);
         }
     }
 

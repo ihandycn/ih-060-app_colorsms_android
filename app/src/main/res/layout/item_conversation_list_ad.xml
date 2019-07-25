@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/ad_root"
@@ -19,23 +18,22 @@
         <ImageView
             android:layout_width="@dimen/conversation_list_contact_icon_size"
             android:layout_height="@dimen/conversation_list_contact_icon_size"
-            android:src="@drawable/icon_ad"/>
+            android:src="@drawable/icon_ad" />
 
         <net.appcloudbox.ads.base.ContainerView.AcbNativeAdIconView
             android:id="@+id/banner_icon_image"
             android:layout_width="@dimen/conversation_list_contact_icon_size"
-            android:layout_height="@dimen/conversation_list_contact_icon_size"/>
+            android:layout_height="@dimen/conversation_list_contact_icon_size" />
     </com.superapps.view.RoundCornerContainer>
-
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginStart="14dp"
         android:layout_marginEnd="16dp"
-        android:layout_toStartOf="@+id/banner_action"
+        android:layout_marginStart="14dp"
         android:layout_toEndOf="@id/banner_icon"
+        android:layout_toStartOf="@+id/banner_action"
         android:orientation="vertical">
 
         <com.android.messaging.ui.view.MessagesTextView
@@ -48,33 +46,33 @@
             android:textColor="#19191c"
             android:textSize="16sp"
             app:typeface="@string/custom_font_semibold"
-            tools:text="Find funny GIFshjhjhjhjhjhjjhjhjh"/>
+            tools:text="Find funny GIFshjhjhjhjhjhjjhjhjh" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
+            android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:layout_height="wrap_content">
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/icon_ad_preview"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/icon_ad_preview"/>
+                android:src="@drawable/icon_ad_preview" />
 
             <com.android.messaging.ui.view.MessagesTextView
                 android:id="@+id/banner_des"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
                 android:layout_marginStart="4dp"
+                android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:includeFontPadding="false"
                 android:singleLine="true"
                 android:textColor="#878a95"
                 android:textSize="12sp"
                 app:typeface="@string/custom_font_regular"
-                tools:text="memes &amp; watch vir..."/>
+                tools:text="memes &amp; watch vir..." />
         </LinearLayout>
     </LinearLayout>
 
@@ -84,14 +82,11 @@
         android:layout_height="32dp"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="14dp"
+        android:layout_marginEnd="@dimen/conversation_list_item_view_padding"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:textColor="#2caef8"
         android:textSize="13sp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        app:typeface="@string/custom_font_medium"/>
+        app:typeface="@string/custom_font_medium" />
 
     <FrameLayout
         android:id="@+id/ad_choice"

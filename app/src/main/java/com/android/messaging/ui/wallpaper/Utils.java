@@ -13,7 +13,7 @@ public final class Utils {
 
     private static final int STREAM_OP_BUFFER_SIZE = 4096;
 
-    static boolean saveInputStreamToFile(byte[] preData, InputStream is, File fileOut) {
+    public static boolean saveInputStreamToFile(byte[] preData, InputStream is, File fileOut) {
         OutputStream output = null;
         try {
             output = new FileOutputStream(fileOut);
@@ -46,7 +46,7 @@ public final class Utils {
         return true;
     }
 
-    static String md5(final String s) {
+    public static String md5(final String s) {
         final String MD5 = "MD5";
         try {
             // Create MD5 Hash

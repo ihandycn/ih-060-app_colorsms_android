@@ -23,10 +23,6 @@ public class AvatarBgDrawables {
     public static Drawable sAvatarBg;
     public static Drawable sSolidAvatarBg;
 
-    public static Drawable getAvatarBg(boolean forceCreate) {
-        return getAvatarBg(forceCreate, false);
-    }
-
     public static Drawable getAvatarBg(boolean forceCreate, boolean hasCustomBackground) {
         if (hasCustomBackground) {
             Drawable drawable = getsSolidAvatarBg(forceCreate);

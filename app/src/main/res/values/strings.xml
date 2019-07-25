@@ -947,7 +947,7 @@
 
 
     <!--sms show-->
-    <string name="sms_show_apply">APPLY</string>
+    <string name="sms_show_apply">Apply</string>
     <string name="sms_show_current_theme">CURRENT THEME</string>
 
     <!-- Welcome-->
@@ -1063,6 +1063,7 @@
     <string name="menu_bubble">Bubble</string>
     <string name="menu_theme">Theme</string>
     <string name="menu_chat_background">Chat Background</string>
+    <string name="menu_chat_list">Chat List</string>
     <string name="menu_reset_customization">Reset Customization</string>
     <string name="menu_setting">Settings</string>
     <string name="menu_rate">5 Star Rating</string>
@@ -1129,6 +1130,8 @@
     <string name="menu_privacy_box">Private Box</string>
 
     <string name="customize_guide_title">Customization is here!</string>
+    <string name="customize_new_guide_title">Cool Features</string>
+    <string name="customize_new_guide_content">Customize your chat to make it special!</string>
     <string name="signature">Signature</string>
 
     <string name="create_shortcut_has_been_create">Created successfully</string>
@@ -1240,7 +1243,7 @@
     <string name="invite_friends_invite_send_sms_description">Send SMS to the friend that you’d like to invite</string>
 
     <!--New setting-->
-    <string name="emoji">Emoji</string>
+    <string name="emoji" translatable="false">Emoji</string>
     <string name="others">Others</string>
     <string name="about">About</string>
     <string name="notification_summary">Get notify when receiving messages</string>
@@ -1322,7 +1325,15 @@
     <string name="purchase_description">Purchase the AD-FREE version. No ads ever again.</string>
     <string name="purchase_failed">failed</string>
     <string name="switch_sim">Switch SIM</string>
-    
-    
+
+    <!--chat list-->
+    <string name="chat_list_confirm_dialog_title">Save Changes</string>
+    <string name="chat_list_config_dialog_message">Chat list have been modified, would you like to keep changes?</string>
+    <string name="select_image">Select Image</string>
+    <string name="chat_list_change_background">Change Background</string>
+    <string name="chat_list_background_opacity">Background Opacity</string>
+    <string name="chat_list_text_color">Text Color</string>
+
+    <string name="system_font_display_name">System</string>
 </resources>
 

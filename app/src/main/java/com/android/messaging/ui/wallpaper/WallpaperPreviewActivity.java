@@ -36,7 +36,6 @@ import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 public class WallpaperPreviewActivity extends BaseActivity implements WallpaperManager.WallpaperChangeListener {
@@ -60,41 +59,10 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
         }
     }
 
-    private List<WallpaperChooserItemView> mListeners = new ArrayList<>();
     private ImageView mWallpaperPreviewImg;
     private String mConversationId;
     private CustomMessagePreviewView mBubbleView;
-
-    public void addListener(WallpaperChooserItemView listener) {
-        mListeners.add(listener);
-    }
-
-    public void removeListener(WallpaperChooserItemView listener) {
-        mListeners.remove(listener);
-    }
-
-    public void onItemSelected(WallpaperChooserItemView view) {
-        for (WallpaperChooserItemView v : mListeners) {
-            if (v.equals(view)) {
-                v.onItemSelected();
-            } else {
-                v.onItemDeselected();
-            }
-        }
-    }
-
-    public void onItemPreSelected(WallpaperChooserItemView view) {
-        for (WallpaperChooserItemView v : mListeners) {
-            if (v.isItemSelected()) {
-                continue;
-            }
-            if (v.equals(view)) {
-                v.onItemPreSelected();
-            } else {
-                v.onItemDeselected();
-            }
-        }
-    }
+    private WallpaperChooserAdapter mAdapter;
 
     private void setPreviewImage(String path) {
         String url = Uri.fromFile(new File(path)).toString();
@@ -162,8 +130,8 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
         UiUtils.setTitleBarBackground(toolbar, this);
         RecyclerView wallpaperChooser = findViewById(R.id.wallpaper_chooser_container);
         wallpaperChooser.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
-        wallpaperChooser.setAdapter(new WallpaperChooserAdapter(this, WallpaperManager.getWallpaperChooserList()));
-        wallpaperChooser.setItemViewCacheSize(15);
+        mAdapter = new WallpaperChooserAdapter(this, WallpaperManager.getWallpaperChooserList());
+        wallpaperChooser.setAdapter(mAdapter);
 
         String conversationId = getIntent().getStringExtra("conversation_id");
         if (conversationId != null) {
@@ -186,7 +154,6 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mListeners.clear();
         WallpaperManager.removeWallpaperChangeListener(this);
     }
 
@@ -222,7 +189,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                 mWallpaperPreviewImg.setImageURI(Uri.fromFile(new File(wallpaperPath)));
             }
             mBubbleView.updateBackgroundState(mConversationId, true);
-            onItemSelected(null);
+            mAdapter.onItemSelected(null);
         } else {
             finish();
         }
@@ -234,12 +201,81 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
     }
 
     class WallpaperChooserAdapter extends RecyclerView.Adapter<WallpaperChooserViewHolder> {
-        private List<WallpaperChooserItem> wallpaperInfoList;
+        private List<WallpaperChooserItem> mWallpaperInfoList;
         private Context mContext;
+        String mWallpaperPath = WallpaperManager.getWallpaperPathByConversationId(mConversationId);
 
         WallpaperChooserAdapter(Context context, List<WallpaperChooserItem> wallpaperInfos) {
             mContext = context;
-            wallpaperInfoList = wallpaperInfos;
+            mWallpaperInfoList = wallpaperInfos;
+
+            if (TextUtils.isEmpty(mWallpaperPath)) {
+                for (int i = 0; i < mWallpaperInfoList.size(); i++) {
+                    if (mWallpaperInfoList.get(i).getItemType() == WallpaperChooserItem.TYPE_EMPTY) {
+                        mWallpaperInfoList.get(i).setSelectedState(true);
+                        break;
+                    }
+                }
+            } else {
+                for (int i = 0; i < mWallpaperInfoList.size(); i++) {
+                    WallpaperChooserItem item = mWallpaperInfoList.get(i);
+                    if (item.getItemType() == WallpaperChooserItem.TYPE_NORMAL_WALLPAPER
+                            && mWallpaperPath.equals(item.getWallpaperLocalPath())) {
+                        item.setSelectedState(true);
+                        break;
+                    }
+                }
+            }
+
+            for (int i = 0; i < mWallpaperInfoList.size(); i++) {
+                WallpaperChooserItem item = mWallpaperInfoList.get(i);
+                if (item.getItemType() == WallpaperChooserItem.TYPE_NORMAL_WALLPAPER
+                        && !item.isDownloaded()) {
+                    item.setDownloadListener(
+                            new WallpaperDownloader.WallpaperDownloadListener() {
+                                @Override
+                                public void onDownloadSuccess() {
+                                    if (item.isItemChecked()) {
+                                        onItemSelected(item);
+                                        if (isDestroyed()) {
+                                            return;
+                                        }
+                                        setPreviewImage(item.getWallpaperLocalPath());
+                                        WallpaperManager.setWallpaperPath(mConversationId, item.getWallpaperLocalPath());
+
+                                        WallpaperManager.onOnlineWallpaperChanged();
+                                        BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied", true,
+                                                "from", TextUtils.isEmpty(mConversationId) ? "Menu" : "Options");
+                                        BugleFirebaseAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied",
+                                                "from", TextUtils.isEmpty(mConversationId) ? "Menu" : "Options");
+
+                                        BugleAnalytics.logEvent("SMS_ChatBackground_Change", true,
+                                                "from", TextUtils.isEmpty(mConversationId) ? "Menu" : "Options");
+                                        BugleFirebaseAnalytics.logEvent("SMS_ChatBackground_Change",
+                                                "from", TextUtils.isEmpty(mConversationId) ? "Menu" : "Options");
+                                    }
+                                }
+
+                                @Override
+                                public void onDownloadFailed() {
+                                }
+                            }
+                    );
+                }
+            }
+        }
+
+        public void onItemSelected(WallpaperChooserItem selectedItem) {
+            for (WallpaperChooserItem item : mWallpaperInfoList) {
+                item.setSelectedState(item.equals(selectedItem));
+                item.setPreSelectState(false);
+            }
+        }
+
+        void onItemPreSelected(WallpaperChooserItem selectedItem) {
+            for (WallpaperChooserItem item : mWallpaperInfoList) {
+                item.setPreSelectState(item.equals(selectedItem));
+            }
         }
 
         @NonNull
@@ -251,16 +287,16 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
 
         @Override
         public void onBindViewHolder(@NonNull WallpaperChooserViewHolder holder, int position) {
-            WallpaperChooserItem item = wallpaperInfoList.get(position);
-            WallpaperChooserItemView view = (WallpaperChooserItemView) holder.itemView;
-            view.setChooserItem(item);
-            String wallpaperPath = WallpaperManager.getWallpaperPathByConversationId(mConversationId);
+            WallpaperChooserItem item = mWallpaperInfoList.get(position);
+            WallpaperChooserItemView view = holder.mItemView;
+            item.bindView(view);
+
             if (item.getItemType() == WallpaperChooserItem.TYPE_ADD_PHOTO) {
                 view.setBackgroundResource(R.drawable.wallpaper_add_photo_bg);
                 view.setOnClickListener(v -> {
                     Intent pickIntent = new Intent(Intent.ACTION_PICK);
                     pickIntent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-                    Intent chooserIntent = Intent.createChooser(pickIntent, "Select Image");
+                    Intent chooserIntent = Intent.createChooser(pickIntent, getResources().getString(R.string.select_image));
                     Navigations.startActivityForResultSafely((Activity) mContext, chooserIntent, REQUEST_CODE_PICK_WALLPAPER);
                     BugleAnalytics.logEvent("SMS_ChatBackground_AddPhotos_Clicked", true,
                             "from", TextUtils.isEmpty(mConversationId) ? "Menu" : "Options");
@@ -268,12 +304,11 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                             "from", TextUtils.isEmpty(mConversationId) ? "Menu" : "Options");
                 });
             } else if (item.getItemType() == WallpaperChooserItem.TYPE_EMPTY) {
-                addListener(view);
                 view.setOnClickListener(v -> {
-                    if (view.isItemSelected()) {
+                    if (item.isItemChecked()) {
                         return;
                     }
-                    onItemSelected(view);
+                    onItemSelected(item);
                     if (mConversationId == null) {
                         WallpaperManager.setWallpaperPath(null, "");
                         WallpaperManager.onOnlineWallpaperChanged();
@@ -294,70 +329,31 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
                     BugleFirebaseAnalytics.logEvent("SMS_ChatBackground_Change",
                             "from", TextUtils.isEmpty(mConversationId) ? "Menu" : "Options");
                 });
-                if (TextUtils.isEmpty(wallpaperPath)) {
-                    onItemSelected(view);
-                }
             } else {
-                addListener(view);
-                if (wallpaperPath != null && wallpaperPath.equals(item.getAbsolutePath())) {
-                    onItemSelected(view);
-                }
                 view.setOnClickListener(v -> {
-                    if (view.isItemSelected() || view.isItemPreSelected()) {
-                        return;
-                    }
-                    if (item.isDownloaded()) {
-                        onItemSelected(view);
-                        if (view.isItemSelected()) {
-                            view.onItemSelected();
-                            WallpaperManager.setWallpaperPath(mConversationId, item.getAbsolutePath());
+                    if (!item.isItemDownloading() && item.isDownloaded()) {
+                        if (item.isItemChecked()) {
+                            onItemSelected(item);
+                            return;
+                        }
+                        onItemSelected(item);
+                        if (item.isItemChecked()) {
+                            setPreviewImage(item.getSourceLocalPath());
+                            WallpaperManager.setWallpaperPath(mConversationId, item.getWallpaperLocalPath());
                             WallpaperManager.onOnlineWallpaperChanged();
-                            setPreviewImage(item.getLocalPath());
                             BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied", true,
                                     "from", TextUtils.isEmpty(mConversationId) ? "Menu" : "Options");
                             BugleFirebaseAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied",
                                     "from", TextUtils.isEmpty(mConversationId) ? "Menu" : "Options");
+
                             BugleAnalytics.logEvent("SMS_ChatBackground_Change", true,
                                     "from", TextUtils.isEmpty(mConversationId) ? "Menu" : "Options");
                             BugleFirebaseAnalytics.logEvent("SMS_ChatBackground_Change",
                                     "from", TextUtils.isEmpty(mConversationId) ? "Menu" : "Options");
                         }
                     } else {
-                        view.onLoadingStart();
-                        onItemPreSelected(view);
-                        WallpaperDownloader.download(new WallpaperDownloader.WallpaperDownloadListener() {
-                            @Override
-                            public void onDownloadSuccess(String path) {
-                                Threads.postOnMainThread(() -> {
-                                    if (view.isItemPreSelected()) {
-                                        onItemSelected(view);
-                                    }
-                                    view.onLoadingDone();
-                                    if (view.isItemSelected()) {
-                                        if (isDestroyed()) {
-                                            return;
-                                        }
-                                        WallpaperManager.setWallpaperPath(mConversationId, item.getAbsolutePath());
-                                        WallpaperManager.onOnlineWallpaperChanged();
-                                        setPreviewImage(item.getLocalPath());
-                                        BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied", true,
-                                                "from", TextUtils.isEmpty(mConversationId) ? "Menu" : "Options");
-                                        BugleFirebaseAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Applied",
-                                                "from", TextUtils.isEmpty(mConversationId) ? "Menu" : "Options");
-                                        BugleAnalytics.logEvent("SMS_ChatBackground_Change", true,
-                                                "from", TextUtils.isEmpty(mConversationId) ? "Menu" : "Options");
-                                        BugleFirebaseAnalytics.logEvent("SMS_ChatBackground_Change",
-                                                "from", TextUtils.isEmpty(mConversationId) ? "Menu" : "Options");
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onDownloadFailed() {
-                                view.onItemDeselected();
-                                view.onLoadingDone();
-                            }
-                        }, item.getRemoteUrl());
+                        onItemPreSelected(item);
+                        item.downloadWallpaper();
                     }
                     BugleAnalytics.logEvent("SMS_ChatBackground_Backgrounds_Clicked", true,
                             "from", TextUtils.isEmpty(mConversationId) ? "Menu" : "Options");
@@ -368,14 +364,22 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
         }
 
         @Override
+        public void onViewRecycled(@NonNull WallpaperChooserViewHolder holder) {
+            mWallpaperInfoList.get(holder.getAdapterPosition()).bindView(null);
+        }
+
+        @Override
         public int getItemCount() {
-            return wallpaperInfoList.size();
+            return mWallpaperInfoList.size();
         }
     }
 
     class WallpaperChooserViewHolder extends RecyclerView.ViewHolder {
+        private WallpaperChooserItemView mItemView;
+
         WallpaperChooserViewHolder(View itemView) {
             super(itemView);
+            mItemView = (WallpaperChooserItemView) itemView;
         }
     }
 }

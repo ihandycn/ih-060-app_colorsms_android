@@ -2,6 +2,7 @@ package com.android.messaging.ui.appsettings;
 
 import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Ringtone;
@@ -26,7 +27,9 @@ import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.ui.SettingEmojiStyleItemView;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.android.messaging.ui.invitefriends.InviteFriendsActivity;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.util.BugleAnalytics;
@@ -188,6 +191,7 @@ public class SettingActivity extends BaseActivity {
         //emoji
         mSettingEmojiStyleItemView = findViewById(R.id.setting_item_emoji_style);
         mSettingEmojiStyleItemView.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("RestrictedApi")
             @Override
             public void onClick(View v) {
                 BugleAnalytics.logEvent("Settings_EmojiStyle_Click");
@@ -245,12 +249,23 @@ public class SettingActivity extends BaseActivity {
             BugleAnalytics.logEvent("SMS_Settings_Advanced_Click", true);
 
             if (PhoneUtils.getDefault().getActiveSubscriptionCount() <= 1) {
-                Intent intent = UIIntents.get().getAdvancedSettingsIntent(this);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
+                Intent intent = UIIntents.get().getAdvancedSettingsIntent(SettingActivity.this);
+                SettingActivity.this.startActivity(intent);
+                SettingActivity.this.overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
             } else {
-                UIIntents.get().launchSettingsSimSelectActivity(this);
+                UIIntents.get().launchSettingsSimSelectActivity(SettingActivity.this);
             }
+        });
+
+        GeneralSettingItemView inviteFriends = findViewById(R.id.setting_item_invite_friends);
+        inviteFriends.setOnItemClickListener(() -> {
+            Intent inviteFriendsIntent = new Intent(SettingActivity.this, InviteFriendsActivity.class);
+            startActivity(inviteFriendsIntent, TransitionUtils.getTransitionInBundle(SettingActivity.this));
+        });
+
+        GeneralSettingItemView fiveStarRating = findViewById(R.id.setting_item_five_star_rating);
+        fiveStarRating.setOnItemClickListener(() -> {
+            FiveStarRateDialog.showFiveStarFromSetting(SettingActivity.this);
         });
 
         //sms delivery reports

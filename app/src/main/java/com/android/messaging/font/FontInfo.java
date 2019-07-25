@@ -8,21 +8,21 @@ public class FontInfo {
     private List<String> mWeightList = new ArrayList<>();
     private boolean mIsLocalFont;
 
-    public FontInfo(String fontName, List<String> styleList, boolean isLocal) {
+    FontInfo(String fontName, List<String> styleList, boolean isLocal) {
         this.mFontName = fontName;
         this.mWeightList = new ArrayList<>(styleList);
         this.mIsLocalFont = isLocal;
     }
 
-    public String getFontName() {
+    String getFontName() {
         return mFontName;
     }
 
-    public List<String> getFontWeights() {
+    List<String> getFontWeights() {
         return mWeightList;
     }
 
-    public boolean isFontDownloaded() {
+    boolean isFontDownloaded() {
         if (!mIsLocalFont) {
             return FontDownloadManager.isFontDownloaded(this);
         } else {
@@ -30,7 +30,7 @@ public class FontInfo {
         }
     }
 
-    public boolean isLocalFont() {
+    boolean isLocalFont() {
         return mIsLocalFont;
     }
 }

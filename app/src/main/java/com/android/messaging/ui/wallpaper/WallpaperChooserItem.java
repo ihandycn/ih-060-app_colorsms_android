@@ -1,53 +1,101 @@
 package com.android.messaging.ui.wallpaper;
 
-import com.android.messaging.R;
-
 public class WallpaperChooserItem {
-    static final int TYPE_ADD_PHOTO = 0;
-    static final int TYPE_EMPTY = 1;
-    static final int TYPE_NORMAL_WALLPAPER = 2;
+    public static final int TYPE_ADD_PHOTO = 0;
+    public static final int TYPE_EMPTY = 1;
+    public static final int TYPE_NORMAL_WALLPAPER = 2;
 
     private int mItemType = TYPE_NORMAL_WALLPAPER;
-
     private int mIndex;
+    private boolean mIsWallpaperDownloading = false;
+    private boolean mIsItemSelected = false;
+    private boolean mIsItemPreSelected = false;
+    private WallpaperChooserItemView mItemView;
+    private WallpaperDownloader.WallpaperDownloadListener mDownloadListener;
 
-    public static final int[] sThumbnailRes = {
-            R.drawable.wallpaper_thumbnail_abstract,
-            R.drawable.wallpaper_thumbnail_butterfly1,
-            R.drawable.wallpaper_thumbnail_butterfly2,
-            R.drawable.wallpaper_thumbnail_chocolate,
-            R.drawable.wallpaper_thumbnail_dandelion1,
-            R.drawable.wallpaper_thumbnail_dandelion2,
-            R.drawable.wallpaper_thumbnail_dandelion3,
-            R.drawable.wallpaper_thumbnail_flower,
-            R.drawable.wallpaper_thumbnail_frost,
-            R.drawable.wallpaper_thumbnail_gates_wood,
-            R.drawable.wallpaper_thumbnail_iceland,
-            R.drawable.wallpaper_thumbnail_sea,
-            R.drawable.wallpaper_thumbnail_winter
-    };
+    public void downloadWallpaper() {
+        if (mIsWallpaperDownloading) {
+            return;
+        }
+        mIsWallpaperDownloading = true;
+        if (mItemView != null) {
+            mItemView.onDownloadStart();
+        }
+        WallpaperDownloader.download(new WallpaperDownloader.WallpaperDownloadListener() {
+            @Override
+            public void onDownloadSuccess() {
+                if (mItemView != null) {
+                    if (mIsItemPreSelected) {
+                        mItemView.onDownloadSuccessAndChecked();
+                    } else {
+                        mItemView.onDownloadFinish();
+                    }
+                }
+                mIsItemSelected = mIsItemPreSelected;
+                mIsWallpaperDownloading = false;
+                mIsItemPreSelected = false;
+                if (mDownloadListener != null) {
+                    mDownloadListener.onDownloadSuccess();
+                }
+            }
 
-    public static final String[] sRemoteUrl = {
-            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_abstract.jpg",
-            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_butterfly1.jpg",
-            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_butterfly2.jpg",
-            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_chocolate.jpg",
-            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_dandelion1.jpg",
-            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_dandeline2.jpg",
-            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_dandelion3.jpg",
-            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_flower.jpg",
-            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_forst.jpg",
-            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_gates_wood.jpg",
-            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_iceland.jpg",
-            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_sea.jpg",
-            "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/wallpaper_winter.jpg"
-    };
+            @Override
+            public void onDownloadFailed() {
+                if (mItemView != null) {
+                    mItemView.onDownloadFinish();
+                }
+                mIsWallpaperDownloading = false;
+                mIsItemSelected = false;
+                mIsItemPreSelected = false;
+                if (mDownloadListener != null) {
+                    mDownloadListener.onDownloadFailed();
+                }
+            }
+        }, getRemoteUrl());
+    }
+
+    public void bindView(WallpaperChooserItemView view) {
+        mItemView = view;
+        if (view != null) {
+            view.initViewByItemState(this);
+        }
+    }
+
+    public boolean isItemDownloading() {
+        return mIsWallpaperDownloading;
+    }
+
+    public void setSelectedState(boolean isSelected) {
+        if (isSelected == mIsItemSelected) {
+            return;
+        }
+        mIsItemSelected = isSelected;
+        if (mItemView != null) {
+            if (isSelected) {
+                mItemView.setCheckedState();
+            } else {
+                mItemView.setUncheckedState();
+            }
+        }
+    }
+
+    public void setDownloadListener(WallpaperDownloader.WallpaperDownloadListener listener){
+        mDownloadListener = listener;
+    }
+
+    public void setPreSelectState(boolean isSelected) {
+        mIsItemPreSelected = isSelected;
+    }
+
+    public boolean isItemChecked() {
+        return mIsItemSelected;
+    }
 
     public void setIndex(int mIndex) {
         this.mIndex = mIndex;
     }
 
-    int getItemType() {
+    public int getItemType() {
         return mItemType;
     }
 
@@ -56,22 +104,22 @@ public class WallpaperChooserItem {
     }
 
     int getThumbnailResId() {
-        return sThumbnailRes[mIndex];
+        return WallpaperInfos.sThumbnailRes[mIndex];
     }
 
-    String getLocalPath() {
-        return WallpaperDownloader.getWallPaperLocalPath(sRemoteUrl[mIndex]);
+    public String getSourceLocalPath() {
+        return WallpaperDownloader.getSourceLocalPath(WallpaperInfos.sRemoteUrl[mIndex]);
     }
 
-    public String getAbsolutePath() {
-        return WallpaperDownloader.getAbsolutePath(sRemoteUrl[mIndex]);
+    public String getWallpaperLocalPath() {
+        return WallpaperDownloader.getWallpaperLocalPath(WallpaperInfos.sRemoteUrl[mIndex]);
     }
 
-    String getRemoteUrl() {
-        return sRemoteUrl[mIndex];
+    public String getRemoteUrl() {
+        return WallpaperInfos.sRemoteUrl[mIndex];
     }
 
     public boolean isDownloaded() {
-        return WallpaperDownloader.isWallpaperDownloaded(sRemoteUrl[mIndex]);
+        return WallpaperDownloader.isWallpaperDownloaded(WallpaperInfos.sRemoteUrl[mIndex]);
     }
 }

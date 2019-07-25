@@ -131,8 +131,8 @@ import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
-import com.superapps.util.Compats;
 import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Compats;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
@@ -218,7 +218,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     private ConversationMessageAdapter mAdapter;
     private ConversationFastScroller mFastScroller;
     private ImageView mWallpaperView;
-    private ImageView mThemeWallpaperView;
+    private ImageView mOldRecommendImageView;
 
     private View mConversationComposeDivider;
     private ChangeDefaultSmsAppHelper mChangeDefaultSmsAppHelper;
@@ -754,13 +754,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mAdContentView.setAdBodyView(description);
         TextView actionBtn = ViewUtils.findViewById(adView, R.id.banner_action);
         mAdContentView.setAdActionView(actionBtn);
-        actionBtn.setTextColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionTextColor));
+        int actionColor = Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).listTimeColor);
+        actionBtn.setTextColor(actionColor);
         Drawable actionBg = getResources().getDrawable(R.drawable.conversation_list_ad_action_pressed_bg);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ((LayerDrawable) actionBg).getDrawable(1)
-                    .setColorFilter(
-                            Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionColor),
-                            PorterDuff.Mode.SRC_IN);
+                    .setColorFilter(actionColor, PorterDuff.Mode.SRC_IN);
         }
         actionBtn.setBackgroundDrawable(actionBg);
         if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSDetailspageTopAd", "FacebookEnabled")) {
@@ -930,8 +929,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         }
 
         mMediaLayout = view.findViewById(R.id.camera_photo_layout);
-        mWallpaperView = view.findViewById(R.id.conversation_fragment_wallpaper);
-        mThemeWallpaperView = view.findViewById(R.id.conversation_fragment_theme_wallpaper);
+        mWallpaperView = view.findViewById(R.id.conversation_fragment_theme_wallpaper);
+        mOldRecommendImageView = view.findViewById(R.id.conversation_fragment_wallpaper);
 
         mComposeMessageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -1045,7 +1044,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public void onResume() {
         super.onResume();
-        WallpaperManager.setConversationWallPaper(mWallpaperView, mThemeWallpaperView, mConversationId);
+        WallpaperManager.setConversationWallPaper(mWallpaperView, mConversationId, mOldRecommendImageView);
 
         if (mIncomingDraft == null) {
             mComposeMessageView.requestDraftMessage(mClearLocalDraft);

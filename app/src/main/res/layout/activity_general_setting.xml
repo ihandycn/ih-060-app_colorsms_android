@@ -192,6 +192,22 @@
                 app:title="@string/advanced_settings"
                 app:type="withTriangle" />
 
+            <!--Invite Friends-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_item_invite_friends"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/menu_invite_friends"
+                app:type="normal" />
+
+            <!--5 Star Rating-->
+            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                android:id="@+id/setting_item_five_star_rating"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:title="@string/menu_rate"
+                app:type="normal" />
+
             <!--Sync-->
             <com.android.messaging.ui.appsettings.GeneralSettingItemView
                 android:id="@+id/sync_settings_item"
