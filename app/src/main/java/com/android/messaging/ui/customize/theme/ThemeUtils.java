@@ -106,7 +106,6 @@ public class ThemeUtils {
 //
 //                    }
 //                });
-
         if (endRunnable != null) {
             Threads.postOnMainThread(endRunnable);
         }
