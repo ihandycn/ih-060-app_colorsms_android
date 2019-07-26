@@ -77,8 +77,12 @@ public class Upgrader extends BaseUpgrader {
         }
 
         if (oldVersion < 68 && newVersion >= 68) {
-            resizeLocalThemeAndWallpaperResource();
+            resizeDownloadedThemeAndWallpaperResource();
             EmojiManager.upgradeEmojiRecentForEmojiStylePattern();
+        }
+
+        if (oldVersion < newVersion) {
+            ThemeDownloadManager.getInstance().copyAndResizeThemeWhenAppInstallOrUpgrade();
         }
 
         FontDownloadManager.copyFontsFromAssetsAsync();
@@ -97,7 +101,7 @@ public class Upgrader extends BaseUpgrader {
         }
     }
 
-    private void resizeLocalThemeAndWallpaperResource() {
+    private void resizeDownloadedThemeAndWallpaperResource() {
         // resize current theme bitmap size sync
         ThemeInfo info = ThemeUtils.getCurrentTheme();
         if (!ThemeUtils.isDefaultTheme()) {
@@ -111,12 +115,6 @@ public class Upgrader extends BaseUpgrader {
                     WallpaperSizeManager.resizeThemeBitmap(theme);
                 }
             }
-
-//            for (String url : WallpaperInfos.sRemoteUrl) {
-//                if (WallpaperDownloader.isWallpaperDownloaded(url)) {
-//                    WallpaperDownloader.cutSourceBitmap(url);
-//                }
-//            }
         });
     }
 
@@ -132,20 +130,7 @@ public class Upgrader extends BaseUpgrader {
             return;
         }
 
-        if (currentTheme.mIsLocalTheme) {
-            ThemeDownloadManager.getInstance().copyFileFromAssetsSync(currentTheme,
-                    new ThemeDownloadManager.IThemeMoveListener() {
-                        @Override
-                        public void onMoveSuccess() {
-
-                        }
-
-                        @Override
-                        public void onMoveFailed() {
-
-                        }
-                    });
-        } else {
+        if (!currentTheme.mIsLocalTheme) {
             ThemeUtils.applyTheme(ThemeInfo.getThemeInfo(ThemeUtils.DEFAULT_THEME_KEY), 0);
             Preferences.getDefault().putBoolean(BuglePrefsKeys.PREFS_KEY_THEME_CLEARED_TO_DEFAULT, true);
         }

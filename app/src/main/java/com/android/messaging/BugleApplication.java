@@ -52,6 +52,7 @@ import com.android.messaging.sms.BugleUserAgentInfoLoader;
 import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SetAsDefaultGuideActivity;
+import com.android.messaging.ui.customize.theme.ThemeDownloadManager;
 import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
@@ -370,6 +371,10 @@ public class BugleApplication extends HSApplication implements UncaughtException
                     AppPrivateLockManager.getInstance().startAppLockWatch()));
             initWorks.add(new ParallelBackgroundTask("RegisterSignalStrength", () ->
                     DataModel.get().getConnectivityUtil().registerForSignalStrength()));
+            initWorks.add(new ParallelBackgroundTask("CopyAndResizeThemeInfo",
+                    () -> Preferences.getDefault().doOnce(
+                            () -> ThemeDownloadManager.getInstance().copyAndResizeThemeWhenAppInstallOrUpgrade(),
+                            "pref_key_copy_and_resize_theme_when_install")));
             TaskRunner.run(initWorks);
         } finally {
             TraceCompat.endSection();
