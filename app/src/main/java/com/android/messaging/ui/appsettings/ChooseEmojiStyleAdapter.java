@@ -74,7 +74,20 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
         if (item.isSystem) {
             holder.sampleImage.setImageDrawable(new SystemEmojiStylePreview());
         } else {
-            GlideApp.with(holder.sampleImage).load(item.sampleImageUrl).into(holder.sampleImage);
+            switch (item.name) {
+                case "Android Blob":
+                    holder.sampleImage.setImageResource(R.drawable.emoji_style_blob);
+                    break;
+                case "Android Pie":
+                    holder.sampleImage.setImageResource(R.drawable.emoji_style_pie);
+                    break;
+                case "Android Twitter":
+                    holder.sampleImage.setImageResource(R.drawable.emoji_style_twitter);
+                    break;
+                default:
+                    GlideApp.with(holder.sampleImage).load(item.sampleImageUrl).into(holder.sampleImage);
+                    break;
+            }
         }
         // selected it
         if (position == mLastItem) {
@@ -111,9 +124,11 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!Networks.isNetworkAvailable(-1) && (!item.isDownloaded || item.name.equals(EmojiManager.EMOJI_STYLE_SYSTEM))) {
+                boolean network = Networks.isNetworkAvailable(-1);
+                boolean isSystem = item.name.equals(EmojiManager.EMOJI_STYLE_SYSTEM);
+                if (!isSystem && !network && !item.isDownloaded) {
                     Context context = HSApplication.getContext();
-                    Toast.makeText(context, context.getResources().getString(R.string.sms_network_error), Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, context.getResources().getString(R.string.sms_network_error), Toast.LENGTH_SHORT).show();
                     return;
                 }
                 int lastPos = mLastItem;

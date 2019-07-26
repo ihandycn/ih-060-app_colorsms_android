@@ -126,7 +126,7 @@
                 app:type="switchView" />
 
             <!--Signature-->
-            <com.android.messaging.ui.appsettings.GeneralSettingItemView
+            <com.android.messaging.ui.appsettings.SignatureItemView
                 android:id="@+id/setting_item_signature"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
