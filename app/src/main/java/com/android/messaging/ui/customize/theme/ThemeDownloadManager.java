@@ -6,7 +6,6 @@ import android.text.TextUtils;
 import com.android.messaging.font.FontDownloadManager;
 import com.android.messaging.font.FontInfo;
 import com.android.messaging.util.CommonUtils;
-import com.android.messaging.util.VersionUtil;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.connection.HSHttpConnection;
@@ -401,11 +400,7 @@ public class ThemeDownloadManager {
         });
     }
 
-    public void copyFileFromAssetsAsync(ThemeInfo theme, IThemeMoveListener listener) {
-        Threads.postOnThreadPoolExecutor(() -> copyFileFromAssetsSync(theme, listener));
-    }
-
-    public void copyFileFromAssetsSync(ThemeInfo theme, IThemeMoveListener listener) {
+    private void copyFileFromAssetsSync(ThemeInfo theme, IThemeMoveListener listener) {
         String folderName = theme.mThemeKey;
         List<DownloadItemInfo> copyTask = new ArrayList<>();
 
@@ -513,7 +508,7 @@ public class ThemeDownloadManager {
         }
     }
 
-    private String getPrefKeyByThemeName(String name) {
+    public String getPrefKeyByThemeName(String name) {
         return PREF_KEY_THEME_MOVED_AND_RESIZED
                 + LocalThemeVersion.getNewestVersion(name)
                 + "_" + name;
@@ -526,13 +521,14 @@ public class ThemeDownloadManager {
             String key = getPrefKeyByThemeName(theme.mThemeKey);
             if (!currentTheme.mThemeKey.equals(theme.mThemeKey)
                     && !Preferences.getDefault().getBoolean(key, false)) {
-                long t = System.currentTimeMillis();
                 Threads.postOnThreadPoolExecutor(() -> copyFileFromAssetsSync(theme, new IThemeMoveListener() {
                     @Override
                     public void onMoveSuccess() {
                         WallpaperSizeManager.resizeThemeBitmap(theme);
                         Preferences.getDefault().putBoolean(key, true);
-                        HSGlobalNotificationCenter.sendNotification(key);
+                        Threads.postOnMainThreadDelayed(() -> {
+                            HSGlobalNotificationCenter.sendNotification(key);
+                        }, 200);
                     }
 
                     @Override
