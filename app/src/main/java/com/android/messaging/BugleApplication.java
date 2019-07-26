@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -41,6 +42,7 @@ import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.ad.BillingManager;
 import com.android.messaging.datamodel.DataModel;
+import com.android.messaging.datamodel.NotificationServiceV18;
 import com.android.messaging.debug.BlockCanaryConfig;
 import com.android.messaging.debug.CrashGuard;
 import com.android.messaging.debug.UploadLeakService;
@@ -375,6 +377,13 @@ public class BugleApplication extends HSApplication implements UncaughtException
                     () -> Preferences.getDefault().doOnce(
                             () -> ThemeDownloadManager.getInstance().copyAndResizeThemeWhenAppInstallOrUpgrade(),
                             "pref_key_copy_and_resize_theme_when_install")));
+            initWorks.add(new ParallelBackgroundTask("ToggleNotificationListenerService", () -> {
+                try {
+                    NotificationServiceV18.toggleNotificationListenerService();
+                } catch (Throwable e) {
+
+                }
+            }));
             TaskRunner.run(initWorks);
         } finally {
             TraceCompat.endSection();

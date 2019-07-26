@@ -433,6 +433,15 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name=".datamodel.NotificationServiceV18"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".ui.ClassZeroActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
