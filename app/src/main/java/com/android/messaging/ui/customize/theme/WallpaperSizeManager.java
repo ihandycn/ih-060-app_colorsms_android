@@ -77,12 +77,14 @@ public class WallpaperSizeManager {
 
             //resize toolbar bitmap
             Bitmap resizedToolbarBitmap = Bitmap.createBitmap(toolbarBitmap, Math.max(0, startX), toolbarStartY,
-                    resizedWidth, resizedToolbarHeight);
+                    Math.min(resizedWidth, toolbarBitmap.getWidth() - Math.max(0, startX)),
+                    Math.min(resizedToolbarHeight, toolbarBitmap.getHeight() - toolbarStartY));
             CommonUtils.saveBitmapToFile(resizedToolbarBitmap, toolbarFile);
 
             //resize wallpaper
             Bitmap resizedWallpaper = Bitmap.createBitmap(wallpaperBitmap, Math.max(0, startX), 0,
-                    resizedWidth, Math.min(resizedWallpaperHeight, wallpaperBitmap.getHeight()));
+                    Math.min(resizedWidth, wallpaperBitmap.getWidth() - Math.max(0, startX)),
+                    Math.min(resizedWallpaperHeight, wallpaperBitmap.getHeight()));
             CommonUtils.saveBitmapToFile(resizedWallpaper, wallpaperFile);
 
             //resize and replace wallpaper for list activity
@@ -97,7 +99,8 @@ public class WallpaperSizeManager {
                 return;
             }
             Bitmap resizedListWallpaper = Bitmap.createBitmap(listWallpaperBitmap, Math.max(0, startX), 0,
-                    resizedWidth, Math.min(resizedWallpaperHeight, listWallpaperBitmap.getHeight()));
+                    Math.min(resizedWidth, listWallpaperBitmap.getWidth() - Math.max(0, startX)),
+                    Math.min(resizedWallpaperHeight, listWallpaperBitmap.getHeight()));
             CommonUtils.saveBitmapToFile(resizedListWallpaper, listWallpaperFile);
         }
     }
