@@ -60,6 +60,7 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
+import com.ihs.app.framework.HSApplication;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -132,7 +133,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private int mAnimatingCount;
     private ViewGroup mSwipeableContainer;
     private TextView mConversationNameView;
-    private ImageView mWorkProfileIconView;
     private TextView mSnippetTextView;
     private TextView mTimestampTextView;
     private ContactIconView mContactIconView;
@@ -158,8 +158,17 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         super.onFinishInflate();
         mSwipeableContainer = findViewById(R.id.conversation_item_swipeable_container);
         mConversationNameView = findViewById(R.id.conversation_name);
+        FrameLayout.LayoutParams params = (LayoutParams) mConversationNameView.getLayoutParams();
+        params.width = Dimensions.getPhoneWidth(HSApplication.getContext())
+                - getResources().getDimensionPixelSize(R.dimen.conversation_list_item_content_margin_start)
+                - Dimensions.pxFromDp(65);
+        mConversationNameView.setLayoutParams(params);
         mSnippetTextView = findViewById(R.id.conversation_snippet);
-        mWorkProfileIconView = findViewById(R.id.work_profile_icon);
+        FrameLayout.LayoutParams paramSnippet = (LayoutParams) mSnippetTextView.getLayoutParams();
+        paramSnippet.width = Dimensions.getPhoneWidth(HSApplication.getContext())
+                - getResources().getDimensionPixelSize(R.dimen.conversation_list_item_content_margin_start)
+                - Dimensions.pxFromDp(65);
+        mSnippetTextView.setLayoutParams(paramSnippet);
         mTimestampTextView = findViewById(R.id.conversation_timestamp);
         mContactIconView = findViewById(R.id.conversation_icon);
         mFailedStatusIconView = findViewById(R.id.conversation_failed_status_icon);
@@ -204,10 +213,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         } else if (v == mSnippetTextView) {
             setSnippet();
         }
-    }
-
-    private void setWorkProfileIcon() {
-        mWorkProfileIconView.setVisibility(mData.isEnterprise() ? View.VISIBLE : View.INVISIBLE);
     }
 
     private void setConversationName() {
@@ -306,8 +311,8 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         resetAnimatingState();
 
-        this.setOnClickListener(this);
-        this.setOnLongClickListener(this);
+        findViewById(R.id.conversation_item_ripple_view).setOnClickListener(this);
+        findViewById(R.id.conversation_item_ripple_view).setOnLongClickListener(this);
 
         if (mIsFirstBind) {
             if (!mHostInterface.isArchived()) {
@@ -345,7 +350,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         setSnippet();
         setConversationName();
-        setWorkProfileIcon();
         addSpannable();
 
 
@@ -387,7 +391,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             mTimestampTextView.setVisibility(GONE);
             mUnreadMessagesCountView.setVisibility(GONE);
 
-            if(!isLastMutiMode){
+            if (!isLastMutiMode) {
                 isLastMutiMode = true;
             }
         } else {

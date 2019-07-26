@@ -13,19 +13,19 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<com.android.messaging.ui.conversationlist.ConversationListItemView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.android.messaging.ui.conversationlist.ConversationListItemView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/conversation_list_item_height"
-    android:background="?android:attr/selectableItemBackground">
+    android:layout_height="@dimen/conversation_list_item_height">
 
     <!-- The background displayed when the conversation is swiped sideways -->
     <View
         android:id="@+id/cross_swipe_archive_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/primary_color" />
+        android:background="@color/primary_color"/>
 
     <LinearLayout
         android:id="@+id/cross_swipe_archive_left_container"
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="@null"
             android:importantForAccessibility="no"
-            android:src="@drawable/archive_swipe" />
+            android:src="@drawable/archive_swipe"/>
 
         <com.android.messaging.ui.view.MessagesTextView
             android:id="@+id/cross_swipe_archive_text_left"
@@ -55,7 +55,7 @@
             android:textColor="@color/white"
             android:textSize="10sp"
             app:typeface="@string/custom_font_semibold"
-            tools:ignore="SmallSp" />
+            tools:ignore="SmallSp"/>
     </LinearLayout>
 
     <LinearLayout
@@ -74,7 +74,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="@null"
             android:importantForAccessibility="no"
-            android:src="@drawable/archive_swipe" />
+            android:src="@drawable/archive_swipe"/>
 
         <com.android.messaging.ui.view.MessagesTextView
             android:id="@+id/cross_swipe_archive_text_right"
@@ -85,14 +85,19 @@
             android:textColor="@color/white"
             android:textSize="10sp"
             app:typeface="@string/custom_font_semibold"
-            tools:ignore="SmallSp" />
+            tools:ignore="SmallSp"/>
     </LinearLayout>
+
+    <View
+        android:id="@+id/conversation_item_ripple_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:attr/selectableItemBackground"/>
 
     <LinearLayout
         android:id="@+id/conversation_item_swipeable_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@null"
         android:clipChildren="false"
         android:clipToPadding="false"
         android:duplicateParentState="true"
@@ -119,20 +124,20 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="2dp"
                 android:contentDescription="@null"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"/>
 
             <com.android.messaging.ui.ContactIconView
                 android:id="@+id/conversation_icon"
                 android:layout_width="@dimen/conversation_list_contact_icon_size"
                 android:layout_height="@dimen/conversation_list_contact_icon_size"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="14dp"
+                android:layout_marginStart="@dimen/conversation_list_contact_margin_start"
                 android:background="@null"
                 android:contentDescription="@null"
                 android:importantForAccessibility="no"
                 app:fadeIn="false"
                 app:iconSize="large"
-                app:reveal="false" />
+                app:reveal="false"/>
 
             <ImageView
                 android:id="@+id/conversation_failed_status_icon"
@@ -145,40 +150,28 @@
                 android:contentDescription="@null"
                 android:importantForAccessibility="no"
                 android:src="@drawable/ic_failed_status_red"
-                android:visibility="visible" />
-
+                android:visibility="visible"/>
 
             <com.android.messaging.ui.view.MessagesTextView
                 android:id="@+id/conversation_name"
                 style="@style/ConversationListItemViewConversationNameStyle"
-                android:layout_width="221dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/conversation_list_item_content_margin_start"
                 android:layout_marginTop="16dp"
                 android:ellipsize="end"
                 android:includeFontPadding="false"
-                android:lines="1" />
-
-            <ImageView
-                android:id="@+id/work_profile_icon"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:layout_marginStart="@dimen/work_profile_icon_margin_start"
-                android:layout_marginTop="19dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:scaleType="center"
-                android:src="@drawable/ic_work_profile"
-                android:visibility="visible" />
+                android:lines="1"/>
 
             <com.android.messaging.ui.view.MessagesTextView
                 android:id="@+id/conversation_timestamp"
                 style="@style/ConversationListItemViewTextTimeStampStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/conversation_timestamp_margin_start"
+                android:layout_gravity="end"
                 android:layout_marginTop="19dp"
-                android:lines="1" />
+                android:layout_marginEnd="15.7dp"
+                android:lines="1"/>
 
             <com.android.messaging.ui.view.MessagesTextView
                 android:id="@+id/conversation_snippet"
@@ -187,13 +180,13 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_marginStart="@dimen/conversation_list_item_content_margin_start"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="@dimen/conversation_list_item_content_margin_bottom"
                 android:ellipsize="end"
                 android:includeFontPadding="false"
                 android:textColor="#878a95"
                 android:textSize="@dimen/conversation_list_item_snippet_text_size"
                 app:layout_goneMarginEnd="30dp"
-                app:typeface="@string/custom_font_regular" />
+                app:typeface="@string/custom_font_regular"/>
 
             <com.android.messaging.ui.view.MessagesTextView
                 android:id="@+id/conversation_unread_messages_count"
@@ -207,7 +200,7 @@
                 android:textColor="@android:color/white"
                 android:textSize="12sp"
                 android:visibility="gone"
-                app:typeface="@string/custom_font_semibold" />
+                app:typeface="@string/custom_font_semibold"/>
         </FrameLayout>
     </LinearLayout>
 </com.android.messaging.ui.conversationlist.ConversationListItemView>

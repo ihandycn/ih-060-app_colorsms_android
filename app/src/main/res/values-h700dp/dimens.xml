@@ -15,7 +15,9 @@
 -->
 <resources>
     <dimen name="conversation_list_contact_icon_size">50dp</dimen>
+    <dimen name="conversation_list_contact_margin_start">14dp</dimen>
     <dimen name="conversation_list_contact_bg_size">74dp</dimen>
+    <dimen name="conversation_list_item_content_margin_bottom">16dp</dimen>
     <dimen name="conversation_list_item_view_padding_top">16dp</dimen>
     <dimen name="conversation_list_item_height">69dp</dimen>
     <dimen name="conversation_list_error_icon_margin_start">45.3dp</dimen>
