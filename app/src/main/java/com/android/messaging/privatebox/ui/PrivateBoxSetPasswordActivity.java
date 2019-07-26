@@ -402,8 +402,14 @@ public class PrivateBoxSetPasswordActivity extends BaseActivity implements View.
     private void onPasswordSetSucceed() {
         BugleAnalytics.logEvent("PrivateBox_Password_SetSuccess");
         if (!isResetPassword && !isForgetPassword) {
-            Navigations.startActivitySafely(this,
-                    new Intent(this, PrivateConversationListActivity.class));
+            Intent listIntent = new Intent(PrivateBoxSetPasswordActivity.this, PrivateConversationListActivity.class);
+            if (getIntent().hasExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST)) {
+                listIntent.putExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST,
+                        getIntent().getStringArrayExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST)
+                );
+            }
+            Navigations.startActivitySafely(PrivateBoxSetPasswordActivity.this, listIntent);
+
             Intent intent = new Intent(PrivateBoxSetPasswordActivity.this, PrivateBoxLockQuestionActivity.class);
             intent.putExtra(PrivateBoxLockQuestionActivity.INTENT_KEY_IS_SETTING_QUESTION, true);
             intent.putExtra(PrivateBoxLockQuestionActivity.INTENT_KEY_IS_FIRST_SETTING_QUESTION, true);
