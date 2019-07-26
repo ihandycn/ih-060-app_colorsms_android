@@ -111,10 +111,10 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!Networks.isNetworkAvailable(-1)) {
+                if (!Networks.isNetworkAvailable(-1) && (!item.isDownloaded || item.name.equals(EmojiManager.EMOJI_STYLE_SYSTEM))) {
                     Context context = HSApplication.getContext();
                     Toast.makeText(context, context.getResources().getString(R.string.sms_network_error), Toast.LENGTH_LONG).show();
-                    return ;
+                    return;
                 }
                 int lastPos = mLastItem;
                 mLastItem = holder.getAdapterPosition();
