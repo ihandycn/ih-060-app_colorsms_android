@@ -196,7 +196,7 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
                 if(mCurrentPos == position){
                     return ;
                 }
-                if(position == EMOJI_PAGE_INDEX && EmojiManager.isFirstEmojiPageClick()){
+                if(!mIsOnlyEmoji && position == EMOJI_PAGE_INDEX && EmojiManager.isFirstEmojiPageClick()){
                     Toast.makeText(activity, activity.getResources().getString(R.string.emoji_page_first_click), Toast.LENGTH_SHORT).show();
                 }
                 FragmentManager fm = getChildFragmentManager();
