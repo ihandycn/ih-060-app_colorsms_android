@@ -45,8 +45,6 @@
 			<dict>
 				<key>FreeUpOldmsg</key>
 				<false/>
-				<key>RecommendBannerTimes</key>
-				<integer>0</integer>
 				<key>RecommendFull</key>
 				<false/>
 			</dict>
