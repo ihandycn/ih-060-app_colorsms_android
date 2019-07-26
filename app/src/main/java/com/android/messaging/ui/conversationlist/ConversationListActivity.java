@@ -96,7 +96,6 @@ import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.CreateShortcutUtils;
 import com.android.messaging.util.ExitAdAutopilotUtils;
-import com.android.messaging.util.ExitAdConfig;
 import com.android.messaging.util.PhoneUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
@@ -1200,8 +1199,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
     }
 
-    private void preloadAds(long delay) {
-        Threads.postOnMainThreadDelayed(() -> {
+    private void preloadAds() {
             if (AdConfig.isHomepageBannerAdEnabled()) {
                 AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
             }
@@ -1210,10 +1208,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
             }
 
-            // preload exit ad
-            ExitAdConfig.preLoadExitAd();
-
-        }, delay);
+            if (AdConfig.isExitAdEnabled()){
+                AcbInterstitialAdManager.preload(1, AdPlacement.AD_EXIT_WIRE);
+            }
     }
 
 
@@ -1226,7 +1223,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 break;
             case CONVERSATION_LIST_DISPLAYED:
                 if (Preferences.getDefault().getBoolean(PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE, true)) {
-                    preloadAds(2 * DateUtils.SECOND_IN_MILLIS);
                     Threads.postOnMainThreadDelayed(() -> {
                         if (mCustomizeGuideController == null) {
                             if (!isFinishing()) {
@@ -1239,9 +1235,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             }
                         }
                     }, 200);
-                } else {
-                    preloadAds(0L);
                 }
+                preloadAds();
                 break;
             case FIRST_LOAD:
                 if (!sIsRecreate && hsBundle != null) {
