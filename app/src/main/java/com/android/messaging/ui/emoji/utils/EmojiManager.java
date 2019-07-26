@@ -12,6 +12,7 @@ import com.android.messaging.download.Downloader;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
+import com.android.messaging.ui.emoji.EmojiPackageInfo;
 import com.android.messaging.ui.emoji.EmojiPackageType;
 import com.android.messaging.ui.emoji.GiphyInfo;
 import com.android.messaging.ui.emoji.StickerInfo;
@@ -111,6 +112,27 @@ public class EmojiManager {
         Preferences.get(PREF_FILE_NAME).putBoolean(PREF_IS_SHOW_EMOJI_GUIDE, false);
     }
 
+    public static void upgradeEmojiRecentForEmojiStylePattern() {
+        List<String> result = Preferences.get(PREF_FILE_NAME).getStringList(PREF_RECENT_EMOJI);
+        List<EmojiPackageInfo> packageInfos = EmojiDataProducer.loadEmojiData(EMOJI_STYLE_SYSTEM);
+        List<String> convertedStr = new ArrayList<>();
+        for (int i = 0; i < result.size(); i++) {
+            String[] split = result.get(i).split("\\|");
+            if (split != null && split.length > 0 && !TextUtils.isEmpty(split[0])) {
+                String unicode = split[0];
+                for (EmojiPackageInfo packageInfo : packageInfos) {
+                    for (BaseEmojiInfo baseEmojiInfo : packageInfo.mEmojiInfoList) {
+                        if (baseEmojiInfo instanceof EmojiInfo && ((EmojiInfo) baseEmojiInfo).mUnicode.equals(unicode)) {
+                            convertedStr.add(baseEmojiInfo.toString());
+                            continue;
+                        }
+                    }
+                }
+            }
+        }
+        Preferences.get(PREF_FILE_NAME).putStringList(PREF_RECENT_EMOJI, convertedStr);
+    }
+
     private static List<String> getRecentStr(EmojiPackageType emojiType) {
         String key;
         List<String> result;
@@ -186,6 +208,10 @@ public class EmojiManager {
         }
     }
 
+    public static void deleteEmojiRecent(){
+        Preferences.get(PREF_FILE_NAME).putStringList(PREF_RECENT_EMOJI, new ArrayList<>());
+    }
+
     public static boolean isTabSticker(String name) {
         return getTabSticker().contains(name);
     }
@@ -245,7 +271,7 @@ public class EmojiManager {
                         }
                     });
         }
-        
+
     }
 
 
@@ -373,7 +399,7 @@ public class EmojiManager {
         return Preferences.get(PREF_FILE_NAME).getBoolean(name, false);
     }
 
-    public static boolean isFirstEmojiVariantClick(){
+    public static boolean isFirstEmojiVariantClick() {
         boolean result = Preferences.get(PREF_FILE_NAME).getBoolean(PREF_FIRST_VARIANT_CLICK, true);
         Preferences.get(PREF_FILE_NAME).putBoolean(PREF_FIRST_VARIANT_CLICK, false);
         return result;

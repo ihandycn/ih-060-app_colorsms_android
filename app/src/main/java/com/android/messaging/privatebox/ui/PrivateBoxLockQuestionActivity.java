@@ -371,15 +371,7 @@ public class PrivateBoxLockQuestionActivity extends HSAppCompatActivity implemen
             PrivateBoxSettings.setSecurityQuestionSet(true);
             if (getIntent().getBooleanExtra(INTENT_KEY_IS_FIRST_SETTING_QUESTION, false)) {
                 BugleAnalytics.logEvent("PrivateBox_SecurityQuestion_Set_Click", true, "from", "firstsetcode");
-                Intent intent = new Intent(PrivateBoxLockQuestionActivity.this, PrivateConversationListActivity.class);
-                if (getIntent().hasExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST)) {
-                    intent.putExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST,
-                            getIntent().getStringArrayExtra(ConversationListActivity.INTENT_KEY_PRIVATE_CONVERSATION_LIST)
-                    );
-                }
-                Navigations.startActivitySafely(PrivateBoxLockQuestionActivity.this, intent);
-                overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
-                finishWithoutOverridePendingTransition();
+                finish();
             } else {
                 finish();
                 BugleAnalytics.logEvent("PrivateBox_SecurityQuestion_Set_Click", true, "from", "settings");

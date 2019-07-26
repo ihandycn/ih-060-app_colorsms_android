@@ -884,5 +884,17 @@
 	<string name="life_time">مدى الحياة</string>
 	<string name="purchase_description">اشتر النسخة الخالية من الإعلانات. لا إعلانات بعد الآن نهائياً.</string>
 	<string name="emoji_skin_tone_setting">ثيم الرموز التعبيرية </string>
+    <string name="emoji_style_downloading">التنزيل جارٍ</string>
+    <string name="emoji_style_default">افتراضي</string>
+
+
+    <string name="chat_list_text_color">لون النص</string>
+    <string name="purchase_failed">فشل</string>
+    <string name="chat_list_confirm_dialog_title">حفظ التغيرات</string>
+
+	<string name="menu_chat_list">فائمة الدردشة</string>
+	<string name="chat_list_background_opacity">شفافية الخلفية</string>
+	<string name="chat_list_change_background">تغيير الخلفية</string>
+	<string name="chat_list_config_dialog_message">تم تعديل الدردشة، هل ترغب في الاحتفاظ بالتغييرات؟</string>
 
 </resources>

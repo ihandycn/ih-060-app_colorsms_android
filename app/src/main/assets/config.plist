@@ -12,19 +12,19 @@
 					<key>name</key>
 					<string>Twitter</string>
 					<key>PreViewPicUrl</key>
-					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/twitter.png</string>
+					<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/emoji/twitter.png</string>
 					<key>DownloadUrl</key>
-					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/Twitter.zip</string>
+					<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/emoji/Twitter.zip</string>
 					<key>DownloadSize</key>
-					<string>4.5</string>
+					<string>4.6</string>
 				</dict>
 				<dict>
 					<key>name</key>
 					<string>Android Pie</string>
 					<key>PreViewPicUrl</key>
-					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/androidpie.png</string>
+					<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/emoji/pie.png</string>
 					<key>DownloadUrl</key>
-					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/AndroidPie.zip</string>
+					<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/emoji/AndroidPie.zip</string>
 					<key>DownloadSize</key>
 					<string>7.4</string>
 				</dict>
@@ -32,9 +32,9 @@
 					<key>name</key>
 					<string>Android Blob</string>
 					<key>PreViewPicUrl</key>
-					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/androidblob.png</string>
+					<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/emoji/blob.png</string>
 					<key>DownloadUrl</key>
-					<string>https://s3.amazonaws.com/superapps-dev/ColorSMS/emojistyle/AndroidBlob.zip</string>
+					<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/emoji/AndroidBlob.zip</string>
 					<key>DownloadSize</key>
 					<string>6.1</string>
 				</dict>
@@ -318,6 +318,248 @@
 							<string>SemiBold</string>
 							<string>Regular</string>
 						</array>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>advent_pro</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>alegreya</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>arima_madurai</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>cormorant</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>dancing_script</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>encode_sans</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>exo_2</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>fahkwang</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>fira_sans</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>gaegu</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>ibm_plex_sans</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>josefin_sans</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>kodchasan</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>mirza</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>mitr</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>overlock</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>saira</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>share</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>taviraj</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>tillana</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>ubuntu_mono</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>zilla_slab</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
 					</dict>
 				</array>
 			</dict>

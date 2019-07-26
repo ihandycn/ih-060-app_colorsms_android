@@ -24,6 +24,7 @@ import android.widget.LinearLayout;
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
 import com.android.messaging.ui.customize.ConversationColors;
+import com.android.messaging.ui.customize.mainpage.ChatListCustomizeManager;
 import com.android.messaging.ui.view.MessagesTextView;
 
 /**
@@ -45,6 +46,7 @@ public class ListEmptyView extends LinearLayout {
         mEmptyImageHint = (ImageView) findViewById(R.id.empty_image_hint);
         mEmptyTextHint = (MessagesTextView) findViewById(R.id.empty_text_hint);
         mEmptyTextHint.setTextColor(ConversationColors.get().getListTitleColor());
+        ChatListCustomizeManager.changeViewColorIfNeed(mEmptyTextHint);
         mLoadingAnimationView = (LottieAnimationView) findViewById(R.id.loading_image_hint);
     }
 

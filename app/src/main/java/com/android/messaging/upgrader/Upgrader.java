@@ -16,12 +16,17 @@ import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.theme.ThemeDownloadManager;
 import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
+import com.android.messaging.ui.customize.theme.WallpaperSizeManager;
+import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
 import com.android.messaging.ui.welcome.WelcomeStartActivity;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.PhoneUtils;
 import com.superapps.util.Preferences;
+import com.superapps.util.Threads;
+
+import java.util.List;
 
 public class Upgrader extends BaseUpgrader {
 
@@ -71,6 +76,11 @@ public class Upgrader extends BaseUpgrader {
             addDeliveryReportPref();
         }
 
+        if (oldVersion < 68 && newVersion >= 68) {
+            resizeLocalThemeAndWallpaperResource();
+            EmojiManager.upgradeEmojiRecentForEmojiStylePattern();
+        }
+
         FontDownloadManager.copyFontsFromAssetsAsync();
     }
 
@@ -85,6 +95,29 @@ public class Upgrader extends BaseUpgrader {
             Preferences preferences = Preferences.getDefault();
             preferences.putBoolean(deliveryReportKey, originalValue);
         }
+    }
+
+    private void resizeLocalThemeAndWallpaperResource() {
+        // resize current theme bitmap size sync
+        ThemeInfo info = ThemeUtils.getCurrentTheme();
+        if (!ThemeUtils.isDefaultTheme()) {
+            WallpaperSizeManager.resizeThemeBitmap(info);
+        }
+        //resize other theme bitmap async
+        Threads.postOnThreadPoolExecutor(() -> {
+            List<ThemeInfo> list = ThemeInfo.getAllThemes();
+            for (ThemeInfo theme : list) {
+                if (!theme.mIsLocalTheme && theme.isNecessaryFilesInLocalFolder()) {
+                    WallpaperSizeManager.resizeThemeBitmap(theme);
+                }
+            }
+
+//            for (String url : WallpaperInfos.sRemoteUrl) {
+//                if (WallpaperDownloader.isWallpaperDownloaded(url)) {
+//                    WallpaperDownloader.cutSourceBitmap(url);
+//                }
+//            }
+        });
     }
 
     private void migrateLocalThemeAndFont() {

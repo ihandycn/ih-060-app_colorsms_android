@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WallpaperManager {
-
-
     private static final String PREF_KEY_WALLPAPER_PATH = "pref_key_wallpaper_path";
     static final String LOCAL_DIRECTORY = "wallpapers" + File.separator + "local";
     private static List<WallpaperChangeListener> sWallpaperChangeListeners;
@@ -46,7 +44,7 @@ public class WallpaperManager {
         }
     }
 
-    public static void onWallpaperChanged() {
+    static void onWallpaperChanged() {
         if (sWallpaperChangeListeners == null || sWallpaperChangeListeners.size() == 0) {
             return;
         }
@@ -56,7 +54,7 @@ public class WallpaperManager {
         }
     }
 
-    public static void onOnlineWallpaperChanged() {
+    static void onOnlineWallpaperChanged() {
         if (sWallpaperChangeListeners == null || sWallpaperChangeListeners.size() == 0) {
             return;
         }
@@ -84,28 +82,33 @@ public class WallpaperManager {
         view.setImageDrawable(wallpaperDrawable);
     }
 
-    public static void setConversationWallPaper(final ImageView bgView, ImageView themeBgView, String conversationId) {
+    public static void setConversationWallPaper(ImageView wallpaperView, String conversationId, ImageView oldRecommendWallpaperView) {
+        String wallpaperPath;
         if (TextUtils.isEmpty(conversationId)) {
-            String wallpaperPath = sPrefs.getString(PREF_KEY_WALLPAPER_PATH, "");
-
-            if (!isWallpaperPathEmpty(wallpaperPath)) {
-                bgView.setVisibility(View.VISIBLE);
-                bgView.setImageDrawable(new BitmapDrawable(wallpaperPath));
-                return;
-            } else {
-                bgView.setImageDrawable(null);
+            wallpaperPath = sPrefs.getString(PREF_KEY_WALLPAPER_PATH, "");
+            if (isWallpaperPathEmpty(wallpaperPath)) {
+                wallpaperPath = null;
             }
-        } else if (!TextUtils.isEmpty(WallpaperManager.getWallpaperPathByConversationId(conversationId))) {
-            bgView.setVisibility(View.VISIBLE);
-            bgView.setImageDrawable(new BitmapDrawable(WallpaperManager.getWallpaperPathByConversationId(conversationId)));
-            return;
         } else {
-            bgView.setImageDrawable(null);
+            wallpaperPath = WallpaperManager.getWallpaperPathByConversationId(conversationId);
+        }
+
+        if (!TextUtils.isEmpty(wallpaperPath)) {
+            // the old recommend wallpapers is display in CenterTopImageView,
+            for (String oldUrl : WallpaperInfos.sOldRemoteUrl) {
+                if (WallpaperDownloader.getSourceLocalPath(oldUrl).equals(wallpaperPath)) {
+                    oldRecommendWallpaperView.setVisibility(View.VISIBLE);
+                    wallpaperView.setVisibility(View.GONE);
+                    oldRecommendWallpaperView.setImageDrawable(new BitmapDrawable(wallpaperPath));
+                    return;
+                }
+            }
+            wallpaperView.setImageDrawable(new BitmapDrawable(wallpaperPath));
+            return;
         }
 
         Drawable wallpaperDrawable = WallpaperDrawables.getConversationWallpaperBg();
-        themeBgView.setVisibility(View.VISIBLE);
-        themeBgView.setImageDrawable(wallpaperDrawable);
+        wallpaperView.setImageDrawable(wallpaperDrawable);
     }
 
     //if has theme wallpaper or custom wallpaper
@@ -158,7 +161,7 @@ public class WallpaperManager {
         sPrefs.remove(PREF_KEY_WALLPAPER_PATH);
     }
 
-    public static String getWallpaperPath() {
+    private static String getWallpaperPath() {
         String wallpaperPath = sPrefs.
                 getString(PREF_KEY_WALLPAPER_PATH, "");
         if (wallpaperPath != null && !wallpaperPath.equals("")) {
@@ -176,7 +179,7 @@ public class WallpaperManager {
         }
     }
 
-    static List<WallpaperChooserItem> getWallpaperChooserList() {
+    public static List<WallpaperChooserItem> getWallpaperChooserList() {
         List<WallpaperChooserItem> list = new ArrayList<>();
         WallpaperChooserItem addItem = new WallpaperChooserItem();
         addItem.setItemType(WallpaperChooserItem.TYPE_ADD_PHOTO);
@@ -185,7 +188,7 @@ public class WallpaperManager {
         emptyItem.setItemType(WallpaperChooserItem.TYPE_EMPTY);
         list.add(emptyItem);
 
-        for (int i = 0; i < WallpaperChooserItem.sThumbnailRes.length; i++) {
+        for (int i = 0; i < WallpaperInfos.sThumbnailRes.length; i++) {
             WallpaperChooserItem item = new WallpaperChooserItem();
             item.setItemType(WallpaperChooserItem.TYPE_NORMAL_WALLPAPER);
             item.setIndex(i);

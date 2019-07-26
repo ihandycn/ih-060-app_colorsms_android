@@ -227,4 +227,7 @@
     <dimen name="conversation_item_view_swipe_padding">15dp</dimen>
 
     <dimen name="giphy_list_item_radius">4dp</dimen>
+
+    <!--chat list customize-->
+    <dimen name="chat_list_control_area_padding">19dp</dimen>
 </resources>

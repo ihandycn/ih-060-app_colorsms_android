@@ -798,7 +798,18 @@
 	<string name="life_time">SELAMANYA</string>
 	<string name="purchase_description">Beli versi BEBAS-IKLAN. Tak ada iklan lagi.</string>
 
+    <string name="chat_list_text_color">Warna Teks</string>
+    <string name="purchase_failed">gagal</string>
+    <string name="chat_list_confirm_dialog_title">Simpan Perubahan</string>
+
+	<string name="menu_chat_list">Obrolan</string>
+	<string name="chat_list_background_opacity">Opasitas latar belakang</string>
+	<string name="chat_list_change_background">Ubah latar belakang</string>
+	<string name="chat_list_config_dialog_message">Daftar obrolan sudah diubah, ingin menyimpan perubahan?</string>
+    <string name="emoji_style_downloading">Mengunduh</string>
+    <string name="emoji_style_default">Default</string>
 
 	<string name="emoji_skin_tone_setting">Warna Kulit Emoji </string>
-
+    <string name="customize_new_guide_title">Fitur Keren</string>
+    <string name="customize_new_guide_content">Kustomisasi obrolan Anda untuk menjadikannya istimewa!</string>
 </resources>

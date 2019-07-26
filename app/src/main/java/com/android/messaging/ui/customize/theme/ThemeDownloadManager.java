@@ -72,7 +72,7 @@ public class ThemeDownloadManager {
         if (!TextUtils.isEmpty(theme.listWallpaperUrl)) {
             File file = new File(CommonUtils.getDirectory(
                     ThemeBubbleDrawables.THEME_BASE_PATH + theme.mThemeKey),
-                    ThemeBubbleDrawables.LIST_VIEW_WALLPAPER_BG_FILE_NAME);
+                    ThemeBubbleDrawables.LIST_WALLPAPER_BG_FILE_NAME);
             if (!file.exists()) {
                 return false;
             }
@@ -153,7 +153,7 @@ public class ThemeDownloadManager {
             downloadItemInfo.mRemoteFileName = baseUrl + theme.listWallpaperUrl;
             downloadItemInfo.mLocalFile = new File(CommonUtils.getDirectory(
                     ThemeBubbleDrawables.THEME_BASE_PATH + folderName),
-                    ThemeBubbleDrawables.LIST_VIEW_WALLPAPER_BG_FILE_NAME);
+                    ThemeBubbleDrawables.LIST_WALLPAPER_BG_FILE_NAME);
             downloadItemInfo.mStartProcessValue = CONVERSATION_LIST_WALLPAPER_START_RATE;
             downloadItemInfo.mEndProcessValue = TOOLBAR_START_RATE;
 
@@ -328,6 +328,8 @@ public class ThemeDownloadManager {
                 isThemeDownloadSuccess[0] = true;
                 themeRate[0] = FONT_START_RATE;
                 Threads.postOnMainThread(() -> {
+                    //resize bitmap size
+                    WallpaperSizeManager.resizeThemeBitmap(theme);
                     if (isFontDownloadSuccess[0]) {
                         listener.onDownloadSuccess();
                     } else {
@@ -417,7 +419,7 @@ public class ThemeDownloadManager {
             downloadItemInfo.mRemoteFileName = theme.listWallpaperUrl;
             downloadItemInfo.mLocalFile = new File(CommonUtils.getDirectory(
                     ThemeBubbleDrawables.THEME_BASE_PATH + folderName),
-                    ThemeBubbleDrawables.LIST_VIEW_WALLPAPER_BG_FILE_NAME);
+                    ThemeBubbleDrawables.LIST_WALLPAPER_BG_FILE_NAME);
             copyTask.add(downloadItemInfo);
         }
 
@@ -504,7 +506,6 @@ public class ThemeDownloadManager {
         }
         if (listener != null) {
             listener.onMoveSuccess();
-
         }
     }
 

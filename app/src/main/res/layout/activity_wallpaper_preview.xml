@@ -12,11 +12,11 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <ImageView
+        <com.android.messaging.ui.customize.theme.WallpaperBackgroundImageView
             android:id="@+id/wallpaper_preview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:scaleType="centerCrop"
+            android:scaleType="fitXY"
             tools:ignore="ContentDescription" />
         <!-- Message list -->
         <ScrollView

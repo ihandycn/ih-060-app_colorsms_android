@@ -59,7 +59,6 @@ class FireBaseEventIdMap {
         EVENTS_MAP.put("SMS_DetailsPage_IconPlus_Click", true);
 
         EVENTS_MAP.put("SMS_Received_Default", true);
-        EVENTS_MAP.put("SMS_Received_NoDefault", true);
         EVENTS_MAP.put("SMS_Received", true);
 
         EVENTS_MAP.put("SMS_Notifications_Pushed", true);
@@ -127,6 +126,14 @@ class FireBaseEventIdMap {
         EVENTS_MAP.put("SMS_Satisfied", true);
 
         EVENTS_MAP.put("SMS_Messages_Show_Positive", true);
+
+        EVENTS_MAP.put("Customize_ChatList_Show", true);
+        EVENTS_MAP.put("Customize_ChatList_Background_Change", true);
+        EVENTS_MAP.put("Customize_ChatList_Change", true);
+        EVENTS_MAP.put("SMS_Messages_Show_2", true);
+
+        EVENTS_MAP.put("SMS_DetailsPage_Privacy_Click", true);
+        EVENTS_MAP.put("SMS_Settings_Privacy_Click", true);
     }
 
     static boolean getIsValidEventId(String eventId) {

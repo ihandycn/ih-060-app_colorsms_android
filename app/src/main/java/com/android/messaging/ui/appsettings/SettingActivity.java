@@ -2,6 +2,7 @@ package com.android.messaging.ui.appsettings;
 
 import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.Ringtone;
@@ -26,7 +27,9 @@ import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.ui.SettingEmojiStyleItemView;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.android.messaging.ui.invitefriends.InviteFriendsActivity;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.util.BugleAnalytics;
@@ -54,13 +57,14 @@ public class SettingActivity extends BaseActivity {
     private GeneralSettingItemView mSmsShowView;
     private GeneralSettingItemView mNotificationView;
     private GeneralSettingItemView mPopUpsView;
-    private GeneralSettingItemView mSignature;
+    private SignatureItemView mSignature;
     private GeneralSettingItemView mSoundView;
     private GeneralSettingItemView mVibrateView;
     private GeneralSettingItemView mPrivacyModeView;
     private GeneralSettingItemView mSyncSettingsView;
     private GeneralSettingItemView mSendDelayView;
     private GeneralSettingItemView mSMSDeliveryReports;
+    private SettingEmojiSkinItemView mSettingEmojiSkinItemView;
 
     private SettingEmojiStyleItemView mSettingEmojiStyleItemView;
 
@@ -188,6 +192,7 @@ public class SettingActivity extends BaseActivity {
         //emoji
         mSettingEmojiStyleItemView = findViewById(R.id.setting_item_emoji_style);
         mSettingEmojiStyleItemView.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("RestrictedApi")
             @Override
             public void onClick(View v) {
                 BugleAnalytics.logEvent("Settings_EmojiStyle_Click");
@@ -196,30 +201,8 @@ public class SettingActivity extends BaseActivity {
             }
         });
 
-        SettingEmojiSkinItemView settingEmojiSkinItemView = findViewById(R.id.setting_item_emoji_skin);
-        if (Build.VERSION.SDK_INT >= 24) {
-            settingEmojiSkinItemView.setDefault(EmojiManager.EMOJI_SKINS[EmojiManager.getSkinDefault()]);
-            settingEmojiSkinItemView.setOnItemClickListener(() -> {
-                ChooseEmojiSkinDialog dialog = new ChooseEmojiSkinDialog();
-                dialog.setOnDismissOrCancelListener(new BaseDialogFragment.OnDismissOrCancelListener() {
-                    @Override
-                    public void onDismiss(DialogInterface dialog) {
-                        settingEmojiSkinItemView.updateSkin(EmojiManager.EMOJI_SKINS[EmojiManager.getSkinDefault()]);
-                    }
-
-                    @Override
-                    public void onCancel(DialogInterface dialog) {
-
-                    }
-                });
-
-                UiUtils.showDialogFragment(this, dialog);
-                BugleAnalytics.logEvent("Settings_EmojiSkintone_Click");
-            });
-        } else {
-            settingEmojiSkinItemView.setVisibility(GONE);
-            findViewById(R.id.setting_title_emoji).setVisibility(GONE);
-        }
+        mSettingEmojiSkinItemView = findViewById(R.id.setting_item_emoji_skin);
+        updateEmojiSkinItemView(EmojiManager.isSystemEmojiStyle());
 
         //blocked contacts
         GeneralSettingItemView mBlockedContactsView = findViewById(R.id.setting_item_blocked_contacts);
@@ -245,12 +228,23 @@ public class SettingActivity extends BaseActivity {
             BugleAnalytics.logEvent("SMS_Settings_Advanced_Click", true);
 
             if (PhoneUtils.getDefault().getActiveSubscriptionCount() <= 1) {
-                Intent intent = UIIntents.get().getAdvancedSettingsIntent(this);
-                startActivity(intent);
-                overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
+                Intent intent = UIIntents.get().getAdvancedSettingsIntent(SettingActivity.this);
+                SettingActivity.this.startActivity(intent);
+                SettingActivity.this.overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
             } else {
-                UIIntents.get().launchSettingsSimSelectActivity(this);
+                UIIntents.get().launchSettingsSimSelectActivity(SettingActivity.this);
             }
+        });
+
+        GeneralSettingItemView inviteFriends = findViewById(R.id.setting_item_invite_friends);
+        inviteFriends.setOnItemClickListener(() -> {
+            Intent inviteFriendsIntent = new Intent(SettingActivity.this, InviteFriendsActivity.class);
+            startActivity(inviteFriendsIntent, TransitionUtils.getTransitionInBundle(SettingActivity.this));
+        });
+
+        GeneralSettingItemView fiveStarRating = findViewById(R.id.setting_item_five_star_rating);
+        fiveStarRating.setOnItemClickListener(() -> {
+            FiveStarRateDialog.showFiveStarFromSetting(SettingActivity.this);
         });
 
         //sms delivery reports
@@ -286,6 +280,33 @@ public class SettingActivity extends BaseActivity {
 
         if (!DefaultSMSUtils.isDefaultSmsApp()) {
             mSMSDeliveryReports.setChecked(false);
+        }
+    }
+
+    private void updateEmojiSkinItemView(boolean isSystemStyle){
+        if (Build.VERSION.SDK_INT < 24 && isSystemStyle) {
+            mSettingEmojiSkinItemView.setVisibility(GONE);
+        } else {
+            mSettingEmojiSkinItemView.setVisibility(View.VISIBLE);
+
+            mSettingEmojiSkinItemView.setDefault(EmojiManager.getSkinDefault());
+            mSettingEmojiSkinItemView.setOnItemClickListener(() -> {
+                ChooseEmojiSkinDialog dialog = new ChooseEmojiSkinDialog();
+                dialog.setOnDismissOrCancelListener(new BaseDialogFragment.OnDismissOrCancelListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        mSettingEmojiSkinItemView.updateSkin(EmojiManager.getSkinDefault());
+                    }
+
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+
+                    }
+                });
+
+                UiUtils.showDialogFragment(this, dialog);
+                BugleAnalytics.logEvent("Settings_EmojiSkintone_Click");
+            });
         }
     }
 
@@ -526,6 +547,8 @@ public class SettingActivity extends BaseActivity {
                 String name = data.getStringExtra("name");
                 String url = data.getStringExtra("url");
                 mSettingEmojiStyleItemView.update(name, url);
+
+                updateEmojiSkinItemView(name.equals(EmojiManager.EMOJI_STYLE_SYSTEM));
             }
         }
     }

@@ -145,10 +145,13 @@ public class SmsSender {
             LogUtil.e(TAG, "SmsSender: failure in sending message part. "
                     + " requestId=" + requestId + " partId=" + partId
                     + " resultCode=" + resultCode + " errorCode=" + errorCode);
+            String carrierName = PhoneUtils.get(subId).getCarrierName();
             BugleAnalytics.logEvent("SMS_Send_Failed",
-                    "SmsSendResult", "False", "FailCarrierName", PhoneUtils.get(subId).getCarrierName());
-            BugleFirebaseAnalytics.logEvent("SMS_Send_Failed",
-                    "SmsSendResult", "False", "FailCarrierName", PhoneUtils.get(subId).getCarrierName());
+                    "SmsSendResult", "False", "FailCarrierName", carrierName);
+            if (!TextUtils.isEmpty(carrierName)) {
+                BugleFirebaseAnalytics.logEvent("SMS_Send_Failed",
+                        "SmsSendResult", "False", "FailCarrierName", carrierName);
+            }
             if (errorCode != SendStatusReceiver.NO_ERROR_CODE) {
                 final Context context = Factory.get().getApplicationContext();
                 UiUtils.showToastAtBottom(getSendErrorToastMessage(context, subId, errorCode));

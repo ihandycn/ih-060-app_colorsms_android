@@ -780,4 +780,18 @@
     <string name="purchase">購買</string>
     <string name="life_time">永久</string>
     <string name="purchase_description">購買免廣告版本，永久移除廣告。 </string>
+
+
+    <string name="chat_list_text_color">文字顏色</string>
+    <string name="purchase_failed">失敗</string>
+    <string name="chat_list_confirm_dialog_title">保存修改</string>
+    <string name="chat_list_config_dialog_message">聊天列表樣式已修改，是否保存修改？</string>
+    <string name="chat_list_change_background">修改背景</string>
+    <string name="chat_list_background_opacity">背景不透明度</string>
+    <string name="menu_chat_list">聊天列表</string>
+
+    <string name="emoji_style_downloading">下載中</string>
+    <string name="emoji_style_default">默認</string>
+
+
 </resources>

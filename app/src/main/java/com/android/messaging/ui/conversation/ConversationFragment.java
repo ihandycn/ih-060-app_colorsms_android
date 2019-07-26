@@ -54,7 +54,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.ActionMode;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -105,7 +104,6 @@ import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
-import com.android.messaging.ui.emoji.utils.EmojiStyleDownloadManager;
 import com.android.messaging.ui.mediapicker.CameraGalleryFragment;
 import com.android.messaging.ui.mediapicker.MediaPickerFragment;
 import com.android.messaging.ui.senddelaymessages.SendDelayMessagesManager;
@@ -126,13 +124,14 @@ import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
 import com.android.messaging.util.ViewUtils;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
-import com.superapps.util.Compats;
 import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Compats;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
@@ -218,7 +217,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     private ConversationMessageAdapter mAdapter;
     private ConversationFastScroller mFastScroller;
     private ImageView mWallpaperView;
-    private ImageView mThemeWallpaperView;
+    private ImageView mOldRecommendImageView;
 
     private View mConversationComposeDivider;
     private ChangeDefaultSmsAppHelper mChangeDefaultSmsAppHelper;
@@ -620,7 +619,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             }
         }
     };
-
+    private boolean isFirstOpen = false;
 
     /**
      * {@inheritDoc} from Fragment
@@ -675,6 +674,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         BugleAnalytics.logEvent("SMS_DetailsPage_Show", true);
         BugleFirebaseAnalytics.logEvent("SMS_DetailsPage_Show");
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "detailspage_show");
+
+        if (!Preferences.getDefault().contains("pref_key_conversation_detail_first_open")) {
+            isFirstOpen = true;
+            Preferences.getDefault().putBoolean("pref_key_conversation_detail_first_open", true);
+        }
     }
 
 
@@ -754,13 +758,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mAdContentView.setAdBodyView(description);
         TextView actionBtn = ViewUtils.findViewById(adView, R.id.banner_action);
         mAdContentView.setAdActionView(actionBtn);
-        actionBtn.setTextColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionTextColor));
+        int actionColor = Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).listTimeColor);
+        actionBtn.setTextColor(actionColor);
         Drawable actionBg = getResources().getDrawable(R.drawable.conversation_list_ad_action_pressed_bg);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ((LayerDrawable) actionBg).getDrawable(1)
-                    .setColorFilter(
-                            Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdActionColor),
-                            PorterDuff.Mode.SRC_IN);
+                    .setColorFilter(actionColor, PorterDuff.Mode.SRC_IN);
         }
         actionBtn.setBackgroundDrawable(actionBg);
         if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSDetailspageTopAd", "FacebookEnabled")) {
@@ -888,11 +891,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         intent.putExtra(UIIntents.UI_INTENT_EXTRA_MESSAGE_POSITION, -1);
     }
 
-    private final Handler mHandler = new Handler();
-
-    /**
-     * {@inheritDoc} from Fragment
-     */
     @DebugLog
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
@@ -930,8 +928,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         }
 
         mMediaLayout = view.findViewById(R.id.camera_photo_layout);
-        mWallpaperView = view.findViewById(R.id.conversation_fragment_wallpaper);
-        mThemeWallpaperView = view.findViewById(R.id.conversation_fragment_theme_wallpaper);
+        mWallpaperView = view.findViewById(R.id.conversation_fragment_theme_wallpaper);
+        mOldRecommendImageView = view.findViewById(R.id.conversation_fragment_wallpaper);
 
         mComposeMessageView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -1045,7 +1043,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public void onResume() {
         super.onResume();
-        WallpaperManager.setConversationWallPaper(mWallpaperView, mThemeWallpaperView, mConversationId);
+        WallpaperManager.setConversationWallPaper(mWallpaperView, mConversationId, mOldRecommendImageView);
 
         if (mIncomingDraft == null) {
             mComposeMessageView.requestDraftMessage(mClearLocalDraft);
@@ -1108,6 +1106,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             case R.id.action_menu:
                 BugleAnalytics.logEvent("SMS_DetailsPage_IconSettings_Click", true);
                 BugleFirebaseAnalytics.logEvent("SMS_DetailsPage_IconSettings_Click");
+                if (isFirstOpen) {
+                    BugleAnalytics.logEvent("SMS_Detailspage_Settings_Click_FirstShow", true);
+                }
                 if (!mAdapter.isMultiSelectMode()) {
                     UIIntents.get().launchPeopleAndOptionsActivity(getActivity(), mConversationId);
                 }
@@ -1386,9 +1387,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 // Merge the caption text from attachments into the text body of the messages
                 message.consolidateText();
 
-                final String deliveryReportsKey = getString(R.string.delivery_reports_pref_key);
+                final String deliveryReportsKey = HSApplication.getContext().getString(R.string.delivery_reports_pref_key);
                 message.setIsDeliveryReportOpen(Preferences.getDefault().getBoolean(deliveryReportsKey,
-                        getResources().getBoolean(R.bool.delivery_reports_pref_default)));
+                        HSApplication.getContext().getResources().getBoolean(R.bool.delivery_reports_pref_default)));
 
                 boolean isDefaultSelf = mBinding.getData().isDefaultSelf(message.getSelfId());
 

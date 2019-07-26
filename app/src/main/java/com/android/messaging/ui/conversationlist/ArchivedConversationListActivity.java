@@ -15,6 +15,7 @@
  */
 package com.android.messaging.ui.conversationlist;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -29,13 +30,12 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
-import com.android.messaging.datamodel.action.PinConversationAction;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
+import com.android.messaging.ui.customize.mainpage.ChatListCustomizeManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.superapps.util.Dimensions;
 
-import java.util.Collection;
 import java.util.List;
 
 public class ArchivedConversationListActivity extends AbstractConversationListActivity {
@@ -58,7 +58,12 @@ public class ArchivedConversationListActivity extends AbstractConversationListAc
         ViewGroup.LayoutParams layoutParams = accessoryContainer.getLayoutParams();
         layoutParams.height = Dimensions.getStatusBarHeight(this) + Dimensions.pxFromDp(56);
         accessoryContainer.setLayoutParams(layoutParams);
-        if (ToolbarDrawables.getToolbarBg() != null) {
+        Drawable customToolBar = ChatListCustomizeManager.getToolbarDrawable();
+        if (customToolBar != null) {
+            ImageView ivAccessoryBg = accessoryContainer.findViewById(R.id.accessory_bg);
+            ivAccessoryBg.setVisibility(View.VISIBLE);
+            ivAccessoryBg.setImageDrawable(customToolBar);
+        } else if (ToolbarDrawables.getToolbarBg() != null) {
             ImageView ivAccessoryBg = accessoryContainer.findViewById(R.id.accessory_bg);
             ivAccessoryBg.setVisibility(View.VISIBLE);
             ivAccessoryBg.setImageDrawable(ToolbarDrawables.getToolbarBg());
@@ -74,8 +79,13 @@ public class ArchivedConversationListActivity extends AbstractConversationListAc
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
+        toolbar.setContentInsetsRelative(0, 0);
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(getString(R.string.archived_conversations));
+        ChatListCustomizeManager.changeViewColorIfNeed(title);
+        Drawable backDrawable = getResources().getDrawable(R.drawable.ic_back).mutate();
+        ChatListCustomizeManager.changeDrawableColorIfNeed(backDrawable);
+        toolbar.setNavigationIcon(backDrawable);
         setSupportActionBar(toolbar);
 
         if (getSupportActionBar() != null) {

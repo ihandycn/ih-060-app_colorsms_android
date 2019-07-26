@@ -38,6 +38,7 @@ import android.text.TextUtils;
 
 import com.android.ex.photo.util.PhotoViewAnalytics;
 import com.android.messaging.ad.AdConfig;
+import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.ad.BillingManager;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.debug.BlockCanaryConfig;
@@ -71,7 +72,6 @@ import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.DebugUtils;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.DefaultSmsAppChangeObserver;
-import com.android.messaging.util.ExitAdConfig;
 import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
@@ -108,6 +108,7 @@ import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
 import net.appcloudbox.AcbAds;
+import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
 import net.appcloudbox.autopilot.AutopilotConfig;
 import net.appcloudbox.autopilot.core.PrefsUtils;
 import net.appcloudbox.common.analytics.publisher.AcbPublisherMgr;
@@ -225,13 +226,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
         });
 
         prepareEmoji();
-
-//        new Thread(new Runnable() {
-//            @Override
-//            public void run() {
-//                checkEmoji();
-//            }
-//        }).start();
     }
 
     @DebugLog
@@ -309,7 +303,11 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 if (!isPremiumUser) {
                     AdConfig.activeAllAdsReentrantly();
 
-                    Threads.postOnMainThread(ExitAdConfig::preLoadExitAd);
+                    Threads.postOnMainThread(() -> {
+                        if (AdConfig.isExitAdEnabled()){
+                            AcbInterstitialAdManager.preload(1, AdPlacement.AD_EXIT_WIRE);
+                        }
+                    });
                 } else {
                     AdConfig.deactiveAllAds();
                     Threads.postOnMainThread(() -> HSGlobalNotificationCenter.sendNotification(BILLING_VERIFY_SUCCESS));

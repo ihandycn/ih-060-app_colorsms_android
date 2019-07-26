@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -37,6 +38,7 @@ import com.android.messaging.ui.conversationlist.ConversationListItemView;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.WallpaperDrawables;
+import com.android.messaging.ui.customize.mainpage.ChatListCustomizeManager;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ImeUtil;
@@ -139,7 +141,9 @@ public class PrivateConversationListFragment extends Fragment
         final ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.private_conversation_list_fragment,
                 container, false);
         ImageView conversationListBg = rootView.findViewById(R.id.private_conversation_list_bg);
-        conversationListBg.setImageDrawable(WallpaperDrawables.getConversationListWallpaperDrawable());
+        Drawable customDrawable = ChatListCustomizeManager.getWallpaperDrawable();
+        Drawable bgDrawable = customDrawable != null ? customDrawable : WallpaperDrawables.getConversationListWallpaperDrawable();
+        conversationListBg.setImageDrawable(bgDrawable);
         mEmptyListMessageView = rootView.findViewById(R.id.private_box_empty_container);
         mRecyclerView = rootView.findViewById(android.R.id.list);
         mRecyclerView.setHasFixedSize(true);
@@ -329,8 +333,9 @@ public class PrivateConversationListFragment extends Fragment
 
                 addToBlackListDialog.show();
             });
-            ((TextView) mEmptyListMessageView.findViewById(R.id.private_box_empty_view_description))
-                    .setTextColor(ConversationColors.get().getListTitleColor());
+            TextView descriptionView = mEmptyListMessageView.findViewById(R.id.private_box_empty_view_description);
+            descriptionView.setTextColor(ConversationColors.get().getListTitleColor());
+            ChatListCustomizeManager.changeViewColorIfNeed(descriptionView);
         } else {
             mEmptyListMessageView.setVisibility(View.GONE);
         }

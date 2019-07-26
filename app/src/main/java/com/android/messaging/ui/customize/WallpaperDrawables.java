@@ -93,7 +93,7 @@ public class WallpaperDrawables {
 
         File file = new File(CommonUtils.getDirectory(
                 ThemeBubbleDrawables.THEME_BASE_PATH + info.mThemeKey),
-                ThemeBubbleDrawables.LIST_VIEW_WALLPAPER_BG_FILE_NAME);
+                ThemeBubbleDrawables.LIST_WALLPAPER_BG_FILE_NAME);
 
         if (file.exists()) {
             try {

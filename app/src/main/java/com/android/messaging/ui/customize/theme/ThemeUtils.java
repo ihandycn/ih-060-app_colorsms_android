@@ -16,6 +16,7 @@ import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.customize.WallpaperDrawables;
+import com.android.messaging.ui.customize.mainpage.ChatListCustomizeManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.ihs.app.framework.HSApplication;
@@ -23,6 +24,7 @@ import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.Threads;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -82,7 +84,7 @@ public class ThemeUtils {
         if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
             BubbleDrawables.setSelectedIdentifier(-1);
         }
-
+        ChatListCustomizeManager.resetAllCustomData();
         FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
 
         ThemeDownloadManager.getInstance().copyFileFromAssetsSync(themeInfo,
@@ -91,10 +93,10 @@ public class ThemeUtils {
                     public void onMoveSuccess() {
                         FontUtils.onFontTypefaceChanged();
 
-                        WallpaperSizeManager.getInstance().loadWallpaperParams();
+                        WallpaperSizeManager.resizeThemeBitmap(themeInfo);
 
                         if (endRunnable != null) {
-                            endRunnable.run();
+                            Threads.postOnMainThread(endRunnable);
                         }
                     }
 
@@ -108,64 +110,67 @@ public class ThemeUtils {
     }
 
     private static void applyTheme(ThemeInfo themeInfo) {
-        if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
-            ConversationColors.get().setBubbleBackgroundColor(false, Color.parseColor(themeInfo.outgoingBubbleBgColor));
-        } else {
-            ConversationColors.get().setBubbleBackgroundColor(false, Color.parseColor(themeInfo.themeColor));
-        }
-        // change theme color should be after bubble color set
-        PrimaryColors.changePrimaryColor(Color.parseColor(themeInfo.themeColor));
+        Threads.postOnThreadPoolExecutor(() -> {
+            if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
+                ConversationColors.get().setBubbleBackgroundColor(false, Color.parseColor(themeInfo.outgoingBubbleBgColor));
+            } else {
+                ConversationColors.get().setBubbleBackgroundColor(false, Color.parseColor(themeInfo.themeColor));
+            }
+            // change theme color should be after bubble color set
+            PrimaryColors.changePrimaryColor(Color.parseColor(themeInfo.themeColor));
 
-        ConversationColors.get().setBubbleBackgroundColor(true, Color.parseColor(themeInfo.incomingBubbleBgColor));
-        ConversationColors.get().setMessageTextColor(true, Color.parseColor(themeInfo.incomingBubbleTextColor));
-        ConversationColors.get().setMessageTextColor(false, Color.parseColor(themeInfo.outgoingBubbleTextColor));
-        ConversationColors.get().setListTitleColor(Color.parseColor(themeInfo.listTitleColor));
-        ConversationColors.get().setListSubTitleColor(Color.parseColor(themeInfo.listSubtitleColor));
-        ConversationColors.get().setListTimeColor(Color.parseColor(themeInfo.listTimeColor));
-        ConversationColors.get().setAdActionColor(Color.parseColor(themeInfo.bubbleAdColor));
+            ConversationColors.get().setBubbleBackgroundColor(true, Color.parseColor(themeInfo.incomingBubbleBgColor));
+            ConversationColors.get().setMessageTextColor(true, Color.parseColor(themeInfo.incomingBubbleTextColor));
+            ConversationColors.get().setMessageTextColor(false, Color.parseColor(themeInfo.outgoingBubbleTextColor));
+            ConversationColors.get().setListTitleColor(Color.parseColor(themeInfo.listTitleColor));
+            ConversationColors.get().setListSubTitleColor(Color.parseColor(themeInfo.listSubtitleColor));
+            ConversationColors.get().setListTimeColor(Color.parseColor(themeInfo.listTimeColor));
+            ConversationColors.get().setAdActionColor(Color.parseColor(themeInfo.bubbleAdColor));
 
-        ToolbarDrawables.sToolbarBitmap = null;
-        WallpaperDrawables.sListWallpaperBitmap = null;
-        WallpaperDrawables.sWallpaperBitmap = null;
-        WallpaperDrawables.applyWallpaperBg(themeInfo.wallpaperUrl);
-        AvatarBgDrawables.sAvatarBg = null;
-        AvatarBgDrawables.sSolidAvatarBg = null;
-        CreateIconDrawable.sCreateIconBitmap = null;
+            ToolbarDrawables.sToolbarBitmap = null;
+            WallpaperDrawables.sListWallpaperBitmap = null;
+            WallpaperDrawables.sWallpaperBitmap = null;
+            WallpaperDrawables.applyWallpaperBg(themeInfo.wallpaperUrl);
+            AvatarBgDrawables.sAvatarBg = null;
+            AvatarBgDrawables.sSolidAvatarBg = null;
+            CreateIconDrawable.sCreateIconBitmap = null;
 
-        ThemeBubbleDrawables.getInstance().clearCacheDrawable();
+            ThemeBubbleDrawables.getInstance().clearCacheDrawable();
 
-        if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
-            BubbleDrawables.setSelectedIdentifier(-1);
-        }
+            if (!themeInfo.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)) {
+                BubbleDrawables.setSelectedIdentifier(-1);
+            }
 
-        FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
+            ChatListCustomizeManager.resetAllCustomData();
 
-        if (themeInfo.mIsLocalTheme) {
-            ThemeDownloadManager.getInstance().copyFileFromAssetsAsync(themeInfo,
-                    new ThemeDownloadManager.IThemeMoveListener() {
-                        @Override
-                        public void onMoveSuccess() {
-                            FontUtils.onFontTypefaceChanged();
+            FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
 
-                            Threads.postOnMainThread(() ->
-                                    HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
-                            WallpaperSizeManager.getInstance().loadWallpaperParams();
-                        }
+            if (themeInfo.mIsLocalTheme) {
+                ThemeDownloadManager.getInstance().copyFileFromAssetsSync(themeInfo,
+                        new ThemeDownloadManager.IThemeMoveListener() {
+                            @Override
+                            public void onMoveSuccess() {
+                                WallpaperSizeManager.resizeThemeBitmap(themeInfo);
+                                FontUtils.onFontTypefaceChanged();
 
-                        @Override
-                        public void onMoveFailed() {
+                                Threads.postOnMainThread(() ->
+                                        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
+                            }
 
-                        }
-                    });
-        } else {
-            FontUtils.onFontTypefaceChanged();
+                            @Override
+                            public void onMoveFailed() {
 
-            Threads.postOnMainThread(() ->
-                    HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
-            WallpaperSizeManager.getInstance().loadWallpaperParams();
-        }
+                            }
+                        });
+            } else {
+                FontUtils.onFontTypefaceChanged();
 
-        Factory.get().reclaimMemory();
+                Threads.postOnMainThread(() ->
+                        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
+            }
+
+            Factory.get().reclaimMemory();
+        });
     }
 
     public static String getCurrentThemeName() {
@@ -235,7 +240,7 @@ public class ThemeUtils {
 
     static Drawable getLocalThemeDrawableFromPath(String path) {
         try {
-            InputStream ims = HSApplication.getContext().getAssets().open("themes/" + path);
+            InputStream ims = HSApplication.getContext().getAssets().open("themes" + File.separator + path);
             Bitmap bitmap = BitmapFactory.decodeStream(ims);
             return new BitmapDrawable(HSApplication.getContext().getResources(), bitmap);
         } catch (IOException e) {

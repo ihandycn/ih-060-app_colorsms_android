@@ -74,7 +74,7 @@
                 android:background="@drawable/input_edit_drawable"
                 android:orientation="horizontal">
 
-                <com.android.messaging.ui.PlainTextEditText
+                <com.android.messaging.ui.emoji.EmojiEditText
                     android:id="@+id/compose_message_text"
                     style="@style/ConversationComposeSendText"
                     android:layout_width="0dp"

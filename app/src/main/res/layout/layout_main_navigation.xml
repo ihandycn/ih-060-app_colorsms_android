@@ -59,24 +59,23 @@
                 app:typeface="@string/custom_font_bold"/>
         </RelativeLayout>
 
-
-        <!-- Item Theme Color -->
+        <!-- Item Change Font -->
         <RelativeLayout
-            android:id="@+id/navigation_item_theme_color"
+            android:id="@+id/navigation_item_change_font"
             style="@style/DrawerMenuItem">
 
             <android.support.v7.widget.AppCompatImageView
                 style="@style/DrawerMenuIcon"
-                app:srcCompat="@drawable/ic_menu_theme_color"/>
+                app:srcCompat="@drawable/ic_menu_font"/>
 
             <com.android.messaging.ui.view.MessagesTextView
                 style="@style/DrawerMenuTitle"
                 android:includeFontPadding="false"
-                android:text="@string/menu_theme_color"
+                android:text="@string/menu_change_font"
                 app:typeface="@string/custom_font_medium"/>
 
             <com.android.messaging.ui.view.MessagesTextView
-                android:id="@+id/navigation_item_theme_color_new_text"
+                android:id="@+id/navigation_item_font_new_text"
                 style="@style/DrawerMenuNewMark"
                 app:textAllCaps="true"
                 app:typeface="@string/custom_font_bold"/>
@@ -120,29 +119,55 @@
                 app:typeface="@string/custom_font_bold"/>
         </RelativeLayout>
 
-        <!-- Item Change Font -->
+        <!-- Item Chat List -->
         <RelativeLayout
-            android:id="@+id/navigation_item_change_font"
+            android:id="@+id/navigation_item_chat_list"
             style="@style/DrawerMenuItem">
 
             <android.support.v7.widget.AppCompatImageView
                 style="@style/DrawerMenuIcon"
-                app:srcCompat="@drawable/ic_menu_font"/>
+                app:srcCompat="@drawable/ic_menu_chat_list"/>
 
             <com.android.messaging.ui.view.MessagesTextView
                 style="@style/DrawerMenuTitle"
                 android:includeFontPadding="false"
-                android:text="@string/menu_change_font"
+                android:text="@string/menu_chat_list"
                 app:typeface="@string/custom_font_medium"/>
 
             <com.android.messaging.ui.view.MessagesTextView
-                android:id="@+id/navigation_item_font_new_text"
+                android:id="@+id/navigation_item_chat_list_new_text"
                 style="@style/DrawerMenuNewMark"
                 app:textAllCaps="true"
                 app:typeface="@string/custom_font_bold"/>
         </RelativeLayout>
 
-        <!-- Backup & Restore -->
+        <!-- Item Theme Color -->
+        <RelativeLayout
+            android:id="@+id/navigation_item_theme_color"
+            style="@style/DrawerMenuItem">
+
+            <android.support.v7.widget.AppCompatImageView
+                style="@style/DrawerMenuIcon"
+                app:srcCompat="@drawable/ic_menu_theme_color"/>
+
+            <com.android.messaging.ui.view.MessagesTextView
+                style="@style/DrawerMenuTitle"
+                android:includeFontPadding="false"
+                android:text="@string/menu_theme_color"
+                app:typeface="@string/custom_font_medium"/>
+
+            <com.android.messaging.ui.view.MessagesTextView
+                android:id="@+id/navigation_item_theme_color_new_text"
+                style="@style/DrawerMenuNewMark"
+                app:textAllCaps="true"
+                app:typeface="@string/custom_font_bold"/>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="35dp"/>
+
+        <!-- Emoji Restore -->
         <RelativeLayout
             android:id="@+id/navigation_item_emoji_store"
             android:layout_width="match_parent"
@@ -191,10 +216,6 @@
                     app:typeface="@string/custom_font_bold" />
             </LinearLayout>
         </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="35dp"/>
 
         <!-- Backup & Restore -->
         <RelativeLayout
@@ -284,23 +305,6 @@
                 app:typeface="@string/custom_font_medium"/>
         </RelativeLayout>
 
-
-        <!-- Item Invite Friends -->
-        <RelativeLayout
-            android:id="@+id/navigation_item_invite_friends"
-            style="@style/DrawerMenuItem">
-
-            <android.support.v7.widget.AppCompatImageView
-                style="@style/DrawerMenuIcon"
-                app:srcCompat="@drawable/ic_menu_invite_friends"/>
-
-            <com.android.messaging.ui.view.MessagesTextView
-                style="@style/DrawerMenuTitle"
-                android:includeFontPadding="false"
-                android:text="@string/menu_invite_friends"
-                app:typeface="@string/custom_font_medium"/>
-        </RelativeLayout>
-
         <!-- Item Remove Ads -->
         <RelativeLayout
             android:id="@+id/navigation_item_remove_ads"
@@ -314,24 +318,6 @@
                 style="@style/DrawerMenuTitle"
                 android:includeFontPadding="false"
                 android:text="@string/remove_ad"
-                app:typeface="@string/custom_font_medium"/>
-        </RelativeLayout>
-
-
-
-        <!-- Item Rate -->
-        <RelativeLayout
-            android:id="@+id/navigation_item_rate"
-            style="@style/DrawerMenuItem">
-
-            <android.support.v7.widget.AppCompatImageView
-                style="@style/DrawerMenuIcon"
-                app:srcCompat="@drawable/ic_menu_rate"/>
-
-            <com.android.messaging.ui.view.MessagesTextView
-                style="@style/DrawerMenuTitle"
-                android:includeFontPadding="false"
-                android:text="@string/menu_rate"
                 app:typeface="@string/custom_font_medium"/>
         </RelativeLayout>
 

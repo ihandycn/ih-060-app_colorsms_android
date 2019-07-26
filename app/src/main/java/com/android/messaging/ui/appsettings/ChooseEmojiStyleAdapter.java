@@ -21,7 +21,9 @@ import com.android.messaging.util.OsUtil;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Networks;
 
+import java.lang.ref.WeakReference;
 import java.util.List;
 
 public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiStyleAdapter.ChooseEmojiStyleHolder> {
@@ -32,11 +34,11 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
     private Context mContext;
 
     private ColorStateList colorStateList = new ColorStateList(
-            new int[][] {
+            new int[][]{
                     new int[]{-android.R.attr.state_checked},
                     new int[]{android.R.attr.state_checked}
             },
-            new int[] {
+            new int[]{
                     0xffa5abb1
                     , PrimaryColors.getPrimaryColor(),
             }
@@ -59,7 +61,7 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
         int position = holder.getAdapterPosition();
         EmojiStyleItem item = mDataList.get(position);
         holder.nameText.setText(item.name);
-        if(!item.isInit) {
+        if (!item.isInit) {
             holder.itemView.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff,
                     HSApplication.getContext().getResources().getColor(com.superapps.R.color.ripples_ripple_color),
                     0, true, true));
@@ -68,11 +70,26 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
         if (OsUtil.isAtLeastL()) {
             holder.radioButton.setButtonTintList(colorStateList); // Applying tint to drawable at left. '0' to get drawable at bottom
         }
+
         if (item.isSystem) {
             holder.sampleImage.setImageDrawable(new SystemEmojiStylePreview());
         } else {
-            GlideApp.with(holder.sampleImage).load(item.sampleImageUrl).into(holder.sampleImage);
+            switch (item.name) {
+                case "Android Blob":
+                    holder.sampleImage.setImageResource(R.drawable.emoji_style_blob);
+                    break;
+                case "Android Pie":
+                    holder.sampleImage.setImageResource(R.drawable.emoji_style_pie);
+                    break;
+                case "Android Twitter":
+                    holder.sampleImage.setImageResource(R.drawable.emoji_style_twitter);
+                    break;
+                default:
+                    GlideApp.with(holder.sampleImage).load(item.sampleImageUrl).into(holder.sampleImage);
+                    break;
+            }
         }
+        // selected it
         if (position == mLastItem) {
             holder.radioButton.setChecked(true);
             holder.downloadText.setTextColor(0xff2d7ab5);
@@ -88,6 +105,7 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
                 }
             }
         } else {
+            // not select
             holder.radioButton.setChecked(false);
             holder.downloadText.setTextColor(0xff858b92);
             if (item.isSystem) {
@@ -96,7 +114,7 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
                 if (item.isDownloaded) {
                     holder.downloadText.setText(mContext.getResources().getString(R.string.emoji_style_downloaded));
                 } else {
-                    String text = mContext.getResources().getString(R.string.emoji_style_download);
+                    String text = mContext.getResources().getString(R.string.action_download);
                     text += " " + item.downloadSize + " MB";
                     holder.downloadText.setText(text);
                 }
@@ -106,38 +124,23 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean network = Networks.isNetworkAvailable(-1);
+                boolean isSystem = item.name.equals(EmojiManager.EMOJI_STYLE_SYSTEM);
+                if (!isSystem && !network && !item.isDownloaded) {
+                    Context context = HSApplication.getContext();
+                    Toast.makeText(context, context.getResources().getString(R.string.sms_network_error), Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 int lastPos = mLastItem;
                 mLastItem = holder.getAdapterPosition();
                 notifyItemChanged(holder.getAdapterPosition());
                 notifyItemChanged(lastPos);
-                // callback for download, when the emoji is downloaded, it's useless.
-                mListener.onItemSelected(item, new EmojiStyleDownloadManager.DownloadCallback() {
-                    @Override
-                    public void onFail(EmojiStyleDownloadManager.EmojiStyleDownloadTask task, String msg) {
-                        HSLog.e("emoji_download", msg);
-                        Toast.makeText(mContext, mContext.getResources().getString(R.string.emoji_style_download_failed), Toast.LENGTH_LONG).show();
-                    }
-
-                    @Override
-                    public void onSuccess(EmojiStyleDownloadManager.EmojiStyleDownloadTask task) {
-                        item.isDownloaded = true;
-                        EmojiManager.setEmojiStyleDownloaded(item.name);
-                        notifyItemChanged(position);
-                    }
-
-                    @Override
-                    public void onUpdate(long downloadSize, long totalSize) {
-                        item.downloadPercent = (int) (downloadSize * 100 / (float) totalSize);
-                        notifyItemChanged(position);
-                    }
-
-                    @Override
-                    public void onCancel() {
-                    }
-                });
+                UiDownloadCallback callback = new UiDownloadCallback(ChooseEmojiStyleAdapter.this, item, position);
+                mListener.onItemSelected(item, callback);
                 mListener.onItemUnSelected(mDataList.get(lastPos));
             }
         };
+
         holder.itemView.setOnClickListener(clickListener);
         holder.radioButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -173,6 +176,46 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
         void onItemSelected(EmojiStyleItem item, EmojiStyleDownloadManager.DownloadCallback callback);
 
         void onItemUnSelected(EmojiStyleItem item);
+    }
+
+    // callback for download, when the emoji is downloaded, it's useless.
+    static class UiDownloadCallback implements EmojiStyleDownloadManager.DownloadCallback {
+        private WeakReference<ChooseEmojiStyleAdapter> outer;
+        private int position;
+        private EmojiStyleItem item;
+
+        UiDownloadCallback(ChooseEmojiStyleAdapter outer, EmojiStyleItem item, int position) {
+            this.outer = new WeakReference<>(outer);
+            this.position = position;
+            this.item = item;
+        }
+
+        @Override
+        public void onFail(EmojiStyleDownloadManager.EmojiStyleDownloadTask task, String msg) {
+            HSLog.e("emoji_download", msg);
+            Context context = HSApplication.getContext();
+            Toast.makeText(context, context.getResources().getString(R.string.sms_network_error), Toast.LENGTH_LONG).show();
+        }
+
+        @Override
+        public void onSuccess(EmojiStyleDownloadManager.EmojiStyleDownloadTask task) {
+            item.isDownloaded = true;
+            if (outer.get() != null) {
+                outer.get().notifyItemChanged(position);
+            }
+        }
+
+        @Override
+        public void onUpdate(long downloadSize, long totalSize) {
+            item.downloadPercent = (int) (downloadSize * 100 / (float) totalSize);
+            if (outer.get() != null) {
+                outer.get().notifyItemChanged(position);
+            }
+        }
+
+        @Override
+        public void onCancel() {
+        }
     }
 
     static class ChooseEmojiStyleHolder extends RecyclerView.ViewHolder {

@@ -4,10 +4,10 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.KeyEvent;
 
-import com.android.messaging.ui.PlainTextEditText;
+import com.android.messaging.ui.emoji.EmojiEditText;
 
 
-public class InterceptBackKeyEditText extends PlainTextEditText {
+public class InterceptBackKeyEditText extends EmojiEditText {
 
     interface BackEventListener {
         void onBackPressed();

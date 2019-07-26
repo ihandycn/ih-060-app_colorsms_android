@@ -791,7 +791,18 @@
 	<string name="life_time">TRỌN ĐỜI</string>
 	<string name="purchase_description">Mua phiên bản KHÔNG QUẢNG CÁO. Không còn quảng cáo.</string>
 
+    <string name="chat_list_text_color">Màu chữ</string>
+    <string name="purchase_failed">không thành công</string>
+    <string name="chat_list_confirm_dialog_title">Lưu thay đổi</string>
+
+
+	<string name="menu_chat_list">Danh sách trò chuyện</string>
+	<string name="chat_list_background_opacity">Độ chắn sáng hình nền</string>
+	<string name="chat_list_change_background">Thay đổi hình nền</string>
+	<string name="chat_list_config_dialog_message">Danh sách trò chuyện đã được sửa đổi, bạn có muốn giữ những thay đổi này không?</string>
 
 	<string name="emoji_skin_tone_setting">Màu da Emoji </string>
+    <string name="emoji_style_downloading">Đang tải xuống</string>
+    <string name="emoji_style_default">Mặc định</string>
 
 </resources>
