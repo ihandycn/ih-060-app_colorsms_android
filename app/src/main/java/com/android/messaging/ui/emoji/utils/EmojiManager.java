@@ -177,7 +177,12 @@ public class EmojiManager {
                     info = StickerInfo.unflatten(msg);
                     break;
                 case EMOJI:
-                    info = EmojiInfo.unflatten(msg, emojiStyle);
+                    try {
+                        info = EmojiInfo.unflatten(msg, emojiStyle);
+                    } catch (Exception e) {
+                        Preferences.get(PREF_FILE_NAME).putStringList(PREF_RECENT_EMOJI, new ArrayList<>());
+                        return new ArrayList<>();
+                    }
                     break;
                 case GIF:
                     info = GiphyInfo.unflatten(msg);
@@ -210,7 +215,7 @@ public class EmojiManager {
         }
     }
 
-    public static void deleteEmojiRecent(){
+    public static void deleteEmojiRecent() {
         Preferences.get(PREF_FILE_NAME).putStringList(PREF_RECENT_EMOJI, new ArrayList<>());
     }
 
