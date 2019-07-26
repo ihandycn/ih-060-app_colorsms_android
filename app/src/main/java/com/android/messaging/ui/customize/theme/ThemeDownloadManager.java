@@ -6,11 +6,14 @@ import android.text.TextUtils;
 import com.android.messaging.font.FontDownloadManager;
 import com.android.messaging.font.FontInfo;
 import com.android.messaging.util.CommonUtils;
+import com.android.messaging.util.VersionUtil;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.connection.HSHttpConnection;
 import com.ihs.commons.connection.httplib.HttpRequest;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSError;
+import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
 import java.io.File;
@@ -22,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ThemeDownloadManager {
+    private static final String PREF_KEY_THEME_MOVED_AND_RESIZED = "theme_moved_and_resized_";
     private static final float CONVERSATION_WALLPAPER_START_RATE = 0;
     private static final float CONVERSATION_LIST_WALLPAPER_START_RATE = 0.2f;
     private static final float TOOLBAR_START_RATE = 0.4f;
@@ -509,8 +513,53 @@ public class ThemeDownloadManager {
         }
     }
 
-    public void copyAssetFileAsync(String themeKey, File fileName, String assetFileName) {
-        Threads.postOnThreadPoolExecutor(() -> copyAssetFile(themeKey, fileName, assetFileName));
+    private String getPrefKeyByThemeName(String name) {
+        return PREF_KEY_THEME_MOVED_AND_RESIZED
+                + LocalThemeVersion.getNewestVersion(name)
+                + "_" + name;
+    }
+
+    public void copyAndResizeThemeWhenAppInstallOrUpgrade() {
+        ThemeInfo currentTheme = ThemeUtils.getCurrentTheme();
+        List<ThemeInfo> localThemes = ThemeInfo.getLocalThemes();
+        for (ThemeInfo theme : localThemes) {
+            String key = getPrefKeyByThemeName(theme.mThemeKey);
+            if (!currentTheme.mThemeKey.equals(theme.mThemeKey)
+                    && !Preferences.getDefault().getBoolean(key, false)) {
+                long t = System.currentTimeMillis();
+                Threads.postOnThreadPoolExecutor(() -> copyFileFromAssetsSync(theme, new IThemeMoveListener() {
+                    @Override
+                    public void onMoveSuccess() {
+                        WallpaperSizeManager.resizeThemeBitmap(theme);
+                        Preferences.getDefault().putBoolean(key, true);
+                        HSGlobalNotificationCenter.sendNotification(key);
+                    }
+
+                    @Override
+                    public void onMoveFailed() {
+
+                    }
+                }));
+            }
+        }
+        //if current theme is not copy and resized, move on main thread
+        if (currentTheme.mIsLocalTheme
+                && !Preferences.getDefault().getBoolean(getPrefKeyByThemeName(currentTheme.mThemeKey), false)) {
+            String key = getPrefKeyByThemeName(currentTheme.mThemeKey);
+            copyFileFromAssetsSync(currentTheme, new IThemeMoveListener() {
+                @Override
+                public void onMoveSuccess() {
+                    WallpaperSizeManager.resizeThemeBitmap(currentTheme);
+                    Preferences.getDefault().putBoolean(key, true);
+                    HSGlobalNotificationCenter.sendNotification(key);
+                }
+
+                @Override
+                public void onMoveFailed() {
+
+                }
+            });
+        }
     }
 
     public boolean copyAssetFile(String themeKey, File fileName, String assetFileName) {

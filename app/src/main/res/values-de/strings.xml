@@ -798,4 +798,9 @@
     <string name="emoji_style_downloading">Wird heruntergeladen</string>
     <string name="emoji_style_default">Standard</string>
 
+
+	<string name="customize_new_guide_title">Coole Funktionen</string>
+	<string name="customize_new_guide_content">Richten Sie Ihren Chat individuell ein, um ihn zu etwas Besonderem zu machen!</string>
+	<string name="select_image">Bild auswählen</string>
+
 </resources>

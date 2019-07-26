@@ -86,26 +86,29 @@ public class ThemeUtils {
         }
         ChatListCustomizeManager.resetAllCustomData();
         FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
+//
+//        ThemeDownloadManager.getInstance().copyFileFromAssetsSync(themeInfo,
+//                new ThemeDownloadManager.IThemeMoveListener() {
+//                    @Override
+//                    public void onMoveSuccess() {
+//                        FontUtils.onFontTypefaceChanged();
+//
+//                        //WallpaperSizeManager.resizeThemeBitmap(themeInfo);
+//
+//                        if (endRunnable != null) {
+//                            Threads.postOnMainThread(endRunnable);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onMoveFailed() {
+//
+//                    }
+//                });
 
-        ThemeDownloadManager.getInstance().copyFileFromAssetsSync(themeInfo,
-                new ThemeDownloadManager.IThemeMoveListener() {
-                    @Override
-                    public void onMoveSuccess() {
-                        FontUtils.onFontTypefaceChanged();
-
-                        WallpaperSizeManager.resizeThemeBitmap(themeInfo);
-
-                        if (endRunnable != null) {
-                            Threads.postOnMainThread(endRunnable);
-                        }
-                    }
-
-                    @Override
-                    public void onMoveFailed() {
-
-                    }
-                });
-
+        if (endRunnable != null) {
+            Threads.postOnMainThread(endRunnable);
+        }
         Factory.get().reclaimMemory();
     }
 
@@ -145,29 +148,34 @@ public class ThemeUtils {
 
             FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
 
-            if (themeInfo.mIsLocalTheme) {
-                ThemeDownloadManager.getInstance().copyFileFromAssetsSync(themeInfo,
-                        new ThemeDownloadManager.IThemeMoveListener() {
-                            @Override
-                            public void onMoveSuccess() {
-                                WallpaperSizeManager.resizeThemeBitmap(themeInfo);
-                                FontUtils.onFontTypefaceChanged();
+//            if (themeInfo.mIsLocalTheme) {
+//                ThemeDownloadManager.getInstance().copyFileFromAssetsSync(themeInfo,
+//                        new ThemeDownloadManager.IThemeMoveListener() {
+//                            @Override
+//                            public void onMoveSuccess() {
+//                                WallpaperSizeManager.resizeThemeBitmap(themeInfo);
+//                                FontUtils.onFontTypefaceChanged();
+//
+//                                Threads.postOnMainThread(() ->
+//                                        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
+//                            }
+//
+//                            @Override
+//                            public void onMoveFailed() {
+//
+//                            }
+//                        });
+//            } else {
+//                FontUtils.onFontTypefaceChanged();
+//
+//                Threads.postOnMainThread(() ->
+//                        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
+//            }
 
-                                Threads.postOnMainThread(() ->
-                                        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
-                            }
+            FontUtils.onFontTypefaceChanged();
 
-                            @Override
-                            public void onMoveFailed() {
-
-                            }
-                        });
-            } else {
-                FontUtils.onFontTypefaceChanged();
-
-                Threads.postOnMainThread(() ->
-                        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
-            }
+            Threads.postOnMainThread(() ->
+                    HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
 
             Factory.get().reclaimMemory();
         });
