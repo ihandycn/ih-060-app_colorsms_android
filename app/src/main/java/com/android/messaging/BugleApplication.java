@@ -225,8 +225,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 AcbService.setGDPRConsentGranted(false);
             }
         });
-
-        prepareEmoji();
     }
 
     @DebugLog
@@ -305,7 +303,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
                     AdConfig.activeAllAdsReentrantly();
 
                     Threads.postOnMainThread(() -> {
-                        if (AdConfig.isExitAdEnabled()){
+                        if (AdConfig.isExitAdEnabled()) {
                             AcbInterstitialAdManager.preload(1, AdPlacement.AD_EXIT_WIRE);
                         }
                     });
@@ -359,6 +357,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
             initWorks.add(new SyncMainThreadTask("InitObserveScreenStatusChanged", this::initObserveUserPresentChanged));
 
             initWorks.add(new SyncMainThreadTask("RecordInstallType", this::recordInstallType));
+
+            initWorks.add(new SyncMainThreadTask("PrepareEmoji", this::prepareEmoji));
 
             initWorks.add(new SyncMainThreadTask("AddObservers", () -> {
                 HSGlobalNotificationCenter.addObserver(HSNotificationConstant.HS_SESSION_START, this);
