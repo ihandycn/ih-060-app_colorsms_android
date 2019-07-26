@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.MediaPickerMessagePartData;
@@ -194,6 +195,9 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
 
                 if(mCurrentPos == position){
                     return ;
+                }
+                if(position == EMOJI_PAGE_INDEX && EmojiManager.isFirstEmojiPageClick()){
+                    Toast.makeText(activity, activity.getResources().getString(R.string.emoji_page_first_click), Toast.LENGTH_SHORT).show();
                 }
                 FragmentManager fm = getChildFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
