@@ -400,7 +400,7 @@ public class ThemeDownloadManager {
         });
     }
 
-    private void copyFileFromAssetsSync(ThemeInfo theme, IThemeMoveListener listener) {
+    void copyFileFromAssetsSync(ThemeInfo theme, IThemeMoveListener listener) {
         String folderName = theme.mThemeKey;
         List<DownloadItemInfo> copyTask = new ArrayList<>();
 
@@ -520,6 +520,7 @@ public class ThemeDownloadManager {
         for (ThemeInfo theme : localThemes) {
             String key = getPrefKeyByThemeName(theme.mThemeKey);
             if (!currentTheme.mThemeKey.equals(theme.mThemeKey)
+                    && !currentTheme.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)
                     && !Preferences.getDefault().getBoolean(key, false)) {
                 Threads.postOnThreadPoolExecutor(() -> copyFileFromAssetsSync(theme, new IThemeMoveListener() {
                     @Override
@@ -540,6 +541,7 @@ public class ThemeDownloadManager {
         }
         //if current theme is not copy and resized, move on main thread
         if (currentTheme.mIsLocalTheme
+                && !currentTheme.mThemeKey.equals(ThemeUtils.DEFAULT_THEME_KEY)
                 && !Preferences.getDefault().getBoolean(getPrefKeyByThemeName(currentTheme.mThemeKey), false)) {
             String key = getPrefKeyByThemeName(currentTheme.mThemeKey);
             copyFileFromAssetsSync(currentTheme, new IThemeMoveListener() {

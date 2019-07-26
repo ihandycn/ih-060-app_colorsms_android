@@ -54,8 +54,8 @@ public class ThemePreviewActivity extends BaseActivity {
 
         pagerView.setOnApplyClickListener(v -> {
             Toasts.showToast(R.string.apply_theme_success);
-            //UIIntents.get().launchConversationListActivity(this);
-            Threads.postOnMainThreadDelayed(this::finish, 200);
+            UIIntents.get().launchConversationListActivity(this);
+            Threads.postOnMainThreadDelayed(this::finish, 100);
         });
 
     }
