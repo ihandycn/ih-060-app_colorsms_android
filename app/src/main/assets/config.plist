@@ -75,7 +75,7 @@
 						<key>IsLocalFont</key>
 						<false/>
 						<key>Name</key>
-						<string>oswald</string>
+						<string>share</string>
 						<key>Weight</key>
 						<array>
 							<string>SemiBold</string>
@@ -86,12 +86,56 @@
 						<key>IsLocalFont</key>
 						<false/>
 						<key>Name</key>
-						<string>quicksand</string>
+						<string>lato</string>
 						<key>Weight</key>
 						<array>
 							<string>SemiBold</string>
 							<string>Regular</string>
 						</array>
+					</dict>
+					<dict>
+						<key>IsLocalFont</key>
+						<false/>
+						<key>Name</key>
+						<string>charm</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>overlock</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>zilla_slab</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>ibm_plex_sans</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
 					</dict>
 					<dict>
 						<key>IsLocalFont</key>
@@ -108,7 +152,52 @@
 						<key>IsLocalFont</key>
 						<false/>
 						<key>Name</key>
-						<string>lemonada</string>
+						<string>expletus_sans</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+							<string>Medium</string>
+						</array>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>alegreya</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>cormorant</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
+					</dict>
+					<dict>
+						<key>IsLocalFont</key>
+						<false/>
+						<key>Name</key>
+						<string>kalam</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+					</dict>
+					<dict>
+						<key>IsLocalFont</key>
+						<false/>
+						<key>Name</key>
+						<string>laila</string>
 						<key>Weight</key>
 						<array>
 							<string>SemiBold</string>
@@ -120,17 +209,6 @@
 						<false/>
 						<key>Name</key>
 						<string>mina</string>
-						<key>Weight</key>
-						<array>
-							<string>SemiBold</string>
-							<string>Regular</string>
-						</array>
-					</dict>
-					<dict>
-						<key>IsLocalFont</key>
-						<false/>
-						<key>Name</key>
-						<string>kalam</string>
 						<key>Weight</key>
 						<array>
 							<string>SemiBold</string>
@@ -163,12 +241,23 @@
 						<key>IsLocalFont</key>
 						<false/>
 						<key>Name</key>
-						<string>lato</string>
+						<string>oswald</string>
 						<key>Weight</key>
 						<array>
 							<string>SemiBold</string>
 							<string>Regular</string>
 						</array>
+					</dict>
+					<dict>
+						<key>Name</key>
+						<string>exo_2</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
+						</array>
+						<key>IsLocalFont</key>
+						<false/>
 					</dict>
 					<dict>
 						<key>IsLocalFont</key>
@@ -185,46 +274,23 @@
 						<key>IsLocalFont</key>
 						<false/>
 						<key>Name</key>
-						<string>laila</string>
-						<key>Weight</key>
-						<array>
-							<string>SemiBold</string>
-							<string>Regular</string>
-						</array>
-					</dict>
-					<dict>
-						<key>IsLocalFont</key>
-						<false/>
-						<key>Name</key>
-						<string>charm</string>
-						<key>Weight</key>
-						<array>
-							<string>SemiBold</string>
-							<string>Regular</string>
-						</array>
-					</dict>
-					<dict>
-						<key>IsLocalFont</key>
-						<false/>
-						<key>Name</key>
-						<string>expletus_sans</string>
-						<key>Weight</key>
-						<array>
-							<string>SemiBold</string>
-							<string>Regular</string>
-							<string>Medium</string>
-						</array>
-					</dict>
-					<dict>
-						<key>IsLocalFont</key>
-						<false/>
-						<key>Name</key>
 						<string>source_serif_pro</string>
 						<key>Weight</key>
 						<array>
 							<string>SemiBold</string>
 							<string>Regular</string>
 							<string>Medium</string>
+						</array>
+					</dict>
+					<dict>
+						<key>IsLocalFont</key>
+						<false/>
+						<key>Name</key>
+						<string>lemonada</string>
+						<key>Weight</key>
+						<array>
+							<string>SemiBold</string>
+							<string>Regular</string>
 						</array>
 					</dict>
 					<dict>
@@ -332,29 +398,7 @@
 					</dict>
 					<dict>
 						<key>Name</key>
-						<string>alegreya</string>
-						<key>Weight</key>
-						<array>
-							<string>SemiBold</string>
-							<string>Regular</string>
-						</array>
-						<key>IsLocalFont</key>
-						<false/>
-					</dict>
-					<dict>
-						<key>Name</key>
 						<string>arima_madurai</string>
-						<key>Weight</key>
-						<array>
-							<string>SemiBold</string>
-							<string>Regular</string>
-						</array>
-						<key>IsLocalFont</key>
-						<false/>
-					</dict>
-					<dict>
-						<key>Name</key>
-						<string>cormorant</string>
 						<key>Weight</key>
 						<array>
 							<string>SemiBold</string>
@@ -377,17 +421,6 @@
 					<dict>
 						<key>Name</key>
 						<string>encode_sans</string>
-						<key>Weight</key>
-						<array>
-							<string>SemiBold</string>
-							<string>Regular</string>
-						</array>
-						<key>IsLocalFont</key>
-						<false/>
-					</dict>
-					<dict>
-						<key>Name</key>
-						<string>exo_2</string>
 						<key>Weight</key>
 						<array>
 							<string>SemiBold</string>
@@ -421,17 +454,6 @@
 					<dict>
 						<key>Name</key>
 						<string>gaegu</string>
-						<key>Weight</key>
-						<array>
-							<string>SemiBold</string>
-							<string>Regular</string>
-						</array>
-						<key>IsLocalFont</key>
-						<false/>
-					</dict>
-					<dict>
-						<key>Name</key>
-						<string>ibm_plex_sans</string>
 						<key>Weight</key>
 						<array>
 							<string>SemiBold</string>
@@ -486,17 +508,6 @@
 					</dict>
 					<dict>
 						<key>Name</key>
-						<string>overlock</string>
-						<key>Weight</key>
-						<array>
-							<string>SemiBold</string>
-							<string>Regular</string>
-						</array>
-						<key>IsLocalFont</key>
-						<false/>
-					</dict>
-					<dict>
-						<key>Name</key>
 						<string>saira</string>
 						<key>Weight</key>
 						<array>
@@ -508,7 +519,7 @@
 					</dict>
 					<dict>
 						<key>Name</key>
-						<string>share</string>
+						<string>quicksand</string>
 						<key>Weight</key>
 						<array>
 							<string>SemiBold</string>
@@ -542,17 +553,6 @@
 					<dict>
 						<key>Name</key>
 						<string>ubuntu_mono</string>
-						<key>Weight</key>
-						<array>
-							<string>SemiBold</string>
-							<string>Regular</string>
-						</array>
-						<key>IsLocalFont</key>
-						<false/>
-					</dict>
-					<dict>
-						<key>Name</key>
-						<string>zilla_slab</string>
 						<key>Weight</key>
 						<array>
 							<string>SemiBold</string>
@@ -645,7 +645,7 @@
 				</dict>
 				<dict>
 					<key>MessagePattern</key>
-					<string>can't deliver broadcast</string>
+					<string>can&apos;t deliver broadcast</string>
 					<key>Type</key>
 					<string>RemoteServiceException</string>
 				</dict>
@@ -680,7 +680,7 @@
 				</dict>
 				<dict>
 					<key>MessagePattern</key>
-					<string>Attempt to invoke virtual method 'void android.view.Display.getSize(android.graphics.Point)' on a null object reference</string>
+					<string>Attempt to invoke virtual method &apos;void android.view.Display.getSize(android.graphics.Point)&apos; on a null object reference</string>
 				</dict>
 				<dict>
 					<key>MessagePattern</key>
@@ -701,19 +701,17 @@
 				</dict>
 				<dict>
 					<key>MessagePattern</key>
-					<string>Attempt to read from field 'int android.view.View.mViewFlags' on a null object reference</string>
+					<string>Attempt to read from field &apos;int android.view.View.mViewFlags&apos; on a null object reference</string>
 				</dict>
 				<dict>
 					<key>MessagePattern</key>
-					<string>Attempt to invoke virtual method 'java.lang.String android.content.Context.getOpPackageName()' on a null object reference</string>
+					<string>Attempt to invoke virtual method &apos;java.lang.String android.content.Context.getOpPackageName()&apos; on a null object reference</string>
 				</dict>
 			</array>
 			<key>InviteFriendsGuide</key>
 			<false/>
 			<key>PrivacyPolicyUrl</key>
 			<string>http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/privacy.html</string>
-			<key>PrivateBox</key>
-			<true/>
 			<key>SMSAd</key>
 			<dict>
 				<key>SMSDetailspageFullAd</key>
