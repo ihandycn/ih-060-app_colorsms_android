@@ -433,7 +433,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mFailedStatusIconView.setVisibility(failStatusVisibility);
     }
 
-<<<<<<< HEAD
     private void addSpannable() {
         Drawable pinDrawable = getResources().getDrawable(R.drawable.ic_small_pin);
         Drawable muteDrawable = getResources().getDrawable(R.drawable.ic_small_mute);
@@ -467,13 +466,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             bj--;
         }
         mConversationNameView.setText(sp);
-=======
-        final int notificationBellVisibility = mData.getNotificationEnabled() ? GONE : VISIBLE;
-        mNotificationBellView.setVisibility(notificationBellVisibility);
-        if (!mData.getNotificationEnabled()) {
-           ChatListCustomizeManager.changeViewColorIfNeed(mNotificationBellView);
-        }
->>>>>>> 2c0f36b863eb2c8db9d663cc99ce32a65769ae68
     }
 
     public boolean isSwipeAnimatable() {
