@@ -805,4 +805,9 @@
     <string name="emoji_style_downloading">Đang tải xuống</string>
     <string name="emoji_style_default">Mặc định</string>
 
+
+	<string name="customize_new_guide_title">Tính năng thú vị</string>
+	<string name="customize_new_guide_content">Tùy chỉnh trò chuyện của bạn để khiến nó đặc biệt!</string>
+	<string name="select_image">Chọn hình ảnh</string>
+
 </resources>

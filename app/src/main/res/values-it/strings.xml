@@ -803,4 +803,9 @@
 	<string name="emoji_skin_tone_setting">Colore pelle emoji </string>
     <string name="emoji_style_downloading">Download in corso</string>
     <string name="emoji_style_default">Predefinito</string>
+
+	<string name="customize_new_guide_title">Fantastiche funzionalità</string>
+	<string name="customize_new_guide_content">Personalizza la chat e rendila speciale!</string>
+	<string name="select_image">Seleziona immagine</string>
+
 </resources>

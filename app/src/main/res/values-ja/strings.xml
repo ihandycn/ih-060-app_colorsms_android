@@ -805,4 +805,9 @@
     <string name="emoji_style_downloading">ダウンロード中</string>
     <string name="emoji_style_default">デフォルト</string>
 
+
+	<string name="customize_new_guide_title">おすすめの機能</string>
+	<string name="customize_new_guide_content">カスタマイズでチャットを目立たせよう！</string>
+	<string name="select_image">画像を選択</string>
+
 </resources>

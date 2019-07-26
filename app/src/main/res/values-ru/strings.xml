@@ -851,7 +851,9 @@
 	<string name="emoji_skin_tone_setting">Цвет кожи эмотиконов</string>
     <string name="emoji_style_downloading">Загрузка</string>
     <string name="emoji_style_default">По умолчанию</string>
-    <string name="customize_new_guide_title">Интересные функции</string>
-    <string name="customize_new_guide_content">Настройте свой чат, чтобы сделать его особенным!</string>
+
+	<string name="customize_new_guide_title">Классные функции</string>
+	<string name="customize_new_guide_content">Сделайте свой чат индивидуальным!</string>
+	<string name="select_image">Выбрать изображение</string>
 
 </resources>

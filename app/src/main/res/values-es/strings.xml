@@ -804,6 +804,9 @@
 
     <string name="emoji_long_click"> El tono de máscara predeterminado se puede configurar en Configuración. </string>
 	<string name="emoji_skin_tone_setting">Tono de aspecto de emoji </string>
-    <string name="customize_new_guide_title">Características interesantes</string>
-    <string name="customize_new_guide_content">Personaliza tu chat para que sea especial!</string>
+
+	<string name="customize_new_guide_title">Características geniales</string>
+	<string name="customize_new_guide_content">¡Personaliza tu chat para hacerlo especial!</string>
+	<string name="select_image">Seleccionar imagen</string>
+
 </resources>
