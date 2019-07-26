@@ -90,8 +90,8 @@ import com.android.messaging.ui.wallpaper.WallpaperInfos;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BugleFirebaseAnalytics;
+import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.CreateShortcutUtils;
@@ -699,10 +699,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         View backupEntrance = navigationContent.findViewById(R.id.navigation_item_backup_restore);
         backupEntrance.setOnClickListener(this);
-        if (!BackupAutopilotUtils.getIsBackupSwitchOn()) {
-            backupEntrance.setVisibility(View.GONE);
-        } else {
-            backupEntrance.setVisibility(View.VISIBLE);
+        if (HSApplication.getFirstLaunchInfo().appVersionCode >= 68) {
+            if (!BackupAutopilotUtils.getIsBackupSwitchOn()) {
+                backupEntrance.setVisibility(View.GONE);
+            } else {
+                backupEntrance.setVisibility(View.VISIBLE);
+            }
         }
 
         if (HSConfig.optBoolean(false, "Application", "Subscription", "Enabled")
@@ -1200,17 +1202,17 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     private void preloadAds() {
-            if (AdConfig.isHomepageBannerAdEnabled()) {
-                AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
-            }
+        if (AdConfig.isHomepageBannerAdEnabled()) {
+            AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
+        }
 
-            if (AdConfig.isDetailpageTopAdEnabled()) {
-                AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
-            }
+        if (AdConfig.isDetailpageTopAdEnabled()) {
+            AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
+        }
 
-            if (AdConfig.isExitAdEnabled()){
-                AcbInterstitialAdManager.preload(1, AdPlacement.AD_EXIT_WIRE);
-            }
+        if (AdConfig.isExitAdEnabled()) {
+            AcbInterstitialAdManager.preload(1, AdPlacement.AD_EXIT_WIRE);
+        }
     }
 
 
