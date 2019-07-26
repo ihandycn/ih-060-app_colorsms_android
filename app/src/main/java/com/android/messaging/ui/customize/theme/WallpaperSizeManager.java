@@ -76,7 +76,8 @@ public class WallpaperSizeManager {
             int toolbarStartY = toolbarBitmap.getHeight() - resizedToolbarHeight;
 
             //resize toolbar bitmap
-            Bitmap resizedToolbarBitmap = Bitmap.createBitmap(toolbarBitmap, Math.max(0, startX), toolbarStartY,
+            Bitmap resizedToolbarBitmap = Bitmap.createBitmap(toolbarBitmap, Math.max(0, startX),
+                    Math.max(toolbarStartY, 0),
                     Math.min(resizedWidth, toolbarBitmap.getWidth() - Math.max(0, startX)),
                     Math.min(resizedToolbarHeight, toolbarBitmap.getHeight() - toolbarStartY));
             CommonUtils.saveBitmapToFile(resizedToolbarBitmap, toolbarFile);
