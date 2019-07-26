@@ -38,7 +38,6 @@ import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.UiUtils;
-import com.ihs.commons.utils.HSLog;
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -148,12 +147,10 @@ public class SmsSender {
                     + " resultCode=" + resultCode + " errorCode=" + errorCode);
             String carrierName = PhoneUtils.get(subId).getCarrierName();
             BugleAnalytics.logEvent("SMS_Send_Failed",
-                    "SmsSendResult", "False", "FailCarrierName", PhoneUtils.get(subId).getCarrierName());
-            HSLog.i("crash_test", PhoneUtils.get(subId).getCarrierName());
-
-            if (!TextUtils.isEmpty(PhoneUtils.get(subId).getCarrierName())) {
+                    "SmsSendResult", "False", "FailCarrierName", carrierName);
+            if (!TextUtils.isEmpty(carrierName)) {
                 BugleFirebaseAnalytics.logEvent("SMS_Send_Failed",
-                        "SmsSendResult", "False", "FailCarrierName", PhoneUtils.get(subId).getCarrierName());
+                        "SmsSendResult", "False", "FailCarrierName", carrierName);
             }
             if (errorCode != SendStatusReceiver.NO_ERROR_CODE) {
                 final Context context = Factory.get().getApplicationContext();
