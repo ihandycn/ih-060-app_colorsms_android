@@ -980,6 +980,7 @@
     <string name="welcome_set_default_feature">Other SMS basic features</string>
     <string name="welcome_set_default_failed_toast">Color SMS was not set up properly</string>
 
+    
     <!-- News -->
     <string name="reload">Reload</string>
 
