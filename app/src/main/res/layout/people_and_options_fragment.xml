@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     Copyright (C) 2015 The Android Open Source Project
 
     Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,10 +13,130 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<ListView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@android:id/list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:divider="@null"
-    android:dividerHeight="0px" />
+    android:dividerHeight="0px">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/setting_title_customize"
+            style="@style/SettingTitleStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/menu_group_customization"
+            app:typeface="@string/custom_font_regular" />
+
+        <com.android.messaging.ui.appsettings.GeneralSettingItemView
+            android:id="@+id/setting_item_chat_bubble"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/menu_bubble" />
+
+        <com.android.messaging.ui.appsettings.GeneralSettingItemView
+            android:id="@+id/setting_item_chat_background"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/menu_chat_background" />
+
+        <com.android.messaging.ui.appsettings.GeneralSettingItemView
+            android:id="@+id/setting_item_reset_customization"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:summary="@string/setting_reset_customization_summary"
+            app:title="@string/menu_reset_customization" />
+
+        <View style="@style/SettingDividerStyle" />
+
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/setting_title_notifications"
+            style="@style/SettingTitleStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/notifications_enabled_pref_title"
+            app:typeface="@string/custom_font_regular" />
+
+        <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
+            android:id="@+id/setting_item_notifications"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:summary="@string/notification_summary"
+            app:title="@string/notifications_enabled_pref_title"
+            app:type="switchView" />
+
+        <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
+            android:id="@+id/setting_item_sound"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/notification_sound_pref_title" />
+
+        <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
+            android:id="@+id/setting_item_vibrate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:summary="@string/notification_vibrate_pref_title"
+            app:title="@string/menu_reset_customization"
+            app:type="switchView" />
+
+        <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
+            android:id="@+id/setting_item_privacy_mode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:summary="@string/privacy_mode_hide_message_only"
+            app:title="@string/privacy_mode_settings" />
+
+        <View style="@style/SettingDividerStyle" />
+
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/setting_title_general"
+            style="@style/SettingTitleStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/general_settings"
+            app:typeface="@string/custom_font_regular" />
+
+        <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
+            android:id="@+id/setting_item_pin_to_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/action_pin"
+            app:type="switchView" />
+
+        <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
+            android:id="@+id/setting_item_block"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:title="@string/block_contact_title" />
+
+        <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
+            android:id="@+id/setting_item_delete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:summary="@string/action_delete"
+            app:title="@string/menu_reset_customization" />
+
+        <View style="@style/SettingDividerStyle" />
+
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/setting_title_participant_list"
+            style="@style/SettingTitleStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/participant_list_title"
+            app:typeface="@string/custom_font_regular" />
+
+        <LinearLayout
+            android:id="@+id/participant_list_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+    </LinearLayout>
+</ScrollView>

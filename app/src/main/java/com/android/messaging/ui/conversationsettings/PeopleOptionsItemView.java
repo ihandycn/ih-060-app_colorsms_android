@@ -23,6 +23,7 @@ import android.util.AttributeSet;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.data.PeopleOptionsItemData;
+import com.android.messaging.ui.appsettings.GeneralSettingItemView;
 import com.android.messaging.ui.appsettings.SettingItemView;
 import com.android.messaging.util.Assert;
 
@@ -32,7 +33,7 @@ import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING
 /**
  * The view for a single entry in the options section of people & options activity.
  */
-public class PeopleOptionsItemView extends SettingItemView {
+public class PeopleOptionsItemView extends GeneralSettingItemView {
     /**
      * Implemented by the host of this view that handles options click event.
      */

@@ -18,7 +18,6 @@ package com.android.messaging.ui.conversationsettings;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -31,10 +30,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
@@ -46,12 +41,12 @@ import com.android.messaging.datamodel.data.ParticipantListItemData;
 import com.android.messaging.datamodel.data.PeopleAndOptionsData;
 import com.android.messaging.datamodel.data.PeopleAndOptionsData.PeopleAndOptionsDataListener;
 import com.android.messaging.datamodel.data.PeopleOptionsItemData;
-import com.android.messaging.datamodel.data.PersonItemData;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.BaseDialogFragment;
-import com.android.messaging.ui.CompositeAdapter;
 import com.android.messaging.ui.PersonItemView;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.appsettings.BaseItemView;
+import com.android.messaging.ui.appsettings.GeneralSettingItemView;
 import com.android.messaging.ui.appsettings.SelectPrivacyModeDialog;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
@@ -62,16 +57,18 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Toasts;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTINGS_PIN;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_ADD_CONTACT;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_DELETE;
+import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_NOTIFICATION_ENABLED;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_NOTIFICATION_SOUND_URI;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_NOTIFICATION_VIBRATION;
+import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_PRIVACY_MODE;
 import static com.android.messaging.ui.conversation.ConversationActivity.DELETE_CONVERSATION_RESULT_CODE;
 import static com.android.messaging.ui.conversation.ConversationActivity.FINISH_RESULT_CODE;
 import static com.android.messaging.ui.conversation.ConversationFragment.EVENT_UPDATE_BUBBLE_DRAWABLE;
@@ -81,16 +78,26 @@ import static com.android.messaging.ui.conversation.ConversationFragment.EVENT_U
  */
 public class PeopleAndOptionsFragment extends Fragment
         implements PeopleAndOptionsDataListener, PeopleOptionsItemView.HostInterface, WallpaperManager.WallpaperChangeListener {
-    private ListView mListView;
-    private OptionsListAdapter mOptionsListAdapter;
-    private PeopleListAdapter mPeopleListAdapter;
-    private final Binding<PeopleAndOptionsData> mBinding =
-            BindingBase.createBinding(this);
+
+    private final Binding<PeopleAndOptionsData> mBinding = BindingBase.createBinding(this);
     private String mConversationId;
     private String mRingtone;
 
     private static final int REQUEST_CODE_RINGTONE_PICKER = 1000;
-    private ParticipantData mOtherParticipantData;
+    private ParticipantData mOtherParticipantData;  // TODO: 2019-07-26
+
+    private GeneralSettingItemView mBubbleItemView;
+    private GeneralSettingItemView mChatBgItemView;
+    private GeneralSettingItemView mResetItemView;
+    private PeopleOptionsItemView mNotificationItemView;
+    private PeopleOptionsItemView mSoundItemView;
+    private PeopleOptionsItemView mVibrateItemView;
+    private PeopleOptionsItemView mPrivacyModeItemView;
+    private PeopleOptionsItemView mPinItemView;
+    private PeopleOptionsItemView mBlockItemView;
+    private PeopleOptionsItemView mDeleteItemView;
+    private ViewGroup mParticipantContainer;
+    private Cursor mCursor;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -103,18 +110,52 @@ public class PeopleAndOptionsFragment extends Fragment
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.people_and_options_fragment, container, false);
-        mListView = view.findViewById(android.R.id.list);
-        mPeopleListAdapter = new PeopleListAdapter(getActivity());
-        mOptionsListAdapter = new OptionsListAdapter();
-        CustomizeListAdapter adapter = new CustomizeListAdapter(getActivity());
+        mBubbleItemView = view.findViewById(R.id.setting_item_chat_bubble);
+        mChatBgItemView = view.findViewById(R.id.setting_item_chat_background);
+        mResetItemView = view.findViewById(R.id.setting_item_reset_customization);
+        mNotificationItemView = view.findViewById(R.id.setting_item_notifications);
+        mSoundItemView = view.findViewById(R.id.setting_item_sound);
+        mVibrateItemView = view.findViewById(R.id.setting_item_vibrate);
+        mPrivacyModeItemView = view.findViewById(R.id.setting_item_privacy_mode);
+        mPinItemView = view.findViewById(R.id.setting_item_pin_to_top);
+        mBlockItemView = view.findViewById(R.id.setting_item_block);
+        mDeleteItemView = view.findViewById(R.id.setting_item_delete);
+        mParticipantContainer = view.findViewById(R.id.participant_list_container);
 
-        final CompositeAdapter compositeAdapter = new CompositeAdapter(getActivity());
-        compositeAdapter.addPartition(new PeopleAndOptionsPartition(adapter, R.string.menu_group_customization, false));
-        compositeAdapter.addPartition(new PeopleAndOptionsPartition(mOptionsListAdapter,
-                R.string.general_settings_title, false));
-        compositeAdapter.addPartition(new PeopleAndOptionsPartition(mPeopleListAdapter,
-                R.string.participant_list_title, false));
-        mListView.setAdapter(compositeAdapter);
+        Activity activity = getActivity();
+        mChatBgItemView.setOnItemClickListener(new BaseItemView.OnSettingItemClickListener() {
+            @Override
+            public void onClick() {
+                WallpaperPreviewActivity.startWallpaperPreviewByConversationId(activity, mConversationId);
+            }
+        });
+        mResetItemView.setOnItemClickListener(new BaseItemView.OnSettingItemClickListener() {
+            @Override
+            public void onClick() {
+                new BaseAlertDialog.Builder(getActivity())
+                        .setTitle(getResources().getString(R.string.setting_reset_customization_title))
+                        .setPositiveButton(R.string.reset_customization_confirmation_button, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ConversationColors.get().resetConversationCustomization(mConversationId);
+                                BubbleDrawables.resetConversationCustomization(mConversationId);
+                                WallpaperManager.resetConversationCustomization(mConversationId);
+                                BugleAnalytics.logEvent("Customize_Chat_Reset", true);
+
+                                HSGlobalNotificationCenter.sendNotification(EVENT_UPDATE_BUBBLE_DRAWABLE);
+                            }
+                        })
+                        .setNegativeButton(R.string.reset_customization_decline_button, null)
+                        .show();
+            }
+        });
+
+        mBubbleItemView.setOnItemClickListener(new BaseItemView.OnSettingItemClickListener() {
+            @Override
+            public void onClick() {
+                UIIntents.get().launchCustomBubblesActivity(activity, mConversationId);
+            }
+        });
         return view;
     }
 
@@ -128,7 +169,7 @@ public class PeopleAndOptionsFragment extends Fragment
             mBinding.getData().setConversationNotificationSound(mBinding, pickedUri);
             if (pickedUri != null && !pickedUri.equals(mRingtone)) {
                 BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, "from", "chat");
-                BugleFirebaseAnalytics.logEvent("Customize_Notification_Sound_Change",  "from", "chat");
+                BugleFirebaseAnalytics.logEvent("Customize_Notification_Sound_Change", "from", "chat");
             }
         }
     }
@@ -143,25 +184,55 @@ public class PeopleAndOptionsFragment extends Fragment
     public void setConversationId(final String conversationId) {
         Assert.isTrue(getView() == null);
         Assert.notNull(conversationId);
-        mBinding.bind(DataModel.get().createPeopleAndOptionsData(conversationId, getActivity(),
-                this));
+        mBinding.bind(DataModel.get().createPeopleAndOptionsData(conversationId, getActivity(), this));
         mConversationId = conversationId;
     }
 
     @Override
     public void onOptionsCursorUpdated(final PeopleAndOptionsData data, final Cursor cursor) {
         mBinding.ensureBound(data);
-        mOptionsListAdapter.swapCursor(cursor);
+        HSLog.d("conversation_setting_test", "onOptionCursorUpdated:  ");
+
+        Cursor oldCursor = mCursor;
+        if (cursor == oldCursor) {
+            return;
+        }
+        mCursor = cursor;
+        if (mCursor == null) {
+            return;
+        }
+        cursor.moveToFirst();
+        boolean isGroup = isGroup();
+        boolean addContactVisble = addContactVisble();
+        mPinItemView.bind(cursor, SETTINGS_PIN, mOtherParticipantData, PeopleAndOptionsFragment.this,
+                isGroup, addContactVisble, mConversationId);
+        mNotificationItemView.bind(cursor, SETTING_NOTIFICATION_ENABLED, mOtherParticipantData, PeopleAndOptionsFragment.this,
+                isGroup, addContactVisble, mConversationId);
+        mPrivacyModeItemView.bind(cursor, SETTING_PRIVACY_MODE, mOtherParticipantData, PeopleAndOptionsFragment.this,
+                isGroup, addContactVisble, mConversationId);
+        mSoundItemView.bind(cursor, SETTING_NOTIFICATION_SOUND_URI, mOtherParticipantData, PeopleAndOptionsFragment.this,
+                isGroup, addContactVisble, mConversationId);
+        mVibrateItemView.bind(cursor, SETTING_NOTIFICATION_VIBRATION, mOtherParticipantData, PeopleAndOptionsFragment.this,
+                isGroup, addContactVisble, mConversationId);
+        mDeleteItemView.bind(cursor, SETTING_DELETE, mOtherParticipantData, PeopleAndOptionsFragment.this,
+                isGroup, addContactVisble, mConversationId);
     }
 
     @Override
     public void onParticipantsListLoaded(final PeopleAndOptionsData data,
                                          final List<ParticipantData> participants) {
         mBinding.ensureBound(data);
-        mPeopleListAdapter.updateParticipants(participants);
-        final ParticipantData otherParticipant = participants.size() == 1 ?
+        HSLog.d("conversation_setting_test", "onParticipantsListLoaded:  " + participants.size());
+        Activity activity = getActivity();
+        for (ParticipantData item : participants) {
+            PersonItemView itemView = (PersonItemView) LayoutInflater.from(activity).inflate(R.layout.people_list_item_view, mParticipantContainer, false);
+            ParticipantListItemData itemData = DataModel.get().createParticipantListItemData(item);
+            itemView.bind(itemData);
+            mParticipantContainer.addView(itemView);
+        }
+        // TODO: 2019-07-29 bind mBlockItemView
+        mOtherParticipantData = participants.size() == 1 ?
                 participants.get(0) : null;
-        mOptionsListAdapter.setOtherParticipant(otherParticipant);
     }
 
     @Override
@@ -187,7 +258,7 @@ public class PeopleAndOptionsFragment extends Fragment
                 selectPrivacyModeDialog.setOnDismissOrCancelListener(new BaseDialogFragment.OnDismissOrCancelListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        mOptionsListAdapter.notifyDataSetChanged();
+                        // TODO: 2019-07-26
                     }
 
                     @Override
@@ -277,220 +348,13 @@ public class PeopleAndOptionsFragment extends Fragment
         }
     }
 
-    private class CustomizeListAdapter extends BaseAdapter {
-
-        private Context mContext;
-
-        CustomizeListAdapter(Context context) {
-            mContext = context;
-        }
-
-        @Override
-        public int getCount() {
-            return 1;
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(final int position, final View convertView, final ViewGroup parent) {
-            final LayoutInflater inflater = (LayoutInflater) mContext
-                    .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            View itemView = inflater.inflate(R.layout.conversation_option_customize, parent, false);
-
-            itemView.findViewById(R.id.chat_background).setOnClickListener(v -> {
-                WallpaperPreviewActivity.startWallpaperPreviewByConversationId(mContext, mConversationId);
-            });
-
-            itemView.findViewById(R.id.reset_customization).setOnClickListener(v -> {
-                new BaseAlertDialog.Builder(getActivity())
-                        .setTitle(getResources().getString(R.string.setting_reset_customization_title))
-                        .setPositiveButton(R.string.reset_customization_confirmation_button, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ConversationColors.get().resetConversationCustomization(mConversationId);
-                                BubbleDrawables.resetConversationCustomization(mConversationId);
-                                WallpaperManager.resetConversationCustomization(mConversationId);
-                                BugleAnalytics.logEvent("Customize_Chat_Reset", true);
-
-                                HSGlobalNotificationCenter.sendNotification(EVENT_UPDATE_BUBBLE_DRAWABLE);
-                            }
-                        })
-                        .setNegativeButton(R.string.reset_customization_decline_button, null)
-                        .show();
-            });
-
-            itemView.findViewById(R.id.chat_bubble).setOnClickListener(v ->
-                    UIIntents.get().launchCustomBubblesActivity(mContext, mConversationId));
-            return itemView;
-        }
+    private boolean addContactVisble() {
+        return (mOtherParticipantData != null
+                && TextUtils.isEmpty(mOtherParticipantData.getLookupKey()));
     }
 
-    /**
-     * A simple adapter that takes a conversation metadata cursor and binds
-     * PeopleAndOptionsItemViews to individual COLUMNS of the first cursor record. (Note
-     * that this is not a CursorAdapter because it treats individual columns of the cursor as
-     * separate options to display for the conversation, e.g. notification settings).
-     */
-    private class OptionsListAdapter extends BaseAdapter {
-        private Cursor mOptionsCursor;
-
-        public Cursor swapCursor(final Cursor newCursor) {
-            final Cursor oldCursor = mOptionsCursor;
-            if (newCursor != oldCursor) {
-                mOptionsCursor = newCursor;
-                notifyDataSetChanged();
-            }
-            return oldCursor;
-        }
-
-        public void setOtherParticipant(final ParticipantData participantData) {
-            if (mOtherParticipantData != participantData) {
-                mOtherParticipantData = participantData;
-                notifyDataSetChanged();
-            }
-        }
-
-        @Override
-        public int getCount() {
-            int count = PeopleOptionsItemData.SETTINGS_COUNT;
-            if (mOtherParticipantData == null) {
-                count--;
-            }
-            if (isGroup()) {
-                count = count - 2;
-            } else {
-                if (!addContactVisble()) {
-                    count--;
-                }
-            }
-            return mOptionsCursor == null ? 0 : count;
-        }
-
-        @Override
-        public Object getItem(final int position) {
-            return null;
-        }
-
-        @Override
-        public long getItemId(final int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(final int position, final View convertView, final ViewGroup parent) {
-            final PeopleOptionsItemView itemView;
-            if (convertView != null && convertView instanceof PeopleOptionsItemView) {
-                itemView = (PeopleOptionsItemView) convertView;
-            } else {
-                final LayoutInflater inflater = (LayoutInflater) getActivity()
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                itemView = (PeopleOptionsItemView)
-                        inflater.inflate(R.layout.people_options_item_view, parent, false);
-            }
-            mOptionsCursor.moveToFirst();
-
-            itemView.bind(mOptionsCursor, position, mOtherParticipantData, PeopleAndOptionsFragment.this,
-                    isGroup(), addContactVisble(), mConversationId);
-            return itemView;
-        }
-
-        private boolean addContactVisble() {
-            return (mOtherParticipantData != null
-                    && TextUtils.isEmpty(mOtherParticipantData.getLookupKey()));
-        }
-
-        private boolean isGroup() {
-            return mOtherParticipantData == null;
-        }
-
+    private boolean isGroup() {
+        return mOtherParticipantData == null;
     }
 
-    /**
-     * An adapter that takes a list of ParticipantData and displays them as a list of
-     * ParticipantListItemViews.
-     */
-    private class PeopleListAdapter extends ArrayAdapter<ParticipantData> {
-        public PeopleListAdapter(final Context context) {
-            super(context, R.layout.people_list_item_view, new ArrayList<>());
-        }
-
-        public void updateParticipants(final List<ParticipantData> newList) {
-            clear();
-            addAll(newList);
-            notifyDataSetChanged();
-        }
-
-        @Override
-        public View getView(final int position, final View convertView, final ViewGroup parent) {
-            PersonItemView itemView;
-            final ParticipantData item = getItem(position);
-            if (convertView != null && convertView instanceof PersonItemView) {
-                itemView = (PersonItemView) convertView;
-            } else {
-                final LayoutInflater inflater = (LayoutInflater) getContext()
-                        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                itemView = (PersonItemView) inflater.inflate(R.layout.people_list_item_view, parent,
-                        false);
-            }
-            final ParticipantListItemData itemData =
-                    DataModel.get().createParticipantListItemData(item);
-            itemView.bind(itemData);
-
-            // Any click on the row should have the same effect as clicking the avatar icon
-            final PersonItemView itemViewClosure = itemView;
-            itemView.setListener(new PersonItemView.PersonItemViewListener() {
-                @Override
-                public void onPersonClicked(final PersonItemData data) {
-                    itemViewClosure.performClickOnAvatar();
-                }
-
-                @Override
-                public boolean onPersonLongClicked(PersonItemData data) {
-                    return false;
-                }
-            });
-            return itemView;
-        }
-    }
-
-    /**
-     * Represents a partition/section in the People & Options list (e.g. "general options" and
-     * "people in this conversation" sections).
-     */
-    private class PeopleAndOptionsPartition extends CompositeAdapter.Partition {
-        private final int mHeaderResId;
-        private final boolean mNeedDivider;
-
-        public PeopleAndOptionsPartition(final BaseAdapter adapter, final int headerResId,
-                                         final boolean needDivider) {
-            super(true /* showIfEmpty */, true /* hasHeader */, adapter);
-            mHeaderResId = headerResId;
-            mNeedDivider = needDivider;
-        }
-
-        @Override
-        public View getHeaderView(final View convertView, final ViewGroup parentView) {
-            View view;
-            if (convertView != null && convertView.getId() == R.id.people_and_options_header) {
-                view = convertView;
-            } else {
-                view = LayoutInflater.from(getActivity()).inflate(
-                        R.layout.people_and_options_section_header, parentView, false);
-            }
-            final TextView text = view.findViewById(R.id.header_text);
-            final View divider = view.findViewById(R.id.divider);
-            text.setText(mHeaderResId);
-            divider.setVisibility(mNeedDivider ? View.VISIBLE : View.GONE);
-            return view;
-        }
-    }
 }
