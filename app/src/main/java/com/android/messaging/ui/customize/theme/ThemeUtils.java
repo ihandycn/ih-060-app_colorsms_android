@@ -22,6 +22,7 @@ import com.android.messaging.util.BuglePrefsKeys;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
 import java.io.File;
@@ -86,26 +87,28 @@ public class ThemeUtils {
         }
         ChatListCustomizeManager.resetAllCustomData();
         FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
-
-        ThemeDownloadManager.getInstance().copyFileFromAssetsSync(themeInfo,
-                new ThemeDownloadManager.IThemeMoveListener() {
-                    @Override
-                    public void onMoveSuccess() {
-                        FontUtils.onFontTypefaceChanged();
-
-                        WallpaperSizeManager.resizeThemeBitmap(themeInfo);
-
-                        if (endRunnable != null) {
-                            Threads.postOnMainThread(endRunnable);
-                        }
-                    }
-
-                    @Override
-                    public void onMoveFailed() {
-
-                    }
-                });
-
+//
+//        ThemeDownloadManager.getInstance().copyFileFromAssetsSync(themeInfo,
+//                new ThemeDownloadManager.IThemeMoveListener() {
+//                    @Override
+//                    public void onMoveSuccess() {
+//                        FontUtils.onFontTypefaceChanged();
+//
+//                        //WallpaperSizeManager.resizeThemeBitmap(themeInfo);
+//
+//                        if (endRunnable != null) {
+//                            Threads.postOnMainThread(endRunnable);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onMoveFailed() {
+//
+//                    }
+//                });
+        if (endRunnable != null) {
+            Threads.postOnMainThread(endRunnable);
+        }
         Factory.get().reclaimMemory();
     }
 
@@ -145,14 +148,16 @@ public class ThemeUtils {
 
             FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
 
-            if (themeInfo.mIsLocalTheme) {
+            String copyKey = ThemeDownloadManager.getInstance().getPrefKeyByThemeName(themeInfo.mThemeKey);
+            if (themeInfo.mIsLocalTheme
+                    && !Preferences.getDefault().getBoolean(copyKey, false)) {
                 ThemeDownloadManager.getInstance().copyFileFromAssetsSync(themeInfo,
                         new ThemeDownloadManager.IThemeMoveListener() {
                             @Override
                             public void onMoveSuccess() {
                                 WallpaperSizeManager.resizeThemeBitmap(themeInfo);
+                                Preferences.getDefault().putBoolean(copyKey, true);
                                 FontUtils.onFontTypefaceChanged();
-
                                 Threads.postOnMainThread(() ->
                                         HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
                             }
@@ -164,7 +169,6 @@ public class ThemeUtils {
                         });
             } else {
                 FontUtils.onFontTypefaceChanged();
-
                 Threads.postOnMainThread(() ->
                         HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
             }

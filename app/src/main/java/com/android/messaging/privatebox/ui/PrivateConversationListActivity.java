@@ -33,6 +33,7 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.customize.mainpage.ChatListCustomizeManager;
 import com.android.messaging.util.BugleAnalytics;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.superapps.util.Dimensions;
@@ -165,7 +166,7 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         }
 
         if (mActionMode == null && getSupportActionBar() != null) {
-            Drawable drawable = getDrawable(R.drawable.ic_back).mutate();
+            Drawable drawable = HSApplication.getContext().getResources().getDrawable(R.drawable.ic_back).mutate();
             ChatListCustomizeManager.changeDrawableColorIfNeed(drawable);
             getSupportActionBar().setHomeAsUpIndicator(drawable);
         }

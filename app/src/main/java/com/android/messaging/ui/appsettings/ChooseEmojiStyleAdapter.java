@@ -21,6 +21,7 @@ import com.android.messaging.util.OsUtil;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Networks;
 
 import java.lang.ref.WeakReference;
 import java.util.List;
@@ -33,11 +34,11 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
     private Context mContext;
 
     private ColorStateList colorStateList = new ColorStateList(
-            new int[][] {
+            new int[][]{
                     new int[]{-android.R.attr.state_checked},
                     new int[]{android.R.attr.state_checked}
             },
-            new int[] {
+            new int[]{
                     0xffa5abb1
                     , PrimaryColors.getPrimaryColor(),
             }
@@ -60,7 +61,7 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
         int position = holder.getAdapterPosition();
         EmojiStyleItem item = mDataList.get(position);
         holder.nameText.setText(item.name);
-        if(!item.isInit) {
+        if (!item.isInit) {
             holder.itemView.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff,
                     HSApplication.getContext().getResources().getColor(com.superapps.R.color.ripples_ripple_color),
                     0, true, true));
@@ -73,7 +74,20 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
         if (item.isSystem) {
             holder.sampleImage.setImageDrawable(new SystemEmojiStylePreview());
         } else {
-            GlideApp.with(holder.sampleImage).load(item.sampleImageUrl).into(holder.sampleImage);
+            switch (item.name) {
+                case "Android Blob":
+                    holder.sampleImage.setImageResource(R.drawable.emoji_style_blob);
+                    break;
+                case "Android Pie":
+                    holder.sampleImage.setImageResource(R.drawable.emoji_style_pie);
+                    break;
+                case "Android Twitter":
+                    holder.sampleImage.setImageResource(R.drawable.emoji_style_twitter);
+                    break;
+                default:
+                    GlideApp.with(holder.sampleImage).load(item.sampleImageUrl).into(holder.sampleImage);
+                    break;
+            }
         }
         // selected it
         if (position == mLastItem) {
@@ -110,6 +124,13 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
         View.OnClickListener clickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean network = Networks.isNetworkAvailable(-1);
+                boolean isSystem = item.name.equals(EmojiManager.EMOJI_STYLE_SYSTEM);
+                if (!isSystem && !network && !item.isDownloaded) {
+                    Context context = HSApplication.getContext();
+                    Toast.makeText(context, context.getResources().getString(R.string.sms_network_error), Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 int lastPos = mLastItem;
                 mLastItem = holder.getAdapterPosition();
                 notifyItemChanged(holder.getAdapterPosition());
@@ -163,7 +184,7 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
         private int position;
         private EmojiStyleItem item;
 
-        UiDownloadCallback(ChooseEmojiStyleAdapter outer, EmojiStyleItem item, int position){
+        UiDownloadCallback(ChooseEmojiStyleAdapter outer, EmojiStyleItem item, int position) {
             this.outer = new WeakReference<>(outer);
             this.position = position;
             this.item = item;
@@ -179,7 +200,7 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
         @Override
         public void onSuccess(EmojiStyleDownloadManager.EmojiStyleDownloadTask task) {
             item.isDownloaded = true;
-            if(outer.get() != null) {
+            if (outer.get() != null) {
                 outer.get().notifyItemChanged(position);
             }
         }
@@ -187,7 +208,7 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
         @Override
         public void onUpdate(long downloadSize, long totalSize) {
             item.downloadPercent = (int) (downloadSize * 100 / (float) totalSize);
-            if(outer.get() != null) {
+            if (outer.get() != null) {
                 outer.get().notifyItemChanged(position);
             }
         }

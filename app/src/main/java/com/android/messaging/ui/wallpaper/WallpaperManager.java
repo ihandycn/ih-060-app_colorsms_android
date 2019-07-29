@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import com.android.messaging.Factory;
 import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.BuglePrefs;
+import com.android.messaging.util.TextUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -141,18 +142,6 @@ public class WallpaperManager {
         return TextUtils.isEmpty(path) || path.equals("empty");
     }
 
-    public static String getThreadWallpaperPath(String threadId) {
-        String threadWallpaperPath = sPrefs.
-                getString(PREF_KEY_WALLPAPER_PATH + "_" + threadId, "");
-        if (!TextUtils.isEmpty(threadWallpaperPath)) {
-            if (threadWallpaperPath.equals("empty")) {
-                return null;
-            }
-            return threadWallpaperPath;
-        }
-        return null;
-    }
-
     public static void resetConversationCustomization(String threadId) {
         sPrefs.remove(PREF_KEY_WALLPAPER_PATH + "_" + threadId);
     }
@@ -164,7 +153,7 @@ public class WallpaperManager {
     private static String getWallpaperPath() {
         String wallpaperPath = sPrefs.
                 getString(PREF_KEY_WALLPAPER_PATH, "");
-        if (wallpaperPath != null && !wallpaperPath.equals("")) {
+        if (!TextUtils.isEmpty(wallpaperPath)) {
             return wallpaperPath;
         } else {
             return null;

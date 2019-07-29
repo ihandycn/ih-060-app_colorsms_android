@@ -76,13 +76,18 @@ public class WallpaperSizeManager {
             int toolbarStartY = toolbarBitmap.getHeight() - resizedToolbarHeight;
 
             //resize toolbar bitmap
-            Bitmap resizedToolbarBitmap = Bitmap.createBitmap(toolbarBitmap, Math.max(0, startX), toolbarStartY,
-                    resizedWidth, resizedToolbarHeight);
+            Bitmap resizedToolbarBitmap = Bitmap.createBitmap(toolbarBitmap, Math.max(0, startX),
+                    Math.max(toolbarStartY, 0),
+                    Math.min(resizedWidth, toolbarBitmap.getWidth() - Math.max(0, startX)),
+                    Math.min(resizedToolbarHeight, toolbarBitmap.getHeight() - Math.max(toolbarStartY, 0)));
             CommonUtils.saveBitmapToFile(resizedToolbarBitmap, toolbarFile);
 
             //resize wallpaper
-            Bitmap resizedWallpaper = Bitmap.createBitmap(wallpaperBitmap, Math.max(0, startX), 0,
-                    resizedWidth, Math.min(resizedWallpaperHeight, wallpaperBitmap.getHeight()));
+            Bitmap resizedWallpaper = Bitmap.createBitmap(wallpaperBitmap,
+                    Math.max(0, startX),
+                    0,
+                    Math.min(resizedWidth, wallpaperBitmap.getWidth() - Math.max(0, startX)),
+                    Math.min(resizedWallpaperHeight, wallpaperBitmap.getHeight()));
             CommonUtils.saveBitmapToFile(resizedWallpaper, wallpaperFile);
 
             //resize and replace wallpaper for list activity
@@ -96,8 +101,11 @@ public class WallpaperSizeManager {
             if (listWallpaperBitmap == null) {
                 return;
             }
-            Bitmap resizedListWallpaper = Bitmap.createBitmap(listWallpaperBitmap, Math.max(0, startX), 0,
-                    resizedWidth, Math.min(resizedWallpaperHeight, listWallpaperBitmap.getHeight()));
+            Bitmap resizedListWallpaper = Bitmap.createBitmap(listWallpaperBitmap,
+                    Math.max(0, startX),
+                    0,
+                    Math.min(resizedWidth, listWallpaperBitmap.getWidth() - Math.max(0, startX)),
+                    Math.min(resizedWallpaperHeight, listWallpaperBitmap.getHeight()));
             CommonUtils.saveBitmapToFile(resizedListWallpaper, listWallpaperFile);
         }
     }

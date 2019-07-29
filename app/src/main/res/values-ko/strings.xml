@@ -803,4 +803,9 @@
     <string name="emoji_style_downloading">다운로드 중</string>
     <string name="emoji_style_default">기본</string>
 
+
+	<string name="customize_new_guide_title">멋진 기능</string>
+	<string name="customize_new_guide_content">채팅을 꾸며서 특별하게 만드세요!</string>
+	<string name="select_image">이미지 선택</string>
+
 </resources>

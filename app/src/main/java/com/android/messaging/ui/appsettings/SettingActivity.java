@@ -57,7 +57,7 @@ public class SettingActivity extends BaseActivity {
     private GeneralSettingItemView mSmsShowView;
     private GeneralSettingItemView mNotificationView;
     private GeneralSettingItemView mPopUpsView;
-    private GeneralSettingItemView mSignature;
+    private SignatureItemView mSignature;
     private GeneralSettingItemView mSoundView;
     private GeneralSettingItemView mVibrateView;
     private GeneralSettingItemView mPrivacyModeView;

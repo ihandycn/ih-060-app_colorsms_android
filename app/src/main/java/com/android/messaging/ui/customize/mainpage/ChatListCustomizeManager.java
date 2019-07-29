@@ -228,6 +228,10 @@ public class ChatListCustomizeManager {
             int height = Dimensions.getPhoneHeight(HSApplication.getContext());
             int width = Dimensions.getPhoneWidth(HSApplication.getContext());
 
+            if (bgBitmap == null || bgBitmap.getWidth() == 0 || bgBitmap.getHeight() == 0) {
+                return;
+            }
+
             int bitmapHeight = bgBitmap.getHeight();
             int bitmapWidth = bgBitmap.getWidth();
 
@@ -242,16 +246,18 @@ public class ChatListCustomizeManager {
             } else {
                 if (height * bitmapWidth < width * bitmapHeight) {
                     resizeHeight = (int) (bitmapWidth * height * 1.0f / width);
-                    top = bitmapHeight / 2 - resizeHeight / 2;
+                    top = Math.max(bitmapHeight / 2 - resizeHeight / 2, 0);
                 } else {
                     resizeWidth = (int) (bitmapHeight * width * 1.0f / height);
-                    left = bitmapWidth / 2 - resizeWidth / 2;
+                    left = Math.max(bitmapWidth / 2 - resizeWidth / 2, 0);
                 }
-                resizedBitmap = Bitmap.createBitmap(bgBitmap, left, top, resizeWidth, resizeHeight);
+                resizedBitmap = Bitmap.createBitmap(bgBitmap, left, top,
+                        Math.min(resizeWidth, bitmapWidth - left),
+                        Math.min(resizeHeight, bitmapHeight - top));
             }
 
             if (opacity > 0) {
-                Bitmap bmp = Bitmap.createBitmap(resizeWidth, resizeHeight, Bitmap.Config.ARGB_8888);
+                Bitmap bmp = Bitmap.createBitmap(resizedBitmap.getWidth(), resizedBitmap.getHeight(), Bitmap.Config.ARGB_8888);
                 Canvas canvas = new Canvas(bmp);
                 canvas.drawBitmap(resizedBitmap, 0, 0, null);
                 int coverColor = ((int) (opacity * 255) << 24) | 0x00FFFFFF;
@@ -267,7 +273,7 @@ public class ChatListCustomizeManager {
 
             cutPointY++;
             Bitmap wallpaper = Bitmap.createBitmap(resizedBitmap, 0, cutPointY, resizedBitmap.getWidth(),
-                    resizedBitmap.getHeight() - cutPointY);
+                    Math.max(resizedBitmap.getHeight() - cutPointY, 0));
             CommonUtils.saveBitmapToFile(wallpaper, customWallpaperFile);
         }
 

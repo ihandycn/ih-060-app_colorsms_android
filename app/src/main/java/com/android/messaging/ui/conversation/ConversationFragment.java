@@ -564,7 +564,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                         Intent.EXTRA_STREAM, attachmentToShare.getContentUri());
                 shareIntent.setType(attachmentToShare.getContentType());
             }
-            final CharSequence title = getResources().getText(R.string.action_share);
+            final CharSequence title = HSApplication.getContext().getResources().getText(R.string.action_share);
             startActivity(Intent.createChooser(shareIntent, title));
             Threads.postOnMainThreadDelayed(() -> resetActionModeAndAnimation(), 500);
         }
@@ -627,7 +627,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFastFlingThreshold = getResources().getDimensionPixelOffset(
+        mFastFlingThreshold = HSApplication.getContext().getResources().getDimensionPixelOffset(
                 R.dimen.conversation_fast_fling_threshold);
         mSelectMessageDataList = new ArrayList<>();
         if (selectMessageIds != null) {
@@ -760,7 +760,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mAdContentView.setAdActionView(actionBtn);
         int actionColor = Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).listTimeColor);
         actionBtn.setTextColor(actionColor);
-        Drawable actionBg = getResources().getDrawable(R.drawable.conversation_list_ad_action_pressed_bg);
+        Drawable actionBg = HSApplication.getContext().getResources().getDrawable(R.drawable.conversation_list_ad_action_pressed_bg);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             ((LayerDrawable) actionBg).getDrawable(1)
                     .setColorFilter(actionColor, PorterDuff.Mode.SRC_IN);

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.MediaPickerMessagePartData;
@@ -68,10 +69,10 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
     private List<EmojiPackageInfo> mStickerData = new ArrayList<>();
 
     private int mCurrentPos = -1;
-    private EmojiPagerFragment mEmojiFragment = new EmojiPagerFragment();
-    private EmojiPagerFragment mStickFragment = new EmojiPagerFragment();
-    private EmojiPagerFragment mGiphyFragment = new EmojiPagerFragment();
-    private EmojiPagerFragment[] mFragments = new EmojiPagerFragment[]{mEmojiFragment, mStickFragment, mGiphyFragment};
+    private EmojiPagerFragment mEmojiFragment;
+    private EmojiPagerFragment mStickFragment;
+    private EmojiPagerFragment mGiphyFragment;
+    private EmojiPagerFragment[] mFragments;
     private ViewGroup mContainer;
 
 
@@ -148,15 +149,17 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mIsViewCreated = true;
-        if (mIsDataPrepared && mIsAnimationFinished) {
-            loadData();
-        }
+
     }
 
     private void initView(View view) {
         mTabLayout = view.findViewById(R.id.emoji_tab_layout);
         Activity activity = getActivity();
+
+        mEmojiFragment = new EmojiPagerFragment();
+        mStickFragment = new EmojiPagerFragment();
+        mGiphyFragment = new EmojiPagerFragment();
+        mFragments = new EmojiPagerFragment[]{mEmojiFragment, mStickFragment, mGiphyFragment};
         mEmojiFragment.initData(activity, EmojiPackageType.EMOJI, EmojiDataProducer.getInitEmojiData(activity), mOnEmojiClickListener);
         if (!mIsOnlyEmoji) {
             mStickFragment.initData(activity, EmojiPackageType.STICKER, EmojiDataProducer.getInitStickerData(activity), mOnEmojiClickListener);
@@ -195,6 +198,10 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
                 if(mCurrentPos == position){
                     return ;
                 }
+                
+                if(!mIsOnlyEmoji && position == EMOJI_PAGE_INDEX && EmojiManager.isFirstEmojiPageClick()){
+                    Toast.makeText(activity, activity.getResources().getString(R.string.emoji_page_first_click), Toast.LENGTH_LONG).show();
+                }
                 FragmentManager fm = getChildFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 Fragment to = mFragments[position];
@@ -226,6 +233,11 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
             int position = EmojiManager.getDefaultMainPosition();
             showOrHideDeleteView(deleteView, position);
             mTabLayout.select(position);
+        }
+
+        mIsViewCreated = true;
+        if (mIsDataPrepared && mIsAnimationFinished) {
+            loadData();
         }
     }
 

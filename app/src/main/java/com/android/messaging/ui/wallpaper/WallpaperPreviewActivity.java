@@ -117,6 +117,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wallpaper_preview);
+        mConversationId = getIntent().getStringExtra("conversation_id");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -133,9 +134,7 @@ public class WallpaperPreviewActivity extends BaseActivity implements WallpaperM
         mAdapter = new WallpaperChooserAdapter(this, WallpaperManager.getWallpaperChooserList());
         wallpaperChooser.setAdapter(mAdapter);
 
-        String conversationId = getIntent().getStringExtra("conversation_id");
-        if (conversationId != null) {
-            mConversationId = conversationId;
+        if (!TextUtils.isEmpty(mConversationId)) {
             BugleAnalytics.logEvent("SMS_ChatBackground_Show", true, "from", "Options");
             BugleFirebaseAnalytics.logEvent("SMS_ChatBackground_Show",  "from", "Options");
         } else {

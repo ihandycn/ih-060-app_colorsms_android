@@ -800,7 +800,9 @@
 	<string name="emoji_skin_tone_setting">Couleur de peau emoji</string>
     <string name="emoji_style_default">Par défaut</string>
     <string name="emoji_style_downloading">Téléchargement</string>
-    <string name="customize_new_guide_title">Caractéristiques cool</string>
-    <string name="customize_new_guide_content">Personnalisez votre chat pour le rendre spécial!</string>
+
+	<string name="customize_new_guide_title">Fonctionnalités géniales</string>
+	<string name="customize_new_guide_content">Personnalisez vos conversations pour les rendre uniques !</string>
+	<string name="select_image">Sélectionner une photo</string>
 
 </resources>

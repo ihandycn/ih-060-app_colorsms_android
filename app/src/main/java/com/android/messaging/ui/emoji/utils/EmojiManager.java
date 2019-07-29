@@ -47,18 +47,12 @@ public class EmojiManager {
     private static final String PREF_STICKER_MAGIC_SOUND_URL_PREFIX = "pref_sticker_magic_sound_url_";
     private static final String PREF_STICKER_MAGIC_FILE_URI = "pref_sticker_magic_file_uri";
     private static final String PREF_DEFAULT_MAIN_POSITION = "pref_default_main_position";
+
     private static final String PREF_FIRST_VARIANT_CLICK = "pref_first_variant_click";
+    private static final String PREF_FIRST_EMOJI_PAGE_CLICK = "pref_frist_emoji_page_click";
 
     private static final String PREF_SKIN_FILE_NAME = "pref_skin_record";
     private static final String PREF_SKIN_SET_DEFAULT = "pref_skin_set_default";
-    public static final String[] EMOJI_SKINS = new String[]{
-            "",
-            new String(Character.toChars(0x1F3FB)),
-            new String(Character.toChars(0x1F3FC)),
-            new String(Character.toChars(0x1F3FD)),
-            new String(Character.toChars(0x1F3FE)),
-            new String(Character.toChars(0x1F3FF)),
-    };
 
     private static final String PREF_EMOJI_STYLE = "pref_emoji_style";
     public static final String EMOJI_STYLE_SYSTEM = "System";
@@ -133,6 +127,39 @@ public class EmojiManager {
         Preferences.get(PREF_FILE_NAME).putStringList(PREF_RECENT_EMOJI, convertedStr);
     }
 
+    public static void upgradeEmojiSkin() {
+        final String[] EMOJI_SKINS = new String[]{
+                "",
+                new String(Character.toChars(0x1F3FB)),
+                new String(Character.toChars(0x1F3FC)),
+                new String(Character.toChars(0x1F3FD)),
+                new String(Character.toChars(0x1F3FE)),
+                new String(Character.toChars(0x1F3FF)),
+        };
+        Map<String, ?> map = Preferences.get(PREF_SKIN_FILE_NAME).getAll();
+        for (Map.Entry<String, ?> entry : map.entrySet()) {
+            String value;
+            try {
+                value = (String) entry.getValue();
+            } catch (Exception e) {
+                Preferences.get(PREF_SKIN_FILE_NAME).remove(entry.getKey());
+                continue;
+            }
+            Preferences.get(PREF_SKIN_FILE_NAME).remove(entry.getKey());
+            boolean hasFound = false;
+            for (int i = 1; i < EMOJI_SKINS.length; i++) {
+                if(value.contains(EMOJI_SKINS[i])){
+                    Preferences.get(PREF_SKIN_FILE_NAME).putInt(entry.getKey(), i);
+                    hasFound = true;
+                    break;
+                }
+            }
+            if(!hasFound){
+                Preferences.get(PREF_SKIN_FILE_NAME).putInt(entry.getKey(), 0);
+            }
+        }
+    }
+
     private static List<String> getRecentStr(EmojiPackageType emojiType) {
         String key;
         List<String> result;
@@ -175,7 +202,12 @@ public class EmojiManager {
                     info = StickerInfo.unflatten(msg);
                     break;
                 case EMOJI:
-                    info = EmojiInfo.unflatten(msg, emojiStyle);
+                    try {
+                        info = EmojiInfo.unflatten(msg, emojiStyle);
+                    } catch (Exception e) {
+                        Preferences.get(PREF_FILE_NAME).putStringList(PREF_RECENT_EMOJI, new ArrayList<>());
+                        return new ArrayList<>();
+                    }
                     break;
                 case GIF:
                     info = GiphyInfo.unflatten(msg);
@@ -208,7 +240,7 @@ public class EmojiManager {
         }
     }
 
-    public static void deleteEmojiRecent(){
+    public static void deleteEmojiRecent() {
         Preferences.get(PREF_FILE_NAME).putStringList(PREF_RECENT_EMOJI, new ArrayList<>());
     }
 
@@ -402,6 +434,12 @@ public class EmojiManager {
     public static boolean isFirstEmojiVariantClick() {
         boolean result = Preferences.get(PREF_FILE_NAME).getBoolean(PREF_FIRST_VARIANT_CLICK, true);
         Preferences.get(PREF_FILE_NAME).putBoolean(PREF_FIRST_VARIANT_CLICK, false);
+        return result;
+    }
+
+    public static boolean isFirstEmojiPageClick() {
+        boolean result = Preferences.get(PREF_FILE_NAME).getBoolean(PREF_FIRST_EMOJI_PAGE_CLICK, true);
+        Preferences.get(PREF_FILE_NAME).putBoolean(PREF_FIRST_EMOJI_PAGE_CLICK, false);
         return result;
     }
 }

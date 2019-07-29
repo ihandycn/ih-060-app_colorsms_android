@@ -76,6 +76,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private boolean mHasSms;
     private boolean mHasMms;
     private boolean mHasPrivacyModeConversation;
+    private boolean mIsEmojiFragmentCreated = false;
 
     private HashMap<String, Boolean> mMarkAsReadMap = new HashMap<>(4);
     private HashMap<String, Boolean> mMarkAsSeenMap = new HashMap<>(4);
@@ -104,7 +105,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mPagerAdapter.addView(view);
         mPager.addOnPageChangeListener(this);
         mPager.setAdapter(mPagerAdapter);
-        initEmojiKeyboradSimulation();
 
         mCurrentConversationView = view;
         MessageBoxAnalytics.setIsMultiConversation(false);
@@ -279,7 +279,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         };
 
         int keyboardHeight = UiUtils.getKeyboardHeight();
-        if(keyboardHeight != 0){
+        if (keyboardHeight != 0) {
             mEmojiContainer.getLayoutParams().height = keyboardHeight;
         }
         mEmojiPickerFragment = new EmojiPickerFragment();
@@ -337,6 +337,10 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
     void showEmoji() {
         adjustKeyboardGuideline(true);
+        if (!mIsEmojiFragmentCreated) {
+            initEmojiKeyboradSimulation();
+            mIsEmojiFragmentCreated = true;
+        }
         mEmojiContainer.setVisibility(View.VISIBLE);
         mEmojiContainer.post(this::reLayoutIndicatorView);
     }
@@ -405,10 +409,10 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         overridePendingTransition(R.anim.anim_null, R.anim.anim_null);
         if (MessageBoxAnalytics.getIsMultiConversation()) {
             BugleAnalytics.logEvent("SMS_PopUp_Close_Multifunction_MultiUser", "closeType", source);
-            BugleFirebaseAnalytics.logEvent("SMS_PopUp_Close_Multifunction_MultiUser",  "closeType", source);
+            BugleFirebaseAnalytics.logEvent("SMS_PopUp_Close_Multifunction_MultiUser", "closeType", source);
         } else {
             BugleAnalytics.logEvent("SMS_PopUp_Close_Multifunction_SingleUser", "closeType", source);
-            BugleFirebaseAnalytics.logEvent("SMS_PopUp_Close_Multifunction_SingleUser",  "closeType", source);
+            BugleFirebaseAnalytics.logEvent("SMS_PopUp_Close_Multifunction_SingleUser", "closeType", source);
         }
     }
 
