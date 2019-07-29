@@ -228,6 +228,10 @@ public class ChatListCustomizeManager {
             int height = Dimensions.getPhoneHeight(HSApplication.getContext());
             int width = Dimensions.getPhoneWidth(HSApplication.getContext());
 
+            if (bgBitmap == null || bgBitmap.getWidth() == 0 || bgBitmap.getHeight() == 0) {
+                return;
+            }
+
             int bitmapHeight = bgBitmap.getHeight();
             int bitmapWidth = bgBitmap.getWidth();
 
@@ -269,7 +273,7 @@ public class ChatListCustomizeManager {
 
             cutPointY++;
             Bitmap wallpaper = Bitmap.createBitmap(resizedBitmap, 0, cutPointY, resizedBitmap.getWidth(),
-                    resizedBitmap.getHeight() - cutPointY);
+                    Math.max(resizedBitmap.getHeight() - cutPointY, 0));
             CommonUtils.saveBitmapToFile(wallpaper, customWallpaperFile);
         }
 
