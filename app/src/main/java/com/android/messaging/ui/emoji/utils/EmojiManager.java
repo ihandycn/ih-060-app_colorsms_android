@@ -53,14 +53,6 @@ public class EmojiManager {
 
     private static final String PREF_SKIN_FILE_NAME = "pref_skin_record";
     private static final String PREF_SKIN_SET_DEFAULT = "pref_skin_set_default";
-    public static final String[] EMOJI_SKINS = new String[]{
-            "",
-            new String(Character.toChars(0x1F3FB)),
-            new String(Character.toChars(0x1F3FC)),
-            new String(Character.toChars(0x1F3FD)),
-            new String(Character.toChars(0x1F3FE)),
-            new String(Character.toChars(0x1F3FF)),
-    };
 
     private static final String PREF_EMOJI_STYLE = "pref_emoji_style";
     public static final String EMOJI_STYLE_SYSTEM = "System";
@@ -133,6 +125,39 @@ public class EmojiManager {
             }
         }
         Preferences.get(PREF_FILE_NAME).putStringList(PREF_RECENT_EMOJI, convertedStr);
+    }
+
+    public static void upgradeEmojiSkin() {
+        final String[] EMOJI_SKINS = new String[]{
+                "",
+                new String(Character.toChars(0x1F3FB)),
+                new String(Character.toChars(0x1F3FC)),
+                new String(Character.toChars(0x1F3FD)),
+                new String(Character.toChars(0x1F3FE)),
+                new String(Character.toChars(0x1F3FF)),
+        };
+        Map<String, ?> map = Preferences.get(PREF_SKIN_FILE_NAME).getAll();
+        for (Map.Entry<String, ?> entry : map.entrySet()) {
+            String value;
+            try {
+                value = (String) entry.getValue();
+            } catch (Exception e) {
+                Preferences.get(PREF_SKIN_FILE_NAME).remove(entry.getKey());
+                continue;
+            }
+            Preferences.get(PREF_SKIN_FILE_NAME).remove(entry.getKey());
+            boolean hasFound = false;
+            for (int i = 1; i < EMOJI_SKINS.length; i++) {
+                if(value.contains(EMOJI_SKINS[i])){
+                    Preferences.get(PREF_SKIN_FILE_NAME).putInt(entry.getKey(), i);
+                    hasFound = true;
+                    break;
+                }
+            }
+            if(!hasFound){
+                Preferences.get(PREF_SKIN_FILE_NAME).putInt(entry.getKey(), 0);
+            }
+        }
     }
 
     private static List<String> getRecentStr(EmojiPackageType emojiType) {

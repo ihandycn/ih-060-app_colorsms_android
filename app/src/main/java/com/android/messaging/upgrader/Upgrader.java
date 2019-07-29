@@ -79,6 +79,7 @@ public class Upgrader extends BaseUpgrader {
         if (oldVersion < 68 && newVersion >= 68) {
             resizeDownloadedThemeAndWallpaperResource();
             EmojiManager.upgradeEmojiRecentForEmojiStylePattern();
+            EmojiManager.upgradeEmojiSkin();
         }
 
         if (oldVersion < newVersion) {
