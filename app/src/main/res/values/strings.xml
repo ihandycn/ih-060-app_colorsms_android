@@ -1138,6 +1138,8 @@
     <string name="customize_new_guide_content">Customize your chat to make it special!</string>
     <string name="signature">Signature</string>
 
+    <string name="conversation_setting_guide_text">Customize this conversation!</string>
+
     <string name="create_shortcut_has_been_create">Created successfully</string>
     <string name="create_shortcut_guide_title">Create a Shortcut</string>
     <string name="create_shortcut_guide_content">To enjoy better SMS, create a shortcut like the system SMS.</string>

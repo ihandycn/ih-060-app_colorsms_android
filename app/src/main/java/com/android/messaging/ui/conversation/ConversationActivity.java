@@ -24,21 +24,27 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.ActionMode;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.ad.BillingManager;
@@ -53,12 +59,13 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
+import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleApplicationPrefs;
-import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BugleFirebaseAnalytics;
+import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.FabricUtils;
@@ -70,10 +77,12 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.debug.CrashlyticsLog;
 import com.superapps.util.Dimensions;
 import com.superapps.util.IntegerBuckets;
 import com.superapps.util.Preferences;
+import com.superapps.util.Threads;
 
 import net.appcloudbox.ads.base.AcbInterstitialAd;
 import net.appcloudbox.ads.common.utils.AcbError;
@@ -84,6 +93,8 @@ import java.util.List;
 
 public class ConversationActivity extends BugleActionBarActivity
         implements ConversationFragmentHost, ViewTreeObserver.OnGlobalLayoutListener {
+
+    private final static String TAG = ConversationActivity.class.getName();
     public static final int FINISH_RESULT_CODE = 1;
     public static final int DELETE_CONVERSATION_RESULT_CODE = 2;
     private static final String SAVED_INSTANCE_STATE_UI_STATE_KEY = "uistate";
@@ -109,6 +120,7 @@ public class ConversationActivity extends BugleActionBarActivity
     private long mCreateTime;
     private boolean fromCreateConversation;
     private String mConversationId;
+    private boolean mNeedShowGuide = false;
 
     private BuglePrefs bugleApplicationPrefs = BugleApplicationPrefs.getApplicationPrefs();
 
@@ -165,6 +177,10 @@ public class ConversationActivity extends BugleActionBarActivity
         ViewUtils.setMargins(findViewById(R.id.conversation_fragment_container),
                 0, -Dimensions.getStatusBarHeight(HSApplication.getContext()), 0, 0);
 
+        if (Preferences.getDefault().getBoolean("first_in_conversation_page", true)) {
+            Preferences.getDefault().putBoolean("first_in_conversation_page", false);
+            mNeedShowGuide = true;
+        }
         initConversationFragment();
 
         // See if we're getting called from a widget to directly display an image or video
@@ -196,11 +212,104 @@ public class ConversationActivity extends BugleActionBarActivity
             IntegerBuckets buckets = new IntegerBuckets(5, 10, 30, 60, 300, 600, 1800, 3600, 7200);
             BugleAnalytics.logEvent("Detailspage_Show_Interval", "interval",
                     buckets.getBucket((int) ((System.currentTimeMillis() - lastShowTime) / 1000)));
-            BugleFirebaseAnalytics.logEvent("Detailspage_Show_Interval",  "interval",
+            BugleFirebaseAnalytics.logEvent("Detailspage_Show_Interval", "interval",
                     buckets.getBucket((int) ((System.currentTimeMillis() - lastShowTime) / 1000)));
         }
         bugleApplicationPrefs.putLong(PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME, System.currentTimeMillis());
         mCreateTime = System.currentTimeMillis();
+
+        if (mNeedShowGuide) {
+            Threads.postOnMainThreadDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showSettingGuide();
+                }
+            }, 500);
+        }
+    }
+
+    private void showSettingGuide() {
+        ViewGroup root = this.findViewById(android.R.id.content);
+        FrameLayout container = new FrameLayout(this);
+        container.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+
+        int width = Dimensions.pxFromDp(220f);
+        MessagesTextView tv = new MessagesTextView(this);
+        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.topMargin = Dimensions.pxFromDp(33.3f) + Dimensions.getStatusBarHeight(this);
+        lp.rightMargin = Dimensions.pxFromDp(30.3f);
+        lp.gravity = Gravity.TOP | Gravity.END;
+        tv.setLayoutParams(lp);
+        tv.setTextColor(0xff1b1c1f);
+        tv.setText(this.getResources().getString(R.string.conversation_setting_guide_text));
+        tv.setPadding(Dimensions.pxFromDp(14.3f), Dimensions.pxFromDp(12.7f), Dimensions.pxFromDp(14.3f), Dimensions.pxFromDp(11.3f));
+        tv.setBackgroundResource(R.drawable.guide_view_bg);
+
+        // start animation
+        AnimationSet animationSet = new AnimationSet(false);
+        Animation alpha = new AlphaAnimation(0, 100);
+        alpha.setDuration(80);
+        Animation scale = new ScaleAnimation(0.6f, 1.05f, 0.6f, 1.05f, Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0);
+        scale.setDuration(160);
+        scale.setInterpolator(PathInterpolatorCompat.create(0.32f, 0.66f, 0.6f, 1f));
+        Animation scale2 = new ScaleAnimation(1.05f, 1f, 1.05f, 1f, Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0);
+        scale2.setDuration(160);
+        scale2.setStartOffset(160);
+        animationSet.addAnimation(alpha);
+        animationSet.addAnimation(scale);
+        animationSet.addAnimation(scale2);
+        tv.startAnimation(animationSet);
+
+        container.addView(tv);
+        container.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // end animation
+                AnimationSet animationSet = new AnimationSet(false);
+                Animation alpha = new AlphaAnimation(100, 0);
+                alpha.setDuration(80);
+                alpha.setStartOffset(200);
+                Animation scale = new ScaleAnimation(1f, 1.06f, 1f, 1.06f, Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0);
+                scale.setDuration(160);
+                scale.setInterpolator(PathInterpolatorCompat.create(0.32f, 0.66f, 0.6f, 1f));
+                Animation scale2 = new ScaleAnimation(1.06f, 0.6f, 1.06f, 0.6f, Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0);
+                scale2.setDuration(160);
+                scale2.setStartOffset(160);
+                animationSet.addAnimation(scale);
+                animationSet.addAnimation(scale2);
+                animationSet.addAnimation(alpha);
+                tv.startAnimation(animationSet);
+
+                animationSet.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        if (ConversationActivity.this.isDestroyed()) {
+                            return;
+                        }
+                        root.removeView(container);
+                        ConversationFragment fragment = getConversationFragment();
+                        if (fragment != null) {
+                            fragment.unBLockAd();
+                        } else {
+                            HSLog.e(TAG, "beginAdLoad failed: fragment is null");
+                        }
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+                    }
+                });
+            }
+        });
+
+
+        root.addView(container);
+
+
     }
 
     @Override
@@ -209,7 +318,7 @@ public class ConversationActivity extends BugleActionBarActivity
             Rect r = new Rect();
             View view = getWindow().getDecorView();
             view.getWindowVisibleDisplayFrame(r);
-            int heightDiff = mContainer.getHeight()- r.height() -
+            int heightDiff = mContainer.getHeight() - r.height() -
                     Dimensions.getStatusBarHeight(this);
             if (heightDiff > Dimensions.pxFromDp(120)) {
                 mKeyboardHeight = heightDiff;
@@ -371,7 +480,7 @@ public class ConversationActivity extends BugleActionBarActivity
         showInterstitialAd();
         if (conversationFragment != null) {
             BugleAnalytics.logEvent("Detailspage_Back", "type", "back");
-            BugleFirebaseAnalytics.logEvent("Detailspage_Back", "type", "back" );
+            BugleFirebaseAnalytics.logEvent("Detailspage_Back", "type", "back");
         }
         super.onBackPressed();
     }
@@ -463,7 +572,8 @@ public class ConversationActivity extends BugleActionBarActivity
         return !mIsPaused && hasWindowFocus();
     }
 
-    @Override public boolean isFromCreateConversation() {
+    @Override
+    public boolean isFromCreateConversation() {
         return fromCreateConversation;
     }
 
@@ -486,6 +596,11 @@ public class ConversationActivity extends BugleActionBarActivity
         Assert.notNull(conversationId);
         if (conversationFragment == null) {
             conversationFragment = new ConversationFragment();
+
+            if (mNeedShowGuide) {
+                conversationFragment.blockAd();
+            }
+
             fragmentTransaction.add(R.id.conversation_fragment_container,
                     conversationFragment, ConversationFragment.FRAGMENT_TAG);
             if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageFullAd", "Enabled")
