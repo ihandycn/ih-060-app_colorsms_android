@@ -41,12 +41,14 @@ import com.android.messaging.datamodel.data.ParticipantListItemData;
 import com.android.messaging.datamodel.data.PeopleAndOptionsData;
 import com.android.messaging.datamodel.data.PeopleAndOptionsData.PeopleAndOptionsDataListener;
 import com.android.messaging.datamodel.data.PeopleOptionsItemData;
+import com.android.messaging.datamodel.data.PersonItemData;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.ui.PersonItemView;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.BaseItemView;
 import com.android.messaging.ui.appsettings.GeneralSettingItemView;
+import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.appsettings.SelectPrivacyModeDialog;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
@@ -64,11 +66,13 @@ import java.util.List;
 
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTINGS_PIN;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_ADD_CONTACT;
+import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_BLOCKED;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_DELETE;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_NOTIFICATION_ENABLED;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_NOTIFICATION_SOUND_URI;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_NOTIFICATION_VIBRATION;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_PRIVACY_MODE;
+import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_RENAME_GROUP;
 import static com.android.messaging.ui.conversation.ConversationActivity.DELETE_CONVERSATION_RESULT_CODE;
 import static com.android.messaging.ui.conversation.ConversationActivity.FINISH_RESULT_CODE;
 import static com.android.messaging.ui.conversation.ConversationFragment.EVENT_UPDATE_BUBBLE_DRAWABLE;
@@ -96,8 +100,12 @@ public class PeopleAndOptionsFragment extends Fragment
     private PeopleOptionsItemView mPinItemView;
     private PeopleOptionsItemView mBlockItemView;
     private PeopleOptionsItemView mDeleteItemView;
+    private PeopleOptionsItemView mAddContactItemView;
+    private PeopleOptionsItemView mRenameGroupItemView;
+
     private ViewGroup mParticipantContainer;
     private Cursor mCursor;
+    private RenameGroupDialog mRenameGroupDialog;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -121,6 +129,8 @@ public class PeopleAndOptionsFragment extends Fragment
         mBlockItemView = view.findViewById(R.id.setting_item_block);
         mDeleteItemView = view.findViewById(R.id.setting_item_delete);
         mParticipantContainer = view.findViewById(R.id.participant_list_container);
+        mAddContactItemView = view.findViewById(R.id.setting_item_add_contact);
+        mRenameGroupItemView = view.findViewById(R.id.setting_item_rename_group);
 
         Activity activity = getActivity();
         mChatBgItemView.setOnItemClickListener(new BaseItemView.OnSettingItemClickListener() {
@@ -190,9 +200,8 @@ public class PeopleAndOptionsFragment extends Fragment
 
     @Override
     public void onOptionsCursorUpdated(final PeopleAndOptionsData data, final Cursor cursor) {
+        HSLog.d("conversation_setting_test", "onOptionsCursorUpdated: ");
         mBinding.ensureBound(data);
-        HSLog.d("conversation_setting_test", "onOptionCursorUpdated:  ");
-
         Cursor oldCursor = mCursor;
         if (cursor == oldCursor) {
             return;
@@ -202,37 +211,74 @@ public class PeopleAndOptionsFragment extends Fragment
             return;
         }
         cursor.moveToFirst();
-        boolean isGroup = isGroup();
-        boolean addContactVisble = addContactVisble();
-        mPinItemView.bind(cursor, SETTINGS_PIN, mOtherParticipantData, PeopleAndOptionsFragment.this,
-                isGroup, addContactVisble, mConversationId);
-        mNotificationItemView.bind(cursor, SETTING_NOTIFICATION_ENABLED, mOtherParticipantData, PeopleAndOptionsFragment.this,
-                isGroup, addContactVisble, mConversationId);
-        mPrivacyModeItemView.bind(cursor, SETTING_PRIVACY_MODE, mOtherParticipantData, PeopleAndOptionsFragment.this,
-                isGroup, addContactVisble, mConversationId);
-        mSoundItemView.bind(cursor, SETTING_NOTIFICATION_SOUND_URI, mOtherParticipantData, PeopleAndOptionsFragment.this,
-                isGroup, addContactVisble, mConversationId);
-        mVibrateItemView.bind(cursor, SETTING_NOTIFICATION_VIBRATION, mOtherParticipantData, PeopleAndOptionsFragment.this,
-                isGroup, addContactVisble, mConversationId);
-        mDeleteItemView.bind(cursor, SETTING_DELETE, mOtherParticipantData, PeopleAndOptionsFragment.this,
-                isGroup, addContactVisble, mConversationId);
+        mPinItemView.bind(cursor, SETTINGS_PIN, mOtherParticipantData, PeopleAndOptionsFragment.this, mConversationId);
+        mNotificationItemView.bind(cursor, SETTING_NOTIFICATION_ENABLED, mOtherParticipantData, PeopleAndOptionsFragment.this, mConversationId);
+        mPrivacyModeItemView.bind(cursor, SETTING_PRIVACY_MODE, mOtherParticipantData, PeopleAndOptionsFragment.this, mConversationId);
+        mSoundItemView.bind(cursor, SETTING_NOTIFICATION_SOUND_URI, mOtherParticipantData, PeopleAndOptionsFragment.this, mConversationId);
+        mVibrateItemView.bind(cursor, SETTING_NOTIFICATION_VIBRATION, mOtherParticipantData, PeopleAndOptionsFragment.this, mConversationId);
+        mDeleteItemView.bind(cursor, SETTING_DELETE, mOtherParticipantData, PeopleAndOptionsFragment.this, mConversationId);
+
+        showBlockItemView();
+        showAddContactItemView();
+        showRenameGroupItemView();
     }
 
     @Override
     public void onParticipantsListLoaded(final PeopleAndOptionsData data,
                                          final List<ParticipantData> participants) {
+        HSLog.d("conversation_setting_test", "onParticipantsListLoaded: ");
         mBinding.ensureBound(data);
-        HSLog.d("conversation_setting_test", "onParticipantsListLoaded:  " + participants.size());
         Activity activity = getActivity();
         for (ParticipantData item : participants) {
             PersonItemView itemView = (PersonItemView) LayoutInflater.from(activity).inflate(R.layout.people_list_item_view, mParticipantContainer, false);
             ParticipantListItemData itemData = DataModel.get().createParticipantListItemData(item);
             itemView.bind(itemData);
+            itemView.setListener(new PersonItemView.PersonItemViewListener() {
+                @Override
+                public void onPersonClicked(final PersonItemData data) {
+                    itemView.performClickOnAvatar();
+                }
+
+                @Override
+                public boolean onPersonLongClicked(PersonItemData data) {
+                    return false;
+                }
+            });
             mParticipantContainer.addView(itemView);
         }
-        // TODO: 2019-07-29 bind mBlockItemView
         mOtherParticipantData = participants.size() == 1 ?
                 participants.get(0) : null;
+
+        showBlockItemView();
+        showAddContactItemView();
+        showRenameGroupItemView();
+    }
+
+    private void showBlockItemView() {
+        if (!isGroup() && mCursor != null) {
+            mBlockItemView.bind(mCursor, SETTING_BLOCKED, mOtherParticipantData, this, mConversationId);
+            mBlockItemView.setVisibility(View.VISIBLE);
+        } else {
+            mBlockItemView.setVisibility(View.GONE);
+        }
+    }
+
+    private void showAddContactItemView() {
+        if (!isGroup() && mCursor != null && addContactVisble()) {
+            mAddContactItemView.bind(mCursor, SETTING_ADD_CONTACT, mOtherParticipantData, this, mConversationId);
+            mAddContactItemView.setVisibility(View.VISIBLE);
+        } else {
+            mAddContactItemView.setVisibility(View.GONE);
+        }
+    }
+
+    private void showRenameGroupItemView() {
+        if (isGroup() && mCursor != null) {
+            mRenameGroupItemView.bind(mCursor, SETTING_RENAME_GROUP, mOtherParticipantData, this, mConversationId);
+            mRenameGroupItemView.setVisibility(View.VISIBLE);
+        } else {
+            mRenameGroupItemView.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -258,7 +304,7 @@ public class PeopleAndOptionsFragment extends Fragment
                 selectPrivacyModeDialog.setOnDismissOrCancelListener(new BaseDialogFragment.OnDismissOrCancelListener() {
                     @Override
                     public void onDismiss(DialogInterface dialog) {
-                        // TODO: 2019-07-26
+                        mPrivacyModeItemView.setSummary(PrivacyModeSettings.getPrivacyModeDescription(mConversationId));
                     }
 
                     @Override
@@ -324,6 +370,12 @@ public class PeopleAndOptionsFragment extends Fragment
                         .setNegativeButton(R.string.delete_conversation_decline_button, null)
                         .show();
                 break;
+            case SETTING_RENAME_GROUP:
+                mRenameGroupDialog = new RenameGroupDialog();
+                mRenameGroupDialog.setDefaultText(mRenameGroupItemView.getData().getSubtitle());
+                mRenameGroupDialog.setConversationId(mConversationId);
+                UiUtils.showDialogFragment(getActivity(), mRenameGroupDialog);
+                break;
         }
     }
 
@@ -356,5 +408,4 @@ public class PeopleAndOptionsFragment extends Fragment
     private boolean isGroup() {
         return mOtherParticipantData == null;
     }
-
 }

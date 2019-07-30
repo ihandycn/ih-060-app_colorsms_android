@@ -50,6 +50,7 @@
             android:id="@+id/setting_item_reset_customization"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:hideDivideLine="true"
             app:summary="@string/setting_reset_customization_summary"
             app:title="@string/menu_reset_customization" />
 
@@ -66,31 +67,24 @@
         <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
             android:id="@+id/setting_item_notifications"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:summary="@string/notification_summary"
-            app:title="@string/notifications_enabled_pref_title"
-            app:type="switchView" />
+            android:layout_height="wrap_content" />
 
         <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
             android:id="@+id/setting_item_sound"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:title="@string/notification_sound_pref_title" />
+            android:layout_height="wrap_content" />
 
         <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
             android:id="@+id/setting_item_vibrate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:summary="@string/notification_vibrate_pref_title"
-            app:title="@string/menu_reset_customization"
-            app:type="switchView" />
+            app:summary="@string/notification_vibrate_pref_title"/>
 
         <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
             android:id="@+id/setting_item_privacy_mode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:summary="@string/privacy_mode_hide_message_only"
-            app:title="@string/privacy_mode_settings" />
+            app:hideDivideLine="true"/>
 
         <View style="@style/SettingDividerStyle" />
 
@@ -105,22 +99,29 @@
         <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
             android:id="@+id/setting_item_pin_to_top"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:title="@string/action_pin"
-            app:type="switchView" />
+            android:layout_height="wrap_content" />
+
+        <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
+            android:id="@+id/setting_item_rename_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+
+        <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
+            android:id="@+id/setting_item_add_contact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
             android:id="@+id/setting_item_block"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:title="@string/block_contact_title" />
+            android:layout_height="wrap_content" />
 
         <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
             android:id="@+id/setting_item_delete"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:summary="@string/action_delete"
-            app:title="@string/menu_reset_customization" />
+            app:hideDivideLine="true" />
 
         <View style="@style/SettingDividerStyle" />
 
