@@ -163,12 +163,17 @@ public class ChatListCustomizeActivity extends BaseActivity implements INotifica
                 mIsActivityExiting = true;
                 Threads.postOnThreadPoolExecutor(() -> {
                     BugleAnalytics.logEvent("Customize_ChatList_Save_Click");
+                    if (!ChatListCustomizeManager.isCustomInfoChanged(mCurrentSelectedWallpaperPath,
+                            mBgMaskView.getAlpha(), mUseThemeColor, mCurrentSelectedColor)) {
+                        Threads.postOnMainThread(() -> finish());
+                        return;
+                    }
                     //this event must log before apply
                     logApplyEvent();
                     ChatListCustomizeManager.saveChatListCustomizeInfo(mCurrentSelectedWallpaperPath, mBgMaskView.getAlpha(), mUseThemeColor, mCurrentSelectedColor);
                     Threads.postOnMainThread(() -> {
                         HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
-                        Threads.postOnMainThreadDelayed(() -> finish(), 100);
+                        Threads.postOnMainThreadDelayed(() -> finish(), 50);
                     });
                 });
             }
