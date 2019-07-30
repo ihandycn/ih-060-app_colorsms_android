@@ -1,19 +1,3 @@
-/*
- * Copyright (C) 2015 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package android.support.v7.mms;
 
 import android.os.Build;
@@ -28,6 +12,9 @@ import com.android.i18n.phonenumbers.Phonenumber;
  * This is isolated into a standalone class since it depends on libphonenumber
  */
 public class PhoneNumberHelper {
+    private static final String KOREA_ISO_COUNTRY_CODE = "KR";
+    private static final String JAPAN_ISO_COUNTRY_CODE = "JP";
+
     /**
      * Given a phone number, get its national part without country code
      *
@@ -65,11 +52,65 @@ public class PhoneNumberHelper {
     }
 
     public static Phonenumber.PhoneNumber parse(PhoneNumberUtil phoneNumberUtil,
-                             String phoneText, String country) throws NumberParseException {
+                                                String phoneText, String country) throws NumberParseException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            return phoneNumberUtil.parse((CharSequence) phoneText,country);
+            return phoneNumberUtil.parse((CharSequence) phoneText, country);
         } else {
-            return phoneNumberUtil.parse(phoneText,country);
+            return phoneNumberUtil.parse(phoneText, country);
         }
+    }
+
+    public static Phonenumber.PhoneNumber parseAndKeepRawInput(PhoneNumberUtil phoneNumberUtil,
+                                                               String phoneText, String country) throws NumberParseException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            Phonenumber.PhoneNumber parsedNumber;
+            try {
+                parsedNumber = phoneNumberUtil.parseAndKeepRawInput((CharSequence) phoneText, country);
+            } catch (NoSuchMethodError e) {
+                parsedNumber = phoneNumberUtil.parseAndKeepRawInput(phoneText, country);
+            }
+            return parsedNumber;
+        } else {
+            return phoneNumberUtil.parseAndKeepRawInput(phoneText, country);
+        }
+    }
+
+    public static String formatNumber(String phoneNumber, String countryIso) {
+        // Do not attempt to format numbers that start with a hash or star symbol.
+        if (phoneNumber.startsWith("#") || phoneNumber.startsWith("*")) {
+            return phoneNumber;
+        }
+
+        PhoneNumberUtil util = PhoneNumberUtil.getInstance();
+        String result;
+        Phonenumber.PhoneNumber pn;
+        try {
+            pn = PhoneNumberHelper.parseAndKeepRawInput(util, phoneNumber, countryIso);
+            if (KOREA_ISO_COUNTRY_CODE.equalsIgnoreCase(countryIso) &&
+                    (pn.getCountryCode() == util.getCountryCodeForRegion(KOREA_ISO_COUNTRY_CODE)) &&
+                    (pn.getCountryCodeSource() ==
+                            Phonenumber.PhoneNumber.CountryCodeSource.FROM_NUMBER_WITH_PLUS_SIGN)) {
+                /**
+                 * Need to reformat any local Korean phone numbers (when the user is in Korea) with
+                 * country code to corresponding national format which would replace the leading
+                 * +82 with 0.
+                 */
+                result = util.format(pn, PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
+            } else if (JAPAN_ISO_COUNTRY_CODE.equalsIgnoreCase(countryIso) &&
+                    pn.getCountryCode() == util.getCountryCodeForRegion(JAPAN_ISO_COUNTRY_CODE) &&
+                    (pn.getCountryCodeSource() ==
+                            Phonenumber.PhoneNumber.CountryCodeSource.FROM_NUMBER_WITH_PLUS_SIGN)) {
+                /**
+                 * Need to reformat Japanese phone numbers (when user is in Japan) with the national
+                 * dialing format.
+                 */
+                result = util.format(pn, PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
+            } else {
+                result = util.format(pn, PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
+            }
+        } catch (NumberParseException e) {
+            result = phoneNumber;
+        }
+        return result;
     }
 }

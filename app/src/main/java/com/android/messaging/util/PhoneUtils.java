@@ -885,20 +885,8 @@ public abstract class PhoneUtils {
                 phoneText.replaceAll("\\D", "").length() < MINIMUM_PHONE_NUMBER_LENGTH_TO_FORMAT) {
             return phoneText;
         }
-        final PhoneNumberUtil phoneNumberUtil = PhoneNumberUtil.getInstance();
-        final String systemCountry = getLocaleCountry();
-        final int systemCountryCode = phoneNumberUtil.getCountryCodeForRegion(systemCountry);
-        try {
-            final Phonenumber.PhoneNumber parsedNumber = PhoneNumberHelper.parse(phoneNumberUtil, phoneText, systemCountry);
-            final PhoneNumberUtil.PhoneNumberFormat phoneNumberFormat =
-                    (systemCountryCode > 0 && parsedNumber.getCountryCode() == systemCountryCode) ?
-                            PhoneNumberUtil.PhoneNumberFormat.NATIONAL : PhoneNumberUtil.PhoneNumberFormat.INTERNATIONAL;
-            return phoneNumberUtil.format(parsedNumber, phoneNumberFormat);
-        } catch (NumberParseException e) {
-            LogUtil.e(TAG, "PhoneUtils.formatForDisplay: invalid phone number "
-                    + LogUtil.sanitizePII(phoneText) + " with country " + systemCountry);
-            return phoneText;
-        }
+        final String systemCountry = getSimOrDefaultLocaleCountry();
+        return PhoneNumberHelper.formatNumber(phoneText, systemCountry);
     }
 
     public void registerDefaultSmsPackageChange(Runnable setRunnable, Runnable clearedRunnable) {

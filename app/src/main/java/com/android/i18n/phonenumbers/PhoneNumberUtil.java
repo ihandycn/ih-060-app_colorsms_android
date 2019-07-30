@@ -43,6 +43,14 @@ public class PhoneNumberUtil {
         return 0;
     }
 
+    public Phonenumber.PhoneNumber parseAndKeepRawInput(String phoneNumber, String defaultCountryIso) {
+        return null;
+    }
+
+    public Phonenumber.PhoneNumber parseAndKeepRawInput(CharSequence phoneNumber, String defaultCountryIso) {
+        return null;
+    }
+
     public enum PhoneNumberFormat {
         E164,
         INTERNATIONAL,
