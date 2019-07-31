@@ -515,50 +515,54 @@ public class ThemeDownloadManager {
     }
 
     public void copyAndResizeThemeWhenAppInstallOrUpgrade() {
-        ThemeInfo currentTheme = ThemeUtils.getCurrentTheme();
-        List<ThemeInfo> localThemes = ThemeInfo.getLocalThemes();
-        for (ThemeInfo theme : localThemes) {
-            String key = getPrefKeyByThemeName(theme.mThemeKey);
-            if (!currentTheme.mThemeKey.equals(theme.mThemeKey)
-                    && !Preferences.getDefault().getBoolean(key, false)) {
-                Threads.postOnThreadPoolExecutor(() -> copyFileFromAssetsSync(theme, new IThemeMoveListener() {
+        try {
+            ThemeInfo currentTheme = ThemeUtils.getCurrentTheme();
+            List<ThemeInfo> localThemes = ThemeInfo.getLocalThemes();
+            for (ThemeInfo theme : localThemes) {
+                String key = getPrefKeyByThemeName(theme.mThemeKey);
+                if (!currentTheme.mThemeKey.equals(theme.mThemeKey)
+                        && !Preferences.getDefault().getBoolean(key, false)) {
+                    Threads.postOnThreadPoolExecutor(() -> copyFileFromAssetsSync(theme, new IThemeMoveListener() {
+                        @Override
+                        public void onMoveSuccess() {
+                            WallpaperSizeManager.resizeThemeBitmap(theme);
+                            Preferences.getDefault().putBoolean(key, true);
+                            Threads.postOnMainThreadDelayed(() -> {
+                                HSGlobalNotificationCenter.sendNotification(key);
+                            }, 200);
+                        }
+
+                        @Override
+                        public void onMoveFailed() {
+
+                        }
+                    }));
+                }
+            }
+            //if current theme is not copy and resized, move on main thread
+            if (currentTheme.mIsLocalTheme
+                    && !Preferences.getDefault().getBoolean(getPrefKeyByThemeName(currentTheme.mThemeKey), false)) {
+                String key = getPrefKeyByThemeName(currentTheme.mThemeKey);
+                copyFileFromAssetsSync(currentTheme, new IThemeMoveListener() {
                     @Override
                     public void onMoveSuccess() {
-                        WallpaperSizeManager.resizeThemeBitmap(theme);
+                        if (!ThemeUtils.DEFAULT_THEME_KEY.equals(currentTheme.mThemeKey)) {
+                            WallpaperSizeManager.resizeThemeBitmap(currentTheme);
+                        }
                         Preferences.getDefault().putBoolean(key, true);
                         Threads.postOnMainThreadDelayed(() -> {
                             HSGlobalNotificationCenter.sendNotification(key);
-                        }, 200);
+                        }, 100);
                     }
 
                     @Override
                     public void onMoveFailed() {
 
                     }
-                }));
+                });
             }
-        }
-        //if current theme is not copy and resized, move on main thread
-        if (currentTheme.mIsLocalTheme
-                && !Preferences.getDefault().getBoolean(getPrefKeyByThemeName(currentTheme.mThemeKey), false)) {
-            String key = getPrefKeyByThemeName(currentTheme.mThemeKey);
-            copyFileFromAssetsSync(currentTheme, new IThemeMoveListener() {
-                @Override
-                public void onMoveSuccess() {
-                    if (!ThemeUtils.DEFAULT_THEME_KEY.equals(currentTheme.mThemeKey)) {
-                        WallpaperSizeManager.resizeThemeBitmap(currentTheme);
-                    }
-                    Preferences.getDefault().putBoolean(key, true);
-                    Threads.postOnMainThreadDelayed(() -> {
-                        HSGlobalNotificationCenter.sendNotification(key);
-                    }, 100);
-                }
+        } catch (Exception ignored) {
 
-                @Override
-                public void onMoveFailed() {
-
-                }
-            });
         }
     }
 
