@@ -52,11 +52,12 @@ import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.privatebox.ui.SelfVerifyActivity;
 import com.android.messaging.receiver.NotificationReceiver;
+import com.android.messaging.receiver.RemoteInputReceiver;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.ui.appsettings.ApnEditorActivity;
 import com.android.messaging.ui.appsettings.ApnSettingsActivity;
-import com.android.messaging.ui.appsettings.SettingAdvancedActivity;
 import com.android.messaging.ui.appsettings.SettingActivity;
+import com.android.messaging.ui.appsettings.SettingAdvancedActivity;
 import com.android.messaging.ui.appsettings.SettingsSimSelectActivity;
 import com.android.messaging.ui.attachmentchooser.AttachmentChooserActivity;
 import com.android.messaging.ui.contact.ContactPickerActivity;
@@ -80,6 +81,7 @@ import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ConversationIdSet;
 import com.android.messaging.util.TransitionUtils;
 import com.android.messaging.util.UriUtil;
+import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Navigations;
 
 /**
@@ -513,7 +515,7 @@ public class UIIntentsImpl extends UIIntents {
                                                                          final String conversationId, final String selfId, final boolean requiresMms,
                                                                          final int requestCode,
                                                                          final int notificationId) {
-        final Intent intent = new Intent(context, RemoteInputEntrypointActivity.class);
+        final Intent intent = new Intent(context, RemoteInputReceiver.class);
         intent.setAction(Intent.ACTION_SENDTO);
         // Ensure that the platform doesn't reuse PendingIntents across conversations
         intent.setData(MessagingContentProvider.buildConversationMetadataUri(conversationId));
@@ -521,8 +523,7 @@ public class UIIntentsImpl extends UIIntents {
         intent.putExtra(UIIntents.UI_INTENT_EXTRA_SELF_ID, selfId);
         intent.putExtra(UIIntents.UI_INTENT_EXTRA_REQUIRES_MMS, requiresMms);
         intent.putExtra(UIIntents.UI_INTENT_EXTRA_NOTIFICATION_ID, notificationId);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        return getPendingIntentWithParentStack(context, intent, requestCode);
+        return PendingIntent.getBroadcast(HSApplication.getContext(), requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     @Override
