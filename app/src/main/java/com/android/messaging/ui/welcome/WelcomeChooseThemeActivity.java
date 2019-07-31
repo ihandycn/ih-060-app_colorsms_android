@@ -1,8 +1,16 @@
 package com.android.messaging.ui.welcome;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.animation.Interpolator;
+import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
@@ -15,6 +23,8 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
+import com.superapps.util.Dimensions;
+import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
@@ -30,6 +40,15 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
         BugleActivityUtil.adaptScreen4VerticalSlide(this, 360);
         setContentView(R.layout.welcome_choose_theme_activity);
 
+        TextView title = findViewById(R.id.title);
+
+        Interpolator interpolator = PathInterpolatorCompat.create(0.17f, 0.17f, 0.6f, 1);
+        ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(title, "alpha", 1, 0);
+        alphaAnimator.setDuration(240);
+        ObjectAnimator translationAnimator = ObjectAnimator.ofFloat(title, "translationY", 0, Dimensions.pxFromDp(34));
+        translationAnimator.setDuration(320);
+        translationAnimator.setInterpolator(interpolator);
+
         ChooseThemePagerView chooseThemePagerView = findViewById(R.id.choose_theme_pager_view);
         chooseThemePagerView.setOnApplyClickListener(themeInfo -> {
             if (mIsThemeAppling) {
@@ -42,9 +61,21 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
                     if (s.equals(copyAndMoveKey)) {
                         Threads.postOnThreadPoolExecutor(() -> ThemeUtils.applyThemeFirstTime(themeInfo,
                                 () -> Threads.postOnMainThread(() -> {
-                                    BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
-                                    UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
-                                    finish();
+                                    chooseThemePagerView.setVisibility(View.GONE);
+                                    alphaAnimator.start();
+                                    translationAnimator.start();
+                                    translationAnimator.addListener(new AnimatorListenerAdapter() {
+                                        @Override
+                                        public void onAnimationEnd(Animator animation) {
+                                            super.onAnimationEnd(animation);
+                                            BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
+//                                          UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
+                                            Navigations.startActivitySafely(WelcomeChooseThemeActivity.this,
+                                                    new Intent(WelcomeChooseThemeActivity.this, NotificationGuideActivity.class));
+                                            overridePendingTransition(0, 0);
+                                            finish();
+                                        }
+                                    });
                                 })));
                     }
                 };
@@ -52,9 +83,21 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
             } else {
                 Threads.postOnThreadPoolExecutor(() -> ThemeUtils.applyThemeFirstTime(themeInfo,
                         () -> Threads.postOnMainThread(() -> {
-                            BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
-                            UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
-                            finish();
+                            chooseThemePagerView.setVisibility(View.GONE);
+                            alphaAnimator.start();
+                            translationAnimator.start();
+                            translationAnimator.addListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+                                    BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
+//                                  UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
+                                    Navigations.startActivitySafely(WelcomeChooseThemeActivity.this,
+                                            new Intent(WelcomeChooseThemeActivity.this, NotificationGuideActivity.class));
+                                    overridePendingTransition(0, 0);
+                                    finish();
+                                }
+                            });
                         })));
             }
             BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, "theme", themeInfo.mThemeKey);

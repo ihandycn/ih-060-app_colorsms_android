@@ -1335,6 +1335,10 @@
     <string name="chat_list_background_opacity">Background Opacity</string>
     <string name="chat_list_text_color">Text Color</string>
     <string name="system_font_display_name">System</string>
+
+    <string name="notification_guide_skip_button">Skip</string>
+    <string name="notification_guide_title">Last Step</string>
+    <string name="notification_guide_content">To serve you better for receiving messages, please grant Notification Access.</string>
     
 </resources>
 

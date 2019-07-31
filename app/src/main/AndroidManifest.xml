@@ -837,6 +837,12 @@
             android:theme="@style/WelcomeChooseThemeActivity" />
 
         <activity
+            android:name=".ui.welcome.NotificationGuideActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/WelcomeChooseThemeActivity" />
+
+        <activity
             android:name=".ui.smspro.BillingActivity"
             android:configChanges="orientation|screenSize"
             android:excludeFromRecents="true"

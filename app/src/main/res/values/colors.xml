@@ -275,4 +275,7 @@
     <color name="pickerview_wheelview_textcolor_divider">#a8a8a8</color>
     <color name="button_pressed_bg">#0d000000</color>
     <color name="customize_guide_button_stroke_color">#99313131</color>
+
+    <color name="notification_guide_skip_button_color">#e4e6ee</color>
+    <color name="notification_guide_confirm_button_color">#ed4864</color>
 </resources>
