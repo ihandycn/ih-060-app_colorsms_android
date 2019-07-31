@@ -1,7 +1,5 @@
 package com.android.messaging.ui.welcome;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,6 +13,7 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Threads;
 
 public class NotificationGuideActivity extends AppCompatActivity {
 
@@ -60,15 +59,10 @@ public class NotificationGuideActivity extends AppCompatActivity {
         titleTranslationAnimator.start();
         contentAlphaAnimator.start();
         contentTranslationAnimator.start();
-
-        titleAlphaAnimator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
-                guideBackground.setVisibility(View.VISIBLE);
-                skipButton.setVisibility(View.VISIBLE);
-                confirmButton.setVisibility(View.VISIBLE);
-            }
-        });
+        Threads.postOnMainThreadDelayed(() -> {
+            guideBackground.setVisibility(View.VISIBLE);
+            skipButton.setVisibility(View.VISIBLE);
+            confirmButton.setVisibility(View.VISIBLE);
+        }, 160);
     }
 }
