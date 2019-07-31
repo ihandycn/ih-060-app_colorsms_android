@@ -301,12 +301,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
             BillingManager.init(BugleApplication.this, isPremiumUser -> {
                 if (!isPremiumUser) {
                     AdConfig.activeAllAdsReentrantly();
-
-                    Threads.postOnMainThread(() -> {
-                        if (AdConfig.isExitAdEnabled()) {
-                            AcbInterstitialAdManager.preload(1, AdPlacement.AD_EXIT_WIRE);
-                        }
-                    });
                 } else {
                     AdConfig.deactiveAllAds();
                     Threads.postOnMainThread(() -> HSGlobalNotificationCenter.sendNotification(BILLING_VERIFY_SUCCESS));
