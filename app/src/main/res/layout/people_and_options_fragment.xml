@@ -85,8 +85,7 @@
             <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
                 android:id="@+id/setting_item_vibrate"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:summary="@string/notification_vibrate_pref_title" />
+                android:layout_height="wrap_content" />
 
             <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
                 android:id="@+id/setting_item_privacy_mode"

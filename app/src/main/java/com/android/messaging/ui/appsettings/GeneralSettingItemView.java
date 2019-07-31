@@ -5,20 +5,14 @@ import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.PorterDuff;
 import android.os.Build;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.view.ViewStub;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.customize.PrimaryColors;
@@ -37,6 +31,8 @@ public class GeneralSettingItemView extends BaseItemView {
 
     private Switch mSwitchView;
     private ImageView mTriangleView;
+
+    private boolean mBlockSwitchAutoCheck = false;
 
     public GeneralSettingItemView(Context context) {
         this(context, null);
@@ -100,7 +96,9 @@ public class GeneralSettingItemView extends BaseItemView {
         setOnClickListener(v -> {
             if (mSwitchView != null) {
                 boolean isChecked = !mSwitchView.isChecked();
-                mSwitchView.setChecked(isChecked);
+                if(!mBlockSwitchAutoCheck) {
+                    mSwitchView.setChecked(isChecked);
+                }
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                     toggleSwitchViewColorFilter(isChecked);
                 }
@@ -164,12 +162,19 @@ public class GeneralSettingItemView extends BaseItemView {
         }
     }
 
+    protected void blockSwitchAutoCheck(){
+        mBlockSwitchAutoCheck = true;
+    }
+
     public boolean isChecked() {
         return mSwitchView != null && mSwitchView.isChecked();
     }
 
     public void setChecked(boolean isChecked) {
         if (mViewType == SWITCH && mSwitchView != null) {
+            if (mSwitchView.isChecked() == isChecked) {
+                return;
+            }
             mSwitchView.setChecked(isChecked);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 toggleSwitchViewColorFilter(isChecked);

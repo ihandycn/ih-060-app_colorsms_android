@@ -445,10 +445,10 @@ public class ConversationActivity extends BugleActionBarActivity
             return true;
         }
         if (menuItem.getItemId() == android.R.id.home) {
+            BugleAnalytics.logEvent("SMS_DetailsPage_IconBack_Click", true);
             onNavigationUpPressed();
             return true;
         }
-        BugleAnalytics.logEvent("SMS_DetailsPage_IconBack_Click", true);
         return false;
     }
 

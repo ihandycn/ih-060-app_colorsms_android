@@ -42,6 +42,7 @@ public class PeopleOptionsItemView extends GeneralSettingItemView {
 
     public PeopleOptionsItemView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
+        super.blockSwitchAutoCheck();
         mData = DataModel.get().createPeopleOptionsItemData(context);
     }
 
