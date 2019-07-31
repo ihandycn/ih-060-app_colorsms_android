@@ -30,7 +30,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.ActionMode;
-import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -99,6 +99,7 @@ public class ConversationActivity extends BugleActionBarActivity
     public static final int DELETE_CONVERSATION_RESULT_CODE = 2;
     private static final String SAVED_INSTANCE_STATE_UI_STATE_KEY = "uistate";
 
+    public static final String PREF_KEY_FIRST_IN_CONVERSATION_PAGE = "pref_key_first_in_conversation_page";
     private static final String PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME = "pref_key_conversation_activity_show_time";
     private static final String PREF_KEY_WIRE_AD_SHOW_TIME = "pref_key_wire_ad_show_time";
     public static final String PREF_KEY_WIRE_AD_SHOW_TIME_FOR_EXIT_WIRE_AD = "pref_key_wire_ad_show_time_for_exit_wire_ad";
@@ -177,8 +178,8 @@ public class ConversationActivity extends BugleActionBarActivity
         ViewUtils.setMargins(findViewById(R.id.conversation_fragment_container),
                 0, -Dimensions.getStatusBarHeight(HSApplication.getContext()), 0, 0);
 
-        if (Preferences.getDefault().getBoolean("first_in_conversation_page", true)) {
-            Preferences.getDefault().putBoolean("first_in_conversation_page", false);
+        if (Preferences.getDefault().getBoolean(PREF_KEY_FIRST_IN_CONVERSATION_PAGE, true)) {
+            Preferences.getDefault().putBoolean(PREF_KEY_FIRST_IN_CONVERSATION_PAGE, false);
             mNeedShowGuide = true;
         }
         initConversationFragment();
@@ -229,21 +230,14 @@ public class ConversationActivity extends BugleActionBarActivity
     }
 
     private void showSettingGuide() {
+        BugleAnalytics.logEvent("SMS_Detailspage_Guide_Show", true);
         ViewGroup root = this.findViewById(android.R.id.content);
-        FrameLayout container = new FrameLayout(this);
-        container.setLayoutParams(new FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
-
-        int width = Dimensions.pxFromDp(220f);
-        MessagesTextView tv = new MessagesTextView(this);
-        FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT);
+        FrameLayout container = (FrameLayout) LayoutInflater.from(this).inflate(R.layout.conversation_setting_guide_view, root, false);
+        MessagesTextView tv = container.findViewById(R.id.view);
+        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) tv.getLayoutParams();
         lp.topMargin = Dimensions.pxFromDp(33.3f) + Dimensions.getStatusBarHeight(this);
         lp.rightMargin = Dimensions.pxFromDp(30.3f);
-        lp.gravity = Gravity.TOP | Gravity.END;
         tv.setLayoutParams(lp);
-        tv.setTextColor(0xff1b1c1f);
-        tv.setText(this.getResources().getString(R.string.conversation_setting_guide_text));
-        tv.setPadding(Dimensions.pxFromDp(14.3f), Dimensions.pxFromDp(12.7f), Dimensions.pxFromDp(14.3f), Dimensions.pxFromDp(11.3f));
-        tv.setBackgroundResource(R.drawable.guide_view_bg);
 
         // start animation
         AnimationSet animationSet = new AnimationSet(false);
@@ -260,7 +254,6 @@ public class ConversationActivity extends BugleActionBarActivity
         animationSet.addAnimation(scale2);
         tv.startAnimation(animationSet);
 
-        container.addView(tv);
         container.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

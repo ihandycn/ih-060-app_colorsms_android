@@ -20,7 +20,6 @@ import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.ui.view.MessagesTextView;
-import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.HSApplication;
@@ -39,6 +38,7 @@ public abstract class TextSettingDialog extends DialogFragment {
     private InterceptBackKeyEditText mInputEditText;
     private MessagesTextView mTitleView;
     private boolean mIsEmojiShow, mIsKeyboardShow;
+    private boolean mEnableEmoji = false;
     protected Set<String> mInputEmojiSet = new HashSet<>();
     private View root;
     private EmojiPickerFragment mEmojiPickerFragment;
@@ -98,7 +98,13 @@ public abstract class TextSettingDialog extends DialogFragment {
                 BackgroundDrawables.createBackgroundDrawable(Color.WHITE, Dimensions.pxFromDp(8), false));
         View cancelBtn = root.findViewById(R.id.signature_cancel_btn);
         cancelBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffebeef3, Dimensions.pxFromDp(3.3f), true));
-        cancelBtn.setOnClickListener(v -> dismiss());
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCancel();
+                dismiss();
+            }
+        });
 
         View saveBtn = root.findViewById(R.id.signature_save_btn);
         saveBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(3.3f), true));
@@ -115,19 +121,23 @@ public abstract class TextSettingDialog extends DialogFragment {
         });
 
         ImageView emojiBtn = root.findViewById(R.id.signature_emoji_btn);
-        emojiBtn.getDrawable().mutate().setColorFilter(0xff3b3e43, PorterDuff.Mode.SRC_ATOP);
-        emojiBtn.setOnClickListener(v -> {
-            if (!mIsKeyboardShow && !mIsEmojiShow) {
-                hideKeyboard();
-                showEmoji();
-            } else if (mIsKeyboardShow) {
-                hideKeyboard();
-                showEmoji();
-            } else {
-                hideEmoji();
-                showKeyboard();
-            }
-        });
+        if (mEnableEmoji) {
+            emojiBtn.getDrawable().mutate().setColorFilter(0xff3b3e43, PorterDuff.Mode.SRC_ATOP);
+            emojiBtn.setOnClickListener(v -> {
+                if (!mIsKeyboardShow && !mIsEmojiShow) {
+                    hideKeyboard();
+                    showEmoji();
+                } else if (mIsKeyboardShow) {
+                    hideKeyboard();
+                    showEmoji();
+                } else {
+                    hideEmoji();
+                    showKeyboard();
+                }
+            });
+        } else {
+            emojiBtn.setVisibility(View.GONE);
+        }
 
         mInputEditText = root.findViewById(R.id.signature_input);
         mInputEditText.addBackListener(this::onBackPressed);
@@ -145,9 +155,12 @@ public abstract class TextSettingDialog extends DialogFragment {
             mInputEditText.setSelection(defaultText.length());
         }
 
-        BugleAnalytics.logEvent("SMS_Signature_Show", true);
         mEmojiContainer.setVisibility(View.INVISIBLE);
         return root;
+    }
+
+    public void setEnableEmojiShow(boolean enable) {
+        this.mEnableEmoji = enable;
     }
 
     public void setHost(TextSettingDialogCallback host) {
@@ -242,6 +255,8 @@ public abstract class TextSettingDialog extends DialogFragment {
     }
 
     public abstract void onSave(String text);
+
+    public abstract void onCancel();
 
     public abstract String getDefaultText();
 

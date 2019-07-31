@@ -22,6 +22,7 @@
     android:dividerHeight="0px">
 
     <LinearLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
@@ -64,27 +65,35 @@
             android:text="@string/notifications_enabled_pref_title"
             app:typeface="@string/custom_font_regular" />
 
+
         <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
             android:id="@+id/setting_item_notifications"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
-            android:id="@+id/setting_item_sound"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-        <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
-            android:id="@+id/setting_item_vibrate"
+        <LinearLayout
+            android:id="@+id/notification_children_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:summary="@string/notification_vibrate_pref_title"/>
+            android:orientation="vertical">
 
-        <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
-            android:id="@+id/setting_item_privacy_mode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:hideDivideLine="true"/>
+            <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
+                android:id="@+id/setting_item_sound"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
+                android:id="@+id/setting_item_vibrate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:summary="@string/notification_vibrate_pref_title" />
+
+            <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
+                android:id="@+id/setting_item_privacy_mode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hideDivideLine="true" />
+        </LinearLayout>
 
         <View style="@style/SettingDividerStyle" />
 
@@ -110,7 +119,7 @@
         <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
             android:id="@+id/setting_item_add_contact"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
 
         <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
             android:id="@+id/setting_item_block"

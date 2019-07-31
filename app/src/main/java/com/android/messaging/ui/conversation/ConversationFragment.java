@@ -1126,7 +1126,10 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     BugleAnalytics.logEvent("SMS_Detailspage_Settings_Click_FirstShow", true);
                 }
                 if (!mAdapter.isMultiSelectMode()) {
-                    UIIntents.get().launchPeopleAndOptionsActivity(getActivity(), mConversationId);
+                    UIIntents.get().launchPeopleAndOptionsActivity(getActivity(), mConversationId, getConversationName());
+                }
+                if (Preferences.getDefault().getBoolean(ConversationActivity.PREF_KEY_FIRST_IN_CONVERSATION_PAGE, true)) {
+                    BugleAnalytics.logEvent("SMS_Detailspage_Settings_Click_FirstShow", true);
                 }
                 return false;
             case R.id.action_call:

@@ -41,7 +41,7 @@ public class PeopleAndOptionsActivity extends BaseActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView title = toolbar.findViewById(R.id.toolbar_title);
-        title.setText(getString(R.string.menu_setting));
+        title.setText(getIntent().getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_NAME));
         UiUtils.setTitleBarBackground(toolbar, this);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {

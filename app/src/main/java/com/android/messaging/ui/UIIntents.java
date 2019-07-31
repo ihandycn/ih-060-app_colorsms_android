@@ -189,7 +189,7 @@ public abstract class UIIntents {
      * Launch an activity to show people & options for a given conversation.
      */
     public abstract void launchPeopleAndOptionsActivity(final Activity context,
-                                                        final String conversationId);
+                                                        final String conversationId, final String conversationName);
 
     /**
      * Launch an external activity to handle a phone call

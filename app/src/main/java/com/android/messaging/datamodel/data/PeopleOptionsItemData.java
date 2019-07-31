@@ -154,7 +154,7 @@ public class PeopleOptionsItemData {
                 Assert.notNull(otherParticipant);
                 final int resourceId = otherParticipant.isBlocked() ?
                         R.string.unblock_contact_title : R.string.block_contact_title;
-                mTitle = mContext.getString(resourceId, otherParticipant.getDisplayDestination());
+                mTitle = mContext.getString(resourceId);
                 mCheckable = false;
                 mType = GeneralSettingItemView.NORMAL;
                 break;

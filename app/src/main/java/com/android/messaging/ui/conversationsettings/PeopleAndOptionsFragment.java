@@ -15,6 +15,8 @@
  */
 package com.android.messaging.ui.conversationsettings;
 
+import android.animation.LayoutTransition;
+import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ActivityNotFoundException;
@@ -52,6 +54,8 @@ import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.appsettings.SelectPrivacyModeDialog;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
+import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.Assert;
@@ -102,10 +106,13 @@ public class PeopleAndOptionsFragment extends Fragment
     private PeopleOptionsItemView mDeleteItemView;
     private PeopleOptionsItemView mAddContactItemView;
     private PeopleOptionsItemView mRenameGroupItemView;
+    private ViewGroup mNotificationChildrenGroup;
+    private ViewGroup mContainer;
 
     private ViewGroup mParticipantContainer;
     private Cursor mCursor;
     private RenameGroupDialog mRenameGroupDialog;
+    private boolean mIsFirstIn = true;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -131,6 +138,18 @@ public class PeopleAndOptionsFragment extends Fragment
         mParticipantContainer = view.findViewById(R.id.participant_list_container);
         mAddContactItemView = view.findViewById(R.id.setting_item_add_contact);
         mRenameGroupItemView = view.findViewById(R.id.setting_item_rename_group);
+        mNotificationChildrenGroup = view.findViewById(R.id.notification_children_group);
+        mContainer = view.findViewById(R.id.container);
+
+        MessagesTextView mCustomizeTitleView = view.findViewById(R.id.setting_title_customize);
+        MessagesTextView mNotificationTitleView = view.findViewById(R.id.setting_title_notifications);
+        MessagesTextView mGeneralTitleView = view.findViewById(R.id.setting_title_general);
+        MessagesTextView mParticipantTitleView = view.findViewById(R.id.setting_title_participant_list);
+        int color = PrimaryColors.getPrimaryColor();
+        mParticipantTitleView.setTextColor(color);
+        mNotificationTitleView.setTextColor(color);
+        mCustomizeTitleView.setTextColor(color);
+        mGeneralTitleView.setTextColor(color);
 
         Activity activity = getActivity();
         mChatBgItemView.setOnItemClickListener(new BaseItemView.OnSettingItemClickListener() {
@@ -172,6 +191,7 @@ public class PeopleAndOptionsFragment extends Fragment
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_RINGTONE_PICKER) {
             final Parcelable pick = data.getParcelableExtra(
                     RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
@@ -218,6 +238,8 @@ public class PeopleAndOptionsFragment extends Fragment
         mVibrateItemView.bind(cursor, SETTING_NOTIFICATION_VIBRATION, mOtherParticipantData, PeopleAndOptionsFragment.this, mConversationId);
         mDeleteItemView.bind(cursor, SETTING_DELETE, mOtherParticipantData, PeopleAndOptionsFragment.this, mConversationId);
 
+        showNotificationListItemView();
+
         showBlockItemView();
         showAddContactItemView();
         showRenameGroupItemView();
@@ -229,6 +251,7 @@ public class PeopleAndOptionsFragment extends Fragment
         HSLog.d("conversation_setting_test", "onParticipantsListLoaded: ");
         mBinding.ensureBound(data);
         Activity activity = getActivity();
+        mParticipantContainer.removeAllViews();
         for (ParticipantData item : participants) {
             PersonItemView itemView = (PersonItemView) LayoutInflater.from(activity).inflate(R.layout.people_list_item_view, mParticipantContainer, false);
             ParticipantListItemData itemData = DataModel.get().createParticipantListItemData(item);
@@ -252,6 +275,17 @@ public class PeopleAndOptionsFragment extends Fragment
         showBlockItemView();
         showAddContactItemView();
         showRenameGroupItemView();
+    }
+
+    private void showNotificationListItemView() {
+        if (mNotificationItemView.isChecked()) {
+            mNotificationChildrenGroup.setVisibility(View.VISIBLE);
+            mNotificationItemView.hideDivideLine(false);
+        } else {
+            mNotificationChildrenGroup.setVisibility(View.GONE);
+            mNotificationItemView.hideDivideLine(true);
+        }
+        HSLog.i("conversation_setting_test", "showNotificationListItemView: " + mIsFirstIn);
     }
 
     private void showBlockItemView() {
@@ -297,6 +331,14 @@ public class PeopleAndOptionsFragment extends Fragment
 
             case PeopleOptionsItemData.SETTING_NOTIFICATION_ENABLED:
                 mBinding.getData().enableConversationNotifications(mBinding, isChecked);
+                if (mIsFirstIn) {
+                    LayoutTransition transition = new LayoutTransition();
+                    ObjectAnimator animator = ObjectAnimator.ofFloat(null, "alpha", 0, 0);
+                    transition.setAnimator(LayoutTransition.DISAPPEARING, animator);
+                    transition.setDuration(LayoutTransition.DISAPPEARING, 200);
+                    mContainer.setLayoutTransition(transition);
+                }
+                mIsFirstIn = true;
                 break;
 
             case PeopleOptionsItemData.SETTING_PRIVACY_MODE:
@@ -371,7 +413,9 @@ public class PeopleAndOptionsFragment extends Fragment
                         .show();
                 break;
             case SETTING_RENAME_GROUP:
+                BugleAnalytics.logEvent("SMS_Detailspage_Settings_Rename_Click", true);
                 mRenameGroupDialog = new RenameGroupDialog();
+                mRenameGroupDialog.setEnableEmojiShow(false);
                 mRenameGroupDialog.setDefaultText(mRenameGroupItemView.getData().getSubtitle());
                 mRenameGroupDialog.setConversationId(mConversationId);
                 UiUtils.showDialogFragment(getActivity(), mRenameGroupDialog);

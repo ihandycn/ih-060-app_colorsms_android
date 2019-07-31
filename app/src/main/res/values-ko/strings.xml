@@ -352,8 +352,6 @@
     <string name="snack_bar_retry" msgid="7140970704902570020">"다시 시도"</string>
     <string name="contact_list_empty_text" msgid="1036353827229041942">"새로운 메시지를 시작하려면 연락처 이름 또는 전화번호를 입력하세요."</string>
     <string name="action_block" msgid="9032076625645190136">"차단"</string>
-    <string name="block_contact_title" msgid="6968382557194643329">"<xliff:g id="DESTINATION">%s</xliff:g> 차단"</string>
-    <string name="unblock_contact_title" msgid="4719854710980066596">"<xliff:g id="DESTINATION">%s</xliff:g> 차단 해제"</string>
     <string name="block_confirmation_title" msgid="8288283455512985682">"<xliff:g id="DESTINATION">%s</xliff:g>을(를) 차단하시겠습니까?"</string>
     <string name="block_confirmation_message" msgid="185429978461824228">"앞으로 이 번호에서 보낸 메시지를 계속 받지만 알림은 더 이상 받지 않습니다. 이 대화는 보관처리됩니다."</string>
     <string name="blocked_contacts_title" msgid="7709164518967312281">"차단된 연락처"</string>

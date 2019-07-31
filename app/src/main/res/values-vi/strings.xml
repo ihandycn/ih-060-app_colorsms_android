@@ -352,8 +352,6 @@
     <string name="snack_bar_retry" msgid="7140970704902570020">"Thử lại"</string>
     <string name="contact_list_empty_text" msgid="1036353827229041942">"Nhập tên liên hệ hoặc số điện thoại để bắt đầu tin nhắn mới"</string>
     <string name="action_block" msgid="9032076625645190136">"Chặn"</string>
-    <string name="block_contact_title" msgid="6968382557194643329">"Chặn <xliff:g id="DESTINATION">%s</xliff:g>"</string>
-    <string name="unblock_contact_title" msgid="4719854710980066596">"Bỏ chặn <xliff:g id="DESTINATION">%s</xliff:g>"</string>
     <string name="block_confirmation_title" msgid="8288283455512985682">"Chặn <xliff:g id="DESTINATION">%s</xliff:g>?"</string>
     <string name="block_confirmation_message" msgid="185429978461824228">"Bạn sẽ tiếp tục nhận tin nhắn từ số này nhưng bạn sẽ không được thông báo nữa. Cuộc trò chuyện này sẽ được lưu trữ."</string>
     <string name="blocked_contacts_title" msgid="7709164518967312281">"Địa chỉ liên hệ bị chặn"</string>

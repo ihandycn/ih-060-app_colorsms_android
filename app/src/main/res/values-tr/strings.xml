@@ -352,8 +352,6 @@
     <string name="snack_bar_retry" msgid="7140970704902570020">"Yeniden dene"</string>
     <string name="contact_list_empty_text" msgid="1036353827229041942">"Yeni bir iletiye başlamak için bir kişi adı veya telefon numarası girin"</string>
     <string name="action_block" msgid="9032076625645190136">"Engelle"</string>
-    <string name="block_contact_title" msgid="6968382557194643329">"<xliff:g id="DESTINATION">%s</xliff:g> hedefini engelle"</string>
-    <string name="unblock_contact_title" msgid="4719854710980066596">"<xliff:g id="DESTINATION">%s</xliff:g> adlı kişinin engellemesini kaldır"</string>
     <string name="block_confirmation_title" msgid="8288283455512985682">"<xliff:g id="DESTINATION">%s</xliff:g> engellensin mi?"</string>
     <string name="block_confirmation_message" msgid="185429978461824228">"Bu numaradan gelen iletileri almaya devam edecek ancak artık bildirim almayacaksınız. Bu ileti dizisi arşivlenecektir."</string>
     <string name="blocked_contacts_title" msgid="7709164518967312281">"Engellenen kişiler"</string>

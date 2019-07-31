@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.action.RenameGroupAction;
 import com.android.messaging.ui.signature.TextSettingDialog;
+import com.android.messaging.util.BugleAnalytics;
 
 public class RenameGroupDialog extends TextSettingDialog {
     private String mDefaultText = "";
@@ -15,7 +16,13 @@ public class RenameGroupDialog extends TextSettingDialog {
         if (TextUtils.isEmpty(mConversationId)) {
             throw new RuntimeException();
         }
+        BugleAnalytics.logEvent("SMS_Detailspage_Settings_Rename_Save", false);
         RenameGroupAction.renameGroup(mConversationId, text);
+    }
+
+    @Override
+    public void onCancel() {
+        BugleAnalytics.logEvent("SMS_Detailspage_Settings_Rename_Cancel", true);
     }
 
     @Override

@@ -352,8 +352,6 @@
     <string name="snack_bar_retry" msgid="7140970704902570020">"重試"</string>
     <string name="contact_list_empty_text" msgid="1036353827229041942">"如要傳送新訊息，請輸入聯絡人姓名或電話號碼"</string>
     <string name="action_block" msgid="9032076625645190136">"封鎖"</string>
-    <string name="block_contact_title" msgid="6968382557194643329">"封鎖<xliff:g id="DESTINATION">%s</xliff:g>"</string>
-    <string name="unblock_contact_title" msgid="4719854710980066596">"解除封鎖<xliff:g id="DESTINATION">%s</xliff:g>"</string>
     <string name="block_confirmation_title" msgid="8288283455512985682">"要封鎖 <xliff:g id="DESTINATION">%s</xliff:g>？"</string>
     <string name="block_confirmation_message" msgid="185429978461824228">"您將繼續接收這個電話號碼傳來的訊息，但不會再收到通知。這個對話將被封存。"</string>
     <string name="blocked_contacts_title" msgid="7709164518967312281">"已封鎖的聯絡人"</string>

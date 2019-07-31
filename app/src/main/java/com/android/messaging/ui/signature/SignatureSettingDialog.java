@@ -1,5 +1,12 @@
 package com.android.messaging.ui.signature;
 
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
 import com.android.messaging.R;
 import com.android.messaging.util.BugleAnalytics;
 import com.superapps.util.Preferences;
@@ -7,6 +14,13 @@ import com.superapps.util.Preferences;
 public class SignatureSettingDialog extends TextSettingDialog {
 
     public static final String PREF_KEY_SIGNATURE_CONTENT = "pref_key_signature_content";
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        BugleAnalytics.logEvent("SMS_Signature_Show", true);
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
 
     @Override
     public void onSave(String text) {
@@ -20,6 +34,11 @@ public class SignatureSettingDialog extends TextSettingDialog {
             }
         }
         BugleAnalytics.logEvent("SMS_Signature_Change", true, "with_emoji", String.valueOf(hasEmoji));
+    }
+
+    @Override
+    public void onCancel() {
+
     }
 
     @Override

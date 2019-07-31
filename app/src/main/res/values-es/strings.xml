@@ -352,8 +352,6 @@
     <string name="snack_bar_retry" msgid="7140970704902570020">"Volver a intentar"</string>
     <string name="contact_list_empty_text" msgid="1036353827229041942">"Escribe el nombre de un contacto o un número de teléfono para iniciar un mensaje nuevo"</string>
     <string name="action_block" msgid="9032076625645190136">"Bloquear"</string>
-    <string name="block_contact_title" msgid="6968382557194643329">"Bloquear a <xliff:g id="DESTINATION">%s</xliff:g>"</string>
-    <string name="unblock_contact_title" msgid="4719854710980066596">"Desbloquear a <xliff:g id="DESTINATION">%s</xliff:g>"</string>
     <string name="block_confirmation_title" msgid="8288283455512985682">"¿Bloquear a <xliff:g id="DESTINATION">%s</xliff:g>?"</string>
     <string name="block_confirmation_message" msgid="185429978461824228">"Seguirás recibiendo mensajes de este número pero no volverás a recibir notificaciones. Esta conversación se archivará."</string>
     <string name="blocked_contacts_title" msgid="7709164518967312281">"Contactos bloqueados"</string>
