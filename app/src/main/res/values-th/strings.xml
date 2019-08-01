@@ -803,4 +803,9 @@
     <string name="emoji_style_downloading">กำลังดาวน์โหลด</string>
     <string name="emoji_style_default">ค่าเริ่มต้น</string>
 
+
+	<string name="customize_new_guide_title">คุณสมบัติเด็ด ๆ</string>
+	<string name="customize_new_guide_content">ปรับแต่งการสนทนาให้พิเศษสำหรับคุณ!</string>
+	<string name="select_image">เลือกรูปภาพ</string>
+
 </resources>

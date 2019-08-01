@@ -52,6 +52,7 @@ import com.android.messaging.sms.BugleUserAgentInfoLoader;
 import com.android.messaging.sms.MmsConfig;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SetAsDefaultGuideActivity;
+import com.android.messaging.ui.customize.theme.ThemeDownloadManager;
 import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
@@ -224,8 +225,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 AcbService.setGDPRConsentGranted(false);
             }
         });
-
-        prepareEmoji();
     }
 
     @DebugLog
@@ -302,12 +301,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
             BillingManager.init(BugleApplication.this, isPremiumUser -> {
                 if (!isPremiumUser) {
                     AdConfig.activeAllAdsReentrantly();
-
-                    Threads.postOnMainThread(() -> {
-                        if (AdConfig.isExitAdEnabled()){
-                            AcbInterstitialAdManager.preload(1, AdPlacement.AD_EXIT_WIRE);
-                        }
-                    });
                 } else {
                     AdConfig.deactiveAllAds();
                     Threads.postOnMainThread(() -> HSGlobalNotificationCenter.sendNotification(BILLING_VERIFY_SUCCESS));
@@ -359,6 +352,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
             initWorks.add(new SyncMainThreadTask("RecordInstallType", this::recordInstallType));
 
+            initWorks.add(new SyncMainThreadTask("PrepareEmoji", this::prepareEmoji));
+
             initWorks.add(new SyncMainThreadTask("AddObservers", () -> {
                 HSGlobalNotificationCenter.addObserver(HSNotificationConstant.HS_SESSION_START, this);
                 HSGlobalNotificationCenter.addObserver(HSNotificationConstant.HS_SESSION_END, this);
@@ -370,6 +365,10 @@ public class BugleApplication extends HSApplication implements UncaughtException
                     AppPrivateLockManager.getInstance().startAppLockWatch()));
             initWorks.add(new ParallelBackgroundTask("RegisterSignalStrength", () ->
                     DataModel.get().getConnectivityUtil().registerForSignalStrength()));
+            initWorks.add(new ParallelBackgroundTask("CopyAndResizeThemeInfo",
+                    () -> Preferences.getDefault().doOnce(
+                            () -> ThemeDownloadManager.getInstance().copyAndResizeThemeWhenAppInstallOrUpgrade(),
+                            "pref_key_copy_and_resize_theme_when_install")));
             TaskRunner.run(initWorks);
         } finally {
             TraceCompat.endSection();

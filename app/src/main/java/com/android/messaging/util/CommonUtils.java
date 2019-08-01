@@ -170,7 +170,7 @@ public class CommonUtils {
             return;
         }
 
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
         try {
             out.flush();
             out.close();

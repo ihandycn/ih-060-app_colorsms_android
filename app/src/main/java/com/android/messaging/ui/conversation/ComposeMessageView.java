@@ -994,12 +994,11 @@ public class ComposeMessageView extends LinearLayout
                 sb.setSpan(mSignatureSpan, message.length() + 1, sb.length(), 0);
                 sb.setSpan(new AbsoluteSizeSpan(13, true), message.length() + 1, sb.length(), 0);
                 mComposeEditText.setText(sb, TextView.BufferType.SPANNABLE);
-                mComposeEditText.setSelection(message.length());
             } else {
                 mComposeEditText.setText(message);
-                // Set the cursor selection to the end since setText resets it to the start
-                mComposeEditText.setSelection(mComposeEditText.getText().length());
             }
+            // Set the cursor selection to the end since setText resets it to the start
+            mComposeEditText.setSelection(mComposeEditText.getText().length());
         }
 
         if ((changeFlags & DraftMessageData.ATTACHMENTS_CHANGED) ==

@@ -219,26 +219,12 @@ public class ChatListWallpaperEditActivity extends BaseActivity implements View.
     }
 
     private String saveWallpaperToLocal(Bitmap bitmap) {
-        File storedWallpaper = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY),
+        File storedFile = new File(CommonUtils.getDirectory(LOCAL_DIRECTORY),
                 System.currentTimeMillis() + ".png");
 
-        FileOutputStream out;
-        try {
-            out = new FileOutputStream(storedWallpaper);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
+        CommonUtils.saveBitmapToFile(bitmap, storedFile);
 
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-        try {
-            out.flush();
-            out.close();
-        } catch (IOException e) {
-            return null;
-        }
-
-        return storedWallpaper.getAbsolutePath();
+        return storedFile.getAbsolutePath();
         //ChatListWallpaperManager.setWallpaperPath(storedPath);
     }
 
@@ -432,7 +418,11 @@ public class ChatListWallpaperEditActivity extends BaseActivity implements View.
     private void apply() {
         mApplyButton.setTextColor(0x80ffffff);
         mApplyButton.setClickable(false);
-        String path = saveWallpaperToLocal(tryGetWallpaperToSet());
+        Bitmap bitmap = tryGetWallpaperToSet();
+        if (bitmap == null) {
+            return;
+        }
+        String path = saveWallpaperToLocal(bitmap);
         HSBundle bundle = new HSBundle();
         bundle.putString(ChatListCustomizeActivity.BUNDLE_KEY_WALLPAPER_PATH, path);
         HSGlobalNotificationCenter.sendNotification(ChatListCustomizeActivity.CHAT_LIST_WALLPAPER_CHANGED, bundle);

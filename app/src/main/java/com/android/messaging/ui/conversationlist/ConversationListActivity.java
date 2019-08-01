@@ -90,8 +90,8 @@ import com.android.messaging.ui.wallpaper.WallpaperInfos;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BugleFirebaseAnalytics;
+import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.CreateShortcutUtils;
@@ -404,7 +404,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
             BugleFirebaseAnalytics.logEvent("SMS_Messages_Show_Positive");
         }
 
-
         BugleAnalytics.logEvent("SMS_Messages_Show_Corrected", true);
         BugleFirebaseAnalytics.logEvent("SMS_Messages_Show_Corrected");
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "homepage_show");
@@ -600,10 +599,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         BackupRestoreActivity.startBackupRestoreActivity(ConversationListActivity.this, BackupRestoreActivity.ENTRANCE_MENU);
                         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_backup_restore_new_text).setVisibility(View.GONE);
-                        final ConversationListFragment conversationListFragment =
-                                (ConversationListFragment) getFragmentManager().findFragmentById(
-                                        R.id.conversation_list_fragment);
-                        conversationListFragment.hideBackupBannerGuide();
                         break;
                     case DRAWER_INDEX_PRIVACY_BOX:
                         BugleAnalytics.logEvent("Menu_PrivateBox_Click", true);
@@ -699,10 +694,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         View backupEntrance = navigationContent.findViewById(R.id.navigation_item_backup_restore);
         backupEntrance.setOnClickListener(this);
-        if (!BackupAutopilotUtils.getIsBackupSwitchOn()) {
-            backupEntrance.setVisibility(View.GONE);
-        } else {
-            backupEntrance.setVisibility(View.VISIBLE);
+        if (HSApplication.getFirstLaunchInfo().appVersionCode >= 68) {
+            if (!BackupAutopilotUtils.getIsBackupSwitchOn()) {
+                backupEntrance.setVisibility(View.GONE);
+            } else {
+                backupEntrance.setVisibility(View.VISIBLE);
+            }
         }
 
         if (HSConfig.optBoolean(false, "Application", "Subscription", "Enabled")
@@ -1200,17 +1197,17 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     private void preloadAds() {
-            if (AdConfig.isHomepageBannerAdEnabled()) {
-                AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
-            }
+        if (AdConfig.isHomepageBannerAdEnabled()) {
+            AcbNativeAdManager.preload(1, AdPlacement.AD_BANNER);
+        }
 
-            if (AdConfig.isDetailpageTopAdEnabled()) {
-                AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
-            }
+        if (AdConfig.isDetailpageTopAdEnabled()) {
+            AcbNativeAdManager.preload(1, AdPlacement.AD_DETAIL_NATIVE);
+        }
 
-            if (AdConfig.isExitAdEnabled()){
-                AcbInterstitialAdManager.preload(1, AdPlacement.AD_EXIT_WIRE);
-            }
+        if (AdConfig.isExitAdEnabled()) {
+            AcbInterstitialAdManager.preload(1, AdPlacement.AD_EXIT_WIRE);
+        }
     }
 
 

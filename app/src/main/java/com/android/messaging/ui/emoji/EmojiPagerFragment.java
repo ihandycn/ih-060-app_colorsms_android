@@ -28,18 +28,28 @@ public class EmojiPagerFragment extends Fragment {
     private AbstractEmojiItemPagerAdapter mAdapter;
     private OnEmojiClickListener mOnEmojiClickListener;
     private final String TAG = EmojiPagerFragment.class.getSimpleName();
+    private boolean mIsViewInited = false;
+    private View mView;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Context context = getActivity();
         HSLog.i(TAG, "EmojiPagerFragment: onCrateView: ");
-        View view = LayoutInflater.from(context).inflate(R.layout.emoji_page_item_layout, container, false);
+        View view = inflater.inflate(R.layout.emoji_page_item_layout, container, false);
+        mView = view;
+        if (mAdapter == null) {
+            HSLog.e(TAG, "adapter is null");
+            return view;
+        }
+        initView(view);
+        return view;
+    }
+
+    private void initView(View view) {
+        mIsViewInited = true;
+        Context context = getActivity();
         ViewPagerFixed itemPager = view.findViewById(R.id.emoji_item_pager);
         TabLayout itemTabLayout = view.findViewById(R.id.emoji_item_tab_layout);
-        if (mAdapter == null) {
-            throw new RuntimeException("adapter is null");
-        }
         mAdapter.setTabLayout(itemTabLayout);
         itemPager.setAdapter(mAdapter);
         if (mAdapter instanceof EmojiItemPagerAdapter) {
@@ -84,7 +94,7 @@ public class EmojiPagerFragment extends Fragment {
             addBtn.setOnClickListener(v -> {
                 BugleAnalytics.logEvent("SMSEmoji_ChatEmoji_Store_Click", true, "type", "chat_tab");
                 BugleFirebaseAnalytics.logEvent("SMSEmoji_ChatEmoji_Store_Click", "type", "chat_tab");
-                EmojiStoreActivity.start(container.getContext());
+                EmojiStoreActivity.start(context);
             });
 
             int width = (int) (Dimensions.getPhoneWidth(context) / 9 + 0.5f);
@@ -93,7 +103,7 @@ public class EmojiPagerFragment extends Fragment {
             addBtn.setLayoutParams(params);
         }
         HSLog.i(TAG, "EmojiPagerFragment: onCrateView: OnFinish");
-        return view;
+
     }
 
     @Override
@@ -121,6 +131,9 @@ public class EmojiPagerFragment extends Fragment {
             case GIF:
                 mAdapter = new GiphyItemPagerAdapter(context, data, mOnEmojiClickListener);
                 break;
+        }
+        if (!mIsViewInited && mView != null) {
+            initView(mView);
         }
     }
 

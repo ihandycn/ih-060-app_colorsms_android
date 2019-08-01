@@ -796,4 +796,9 @@
     <string name="emoji_style_downloading">İndiriliyor</string>
     <string name="emoji_style_default">Varsayılan</string>
 
+
+	<string name="customize_new_guide_title">Havalı Özellikler</string>
+	<string name="customize_new_guide_content">Özel olması için sohbetinizi kişiselleştirin!</string>
+	<string name="select_image">Görsel Seç</string>
+
 </resources>

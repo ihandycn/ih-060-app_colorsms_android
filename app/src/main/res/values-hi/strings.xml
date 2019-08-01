@@ -803,4 +803,9 @@
 	<string name="emoji_skin_tone_setting">इमोजी स्किन टोन </string>
     <string name="emoji_style_downloading">डाउनलोड हो रही है</string>
     <string name="emoji_style_default">डिफॉल्‍ट</string>
+
+	<string name="customize_new_guide_title">अच्</string>
+	<string name="customize_new_guide_content">इसे विशेष बनाने के लिए अपनी चैट अनुकूलित करें!</string>
+	<string name="select_image">छवि चुनें</string>
+
 </resources>

@@ -10,7 +10,9 @@ import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.connection.HSHttpConnection;
 import com.ihs.commons.connection.httplib.HttpRequest;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSError;
+import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
 import java.io.File;
@@ -22,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ThemeDownloadManager {
+    private static final String PREF_KEY_THEME_MOVED_AND_RESIZED = "theme_moved_and_resized_";
     private static final float CONVERSATION_WALLPAPER_START_RATE = 0;
     private static final float CONVERSATION_LIST_WALLPAPER_START_RATE = 0.2f;
     private static final float TOOLBAR_START_RATE = 0.4f;
@@ -397,11 +400,7 @@ public class ThemeDownloadManager {
         });
     }
 
-    public void copyFileFromAssetsAsync(ThemeInfo theme, IThemeMoveListener listener) {
-        Threads.postOnThreadPoolExecutor(() -> copyFileFromAssetsSync(theme, listener));
-    }
-
-    public void copyFileFromAssetsSync(ThemeInfo theme, IThemeMoveListener listener) {
+    void copyFileFromAssetsSync(ThemeInfo theme, IThemeMoveListener listener) {
         String folderName = theme.mThemeKey;
         List<DownloadItemInfo> copyTask = new ArrayList<>();
 
@@ -509,8 +508,62 @@ public class ThemeDownloadManager {
         }
     }
 
-    public void copyAssetFileAsync(String themeKey, File fileName, String assetFileName) {
-        Threads.postOnThreadPoolExecutor(() -> copyAssetFile(themeKey, fileName, assetFileName));
+    public String getPrefKeyByThemeName(String name) {
+        return PREF_KEY_THEME_MOVED_AND_RESIZED
+                + LocalThemeVersion.getNewestVersion(name)
+                + "_" + name;
+    }
+
+    public void copyAndResizeThemeWhenAppInstallOrUpgrade() {
+        try {
+            ThemeInfo currentTheme = ThemeUtils.getCurrentTheme();
+            List<ThemeInfo> localThemes = ThemeInfo.getLocalThemes();
+            for (ThemeInfo theme : localThemes) {
+                String key = getPrefKeyByThemeName(theme.mThemeKey);
+                if (!currentTheme.mThemeKey.equals(theme.mThemeKey)
+                        && !Preferences.getDefault().getBoolean(key, false)) {
+                    Threads.postOnThreadPoolExecutor(() -> copyFileFromAssetsSync(theme, new IThemeMoveListener() {
+                        @Override
+                        public void onMoveSuccess() {
+                            WallpaperSizeManager.resizeThemeBitmap(theme);
+                            Preferences.getDefault().putBoolean(key, true);
+                            Threads.postOnMainThreadDelayed(() -> {
+                                HSGlobalNotificationCenter.sendNotification(key);
+                            }, 200);
+                        }
+
+                        @Override
+                        public void onMoveFailed() {
+
+                        }
+                    }));
+                }
+            }
+            //if current theme is not copy and resized, move on main thread
+            if (currentTheme.mIsLocalTheme
+                    && !Preferences.getDefault().getBoolean(getPrefKeyByThemeName(currentTheme.mThemeKey), false)) {
+                String key = getPrefKeyByThemeName(currentTheme.mThemeKey);
+                copyFileFromAssetsSync(currentTheme, new IThemeMoveListener() {
+                    @Override
+                    public void onMoveSuccess() {
+                        if (!ThemeUtils.DEFAULT_THEME_KEY.equals(currentTheme.mThemeKey)) {
+                            WallpaperSizeManager.resizeThemeBitmap(currentTheme);
+                        }
+                        Preferences.getDefault().putBoolean(key, true);
+                        Threads.postOnMainThreadDelayed(() -> {
+                            HSGlobalNotificationCenter.sendNotification(key);
+                        }, 100);
+                    }
+
+                    @Override
+                    public void onMoveFailed() {
+
+                    }
+                });
+            }
+        } catch (Exception ignored) {
+
+        }
     }
 
     public boolean copyAssetFile(String themeKey, File fileName, String assetFileName) {

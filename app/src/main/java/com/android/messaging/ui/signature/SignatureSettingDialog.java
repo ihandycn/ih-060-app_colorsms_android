@@ -45,8 +45,8 @@ public class SignatureSettingDialog extends DialogFragment {
     private Set<String> mInputEmojiSet = new HashSet<>();
     private View root;
     private WeakReference<Activity> mActivityReference;
-
     private EmojiPickerFragment mEmojiPickerFragment;
+    private boolean mIsEmojiFragmentCreated = false;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -162,7 +162,6 @@ public class SignatureSettingDialog extends DialogFragment {
 
         BugleAnalytics.logEvent("SMS_Signature_Show", true);
         mEmojiContainer.setVisibility(View.INVISIBLE);
-        initEmoji();
         return root;
     }
 
@@ -181,6 +180,10 @@ public class SignatureSettingDialog extends DialogFragment {
 
     private void showEmoji() {
         mEmojiContainer.setVisibility(View.VISIBLE);
+        if (!mIsEmojiFragmentCreated) {
+            initEmoji();
+            mIsEmojiFragmentCreated = true;
+        }
         mIsEmojiShow = true;
     }
 
@@ -228,7 +231,7 @@ public class SignatureSettingDialog extends DialogFragment {
         };
 
         int keyboardHeight = UiUtils.getKeyboardHeight();
-        if(keyboardHeight != 0){
+        if (keyboardHeight != 0) {
             mEmojiContainer.getLayoutParams().height = keyboardHeight;
         }
 

@@ -7,11 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.theme.ChooseThemePagerView;
+import com.android.messaging.ui.customize.theme.ThemeDownloadManager;
 import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
@@ -19,6 +22,7 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
 
     public static final String PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN = "pref_key_welcome_choose_theme_shown";
     private boolean mIsThemeAppling;
+    private INotificationObserver mObserver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,15 +36,29 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
                 return;
             }
             mIsThemeAppling = true;
-            Threads.postOnThreadPoolExecutor(() -> ThemeUtils.applyThemeFirstTime(themeInfo, () -> {
-                Threads.postOnMainThread(() -> {
-                    BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
-                    UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
-                    finish();
-                });
-                BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, "theme", themeInfo.mThemeKey);
-                BugleFirebaseAnalytics.logEvent("Start_ChooseTheme_Apply", "theme", themeInfo.mThemeKey);
-            }));
+            String copyAndMoveKey = ThemeDownloadManager.getInstance().getPrefKeyByThemeName(themeInfo.mThemeKey);
+            if (!Preferences.getDefault().getBoolean(copyAndMoveKey, false)) {
+                mObserver = (s, hsBundle) -> {
+                    if (s.equals(copyAndMoveKey)) {
+                        Threads.postOnThreadPoolExecutor(() -> ThemeUtils.applyThemeFirstTime(themeInfo,
+                                () -> Threads.postOnMainThread(() -> {
+                                    BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
+                                    UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
+                                    finish();
+                                })));
+                    }
+                };
+                HSGlobalNotificationCenter.addObserver(copyAndMoveKey, mObserver);
+            } else {
+                Threads.postOnThreadPoolExecutor(() -> ThemeUtils.applyThemeFirstTime(themeInfo,
+                        () -> Threads.postOnMainThread(() -> {
+                            BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
+                            UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
+                            finish();
+                        })));
+            }
+            BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, "theme", themeInfo.mThemeKey);
+            BugleFirebaseAnalytics.logEvent("Start_ChooseTheme_Apply", "theme", themeInfo.mThemeKey);
         });
 
         BugleAnalytics.logEvent("Start_ChooseTheme_Show", true);
@@ -66,6 +84,9 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mObserver != null) {
+            HSGlobalNotificationCenter.removeObserver(mObserver);
+        }
     }
 }
 

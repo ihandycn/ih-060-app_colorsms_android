@@ -120,7 +120,7 @@ public class EmojiVariantPopup {
                     ((ImageView) mAnchorView).setImageDrawable(emojiInfo.getDrawable());
                     mPopupWindow.dismiss();
                     if (EmojiManager.isFirstEmojiVariantClick()) {
-                        Toast.makeText(context, context.getResources().getString(R.string.emoji_long_click), Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, context.getResources().getString(R.string.emoji_first_long_click), Toast.LENGTH_LONG).show();
                     }
                 }
             });

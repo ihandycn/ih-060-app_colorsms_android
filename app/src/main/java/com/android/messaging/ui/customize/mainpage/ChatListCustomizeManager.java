@@ -4,6 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
@@ -170,13 +172,7 @@ public class ChatListCustomizeManager {
 
     static void saveChatListCustomizeInfo(String wallpaperPath, float opacity, boolean useThemeColor, int textColor) {
         File customWallpaperFile = new File(CommonUtils.getDirectory(CHAT_LIST_BASE_FOLDER), WALLPAPER_FILE_NAME);
-        if (customWallpaperFile.exists()) {
-            customWallpaperFile.delete();
-        }
         File customToolbarFile = new File(CommonUtils.getDirectory(CHAT_LIST_BASE_FOLDER), TOOLBAR_FILE_NAME);
-        if (customToolbarFile.exists()) {
-            customToolbarFile.delete();
-        }
 
         boolean hasCustomWallpaper = true;
 
@@ -217,7 +213,6 @@ public class ChatListCustomizeManager {
                 if (toolbar != null) {
                     CommonUtils.saveBitmapToFile(toolbar, customToolbarFile);
                 }
-
                 if (wallpaper != null) {
                     CommonUtils.saveBitmapToFile(wallpaper, customWallpaperFile);
                 }
@@ -228,46 +223,39 @@ public class ChatListCustomizeManager {
             int height = Dimensions.getPhoneHeight(HSApplication.getContext());
             int width = Dimensions.getPhoneWidth(HSApplication.getContext());
 
+            if (bgBitmap == null || bgBitmap.getWidth() == 0 || bgBitmap.getHeight() == 0) {
+                return;
+            }
+
             int bitmapHeight = bgBitmap.getHeight();
             int bitmapWidth = bgBitmap.getWidth();
 
-            int left = 0;
-            int top = 0;
-            int resizeWidth = bitmapWidth;
-            int resizeHeight = bitmapHeight;
-
-            Bitmap resizedBitmap;
-            if (height * bitmapWidth == width * bitmapHeight) {
-                resizedBitmap = bgBitmap;
+            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bitmap);
+            RectF rectF = new RectF(0, 0, width - 1, height - 1);
+            if (height * bitmapWidth > width * bitmapHeight) {
+                float scale = bitmapHeight / (float) height;
+                int scaledWidth = Math.min((int) (scale * width), bitmapWidth);
+                Rect rect = new Rect((bitmapWidth - scaledWidth) / 2, 0, (bitmapWidth + scaledWidth) / 2, bitmapHeight);
+                canvas.drawBitmap(bgBitmap, rect, rectF, null);
             } else {
-                if (height * bitmapWidth < width * bitmapHeight) {
-                    resizeHeight = (int) (bitmapWidth * height * 1.0f / width);
-                    top = bitmapHeight / 2 - resizeHeight / 2;
-                } else {
-                    resizeWidth = (int) (bitmapHeight * width * 1.0f / height);
-                    left = bitmapWidth / 2 - resizeWidth / 2;
-                }
-                resizedBitmap = Bitmap.createBitmap(bgBitmap, left, top, resizeWidth, resizeHeight);
+                float scale = bitmapWidth / (float) width;
+                int scaledHeight = Math.min((int) (scale * height), bitmapHeight);
+                Rect rect = new Rect(0, (bitmapHeight - scaledHeight) / 2, bitmapWidth, (bitmapHeight + scaledHeight) / 2);
+                canvas.drawBitmap(bgBitmap, rect, rectF, null);
             }
-
             if (opacity > 0) {
-                Bitmap bmp = Bitmap.createBitmap(resizeWidth, resizeHeight, Bitmap.Config.ARGB_8888);
-                Canvas canvas = new Canvas(bmp);
-                canvas.drawBitmap(resizedBitmap, 0, 0, null);
                 int coverColor = ((int) (opacity * 255) << 24) | 0x00FFFFFF;
                 canvas.drawColor(coverColor);
-                resizedBitmap = bmp;
+            }
+            int cutPointY = Dimensions.pxFromDp(56) + Dimensions.getStatusBarHeight(HSApplication.getContext());
+            if (cutPointY >= height) {
+                return;
             }
 
-            int cutPointY = (int) (resizeWidth * 1.0f *
-                    (Dimensions.pxFromDp(56) + Dimensions.getStatusBarHeight(HSApplication.getContext())) / width);
-
-            Bitmap toolbar = Bitmap.createBitmap(resizedBitmap, 0, 0, resizedBitmap.getWidth(), cutPointY);
+            Bitmap toolbar = Bitmap.createBitmap(bitmap, 0, 0, width, cutPointY);
+            Bitmap wallpaper = Bitmap.createBitmap(bitmap, 0, cutPointY, width, height - cutPointY);
             CommonUtils.saveBitmapToFile(toolbar, customToolbarFile);
-
-            cutPointY++;
-            Bitmap wallpaper = Bitmap.createBitmap(resizedBitmap, 0, cutPointY, resizedBitmap.getWidth(),
-                    resizedBitmap.getHeight() - cutPointY);
             CommonUtils.saveBitmapToFile(wallpaper, customWallpaperFile);
         }
 

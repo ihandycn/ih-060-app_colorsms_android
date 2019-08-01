@@ -11,6 +11,7 @@ import com.superapps.util.Calendars;
 
 import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
 import net.appcloudbox.ads.nativead.AcbNativeAdManager;
+import net.appcloudbox.autopilot.AutopilotEvent;
 
 import static com.android.messaging.ui.conversationlist.ConversationListActivity.PREF_KEY_EXIT_WIRE_AD_SHOW_COUNT_IN_ONE_DAY;
 import static com.android.messaging.ui.conversationlist.ConversationListActivity.PREF_KEY_EXIT_WIRE_AD_SHOW_TIME;
@@ -29,20 +30,23 @@ public class AdConfig {
                 > HSConfig.optInteger(30, "Application", "SMSAd", "SMSHomepageBannerAd", "ShowAfterInstall") * DateUtils.MINUTE_IN_MILLIS;
     }
 
-    public static boolean isDetailpageTopAdEnabled(){
+    public static boolean isDetailpageTopAdEnabled() {
         return HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageTopAd", "Enabled")
                 && System.currentTimeMillis() - CommonUtils.getAppInstallTimeMillis()
                 > HSConfig.optInteger(30, "Application", "SMSAd", "SMSDetailspageTopAd", "ShowAfterInstall") * DateUtils.MINUTE_IN_MILLIS;
     }
 
-    public static boolean isExitAdEnabled(){
+    public static boolean isExitAdEnabled() {
+        int adShowCountToday = Calendars.isSameDay(System.currentTimeMillis(), mPrefs.getLong(PREF_KEY_EXIT_WIRE_AD_SHOW_TIME, -1))
+                ? mPrefs.getInt(PREF_KEY_EXIT_WIRE_AD_SHOW_COUNT_IN_ONE_DAY, 0)
+                : 0;
+
         return !BillingManager.isPremiumUser()
                 && HSConfig.optBoolean(true, "Application", "SMSAd", "SMSExitAd", "Enabled")
                 && ExitAdAutopilotUtils.getIsExitAdSwitchOn()
                 && System.currentTimeMillis() - CommonUtils.getAppInstallTimeMillis()
                 > HSConfig.optInteger(2, "Application", "SMSAd", "SMSExitAd", "ShowAfterInstall") * DateUtils.HOUR_IN_MILLIS
-                && !(Calendars.isSameDay(System.currentTimeMillis(), mPrefs.getLong(PREF_KEY_EXIT_WIRE_AD_SHOW_TIME, -1))
-                && mPrefs.getInt(PREF_KEY_EXIT_WIRE_AD_SHOW_COUNT_IN_ONE_DAY, 0) == ExitAdAutopilotUtils.getExitAdShowMaxTimes());
+                && adShowCountToday < ExitAdAutopilotUtils.getExitAdShowMaxTimes();
     }
 
     public static void deactiveAllAds() {

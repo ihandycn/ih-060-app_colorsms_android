@@ -37,36 +37,36 @@ public class WallpaperSizeManager {
             }
 
             int toolbarViewHeight = Dimensions.pxFromDp(56) + Dimensions.getStatusBarHeight(HSApplication.getContext());
-            int mToolbarDrawableWidth = toolbarBitmap.getWidth();
-            int mToolbarDrawableHeight = toolbarBitmap.getHeight();
-            int mWallpaperDrawableWidth = wallpaperBitmap.getWidth();
-            int mWallpaperDrawableHeight = wallpaperBitmap.getHeight();
-            float toolbarHeightRadio = mToolbarDrawableHeight * 1.0f / toolbarViewHeight;
+            int toolbarBitmapWidth = toolbarBitmap.getWidth();
+            int toolbarBitmapHeight = toolbarBitmap.getHeight();
+            int wallpaperBitmapWidth = wallpaperBitmap.getWidth();
+            int wallpaperBitmapHeight = wallpaperBitmap.getHeight();
+            float toolbarHeightRadio = toolbarBitmapHeight * 1.0f / toolbarViewHeight;
 
-            float widthRadio = mToolbarDrawableWidth * 1.0f / phoneWidth;
-            float wallpaperHeightRadio = mWallpaperDrawableHeight * 1.0f / (phoneHeight - toolbarViewHeight);
+            float widthRadio = toolbarBitmapWidth * 1.0f / phoneWidth;
+            float wallpaperHeightRadio = wallpaperBitmapHeight * 1.0f / (phoneHeight - toolbarViewHeight);
 
-            int mToolbarViewWidth;
-            int mToolbarViewHeight;
-            int mWallpaperViewWidth;
-            int mWallpaperViewHeight;
+            int scaledToolbarWidth;
+            int scaledToolbarHeight;
+            int scaledWallpaperWidth;
+            int scaledWallpaperHeight;
 
             if (toolbarHeightRadio <= widthRadio && toolbarHeightRadio <= wallpaperHeightRadio) {
                 //toolbar drawable height is the shortest length;
-                mToolbarViewHeight = toolbarViewHeight;
+                scaledToolbarHeight = toolbarViewHeight;
 
             } else if (widthRadio <= toolbarHeightRadio && widthRadio <= wallpaperHeightRadio) {
-                mToolbarViewWidth = phoneWidth;
-                mToolbarViewHeight = (int) (mToolbarDrawableHeight * mToolbarViewWidth * 1.0f / mToolbarDrawableWidth);
+                scaledToolbarWidth = phoneWidth;
+                scaledToolbarHeight = (int) (toolbarBitmapHeight * scaledToolbarWidth * 1.0f / toolbarBitmapWidth);
             } else {
-                mWallpaperViewHeight = phoneHeight - toolbarViewHeight;
+                scaledWallpaperHeight = phoneHeight - toolbarViewHeight;
 
-                mWallpaperViewWidth = (int) (mWallpaperViewHeight * mWallpaperDrawableWidth * 1.0f / mWallpaperDrawableHeight);
-                mToolbarViewWidth = mWallpaperViewWidth;
-                mToolbarViewHeight = (int) (mToolbarDrawableHeight * mToolbarViewWidth * 1.0f / mToolbarDrawableWidth);
+                scaledWallpaperWidth = (int) (scaledWallpaperHeight * wallpaperBitmapWidth * 1.0f / wallpaperBitmapHeight);
+                scaledToolbarWidth = scaledWallpaperWidth;
+                scaledToolbarHeight = (int) (toolbarBitmapHeight * scaledToolbarWidth * 1.0f / toolbarBitmapWidth);
             }
 
-            float toolbarScale = mToolbarDrawableHeight * 1.0f / mToolbarViewHeight;
+            float toolbarScale = toolbarBitmapHeight * 1.0f / scaledToolbarHeight;
             int resizedToolbarHeight = (int) (toolbarScale * toolbarViewHeight);
             int resizedWidth = (int) (toolbarScale * phoneWidth);
 
@@ -76,13 +76,18 @@ public class WallpaperSizeManager {
             int toolbarStartY = toolbarBitmap.getHeight() - resizedToolbarHeight;
 
             //resize toolbar bitmap
-            Bitmap resizedToolbarBitmap = Bitmap.createBitmap(toolbarBitmap, Math.max(0, startX), toolbarStartY,
-                    resizedWidth, resizedToolbarHeight);
+            Bitmap resizedToolbarBitmap = Bitmap.createBitmap(toolbarBitmap, Math.max(0, startX),
+                    Math.max(toolbarStartY, 0),
+                    Math.min(resizedWidth, toolbarBitmap.getWidth() - Math.max(0, startX)),
+                    Math.min(resizedToolbarHeight, toolbarBitmap.getHeight() - Math.max(toolbarStartY, 0)));
             CommonUtils.saveBitmapToFile(resizedToolbarBitmap, toolbarFile);
 
             //resize wallpaper
-            Bitmap resizedWallpaper = Bitmap.createBitmap(wallpaperBitmap, Math.max(0, startX), 0,
-                    resizedWidth, Math.min(resizedWallpaperHeight, wallpaperBitmap.getHeight()));
+            Bitmap resizedWallpaper = Bitmap.createBitmap(wallpaperBitmap,
+                    Math.max(0, startX),
+                    0,
+                    Math.min(resizedWidth, wallpaperBitmap.getWidth() - Math.max(0, startX)),
+                    Math.min(resizedWallpaperHeight, wallpaperBitmap.getHeight()));
             CommonUtils.saveBitmapToFile(resizedWallpaper, wallpaperFile);
 
             //resize and replace wallpaper for list activity
@@ -96,8 +101,11 @@ public class WallpaperSizeManager {
             if (listWallpaperBitmap == null) {
                 return;
             }
-            Bitmap resizedListWallpaper = Bitmap.createBitmap(listWallpaperBitmap, Math.max(0, startX), 0,
-                    resizedWidth, Math.min(resizedWallpaperHeight, listWallpaperBitmap.getHeight()));
+            Bitmap resizedListWallpaper = Bitmap.createBitmap(listWallpaperBitmap,
+                    Math.max(0, startX),
+                    0,
+                    Math.min(resizedWidth, listWallpaperBitmap.getWidth() - Math.max(0, startX)),
+                    Math.min(resizedWallpaperHeight, listWallpaperBitmap.getHeight()));
             CommonUtils.saveBitmapToFile(resizedListWallpaper, listWallpaperFile);
         }
     }
