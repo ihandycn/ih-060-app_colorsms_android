@@ -178,7 +178,8 @@ public class ConversationActivity extends BugleActionBarActivity
         ViewUtils.setMargins(findViewById(R.id.conversation_fragment_container),
                 0, -Dimensions.getStatusBarHeight(HSApplication.getContext()), 0, 0);
 
-        if (Preferences.getDefault().getBoolean(PREF_KEY_FIRST_IN_CONVERSATION_PAGE, true)) {
+        if (Preferences.getDefault().getBoolean(PREF_KEY_FIRST_IN_CONVERSATION_PAGE, true))
+        {
             Preferences.getDefault().putBoolean(PREF_KEY_FIRST_IN_CONVERSATION_PAGE, false);
             mNeedShowGuide = true;
         }
@@ -225,7 +226,7 @@ public class ConversationActivity extends BugleActionBarActivity
                 public void run() {
                     showSettingGuide();
                 }
-            }, 2000);
+            }, 1000);
         }
     }
 
@@ -243,15 +244,15 @@ public class ConversationActivity extends BugleActionBarActivity
         AnimationSet animationSet = new AnimationSet(false);
         Animation alpha = new AlphaAnimation(0, 100);
         alpha.setDuration(80);
-        Animation scale = new ScaleAnimation(0.6f, 1.05f, 0.6f, 1.05f, Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0);
+        Animation scale = new ScaleAnimation(0.6f, 1.1f, 0.6f, 1.1f, Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0);
         scale.setDuration(160);
         scale.setInterpolator(PathInterpolatorCompat.create(0.32f, 0.66f, 0.6f, 1f));
-        Animation scale2 = new ScaleAnimation(1.05f, 1f, 1.05f, 1f, Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0);
+        Animation scale2 = new ScaleAnimation(1f, 1 / 1.1f, 1f, 1 / 1.1f, Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0);
         scale2.setDuration(160);
         scale2.setStartOffset(160);
-        animationSet.addAnimation(alpha);
         animationSet.addAnimation(scale);
         animationSet.addAnimation(scale2);
+        animationSet.addAnimation(alpha);
         tv.startAnimation(animationSet);
 
         container.setOnClickListener(new View.OnClickListener() {
@@ -262,10 +263,10 @@ public class ConversationActivity extends BugleActionBarActivity
                 Animation alpha = new AlphaAnimation(100, 0);
                 alpha.setDuration(80);
                 alpha.setStartOffset(200);
-                Animation scale = new ScaleAnimation(1f, 1.06f, 1f, 1.06f, Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0);
+                Animation scale = new ScaleAnimation(1f, 1.1f, 1f, 1.1f, Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0);
                 scale.setDuration(160);
                 scale.setInterpolator(PathInterpolatorCompat.create(0.32f, 0.66f, 0.6f, 1f));
-                Animation scale2 = new ScaleAnimation(1.06f, 0.6f, 1.06f, 0.6f, Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0);
+                Animation scale2 = new ScaleAnimation(1f, 0.6f/1.1f, 1f, 0.6f/1.1f, Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0);
                 scale2.setDuration(160);
                 scale2.setStartOffset(160);
                 animationSet.addAnimation(scale);
@@ -284,12 +285,18 @@ public class ConversationActivity extends BugleActionBarActivity
                             return;
                         }
                         root.removeView(container);
-                        ConversationFragment fragment = getConversationFragment();
-                        if (fragment != null) {
-                            fragment.unBLockAd();
-                        } else {
-                            HSLog.e(TAG, "beginAdLoad failed: fragment is null");
-                        }
+                        Threads.postOnMainThreadDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                ConversationFragment fragment = getConversationFragment();
+                                if (fragment != null) {
+                                    fragment.unBLockAd();
+                                } else {
+                                    HSLog.e(TAG, "beginAdLoad failed: fragment is null");
+                                }
+                            }
+                        }, 500);
+
                     }
 
                     @Override
