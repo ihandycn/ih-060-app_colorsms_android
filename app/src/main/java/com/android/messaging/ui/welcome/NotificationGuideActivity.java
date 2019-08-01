@@ -1,6 +1,7 @@
 package com.android.messaging.ui.welcome;
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.animation.PathInterpolatorCompat;
@@ -11,6 +12,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.dialog.PermissionGuideManager;
+import com.android.messaging.util.NotificationCleanerUtils;
+import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
@@ -64,5 +70,29 @@ public class NotificationGuideActivity extends AppCompatActivity {
             skipButton.setVisibility(View.VISIBLE);
             confirmButton.setVisibility(View.VISIBLE);
         }, 160);
+
+        skipButton.setOnClickListener(v -> {
+            UIIntents.get().launchConversationListActivity(NotificationGuideActivity.this);
+            finish();
+        });
+
+        confirmButton.setOnClickListener(v -> {
+            try {
+                Intent intent = new Intent(NotificationCleanerUtils.ACTION_NOTIFICATION_LISTENER_SETTINGS);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            } catch (Exception e) {
+                HSLog.d("Notification Test", "Start system setting error!");
+            }
+            PermissionGuideManager.getInstance()
+                    .showPermissionGuide(HSApplication.getContext(), PermissionGuideManager.PermissionGuideType.NOTIFICATION_CLEANER_ACCESS_FULL_SCREEN, false);
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        UIIntents.get().launchConversationListActivity(NotificationGuideActivity.this);
+        super.onBackPressed();
     }
 }

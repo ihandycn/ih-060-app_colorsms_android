@@ -1339,6 +1339,9 @@
     <string name="notification_guide_skip_button">Skip</string>
     <string name="notification_guide_title">Last Step</string>
     <string name="notification_guide_content">To serve you better for receiving messages, please grant Notification Access.</string>
+    <string name="permission_guide_description">Enable now and enjoy Color SMS.</string>
+    <string name="battery_off">Off</string>
+    <string name="promotion_enable_btn">ENABLE</string>
     
 </resources>
 

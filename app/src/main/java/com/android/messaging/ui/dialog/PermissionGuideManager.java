@@ -134,6 +134,8 @@ public class PermissionGuideManager {
         switch (type) {
             case FIVE_STAR_RATE:
                 return new FiveStarRateGuideDialog(context);
+            case NOTIFICATION_CLEANER_ACCESS_FULL_SCREEN:
+                return new NotificationAccessGuideAnimationDialog(context);
 //            case SET_AS_DEFAULT:
 //                return new SetAsDefaultGuide(context);
 //            case SET_AS_DEFAULT_HUAWEI_KITKAT:
@@ -148,8 +150,6 @@ public class PermissionGuideManager {
 //                return new WallpaperHintDialog(context, PermissionGuideType.WALLPAPER_LIVE);
 //            case WALLPAPER_3D:
 //                return new WallpaperHintDialog(context, PermissionGuideType.WALLPAPER_3D);
-//            case NOTIFICATION_CLEANER_ACCESS_FULL_SCREEN:
-//                return new NotificationCleanerAccessGuideAnimationDialog(context);
 //            case MESSAGE_CENTER_ACCESS:
 //                return new MessageCenterAccessGuideDialog(context);
 //            case APP_LOCK:

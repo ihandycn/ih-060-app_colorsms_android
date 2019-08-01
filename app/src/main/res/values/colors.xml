@@ -278,4 +278,6 @@
 
     <color name="notification_guide_skip_button_color">#e4e6ee</color>
     <color name="notification_guide_confirm_button_color">#ed4864</color>
+    <color name="permission_guide_phone_frame">#373a3b</color>
+    <color name="divider_gray">#D8D8D8</color>
 </resources>
