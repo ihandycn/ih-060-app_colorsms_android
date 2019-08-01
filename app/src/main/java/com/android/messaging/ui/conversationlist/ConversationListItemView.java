@@ -309,6 +309,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         if (mData.getIsFailedStatus()) {
             maxLines = ERROR_MESSAGE_LINE_COUNT;
             mSnippetTextView.setTextColor(mSnippetColor);
+            ChatListCustomizeManager.changeViewColorIfNeed(mSnippetTextView);
             ChatListUtils.changeTextViewShadow(mSnippetTextView, false);
         } else {
             maxLines = TextUtils.isEmpty(snippetText) ? 0 : SNIPPET_LINE_COUNT;
