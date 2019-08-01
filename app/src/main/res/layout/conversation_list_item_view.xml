@@ -139,19 +139,6 @@
                 app:iconSize="large"
                 app:reveal="false"/>
 
-            <ImageView
-                android:id="@+id/conversation_failed_status_icon"
-                android:layout_width="@dimen/conversation_list_error_icon_size"
-                android:layout_height="@dimen/conversation_list_error_icon_size"
-                android:layout_gravity="bottom"
-                android:layout_marginStart="@dimen/conversation_list_error_icon_margin_start"
-                android:layout_marginBottom="10dp"
-                android:background="@null"
-                android:contentDescription="@null"
-                android:importantForAccessibility="no"
-                android:src="@drawable/ic_failed_status_red"
-                android:visibility="visible"/>
-
             <com.android.messaging.ui.view.MessagesTextView
                 android:id="@+id/conversation_name"
                 style="@style/ConversationListItemViewConversationNameStyle"

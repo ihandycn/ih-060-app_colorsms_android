@@ -11,14 +11,15 @@ import android.text.style.ImageSpan;
 import com.android.messaging.R;
 import com.ihs.app.framework.HSApplication;
 
-final class EmojiSpan extends ImageSpan {
+public final class EmojiSpan extends ImageSpan {
     private final float size;
 
-    EmojiSpan(Drawable drawable, float emojiSize) {
+    public EmojiSpan(Drawable drawable, float emojiSize) {
         super(drawable);
         this.size = emojiSize;
     }
 
+    @Override
     public Drawable getDrawable() {
         Drawable drawable = super.getDrawable();
         if (drawable == null) {
@@ -28,6 +29,7 @@ final class EmojiSpan extends ImageSpan {
         return drawable;
     }
 
+    @Override
     public int getSize(Paint paint, CharSequence charSequence, int i, int i2, FontMetricsInt fontMetricsInt) {
         if (fontMetricsInt != null) {
             FontMetrics fontMetrics = paint.getFontMetrics();
@@ -40,6 +42,7 @@ final class EmojiSpan extends ImageSpan {
         return (int) this.size;
     }
 
+    @Override
     public void draw(Canvas canvas, CharSequence charSequence, int i, int i2, float f, int i3, int i4, int i5, Paint paint) {
         Drawable drawable = getDrawable();
         FontMetrics fontMetrics = paint.getFontMetrics();

@@ -18,11 +18,14 @@ package com.android.messaging.ui.conversationlist;
 import android.animation.LayoutTransition;
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -44,7 +47,6 @@ import com.android.messaging.datamodel.action.UpdateConversationArchiveStatusAct
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.font.FontUtils;
-import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.ContactIconView;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SnackBar;
@@ -61,6 +63,7 @@ import com.android.messaging.util.ContentType;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -106,7 +109,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private TextView mTimestampTextView;
     private ContactIconView mContactIconView;
     private ImageView mContactBackground;
-    private ImageView mFailedStatusIconView;
 
     private View mCrossSwipeArchiveLeftContainer;
     private View mCrossSwipeArchiveRightContainer;
@@ -140,7 +142,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mSnippetTextView.setLayoutParams(paramSnippet);
         mTimestampTextView = findViewById(R.id.conversation_timestamp);
         mContactIconView = findViewById(R.id.conversation_icon);
-        mFailedStatusIconView = findViewById(R.id.conversation_failed_status_icon);
 
         mCrossSwipeArchiveLeftContainer = findViewById(R.id.cross_swipe_archive_left_container);
         mCrossSwipeArchiveRightContainer = findViewById(R.id.cross_swipe_archive_right_container);
@@ -252,14 +253,16 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     }
 
     private void setSnippet() {
+        String text = getSnippetText();
         if (mData.getIsFailedStatus()) {
-            int failureMessageId = R.string.message_status_download_failed;
-
-            if (mData.getIsMessageTypeOutgoing()) {
-                failureMessageId = MmsUtils.mapRawStatusToErrorResourceId(mData.getMessageStatus(),
-                        mData.getMessageRawTelephonyStatus());
-            }
-            mSnippetTextView.setText(getContext().getResources().getString(failureMessageId));
+            SpannableString sp = new SpannableString("  " + text);
+            Drawable drawable = getResources().getDrawable(R.drawable.fail_icon_white);
+            drawable.setColorFilter(mSnippetTextView.getCurrentTextColor(), PorterDuff.Mode.SRC_ATOP);
+            drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+            ImageSpan imageSpan = new CenteredImageSpan(drawable);
+            sp.setSpan(imageSpan, 0, 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            mSnippetTextView.setText(sp);
+            mSnippetTextView.setAlpha(0.65f);
         } else {
             mSnippetTextView.setText(getSnippetText());
         }
@@ -300,19 +303,16 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         final Resources resources = getContext().getResources();
 
-        int color;
         final int maxLines;
         final String snippetText = getSnippetText();
 
         if (mData.getIsFailedStatus()) {
-            color = resources.getColor(R.color.conversation_list_error);
             maxLines = ERROR_MESSAGE_LINE_COUNT;
-            mSnippetTextView.setTextColor(color);
+            mSnippetTextView.setTextColor(mSnippetColor);
             ChatListUtils.changeTextViewShadow(mSnippetTextView, false);
         } else {
             maxLines = TextUtils.isEmpty(snippetText) ? 0 : SNIPPET_LINE_COUNT;
-            color = mSnippetColor;
-            mSnippetTextView.setTextColor(color);
+            mSnippetTextView.setTextColor(mSnippetColor);
             ChatListCustomizeManager.changeViewColorIfNeed(mSnippetTextView);
             ChatListUtils.changeTextViewShadow(mSnippetTextView);
         }
@@ -394,8 +394,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         setContactImage();
         mContactIconView.clearColorFilter();
-
-        mFailedStatusIconView.setVisibility(failStatusVisibility);
     }
 
     private void addSpannable() {
