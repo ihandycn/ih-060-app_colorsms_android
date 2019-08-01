@@ -43,6 +43,8 @@ public class PeopleOptionsItemView extends GeneralSettingItemView {
     public PeopleOptionsItemView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         super.blockSwitchAutoCheck();
+        mSummaryView.setMaxLines(1);
+        mSummaryView.setEllipsize(TextUtils.TruncateAt.END);
         mData = DataModel.get().createPeopleOptionsItemData(context);
     }
 

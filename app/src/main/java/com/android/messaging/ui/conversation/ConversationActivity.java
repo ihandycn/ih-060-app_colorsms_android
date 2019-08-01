@@ -225,7 +225,7 @@ public class ConversationActivity extends BugleActionBarActivity
                 public void run() {
                     showSettingGuide();
                 }
-            }, 500);
+            }, 2000);
         }
     }
 

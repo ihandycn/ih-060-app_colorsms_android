@@ -22,7 +22,7 @@ public class RenameGroupDialog extends TextSettingDialog {
 
     @Override
     public void onCancel() {
-        BugleAnalytics.logEvent("SMS_Detailspage_Settings_Rename_Cancel", true);
+        BugleAnalytics.logEvent("SMS_Detailspage_Settings_Rename_Cancel", false);
     }
 
     @Override

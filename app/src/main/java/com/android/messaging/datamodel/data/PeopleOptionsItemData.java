@@ -153,7 +153,7 @@ public class PeopleOptionsItemData {
             case SETTING_BLOCKED:
                 Assert.notNull(otherParticipant);
                 final int resourceId = otherParticipant.isBlocked() ?
-                        R.string.unblock_contact_title : R.string.block_contact_title;
+                        R.string.tap_to_unblock_message : R.string.action_block;
                 mTitle = mContext.getString(resourceId);
                 mCheckable = false;
                 mType = GeneralSettingItemView.NORMAL;

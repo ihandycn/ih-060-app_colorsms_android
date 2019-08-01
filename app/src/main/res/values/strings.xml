@@ -681,12 +681,6 @@
     <!-- Action menu title for blocking and archiving selected conversations in conversation list -->
     <string name="action_block">Block</string>
 
-    <!-- Label of block contact item in People & Options for 1:1 conversation -->
-    <string name="block_contact_title">Block</string>
-
-    <!-- Label of unblock contact item in People & Options for 1:1 conversation -->
-    <string name="unblock_contact_title">Unblock</string>
-
     <!-- Title of block confirmation dialog -->
     <string name="block_confirmation_title">Block <xliff:g id="destination">%s</xliff:g>?</string>
 
