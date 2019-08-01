@@ -258,11 +258,11 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             SpannableString sp = new SpannableString("  " + text);
             Drawable drawable = getResources().getDrawable(R.drawable.fail_icon_white);
             drawable.setColorFilter(mSnippetTextView.getCurrentTextColor(), PorterDuff.Mode.SRC_ATOP);
+            drawable.setAlpha(0xA6);
             drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
             ImageSpan imageSpan = new CenteredImageSpan(drawable);
             sp.setSpan(imageSpan, 0, 1, Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
             mSnippetTextView.setText(sp);
-            mSnippetTextView.setAlpha(0.65f);
         } else {
             mSnippetTextView.setText(getSnippetText());
         }
