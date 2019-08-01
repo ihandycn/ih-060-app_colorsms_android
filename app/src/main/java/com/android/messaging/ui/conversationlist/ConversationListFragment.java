@@ -17,18 +17,15 @@ package com.android.messaging.ui.conversationlist;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
-import android.provider.Telephony;
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewGroupCompat;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -62,7 +59,6 @@ import com.android.messaging.privatebox.ui.SelfVerifyActivity;
 import com.android.messaging.ui.BugleAnimationTags;
 import com.android.messaging.ui.ListEmptyView;
 import com.android.messaging.ui.SnackBarInteraction;
-import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.WallpaperDrawables;
@@ -79,6 +75,7 @@ import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.ViewUtils;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
@@ -105,7 +102,7 @@ import static com.android.messaging.ui.conversationlist.CustomizeGuideController
  * Shows a list of conversations.
  */
 public class ConversationListFragment extends Fragment implements ConversationListDataListener,
-        ConversationListItemView.HostInterface {
+        ConversationListItemView.HostInterface, INotificationObserver {
     private static final String BUNDLE_ARCHIVED_MODE = "archived_mode";
     private static final String BUNDLE_FORWARD_MESSAGE_MODE = "forward_message_mode";
     private static final boolean VERBOSE = false;
@@ -148,12 +145,15 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
     // Saved Instance State Data - only for temporal data which is nice to maintain but not
     // critical for correctness.
-    private static final String SAVED_INSTANCE_STATE_LIST_VIEW_STATE_KEY =
-            "conversationListViewState";
+    private static final String SAVED_INSTANCE_STATE_LIST_VIEW_STATE_KEY = "conversationListViewState";
     private Parcelable mListState;
 
     @VisibleForTesting
     final Binding<ConversationListData> mListBinding = BindingBase.createBinding(this);
+
+    private List<Runnable> mDeferredRunnables = new ArrayList<>();
+    private boolean mRecyclerViewDisplayed;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     public static ConversationListFragment createArchivedConversationListFragment() {
         return createConversationListFragment(BUNDLE_ARCHIVED_MODE);
@@ -472,7 +472,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         if (getActivity() == null || UiUtils.isDestroyed(getActivity())) {
             return;
         }
-        
+
         if (mAdContainer == null) {
             mAdContainer = (ViewGroup) LayoutInflater.from(getActivity()).inflate(R.layout.conversation_list_header, mRecyclerView, false);
         }
@@ -551,8 +551,28 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             mForwardMessageMode = arguments.getBoolean(BUNDLE_FORWARD_MESSAGE_MODE, false);
         }
         mListBinding.bind(DataModel.get().createConversationListData(activity, this, mArchiveMode));
+
+        HSGlobalNotificationCenter.addObserver(ConversationListActivity.CONVERSATION_LIST_DISPLAYED, this);
     }
 
+    @Override public void onDetach() {
+        super.onDetach();
+        HSGlobalNotificationCenter.removeObserver(this);
+        mDeferredRunnables.clear();
+    }
+
+    @Override public void onReceive(String s, HSBundle hsBundle) {
+        switch (s) {
+            case ConversationListActivity.CONVERSATION_LIST_DISPLAYED:
+                mRecyclerViewDisplayed = true;
+                if (mDeferredRunnables.size() > 0) {
+                    for (final Runnable r : mDeferredRunnables) {
+                        mHandler.post(r);
+                    }
+                }
+                break;
+        }
+    }
 
     @Override
     public void onSaveInstanceState(final Bundle outState) {
@@ -636,7 +656,11 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             if (Preferences.getDefault().getBoolean(PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE, true)) {
                 Threads.postOnMainThreadDelayed(this::tryShowTopNativeAd, 2000);
             } else {
-                tryShowTopNativeAd();
+                if (mRecyclerViewDisplayed) {
+                    tryShowTopNativeAd();
+                } else {
+                    mDeferredRunnables.add(() -> tryShowTopNativeAd());
+                }
             }
             adFirstPrepared = false;
         }
@@ -751,25 +775,9 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         });
     }
 
-    public View getHeroElementForTransition() {
-        return mArchiveMode ? null : mStartNewConversationButton;
-    }
-
     @VisibleForAnimation
     public RecyclerView getRecyclerView() {
         return mRecyclerView;
-    }
-
-    @Override
-    public void startFullScreenPhotoViewer(
-            final Uri initialPhoto, final Rect initialPhotoBounds, final Uri photosUri) {
-        UIIntents.get().launchFullScreenPhotoViewer(
-                getActivity(), initialPhoto, initialPhotoBounds, photosUri);
-    }
-
-    @Override
-    public void startFullScreenVideoViewer(final Uri videoUri) {
-        UIIntents.get().launchFullScreenVideoViewer(getActivity(), videoUri);
     }
 
     @Override

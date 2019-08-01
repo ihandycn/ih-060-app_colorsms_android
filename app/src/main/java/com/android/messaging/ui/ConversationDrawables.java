@@ -50,6 +50,8 @@ public class ConversationDrawables {
     private Drawable mFastScrollThumbPressedDrawable;
     private Drawable mFastScrollPreviewDrawableLeft;
     private Drawable mFastScrollPreviewDrawableRight;
+    private Drawable mArchiveSwipe;
+    private Drawable mUnarchiveSwipe;
     private final Context mContext;
     private int mIncomingErrorBubbleColor;
     private int mThemeColor;
@@ -96,6 +98,10 @@ public class ConversationDrawables {
                 resources.getDrawable(R.drawable.fastscroll_preview_left);
         mFastScrollPreviewDrawableRight =
                 resources.getDrawable(R.drawable.fastscroll_preview_right);
+        mArchiveSwipe =
+                resources.getDrawable(R.drawable.archive_swipe);
+        mUnarchiveSwipe =
+                resources.getDrawable(R.drawable.unarchive_swipe);
         mIncomingErrorBubbleColor =
                 resources.getColor(R.color.message_error_bubble_color_incoming);
         mThemeColor = PrimaryColors.getPrimaryColor();
@@ -210,5 +216,13 @@ public class ConversationDrawables {
         Drawable protoDrawable = positionRight ? mFastScrollPreviewDrawableRight :
                 mFastScrollPreviewDrawableLeft;
         return ImageUtils.getTintedDrawable(mContext, protoDrawable, mThemeColor);
+    }
+
+    public Drawable getArchiveSwipeDrawable() {
+        return mArchiveSwipe;
+    }
+
+    public Drawable getUnarchiveSwipeDrawable() {
+        return mUnarchiveSwipe;
     }
 }

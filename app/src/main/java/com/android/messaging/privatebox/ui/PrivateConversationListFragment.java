@@ -5,7 +5,6 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -344,18 +343,6 @@ public class PrivateConversationListFragment extends Fragment
     @VisibleForAnimation
     public RecyclerView getRecyclerView() {
         return mRecyclerView;
-    }
-
-    @Override
-    public void startFullScreenPhotoViewer(
-            final Uri initialPhoto, final Rect initialPhotoBounds, final Uri photosUri) {
-        UIIntents.get().launchFullScreenPhotoViewer(
-                getActivity(), initialPhoto, initialPhotoBounds, photosUri);
-    }
-
-    @Override
-    public void startFullScreenVideoViewer(final Uri videoUri) {
-        UIIntents.get().launchFullScreenVideoViewer(getActivity(), videoUri);
     }
 
     @Override

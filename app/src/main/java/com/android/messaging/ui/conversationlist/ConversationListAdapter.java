@@ -106,19 +106,11 @@ public class ConversationListAdapter
 
     @Override
     public int getItemViewType(int position) {
-        if (showHeader()) {
-            return isHeader(position) ? TYPE_HEADER_VIEW : TYPE_NORMAL;
+        if (dataList.get(position) instanceof AdItemData) {
+            return TYPE_HEADER_VIEW;
         } else {
             return TYPE_NORMAL;
         }
-    }
-
-    private boolean showHeader() {
-        return AdConfig.isHomepageBannerAdEnabled() && headerView != null;
-    }
-
-    private boolean isHeader(int position) {
-        return dataList.get(position) instanceof AdItemData;
     }
 
     public void setHeader(View adView) {

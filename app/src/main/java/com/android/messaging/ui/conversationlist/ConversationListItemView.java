@@ -23,8 +23,6 @@ import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.support.v4.text.BidiFormatter;
-import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -42,13 +40,13 @@ import android.widget.TextView;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.annotation.VisibleForAnimation;
-import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.action.UpdateConversationArchiveStatusAction;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.font.FontUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.ContactIconView;
+import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SnackBar;
 import com.android.messaging.ui.SnackBarInteraction;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
@@ -94,41 +92,10 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         List<SnackBarInteraction> getSnackBarInteractions();
 
-        void startFullScreenPhotoViewer(final Uri initialPhoto, final Rect initialPhotoBounds,
-                                        final Uri photosUri);
-
-        void startFullScreenVideoViewer(final Uri videoUri);
-
         boolean isSelectionMode();
 
         boolean isArchived();
     }
-
-    private final OnClickListener fullScreenPreviewClickListener = new OnClickListener() {
-        @Override
-        public void onClick(final View v) {
-            ConversationListActivity.logFirstComeInClickEvent("attachment");
-            final String previewType = mData.getShowDraft() ?
-                    mData.getDraftPreviewContentType() : mData.getPreviewContentType();
-            Assert.isTrue(ContentType.isImageType(previewType) ||
-                    ContentType.isVideoType(previewType));
-
-            final Uri previewUri = mData.getShowDraft() ?
-                    mData.getDraftPreviewUri() : mData.getPreviewUri();
-            if (ContentType.isImageType(previewType)) {
-                final Uri imagesUri = mData.getShowDraft() ?
-                        MessagingContentProvider.buildDraftImagesUri(mData.getConversationId()) :
-                        MessagingContentProvider
-                                .buildConversationImagesUri(mData.getConversationId());
-                final Rect previewImageBounds = UiUtils.getMeasuredBoundsOnScreen(v);
-                mHostInterface.startFullScreenPhotoViewer(
-                        previewUri, previewImageBounds, imagesUri);
-            } else {
-                mHostInterface.startFullScreenVideoViewer(previewUri);
-            }
-            BugleAnalytics.logEvent("SMS_Messages_Preview_Click", true);
-        }
-    };
 
     private ConversationListItemData mData;
 
@@ -241,13 +208,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                 mConversationNameView.getMeasuredWidth(),
                 getPlusOneString(),
                 getPlusNString());
-        // RTL : To format conversation name if it happens to be phone number.
-        final BidiFormatter bidiFormatter = BidiFormatter.getInstance();
-        final String bidiFormattedName = bidiFormatter.unicodeWrap(
-                ellipsizedName.toString(),
-                TextDirectionHeuristicsCompat.LTR);
-
-        mConversationNameView.setText(bidiFormattedName);
+        mConversationNameView.setText(ellipsizedName);
     }
 
     private void setContactImage() {
@@ -320,13 +281,17 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         if (mIsFirstBind) {
             if (!mHostInterface.isArchived()) {
-                ((ImageView) findViewById(R.id.cross_swipe_archive_icon_left)).setImageResource(R.drawable.archive_swipe);
-                ((ImageView) findViewById(R.id.cross_swipe_archive_icon_right)).setImageResource(R.drawable.archive_swipe);
+                ((ImageView) findViewById(R.id.cross_swipe_archive_icon_left))
+                        .setImageDrawable(ConversationDrawables.get().getArchiveSwipeDrawable());
+                ((ImageView) findViewById(R.id.cross_swipe_archive_icon_right))
+                        .setImageDrawable(ConversationDrawables.get().getArchiveSwipeDrawable());
                 ((TextView) findViewById(R.id.cross_swipe_archive_text_left)).setText(R.string.action_archive);
                 ((TextView) findViewById(R.id.cross_swipe_archive_text_right)).setText(R.string.action_archive);
             } else {
-                ((ImageView) findViewById(R.id.cross_swipe_archive_icon_left)).setImageResource(R.drawable.unarchive_swipe);
-                ((ImageView) findViewById(R.id.cross_swipe_archive_icon_right)).setImageResource(R.drawable.unarchive_swipe);
+                ((ImageView) findViewById(R.id.cross_swipe_archive_icon_left))
+                        .setImageDrawable(ConversationDrawables.get().getUnarchiveSwipeDrawable());
+                ((ImageView) findViewById(R.id.cross_swipe_archive_icon_right))
+                        .setImageDrawable(ConversationDrawables.get().getUnarchiveSwipeDrawable());
                 ((TextView) findViewById(R.id.cross_swipe_archive_text_left)).setText(R.string.action_unarchive);
                 ((TextView) findViewById(R.id.cross_swipe_archive_text_right)).setText(R.string.action_unarchive);
             }
@@ -434,16 +399,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     }
 
     private void addSpannable() {
-        Drawable pinDrawable = getResources().getDrawable(R.drawable.ic_small_pin);
-        Drawable muteDrawable = getResources().getDrawable(R.drawable.ic_small_mute);
-        muteDrawable.setBounds(0, 0, muteDrawable.getIntrinsicWidth(), muteDrawable.getIntrinsicHeight());
-        pinDrawable.setBounds(0, 0, pinDrawable.getIntrinsicWidth(), pinDrawable.getIntrinsicHeight());
-
-        muteDrawable.setColorFilter(
-                ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
-        pinDrawable.setColorFilter(
-                ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
-
         SpannableString sp = new SpannableString(mConversationNameView.getText());
         int bj = 0;
         if (mData.isPinned()) {
@@ -456,12 +411,20 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         }
         // multiple imageSpans must be set at a invariable spannable
         if (mData.isPinned()) {
-            ImageSpan span = new ImageSpan(pinDrawable, ImageSpan.ALIGN_BASELINE);
+            Drawable pinDrawable = getResources().getDrawable(R.drawable.ic_small_pin);
+            pinDrawable.setBounds(0, 0, pinDrawable.getIntrinsicWidth(), pinDrawable.getIntrinsicHeight());
+            pinDrawable.setColorFilter(
+                    ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
+            CenteredImageSpan span = new CenteredImageSpan(pinDrawable);
             sp.setSpan(span, bj * 2 - 2, bj * 2 - 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             bj--;
         }
         if (!mData.getNotificationEnabled()) {
-            ImageSpan span = new ImageSpan(muteDrawable, ImageSpan.ALIGN_BASELINE);
+            Drawable muteDrawable = getResources().getDrawable(R.drawable.ic_small_mute);
+            muteDrawable.setBounds(0, 0, muteDrawable.getIntrinsicWidth(), muteDrawable.getIntrinsicHeight());
+            muteDrawable.setColorFilter(
+                    ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
+            CenteredImageSpan span = new CenteredImageSpan(muteDrawable);
             sp.setSpan(span, bj * 2 - 2, bj * 2 - 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             bj--;
         }
@@ -621,10 +584,6 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             return true;
         }
         return false;
-    }
-
-    public View getContactIconView() {
-        return mContactIconView;
     }
 
     private String getSnippetText() {
