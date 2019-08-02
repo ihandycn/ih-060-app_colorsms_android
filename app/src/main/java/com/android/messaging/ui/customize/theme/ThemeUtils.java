@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import com.android.messaging.Factory;
 import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.font.FontUtils;
+import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.BubbleDrawables;
@@ -158,8 +159,11 @@ public class ThemeUtils {
                                 WallpaperSizeManager.resizeThemeBitmap(themeInfo);
                                 Preferences.getDefault().putBoolean(copyKey, true);
                                 FontUtils.onFontTypefaceChanged();
-                                Threads.postOnMainThread(() ->
-                                        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
+                                Threads.postOnMainThread(() -> {
+                                    Factory.get().reclaimMemory();
+                                    ConversationDrawables.get().updateDrawables();
+                                    HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
+                                });
                             }
 
                             @Override
@@ -169,8 +173,11 @@ public class ThemeUtils {
                         });
             } else {
                 FontUtils.onFontTypefaceChanged();
-                Threads.postOnMainThread(() ->
-                        HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE));
+                Threads.postOnMainThread(() -> {
+                    Factory.get().reclaimMemory();
+                    ConversationDrawables.get().updateDrawables();
+                    HSGlobalNotificationCenter.sendNotification(ConversationListActivity.EVENT_MAINPAGE_RECREATE);
+                });
             }
 
             Factory.get().reclaimMemory();

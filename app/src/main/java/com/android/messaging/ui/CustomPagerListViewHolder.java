@@ -17,6 +17,8 @@ package com.android.messaging.ui;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +26,10 @@ import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 
+import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.ImeUtil;
+
+import java.lang.reflect.Field;
 
 /**
  * Produces and holds a list view and its tab header to be displayed in a ViewPager.
@@ -64,6 +69,19 @@ public abstract class CustomPagerListViewHolder extends BasePagerViewHolder
                     final int visibleItemCount, final int totalItemCount) {
             }
         });
+        try {
+            Field f = AbsListView.class.getDeclaredField("mFastScroller");
+            f.setAccessible(true);
+            Object o = f.get(listView);
+            f = f.getType().getDeclaredField("mThumbDrawable");
+            f.setAccessible(true);
+            Drawable drawable = (Drawable) f.get(o);
+            drawable = new ColorDrawable(mContext.getResources().getColor(PrimaryColors.getPrimaryColor()));
+            f.set(o, drawable);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         mListView = listView;
         maybeSetEmptyView();
         return view;
