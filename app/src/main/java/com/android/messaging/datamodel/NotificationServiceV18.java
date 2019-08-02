@@ -51,10 +51,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
         if (DefaultSMSUtils.isDefaultSmsApp()) {
             return;
         }
-//        if (!statusBarNotification.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(HSApplication.getContext()))) {
-//            return;
-//        }
-        if (!statusBarNotification.getPackageName().equals("com.example.myapplication_9")) {
+        if (!statusBarNotification.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(HSApplication.getContext()))) {
             return;
         }
         final BlockedNotificationInfo notificationInfo = loadNotificationInfo(statusBarNotification);
@@ -207,6 +204,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
         }
         return new NotificationCompat.Builder(this, channelId)
                 .setContentTitle(messageTitle)
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(messageText))
                 .setContentText(messageText)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.ic_sms_light)
