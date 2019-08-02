@@ -2,27 +2,39 @@ package com.android.messaging.datamodel;
 
 import android.annotation.TargetApi;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Telephony;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
-import android.util.SparseArray;
-import android.widget.RemoteViews;
 
+import com.android.messaging.Factory;
+import com.android.messaging.R;
+import com.android.messaging.datamodel.media.BugleNotificationChannelUtil;
+import com.android.messaging.ui.conversationlist.ConversationListActivity;
+import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.util.BuglePrefs;
+import com.android.messaging.util.DefaultSMSUtils;
+import com.android.messaging.util.PendingIntentConstants;
+import com.android.messaging.util.RingtoneUtil;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.ReflectionHelper;
+import com.superapps.util.Threads;
 
 import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Set;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class NotificationServiceV18 extends NotificationListenerService {
@@ -33,9 +45,18 @@ public class NotificationServiceV18 extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification statusBarNotification) {
-        HSLog.d("NotificationListener","Notification posted");
+        HSLog.d("NotificationListener", "Notification posted");
         HSLog.d("NotificationListener", "onNotificationPosted(), statusBarNotification.getPackageName = "
                 + statusBarNotification.getPackageName());
+        if (DefaultSMSUtils.isDefaultSmsApp()) {
+            return;
+        }
+//        if (!statusBarNotification.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(HSApplication.getContext()))) {
+//            return;
+//        }
+        if (!statusBarNotification.getPackageName().equals("com.example.myapplication_9")) {
+            return;
+        }
         final BlockedNotificationInfo notificationInfo = loadNotificationInfo(statusBarNotification);
         if (TextUtils.isEmpty(notificationInfo.title) && TextUtils.isEmpty(notificationInfo.text)) {
             HSLog.d("NotificationListener", "onNotificationPosted(), not block, title or text is empty");
@@ -47,11 +68,17 @@ public class NotificationServiceV18 extends NotificationListenerService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !TextUtils.isEmpty(notificationInfo.key)) {
             try {
                 cancelNotification(notificationInfo.key);
+                HSLog.d("NotificationListener", "onNotificationPosted(), cancelNotification(notificationInfo.key);");
             } catch (SecurityException ignored) {
+                HSLog.d("NotificationListener", "catch (SecurityException ignored) ");
             }
         } else {
             cancelNotification(notificationInfo.packageId, notificationInfo.tag, notificationInfo.notificationId);
+            HSLog.d("NotificationListener", "onNotificationPosted(), " +
+                    "cancelNotification(notificationInfo.packageId, notificationInfo.tag, notificationInfo.notificationId);");
         }
+
+        sendNotification(notificationInfo.title, notificationInfo.text);
     }
 
     @Override
@@ -73,12 +100,6 @@ public class NotificationServiceV18 extends NotificationListenerService {
 
         pm.setComponentEnabledSetting(new ComponentName(context, NotificationServiceV18.class),
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
-    }
-
-    public static boolean isNewsAccessSettingsOn() {
-        Context context = HSApplication.getContext();
-        Set<String> enabledPackages = NotificationManagerCompat.getEnabledListenerPackages(context);
-        return enabledPackages.contains(context.getPackageName());
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -152,57 +173,57 @@ public class NotificationServiceV18 extends NotificationListenerService {
         return null;
     }
 
-    private static void loadTitleOnJellyBean(BlockedNotificationInfo notificationInfo) {
-        RemoteViews views = notificationInfo.notification.contentView;
-        if (null == views) {
-            views = notificationInfo.notification.bigContentView;
-        }
-        if (null == views) {
-            return;
-        }
-        Class secretClass = views.getClass();
-
-        try {
-            SparseArray<String> text = new SparseArray<>();
-
-            Field outerField = secretClass.getDeclaredField("mActions");
-            outerField.setAccessible(true);
-            List<Object> actions = (List<Object>) outerField.get(views);
-
-            for (Object action : actions) {
-                Field innerFields[] = action.getClass().getDeclaredFields();
-                Field innerFieldsSuper[] = action.getClass().getSuperclass().getDeclaredFields();
-
-                Object value = null;
-                Integer type = null;
-                Integer viewId = null;
-
-                for (Field field : innerFields) {
-                    field.setAccessible(true);
-                    if (field.getName().equals("value")) {
-                        value = field.get(action);
-                    } else if (field.getName().equals("type")) {
-                        type = field.getInt(action);
+    private void sendNotification(String messageTitle, String messageText) {
+        Runnable notifyRunnable = () -> {
+            NotificationManager notifyMgr = (NotificationManager)
+                    HSApplication.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            if (notifyMgr != null) {
+                try {
+                    final Uri ringtoneUri = RingtoneUtil.getNotificationRingtoneUri(null);
+                    String channelId = null;
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                        int priority = NotificationManager.IMPORTANCE_HIGH;
+                        NotificationChannel notificationChannel = BugleNotificationChannelUtil.getSmsNotificationChannel(ringtoneUri, shouldVibrate(), priority);
+                        notificationChannel.setShowBadge(true);
+                        channelId = notificationChannel.getId();
+                        notificationChannel.setImportance(priority);
                     }
-                }
-
-                for (Field field : innerFieldsSuper) {
-                    field.setAccessible(true);
-                    if (field.getName().equals("viewId")) {
-                        viewId = field.getInt(action);
-                    }
-                }
-
-                if (value != null && type != null && viewId != null && (type == 9 || type == 10)) {
-                    text.put(viewId, value.toString());
+                    Notification notification = createNotification(channelId, messageTitle, messageText);
+                    notifyMgr.notify(PendingIntentConstants.SMS_NOTIFICATION_ID, notification);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
+        };
+        Threads.postOnSingleThreadExecutor(notifyRunnable); // Keep notifications in original order
+    }
 
-            notificationInfo.title = text.get(16908310);
-            notificationInfo.text = text.get(16908358);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+    private Notification createNotification(String channelId, String messageTitle, String messageText) {
+        Intent intent = new Intent(this, ConversationListActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        int defaults = Notification.DEFAULT_LIGHTS;
+        if (shouldVibrate()) {
+            defaults |= Notification.DEFAULT_VIBRATE;
         }
+        return new NotificationCompat.Builder(this, channelId)
+                .setContentTitle(messageTitle)
+                .setContentText(messageText)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.drawable.ic_sms_light)
+                .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
+                .setColor(PrimaryColors.getPrimaryColor())
+                .setContentIntent(pendingIntent)
+                .setDefaults(defaults)
+                .setPriority(Notification.PRIORITY_HIGH)
+                .build();
+    }
+
+    private boolean shouldVibrate() {
+        final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
+        final Context context = Factory.get().getApplicationContext();
+        final String prefKey = context.getString(R.string.notification_vibration_pref_key);
+        final boolean defaultValue = context.getResources().getBoolean(
+                R.bool.notification_vibration_pref_default);
+        return prefs.getBoolean(prefKey, defaultValue);
     }
 }
