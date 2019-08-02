@@ -53,6 +53,7 @@ import com.android.messaging.datamodel.data.ContactListItemData;
 import com.android.messaging.datamodel.data.ContactPickerData;
 import com.android.messaging.datamodel.data.ContactPickerData.ContactPickerDataListener;
 import com.android.messaging.datamodel.data.ParticipantData;
+import com.android.messaging.ui.ContactsListViewWrapper;
 import com.android.messaging.ui.CustomPagerViewHolder;
 import com.android.messaging.ui.CustomViewPagerAdapter;
 import com.android.messaging.ui.animation.ViewGroupItemVerticalExplodeAnimation;
@@ -119,8 +120,8 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
 
     private ContactPickerFragmentHost mHost;
     private ContactRecipientAutoCompleteView mRecipientTextView;
-    private ViewPager mViewPager;
-    private AllContactsListViewHolder mAllContactsListViewHolder;
+    private ViewGroup mContactListContainer;
+    private ContactsListViewWrapper mAllContactsListViewHolder;
     private View mRootView;
     private View mPendingExplodeView;
     private View mComposeDivider;
@@ -140,7 +141,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
         super.onCreate(savedInstanceState);
         ContactListAdapter adapter = new ContactListAdapter(this, true);
         adapter.setSelectGroupMessageHost(this);
-        mAllContactsListViewHolder = new AllContactsListViewHolder(getActivity(), adapter);
+        mAllContactsListViewHolder = new ContactsListViewWrapper(getActivity(), adapter);
 
         if (ContactUtil.hasReadContactsPermission()) {
             mBinding.bind(DataModel.get().createContactPickerData(getActivity(), this));
@@ -190,18 +191,10 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
             }
         });
 
-        final CustomPagerViewHolder[] viewHolders = {
-                mAllContactsListViewHolder};
+        mContactListContainer = view.findViewById(R.id.contact_list_container);
+        mContactListContainer.setBackgroundColor(getResources().getColor(R.color.contact_picker_background));
+        mAllContactsListViewHolder.createView(mContactListContainer);
 
-        mViewPager = (ViewPager) view.findViewById(R.id.contact_pager);
-
-
-        mViewPager.setBackgroundColor(getResources()
-                .getColor(R.color.contact_picker_background));
-
-        // The view pager defaults to the frequent contacts page.
-        mViewPager.setCurrentItem(0);
-        setPageViewHolders(viewHolders);
         mToolbar = (Toolbar) view.findViewById(R.id.toolbar);
         mToolbar.setNavigationIcon(R.drawable.ic_arrow_back_light);
         mToolbar.setNavigationContentDescription(R.string.back);
@@ -219,28 +212,6 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
         mRootView = view;
         BugleAnalytics.logEvent("CreatMessage_Show");
         return view;
-    }
-
-    private void setPageViewHolders(CustomPagerViewHolder[] viewHolders) {
-        Assert.notNull(mViewPager);
-        final CustomViewPagerAdapter adapter = new CustomViewPagerAdapter(viewHolders);
-        mViewPager.setAdapter(adapter);
-        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset,
-                                       int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                viewHolders[position].onPageSelected();
-            }
-        });
     }
 
     /**
@@ -393,7 +364,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
                 case MODE_PICK_INITIAL_CONTACT:
                     addMoreParticipantsItem.setVisible(false);
                     confirmParticipantsItem.setVisible(false);
-                    mViewPager.setVisibility(View.VISIBLE);
+                    mContactListContainer.setVisibility(View.VISIBLE);
                     mComposeDivider.setVisibility(View.INVISIBLE);
                     mRecipientTextView.setEnabled(true);
                     showImeKeyboard();
@@ -409,11 +380,11 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
                         startExplodeTransitionForContactLists(false /* show */);
 
                         ViewGroupItemVerticalExplodeAnimation.startAnimationForView(
-                                mViewPager, mPendingExplodeView, mRootView,
+                                mContactListContainer, mPendingExplodeView, mRootView,
                                 true /* snapshotView */, UiUtils.COMPOSE_TRANSITION_DURATION);
                         showHideContactPagerWithAnimation(false /* show */);
                     } else {
-                        mViewPager.setVisibility(View.GONE);
+                        mContactListContainer.setVisibility(View.GONE);
                     }
 
                     addMoreParticipantsItem.setVisible(true);
@@ -427,13 +398,13 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
                         // Correctly set the start visibility state for the view pager and
                         // individual list items (hidden initially), so that the transition
                         // manager can properly track the visibility change for the explode.
-                        mViewPager.setVisibility(View.VISIBLE);
+                        mContactListContainer.setVisibility(View.VISIBLE);
                         toggleContactListItemsVisibilityForPendingTransition(false /* show */);
                         startExplodeTransitionForContactLists(true /* show */);
                     }
                     addMoreParticipantsItem.setVisible(false);
                     confirmParticipantsItem.setVisible(true);
-                    mViewPager.setVisibility(View.VISIBLE);
+                    mContactListContainer.setVisibility(View.VISIBLE);
                     mComposeDivider.setVisibility(View.INVISIBLE);
                     mRecipientTextView.setEnabled(true);
                     showImeKeyboard();
@@ -442,7 +413,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
                 case MODE_PICK_MAX_PARTICIPANTS:
                     addMoreParticipantsItem.setVisible(false);
                     confirmParticipantsItem.setVisible(true);
-                    mViewPager.setVisibility(View.VISIBLE);
+                    mContactListContainer.setVisibility(View.VISIBLE);
                     mComposeDivider.setVisibility(View.INVISIBLE);
                     // TODO: Verify that this is okay for accessibility
                     mRecipientTextView.setEnabled(false);
@@ -565,7 +536,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
         // Kick off the delayed scene explode transition. Anything happens after this line in this
         // method before the next frame will be tracked by the transition manager for visibility
         // changes and animated accordingly.
-        TransitionManager.beginDelayedTransition(mViewPager,
+        TransitionManager.beginDelayedTransition(mContactListContainer,
                 transition);
 
         toggleContactListItemsVisibilityForPendingTransition(show);
@@ -584,25 +555,25 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
     }
 
     private void showHideContactPagerWithAnimation(final boolean show) {
-        final boolean isPagerVisible = (mViewPager.getVisibility() == View.VISIBLE);
+        final boolean isPagerVisible = (mContactListContainer.getVisibility() == View.VISIBLE);
         if (show == isPagerVisible) {
             return;
         }
 
-        mViewPager.animate().alpha(show ? 1F : 0F)
+        mContactListContainer.animate().alpha(show ? 1F : 0F)
                 .setStartDelay(!show ? UiUtils.COMPOSE_TRANSITION_DURATION : 0)
                 .withStartAction(new Runnable() {
                     @Override
                     public void run() {
-                        mViewPager.setVisibility(View.VISIBLE);
-                        mViewPager.setAlpha(show ? 0F : 1F);
+                        mContactListContainer.setVisibility(View.VISIBLE);
+                        mContactListContainer.setAlpha(show ? 0F : 1F);
                     }
                 })
                 .withEndAction(new Runnable() {
                     @Override
                     public void run() {
-                        mViewPager.setVisibility(show ? View.VISIBLE : View.GONE);
-                        mViewPager.setAlpha(1F);
+                        mContactListContainer.setVisibility(show ? View.VISIBLE : View.GONE);
+                        mContactListContainer.setAlpha(1F);
                     }
                 });
     }

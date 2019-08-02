@@ -17,44 +17,33 @@ package com.android.messaging.ui;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.ListView;
 
-import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.R;
 import com.android.messaging.util.ImeUtil;
-
-import java.lang.reflect.Field;
 
 /**
  * Produces and holds a list view and its tab header to be displayed in a ViewPager.
  */
-public abstract class CustomPagerListViewHolder extends BasePagerViewHolder
-        implements CustomPagerViewHolder {
+public class ContactsListViewWrapper {
     private final Context mContext;
     private final CustomCursorAdapter mListAdapter;
     private boolean mListCursorInitialized;
     private ListView mListView;
+    private View mView;
 
-    public CustomPagerListViewHolder(final Context context, final CustomCursorAdapter adapter) {
+    public ContactsListViewWrapper(final Context context, final CustomCursorAdapter adapter) {
         mContext = context;
         mListAdapter = adapter;
     }
 
-    @Override
-    protected View createView(ViewGroup container) {
-        final LayoutInflater inflater = (LayoutInflater)
-                mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View view = inflater.inflate(
-                getLayoutResId(),
-                null /* root */,
-                false /* attachToRoot */);
-        final ListView listView = (ListView) view.findViewById(getListViewResId());
+    public void createView(ViewGroup view) {
+        mView = view;
+        final ListView listView = (ListView) view.findViewById(R.id.all_contacts_list);
         listView.setAdapter(mListAdapter);
         listView.setOnScrollListener(new OnScrollListener() {
             @Override
@@ -69,22 +58,9 @@ public abstract class CustomPagerListViewHolder extends BasePagerViewHolder
                     final int visibleItemCount, final int totalItemCount) {
             }
         });
-        try {
-            Field f = AbsListView.class.getDeclaredField("mFastScroller");
-            f.setAccessible(true);
-            Object o = f.get(listView);
-            f = f.getType().getDeclaredField("mThumbDrawable");
-            f.setAccessible(true);
-            Drawable drawable = (Drawable) f.get(o);
-            drawable = new ColorDrawable(mContext.getResources().getColor(PrimaryColors.getPrimaryColor()));
-            f.set(o, drawable);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         mListView = listView;
         maybeSetEmptyView();
-        return view;
     }
 
     public void onContactsCursorUpdated(final Cursor data) {
@@ -106,11 +82,11 @@ public abstract class CustomPagerListViewHolder extends BasePagerViewHolder
      */
     private void maybeSetEmptyView() {
         if (mView != null && mListCursorInitialized) {
-            final ListEmptyView emptyView = (ListEmptyView) mView.findViewById(getEmptyViewResId());
+            final ListEmptyView emptyView = (ListEmptyView) mView.findViewById(R.id.empty_view);
             if (emptyView != null) {
-                emptyView.setTextHint(getEmptyViewTitleResId());
-                emptyView.setImageHint(getEmptyViewImageResId());
-                final ListView listView = (ListView) mView.findViewById(getListViewResId());
+                emptyView.setTextHint(R.string.contact_list_empty_text);
+                emptyView.setImageHint(R.drawable.ic_oobe_freq_list);
+                final ListView listView = (ListView) mView.findViewById(R.id.all_contacts_list);
                 listView.setEmptyView(emptyView);
             }
         }
@@ -137,16 +113,4 @@ public abstract class CustomPagerListViewHolder extends BasePagerViewHolder
             }
         }
     }
-
-    @Override
-    public CharSequence getPageTitle(Context context) {
-        return context.getString(getPageTitleResId());
-    }
-
-    protected abstract int getLayoutResId();
-    protected abstract int getPageTitleResId();
-    protected abstract int getEmptyViewResId();
-    protected abstract int getEmptyViewTitleResId();
-    protected abstract int getEmptyViewImageResId();
-    protected abstract int getListViewResId();
 }

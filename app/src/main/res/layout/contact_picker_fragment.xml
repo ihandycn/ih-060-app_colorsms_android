@@ -66,10 +66,27 @@
         android:layout_weight="1">
 
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/contact_pager"
+        <FrameLayout
+            android:id="@+id/contact_list_container"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent" >
+            <ListView
+                android:id="@+id/all_contacts_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:clipToPadding="false"
+                android:divider="@null"
+                android:listSelector="@color/transparent"
+                android:dividerHeight="0px"
+                android:fastScrollEnabled="true" />
+
+            <include
+                layout="@layout/list_empty_view"
+                android:id="@+id/empty_view"
+                android:visibility="gone" />
+        </FrameLayout>
 
         <View
             android:id="@+id/compose_contact_divider"
