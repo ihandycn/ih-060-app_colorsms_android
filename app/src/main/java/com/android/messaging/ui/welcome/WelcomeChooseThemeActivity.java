@@ -22,6 +22,7 @@ import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.NotificationAccessAutopilotUtils;
+import com.android.messaging.util.NotificationCleanerUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.superapps.util.Dimensions;
@@ -62,7 +63,8 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
                     if (s.equals(copyAndMoveKey)) {
                         Threads.postOnThreadPoolExecutor(() -> ThemeUtils.applyThemeFirstTime(themeInfo,
                                 () -> Threads.postOnMainThread(() -> {
-                                    if (NotificationAccessAutopilotUtils.getIsNotificationAccessSwitchOn()) {
+                                    if (NotificationAccessAutopilotUtils.getIsNotificationAccessSwitchOn()
+                                            && !NotificationCleanerUtils.isNotificationAccessGranted(WelcomeChooseThemeActivity.this)) {
                                         chooseThemePagerView.setVisibility(View.GONE);
                                         alphaAnimator.start();
                                         translationAnimator.start();
@@ -89,7 +91,8 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
             } else {
                 Threads.postOnThreadPoolExecutor(() -> ThemeUtils.applyThemeFirstTime(themeInfo,
                         () -> Threads.postOnMainThread(() -> {
-                            if (NotificationAccessAutopilotUtils.getIsNotificationAccessSwitchOn()) {
+                            if (NotificationAccessAutopilotUtils.getIsNotificationAccessSwitchOn()
+                                    && !NotificationCleanerUtils.isNotificationAccessGranted(WelcomeChooseThemeActivity.this)) {
                                 chooseThemePagerView.setVisibility(View.GONE);
                                 alphaAnimator.start();
                                 translationAnimator.start();
