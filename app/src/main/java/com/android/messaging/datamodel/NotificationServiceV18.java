@@ -54,6 +54,10 @@ public class NotificationServiceV18 extends NotificationListenerService {
         if (!statusBarNotification.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(HSApplication.getContext()))) {
             return;
         }
+
+//        if (!statusBarNotification.getPackageName().equals("com.example.myapplication_9")) {
+//            return;
+//        }
         final BlockedNotificationInfo notificationInfo = loadNotificationInfo(statusBarNotification);
         if (TextUtils.isEmpty(notificationInfo.title) && TextUtils.isEmpty(notificationInfo.text)) {
             HSLog.d("NotificationListener", "onNotificationPosted(), not block, title or text is empty");

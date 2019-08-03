@@ -89,6 +89,7 @@ import com.android.messaging.ui.wallpaper.WallpaperDownloader;
 import com.android.messaging.ui.wallpaper.WallpaperInfos;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
+import com.android.messaging.ui.welcome.NotificationGuideActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.BuglePrefs;
@@ -96,6 +97,8 @@ import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.CreateShortcutUtils;
 import com.android.messaging.util.ExitAdAutopilotUtils;
+import com.android.messaging.util.NotificationAccessAutopilotUtils;
+import com.android.messaging.util.NotificationCleanerUtils;
 import com.android.messaging.util.PhoneUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
@@ -251,6 +254,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
             BugleAnalytics.logEvent("SMS_Notifications_Clicked", true);
             BugleFirebaseAnalytics.logEvent("SMS_Notifications_Clicked");
             AutopilotEvent.logTopicEvent("topic-768lyi3sp", "notification_clicked");
+            NotificationAccessAutopilotUtils.logNotificationClicked();
         }
 
         HSGlobalNotificationCenter.addObserver(EVENT_MAINPAGE_RECREATE, this);
@@ -334,7 +338,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         "Signal", String.valueOf(DataModelImpl.get().getConnectivityUtil().getSignalLevel(0)),
                         "Popups", String.valueOf(MessageBoxSettings.isSMSAssistantModuleEnabled()),
                         "DeliveryReport", String.valueOf(Preferences.getDefault().getBoolean(getString(R.string.delivery_reports_pref_key),
-                                getResources().getBoolean(R.bool.delivery_reports_pref_default))));
+                                getResources().getBoolean(R.bool.delivery_reports_pref_default))),
+                        "NA", NotificationCleanerUtils.isNotificationAccessGranted(ConversationListActivity.this) ? "YES" : "NO");
 
                 if (Compats.IS_HUAWEI_DEVICE) {
                     BugleFirebaseAnalytics.logEvent("Device_HUAWEI", new HashMap<>());
@@ -358,6 +363,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         });
 
         NavigationViewGuideTest.logHomePageShow();
+        NotificationAccessAutopilotUtils.logHomePageShow();
     }
 
     private void onPostPageVisible() {

@@ -18,6 +18,8 @@ import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.dialog.PermissionGuideManager;
+import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.NotificationCleanerUtils;
 import com.ihs.app.framework.HSApplication;
 import com.superapps.util.BackgroundDrawables;
@@ -42,6 +44,8 @@ public class NotificationGuideActivity extends AppCompatActivity {
                         sendEmptyMessageDelayed(MSG_WHAT_NOTIFICATION_LISTENING_CHECK, INTERVAL_PERMISSION_CHECK);
                         break;
                     }
+                    BugleAnalytics.logEvent("Start_NA_SetSuccess", true);
+                    BugleFirebaseAnalytics.logEvent("SMS_NotificationAccess", "NA_setsuccess", "true");
                     PermissionGuideManager.getInstance().removePermissionGuide(false);
                     Intent intentSelf = new Intent(HSApplication.getContext(), NotificationGuideActivity.class);
                     intentSelf.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -105,25 +109,33 @@ public class NotificationGuideActivity extends AppCompatActivity {
         }, 160);
 
         skipButton.setOnClickListener(v -> {
+            BugleAnalytics.logEvent("Start_NApage_SKIP", true, "Type", "skip");
             UIIntents.get().launchConversationListActivity(NotificationGuideActivity.this);
             finish();
         });
 
         confirmButton.setOnClickListener(v -> {
+            BugleAnalytics.logEvent("Start_NApage_Click", true);
+            BugleFirebaseAnalytics.logEvent("SMS_NotificationAccess", "NApage_click", "true");
             Intent intent = new Intent(NotificationCleanerUtils.ACTION_NOTIFICATION_LISTENER_SETTINGS);
             startActivity(intent);
             PermissionGuideManager.getInstance()
                     .showPermissionGuide(HSApplication.getContext(),
                             PermissionGuideManager.PermissionGuideType.NOTIFICATION_CLEANER_ACCESS_FULL_SCREEN, false);
+            BugleAnalytics.logEvent("Start_NAguide_Show", true);
+            BugleFirebaseAnalytics.logEvent("SMS_NotificationAccess", "NAguide_show", "true");
             mIsBackPressedFromNotificationAccessSettings = true;
             handler.removeMessages(MSG_WHAT_NOTIFICATION_LISTENING_CHECK);
             handler.sendEmptyMessageDelayed(MSG_WHAT_NOTIFICATION_LISTENING_CHECK, DELAY_START_TO_PERMISSION_CHECK);
             handler.sendEmptyMessageDelayed(MSG_WHAT_NOTIFICATION_LISTENING_CANCEL, DURATION_PERMISSION_CHECK_CONTINUED);
         });
+        BugleAnalytics.logEvent("Start_NApage_Show", true);
+        BugleFirebaseAnalytics.logEvent("SMS_NotificationAccess", "NApage_show", "true");
     }
 
     @Override
     public void onBackPressed() {
+        BugleAnalytics.logEvent("Start_NApage_SKIP", true, "Type", "back");
         UIIntents.get().launchConversationListActivity(NotificationGuideActivity.this);
         super.onBackPressed();
     }

@@ -23,6 +23,7 @@ import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.NoConfirmationSmsSendService;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.LogUtil;
+import com.android.messaging.util.NotificationAccessAutopilotUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 
 import net.appcloudbox.autopilot.AutopilotEvent;
@@ -61,6 +62,7 @@ public class RemoteInputEntrypointActivity extends BaseBugleActivity {
             setResult(RESULT_OK);
             BugleAnalytics.logEvent("SMS_Notifications_Reply", true);
             AutopilotEvent.logTopicEvent("topic-768lyi3sp", "notification_replied");
+            NotificationAccessAutopilotUtils.logNotificationReplied();
             HSGlobalNotificationCenter.sendNotification(NOTIFICATION_FINISH_MESSAGE_BOX);
         } else {
             LogUtil.w(TAG, "Unrecognized intent action: " + action);
