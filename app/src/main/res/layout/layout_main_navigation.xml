@@ -15,14 +15,15 @@
         <!-- Header -->
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="153dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_width="92dp"
+                android:layout_height="66.7dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="34dp"
                 android:src="@drawable/navigation_header_icon"/>
         </FrameLayout>
 
@@ -31,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="6dp"
             android:layout_marginStart="28dp"
-            android:layout_marginTop="27dp"
+            android:layout_marginTop="35dp"
             android:includeFontPadding="false"
             android:text="@string/menu_group_customization"
             android:textColor="#66222327"
@@ -165,7 +166,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="35dp"/>
+            android:layout_height="24dp"/>
 
         <!-- Emoji Restore -->
         <RelativeLayout
