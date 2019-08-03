@@ -44,6 +44,7 @@ import java.lang.reflect.Field;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class NotificationServiceV18 extends NotificationListenerService {
+    private static String mDefaultSmsPackage;
 
     public NotificationServiceV18() {
         super();
@@ -58,7 +59,11 @@ public class NotificationServiceV18 extends NotificationListenerService {
             return;
         }
 
-        if (!statusBarNotification.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(HSApplication.getContext()))) {
+        if (mDefaultSmsPackage == null){
+            mDefaultSmsPackage = Telephony.Sms.getDefaultSmsPackage(HSApplication.getContext());
+        }
+
+        if (!statusBarNotification.getPackageName().equals(mDefaultSmsPackage)) {
             return;
         }
 
