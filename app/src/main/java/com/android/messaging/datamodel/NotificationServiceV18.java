@@ -45,7 +45,7 @@ import java.lang.reflect.Field;
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class NotificationServiceV18 extends NotificationListenerService {
     private static String mDefaultSmsPackage;
-
+    public static final String EXTRA_FROM_CUSTOMIZE_NOTIFICATION = "customize_notification";
     public NotificationServiceV18() {
         super();
     }
@@ -67,9 +67,6 @@ public class NotificationServiceV18 extends NotificationListenerService {
             return;
         }
 
-//        if (!statusBarNotification.getPackageName().equals("com.example.myapplication_9")) {
-//            return;
-//        }
         final BlockedNotificationInfo notificationInfo = loadNotificationInfo(statusBarNotification);
         if (TextUtils.isEmpty(notificationInfo.title) && TextUtils.isEmpty(notificationInfo.text)) {
             HSLog.d("NotificationListener", "onNotificationPosted(), not block, title or text is empty");
@@ -213,6 +210,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
 
     private Notification createNotification(String channelId, String messageTitle, String messageText) {
         Intent intent = new Intent(this, ConversationListActivity.class);
+        intent.putExtra(EXTRA_FROM_CUSTOMIZE_NOTIFICATION, true);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         int defaults = Notification.DEFAULT_LIGHTS;
         if (shouldVibrate()) {
@@ -245,6 +243,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
                 .setContentIntent(pendingIntent)
                 .setDefaults(defaults)
                 .setPriority(Notification.PRIORITY_HIGH)
+                .setAutoCancel(true)
                 .addAction(action)
                 .build();
     }
