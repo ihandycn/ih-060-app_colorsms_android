@@ -9,6 +9,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,9 +23,14 @@ import android.text.TextUtils;
 
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.datamodel.media.AvatarRequestDescriptor;
 import com.android.messaging.datamodel.media.BugleNotificationChannelUtil;
+import com.android.messaging.datamodel.media.ImageResource;
+import com.android.messaging.datamodel.media.MediaRequest;
+import com.android.messaging.datamodel.media.MediaResourceManager;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.PendingIntentConstants;
@@ -51,6 +57,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
         if (DefaultSMSUtils.isDefaultSmsApp()) {
             return;
         }
+
         if (!statusBarNotification.getPackageName().equals(Telephony.Sms.getDefaultSmsPackage(HSApplication.getContext()))) {
             return;
         }
@@ -206,17 +213,34 @@ public class NotificationServiceV18 extends NotificationListenerService {
         if (shouldVibrate()) {
             defaults |= Notification.DEFAULT_VIBRATE;
         }
+
+        NotificationCompat.Action action =
+                new NotificationCompat.Action.Builder(R.drawable.ic_wear_reply,
+                        HSApplication.getContext().getString(R.string.notification_reply_via_sms), pendingIntent)
+                        .build();
+        final Uri avatarUri = AvatarUriUtil.createAvatarUri(
+                null, "", "", null);
+        AvatarRequestDescriptor descriptor = new AvatarRequestDescriptor(avatarUri,
+                (int) Factory.get().getApplicationContext().getResources().getDimension(android.R.dimen.notification_large_icon_width),
+                (int) Factory.get().getApplicationContext().getResources().getDimension(android.R.dimen.notification_large_icon_height),
+                HSApplication.getContext().getResources().getColor(R.color.notification_avatar_background_color));
+        MediaRequest<ImageResource> imageRequest = descriptor.buildSyncMediaRequest(HSApplication.getContext());
+        ImageResource avatarImage = MediaResourceManager.get().requestMediaResourceSync(imageRequest);
+        Bitmap avatarBitmap = Bitmap.createBitmap(avatarImage.getBitmap());
+
         return new NotificationCompat.Builder(this, channelId)
                 .setContentTitle(messageTitle)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(messageText))
                 .setContentText(messageText)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.ic_sms_light)
+                .setLargeIcon(avatarBitmap)
                 .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
                 .setColor(PrimaryColors.getPrimaryColor())
                 .setContentIntent(pendingIntent)
                 .setDefaults(defaults)
                 .setPriority(Notification.PRIORITY_HIGH)
+                .addAction(action)
                 .build();
     }
 
