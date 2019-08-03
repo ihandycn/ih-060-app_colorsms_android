@@ -32,6 +32,7 @@ import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.invitefriends.InviteFriendsActivity;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
+import com.android.messaging.ui.signature.TextSettingDialog;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.BuglePrefs;
@@ -49,7 +50,7 @@ import java.util.Collections;
 
 import static android.view.View.GONE;
 
-public class SettingActivity extends BaseActivity {
+public class SettingActivity extends BaseActivity implements TextSettingDialog.TextSettingDialogCallback {
     private static final int REQUEST_CODE_START_RINGTONE_PICKER = 1;
     private static final int RC_SIGN_IN = 12;
     private static final int EMOJI_STYLE_SET = 13;
@@ -65,19 +66,14 @@ public class SettingActivity extends BaseActivity {
     private GeneralSettingItemView mSendDelayView;
     private GeneralSettingItemView mSMSDeliveryReports;
     private SettingEmojiSkinItemView mSettingEmojiSkinItemView;
-
     private SettingEmojiStyleItemView mSettingEmojiStyleItemView;
-
     private GeneralSettingItemView mOutgoingSoundView;
 
     private View mNotificationChildrenGroup;
 
-    private BackPressedListener mBackListener;
     final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
 
-    public interface BackPressedListener {
-        void onBackPressed();
-    }
+    private TextSettingDialog mSignatureSettingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -173,7 +169,9 @@ public class SettingActivity extends BaseActivity {
         //signature
         mSignature = findViewById(R.id.setting_item_signature);
         refreshSignature();
-        mSignature.setOnItemClickListener(() -> UiUtils.showDialogFragment(this, new SignatureSettingDialog()));
+        mSignatureSettingDialog = new SignatureSettingDialog();
+        mSignatureSettingDialog.setHost(this);
+        mSignature.setOnItemClickListener(() -> UiUtils.showDialogFragment(this, mSignatureSettingDialog));
 
         //sounds
         mSoundView = findViewById(R.id.setting_item_sound);
@@ -307,23 +305,6 @@ public class SettingActivity extends BaseActivity {
                 UiUtils.showDialogFragment(this, dialog);
                 BugleAnalytics.logEvent("Settings_EmojiSkintone_Click");
             });
-        }
-    }
-
-    public void addBackPressListener(BackPressedListener listener) {
-        mBackListener = listener;
-    }
-
-    public void clearBackPressedListener() {
-        mBackListener = null;
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (mBackListener != null) {
-            mBackListener.onBackPressed();
-        } else {
-            super.onBackPressed();
         }
     }
 
@@ -562,6 +543,11 @@ public class SettingActivity extends BaseActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    @Override
+    public void onSave(String text) {
+        refreshSignature();
     }
 }
 

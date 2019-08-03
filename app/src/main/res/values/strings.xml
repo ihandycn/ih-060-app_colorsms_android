@@ -255,6 +255,8 @@
     <!-- Action menu title for deleting failed message selected in conversation -->
     <string name="action_delete_message">Delete</string>
 
+    <string name="action_rename_group_chat">Rename Group Chat</string>
+
     <string name="delete_message_confirmation_dialog_title">Delete this message?</string>
     <string name="delete_message_confirmation_dialog_text">This action cannot be undone.</string>
     <string name="delete_message_confirmation_button">Delete</string>
@@ -678,12 +680,6 @@
 
     <!-- Action menu title for blocking and archiving selected conversations in conversation list -->
     <string name="action_block">Block</string>
-
-    <!-- Label of block contact item in People & Options for 1:1 conversation -->
-    <string name="block_contact_title">Block <xliff:g id="destination">%s</xliff:g></string>
-
-    <!-- Label of unblock contact item in People & Options for 1:1 conversation -->
-    <string name="unblock_contact_title">Unblock <xliff:g id="destination">%s</xliff:g></string>
 
     <!-- Title of block confirmation dialog -->
     <string name="block_confirmation_title">Block <xliff:g id="destination">%s</xliff:g>?</string>
@@ -1135,6 +1131,8 @@
     <string name="customize_new_guide_title">Cool Features</string>
     <string name="customize_new_guide_content">Customize your chat to make it special!</string>
     <string name="signature">Signature</string>
+
+    <string name="conversation_setting_guide_text">Customize this conversation!</string>
 
     <string name="create_shortcut_has_been_create">Created successfully</string>
     <string name="create_shortcut_guide_title">Create a Shortcut</string>

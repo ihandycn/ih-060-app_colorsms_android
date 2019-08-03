@@ -257,6 +257,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     private boolean mIsDestroyed = false;
 
+    private boolean mIsBlockAd = false;
+
     // Normally, as soon as draft message is loaded, we trust the UI state held in
     // ComposeMessageView to be the only source of truth (incl. the conversation self id). However,
     // there can be external events that forces the UI state to change, such as SIM state changes
@@ -683,6 +685,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
 
     private void loadTopBannerAd() {
+        if (mIsBlockAd) {
+            return;
+        }
         if (BillingManager.isPremiumUser()) {
             return;
         }
@@ -819,6 +824,17 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageTopAd", "HideWhenKeyboardShow")) {
             mAdContainer.setVisibility(View.GONE);
             mRecyclerView.setClipToPadding(false);
+        }
+    }
+
+    public void blockAd() {
+        mIsBlockAd = true;
+    }
+
+    public void unBLockAd() {
+        mIsBlockAd = false;
+        if (!mIsDestroyed && getActivity() != null) {
+            loadTopBannerAd();
         }
     }
 
@@ -1110,7 +1126,10 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     BugleAnalytics.logEvent("SMS_Detailspage_Settings_Click_FirstShow", true);
                 }
                 if (!mAdapter.isMultiSelectMode()) {
-                    UIIntents.get().launchPeopleAndOptionsActivity(getActivity(), mConversationId);
+                    UIIntents.get().launchPeopleAndOptionsActivity(getActivity(), mConversationId, getConversationName());
+                }
+                if (Preferences.getDefault().getBoolean(ConversationActivity.PREF_KEY_FIRST_IN_CONVERSATION_PAGE, true)) {
+                    BugleAnalytics.logEvent("SMS_Detailspage_Settings_Click_FirstShow", true);
                 }
                 return false;
             case R.id.action_call:

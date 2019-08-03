@@ -352,8 +352,6 @@
     <string name="snack_bar_retry" msgid="7140970704902570020">"重试"</string>
     <string name="contact_list_empty_text" msgid="1036353827229041942">"要发送新信息，请输入联系人姓名或电话号码"</string>
     <string name="action_block" msgid="9032076625645190136">"屏蔽"</string>
-    <string name="block_contact_title" msgid="6968382557194643329">"屏蔽<xliff:g id="DESTINATION">%s</xliff:g>"</string>
-    <string name="unblock_contact_title" msgid="4719854710980066596">"取消屏蔽<xliff:g id="DESTINATION">%s</xliff:g>"</string>
     <string name="block_confirmation_title" msgid="8288283455512985682">"要屏蔽<xliff:g id="DESTINATION">%s</xliff:g>吗？"</string>
     <string name="block_confirmation_message" msgid="185429978461824228">"您将继续接收来自此号码的信息，但不会再收到相关通知。此对话将被归档。"</string>
     <string name="blocked_contacts_title" msgid="7709164518967312281">"屏蔽的联系人"</string>

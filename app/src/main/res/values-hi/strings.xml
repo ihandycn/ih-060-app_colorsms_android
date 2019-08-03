@@ -352,8 +352,6 @@
     <string name="snack_bar_retry" msgid="7140970704902570020">"पुन: प्रयास करें"</string>
     <string name="contact_list_empty_text" msgid="1036353827229041942">"नया संदेश प्रारंभ करने के लिए कोई संपर्क नाम या फ़ोन नंबर डालें"</string>
     <string name="action_block" msgid="9032076625645190136">"अवरुद्ध करें"</string>
-    <string name="block_contact_title" msgid="6968382557194643329">"<xliff:g id="DESTINATION">%s</xliff:g> को अवरुद्ध करें"</string>
-    <string name="unblock_contact_title" msgid="4719854710980066596">"<xliff:g id="DESTINATION">%s</xliff:g> को अनवरोधित करें"</string>
     <string name="block_confirmation_title" msgid="8288283455512985682">"<xliff:g id="DESTINATION">%s</xliff:g> को अवरोधित करें?"</string>
     <string name="block_confirmation_message" msgid="185429978461824228">"आपको इस संदेश से नंबर प्राप्‍त होते रहेंगे लेकिन अब उनकी सूचना नहीं दी जाएगी. इस वार्तालाप को संग्रहीत किया जाएगा."</string>
     <string name="blocked_contacts_title" msgid="7709164518967312281">"अवरोधित संपर्क"</string>

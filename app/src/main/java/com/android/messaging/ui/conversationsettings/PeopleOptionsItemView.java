@@ -23,16 +23,13 @@ import android.util.AttributeSet;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.data.PeopleOptionsItemData;
-import com.android.messaging.ui.appsettings.SettingItemView;
+import com.android.messaging.ui.appsettings.GeneralSettingItemView;
 import com.android.messaging.util.Assert;
-
-import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_ADD_CONTACT;
-import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_DELETE;
 
 /**
  * The view for a single entry in the options section of people & options activity.
  */
-public class PeopleOptionsItemView extends SettingItemView {
+public class PeopleOptionsItemView extends GeneralSettingItemView {
     /**
      * Implemented by the host of this view that handles options click event.
      */
@@ -45,6 +42,9 @@ public class PeopleOptionsItemView extends SettingItemView {
 
     public PeopleOptionsItemView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
+        super.blockSwitchAutoCheck();
+        mSummaryView.setMaxLines(1);
+        mSummaryView.setEllipsize(TextUtils.TruncateAt.END);
         mData = DataModel.get().createPeopleOptionsItemData(context);
     }
 
@@ -58,39 +58,31 @@ public class PeopleOptionsItemView extends SettingItemView {
                      int columnIndex,
                      ParticipantData otherParticipant,
                      final HostInterface hostInterface,
-                     final boolean isGroup,
-                     final boolean isContactVisible,
                      final String conversationId) {
         Assert.isTrue(columnIndex < PeopleOptionsItemData.SETTINGS_COUNT && columnIndex >= 0);
-        //group conversation  don't show add contact and block
-        if (isGroup) {
-            if (columnIndex == SETTING_ADD_CONTACT) {
-                columnIndex = SETTING_DELETE;
-            }
-        } else {
-            if (columnIndex >= SETTING_ADD_CONTACT && !isContactVisible) {
-                columnIndex++;
-            }
-        }
+
         mData.bind(cursor, otherParticipant, columnIndex, conversationId);
 
         mHostInterface = hostInterface;
 
+        setViewType(mData.getType());
         setTitle(mData.getTitle());
         final String subtitle = mData.getSubtitle();
         if (!TextUtils.isEmpty(subtitle)) {
             setSummary(subtitle);
         }
-
         if (mData.getCheckable()) {
-            setViewType(SettingItemView.SWITCH);
+            setViewType(GeneralSettingItemView.SWITCH);
             setChecked(mData.getChecked());
         }
-
         final boolean enabled = mData.getEnabled();
         if (enabled != isEnabled()) {
             setEnabled(enabled);
             setEnable(enabled);
         }
+    }
+
+    public PeopleOptionsItemData getData() {
+        return mData;
     }
 }

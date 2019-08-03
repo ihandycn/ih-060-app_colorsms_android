@@ -23,6 +23,7 @@ import android.net.Uri;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ConversationListItemData.ConversationListViewColumns;
+import com.android.messaging.ui.appsettings.GeneralSettingItemView;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BuglePrefs;
@@ -34,7 +35,8 @@ public class PeopleOptionsItemData {
             ConversationListViewColumns.NOTIFICATION_ENABLED,
             ConversationListViewColumns.NOTIFICATION_SOUND_URI,
             ConversationListViewColumns.NOTIFICATION_VIBRATION,
-            ConversationListViewColumns.PIN_TIMESTAMP
+            ConversationListViewColumns.PIN_TIMESTAMP,
+            ConversationListViewColumns.NAME
     };
 
     // Column index for query projection.
@@ -42,6 +44,7 @@ public class PeopleOptionsItemData {
     private static final int INDEX_NOTIFICATION_SOUND_URI = 1;
     private static final int INDEX_NOTIFICATION_VIBRATION = 2;
     private static final int INDEX_PIN_TIMESTAMP = 3;
+    private static final int INDEX_GROUP_NAME = 4;
 
     // Identification for each setting that's surfaced to the UI layer.
     public static final int SETTINGS_PIN = 0;
@@ -52,8 +55,8 @@ public class PeopleOptionsItemData {
     public static final int SETTING_ADD_CONTACT = 5;
     public static final int SETTING_BLOCKED = 6;
     public static final int SETTING_DELETE = 7;
-
-    public static final int SETTINGS_COUNT = 8;
+    public static final int SETTING_RENAME_GROUP = 8;
+    public static final int SETTINGS_COUNT = 9;
 
 
     // Type of UI switch to show for the toggle button.
@@ -66,6 +69,7 @@ public class PeopleOptionsItemData {
     private boolean mCheckable;
     private boolean mChecked;
     private boolean mEnabled;
+    private int mType;
     private int mItemId;
     private ParticipantData mOtherParticipant;
 
@@ -98,6 +102,7 @@ public class PeopleOptionsItemData {
             case SETTING_NOTIFICATION_ENABLED:
                 mTitle = mContext.getString(R.string.notifications_enabled_conversation_pref_title);
                 mChecked = notificationEnabled;
+                mType = GeneralSettingItemView.SWITCH;
                 break;
 
             case SETTING_PRIVACY_MODE:
@@ -105,6 +110,7 @@ public class PeopleOptionsItemData {
                 mSubtitle = PrivacyModeSettings.getPrivacyModeDescription(conversationId);
                 mEnabled = notificationEnabled;
                 mCheckable = false;
+                mType = GeneralSettingItemView.NORMAL;
                 break;
 
             case SETTING_NOTIFICATION_SOUND_URI:
@@ -126,6 +132,7 @@ public class PeopleOptionsItemData {
                 mCheckable = false;
                 mRingtoneUri = ringtoneUri;
                 mEnabled = notificationEnabled;
+                mType = GeneralSettingItemView.NORMAL;
                 break;
 
             case SETTING_NOTIFICATION_VIBRATION:
@@ -140,28 +147,40 @@ public class PeopleOptionsItemData {
                     mChecked = BuglePrefs.getApplicationPrefs().getBoolean(prefKey, defaultValue);
                 }
                 mEnabled = notificationEnabled;
+                mType = GeneralSettingItemView.SWITCH;
                 break;
 
             case SETTING_BLOCKED:
                 Assert.notNull(otherParticipant);
                 final int resourceId = otherParticipant.isBlocked() ?
-                        R.string.unblock_contact_title : R.string.block_contact_title;
-                mTitle = mContext.getString(resourceId, otherParticipant.getDisplayDestination());
+                        R.string.tap_to_unblock_message : R.string.action_block;
+                mTitle = mContext.getString(resourceId);
                 mCheckable = false;
+                mType = GeneralSettingItemView.NORMAL;
                 break;
             case SETTINGS_PIN:
                 mTitle = mContext.getString(R.string.action_pin);
                 mChecked = cursor.getInt(INDEX_PIN_TIMESTAMP) != 0;
+                mType = GeneralSettingItemView.SWITCH;
                 break;
 
             case SETTING_ADD_CONTACT:
                 mTitle = mContext.getString(R.string.action_add_contact);
                 mCheckable = false;
+                mType = GeneralSettingItemView.NORMAL;
                 break;
 
             case SETTING_DELETE:
                 mTitle = mContext.getString(R.string.action_delete);
                 mCheckable = false;
+                mType = GeneralSettingItemView.NORMAL;
+                break;
+
+            case SETTING_RENAME_GROUP:
+                mTitle = mContext.getString(R.string.action_rename_group_chat);
+                mSubtitle = cursor.getString(INDEX_GROUP_NAME);
+                mCheckable = false;
+                mType = GeneralSettingItemView.NORMAL;
                 break;
 
             default:
@@ -192,6 +211,10 @@ public class PeopleOptionsItemData {
 
     public int getItemId() {
         return mItemId;
+    }
+
+    public int getType(){
+        return mType;
     }
 
     public Uri getRingtoneUri() {

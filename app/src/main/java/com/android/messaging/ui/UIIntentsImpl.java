@@ -292,9 +292,10 @@ public class UIIntentsImpl extends UIIntents {
     }
 
     @Override
-    public void launchPeopleAndOptionsActivity(Activity context, String conversationId) {
+    public void launchPeopleAndOptionsActivity(Activity context, String conversationId, String conversationName) {
         final Intent intent = new Intent(context, PeopleAndOptionsActivity.class);
         intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_ID, conversationId);
+        intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_NAME, conversationName);
         context.startActivityForResult(intent, 0, TransitionUtils.getTransitionInBundle(context));
     }
 

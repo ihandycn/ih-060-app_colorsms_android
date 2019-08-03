@@ -35,7 +35,6 @@ import com.android.messaging.datamodel.DatabaseHelper.PartColumns;
 import com.android.messaging.datamodel.DatabaseHelper.ParticipantColumns;
 import com.android.messaging.datamodel.ParticipantRefresh.ConversationParticipantsQuery;
 import com.android.messaging.datamodel.data.ConversationListItemData;
-import com.android.messaging.datamodel.data.ConversationMessageData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
@@ -667,6 +666,14 @@ public class BugleDatabaseOperations {
         Assert.isTrue(dbWrapper.getDatabase().inTransaction());
         final ContentValues values = new ContentValues();
         values.put(ConversationColumns.PIN_TIMESTAMP, isPin ? time : 0);
+        updateConversationRowIfExists(dbWrapper, conversationId, values);
+    }
+
+    public static void updateGroupName(final DatabaseWrapper dbWrapper, final String conversationId, final String name){
+        Assert.isNotMainThread();
+        Assert.isTrue(dbWrapper.getDatabase().inTransaction());
+        final ContentValues values = new ContentValues();
+        values.put(ConversationColumns.NAME, name);
         updateConversationRowIfExists(dbWrapper, conversationId, values);
     }
 
