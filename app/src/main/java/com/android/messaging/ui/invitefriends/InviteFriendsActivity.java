@@ -78,6 +78,9 @@ public class InviteFriendsActivity extends BaseActivity
             if (mAdapter.getItemCount() <= 1) {
                 return;
             }
+            if (isFinishing()) {
+                return;
+            }
 
             String message = mDescription + "\n" + getString(R.string.invite_friends_default_auto_link_content);
             for (CallAssistantUtils.ContactInfo contactInfo : mAdapter.getContactInfos()) {
