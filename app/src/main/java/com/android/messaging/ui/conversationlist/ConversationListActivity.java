@@ -97,7 +97,6 @@ import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.CreateShortcutUtils;
 import com.android.messaging.util.ExitAdAutopilotUtils;
 import com.android.messaging.util.NotificationAccessAutopilotUtils;
-import com.android.messaging.util.NotificationCleanerUtils;
 import com.android.messaging.util.PhoneUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
@@ -110,6 +109,7 @@ import com.superapps.util.Calendars;
 import com.superapps.util.Compats;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
+import com.superapps.util.Permissions;
 import com.superapps.util.Preferences;
 import com.superapps.util.RuntimePermissions;
 import com.superapps.util.Threads;
@@ -338,7 +338,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         "Popups", String.valueOf(MessageBoxSettings.isSMSAssistantModuleEnabled()),
                         "DeliveryReport", String.valueOf(Preferences.getDefault().getBoolean(getString(R.string.delivery_reports_pref_key),
                                 getResources().getBoolean(R.bool.delivery_reports_pref_default))),
-                        "NA", NotificationCleanerUtils.isNotificationAccessGranted(ConversationListActivity.this) ? "YES" : "NO");
+                        "NA", Permissions.isNotificationAccessGranted() ? "YES" : "NO");
 
                 if (Compats.IS_HUAWEI_DEVICE) {
                     BugleFirebaseAnalytics.logEvent("Device_HUAWEI", new HashMap<>());

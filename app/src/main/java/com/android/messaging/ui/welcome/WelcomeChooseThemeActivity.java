@@ -22,11 +22,11 @@ import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.NotificationAccessAutopilotUtils;
-import com.android.messaging.util.NotificationCleanerUtils;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
+import com.superapps.util.Permissions;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
@@ -63,27 +63,7 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
                     if (s.equals(copyAndMoveKey)) {
                         Threads.postOnThreadPoolExecutor(() -> ThemeUtils.applyThemeFirstTime(themeInfo,
                                 () -> Threads.postOnMainThread(() -> {
-                                    if (NotificationAccessAutopilotUtils.getIsNotificationAccessSwitchOn()
-                                            && !NotificationCleanerUtils.isNotificationAccessGranted(WelcomeChooseThemeActivity.this)) {
-                                        chooseThemePagerView.setVisibility(View.GONE);
-                                        alphaAnimator.start();
-                                        translationAnimator.start();
-                                        translationAnimator.addListener(new AnimatorListenerAdapter() {
-                                            @Override
-                                            public void onAnimationEnd(Animator animation) {
-                                                super.onAnimationEnd(animation);
-                                                BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
-                                                Navigations.startActivitySafely(WelcomeChooseThemeActivity.this,
-                                                        new Intent(WelcomeChooseThemeActivity.this, NotificationAccessGuideActivity.class));
-                                                overridePendingTransition(0, 0);
-                                                finish();
-                                            }
-                                        });
-                                    } else {
-                                        BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
-                                        UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
-                                        finish();
-                                    }
+                                    launchNextActivity(chooseThemePagerView, alphaAnimator, translationAnimator);
                                 })));
                     }
                 };
@@ -91,27 +71,7 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
             } else {
                 Threads.postOnThreadPoolExecutor(() -> ThemeUtils.applyThemeFirstTime(themeInfo,
                         () -> Threads.postOnMainThread(() -> {
-                            if (NotificationAccessAutopilotUtils.getIsNotificationAccessSwitchOn()
-                                    && !NotificationCleanerUtils.isNotificationAccessGranted(WelcomeChooseThemeActivity.this)) {
-                                chooseThemePagerView.setVisibility(View.GONE);
-                                alphaAnimator.start();
-                                translationAnimator.start();
-                                translationAnimator.addListener(new AnimatorListenerAdapter() {
-                                    @Override
-                                    public void onAnimationEnd(Animator animation) {
-                                        super.onAnimationEnd(animation);
-                                        BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
-                                        Navigations.startActivitySafely(WelcomeChooseThemeActivity.this,
-                                                new Intent(WelcomeChooseThemeActivity.this, NotificationAccessGuideActivity.class));
-                                        overridePendingTransition(0, 0);
-                                        finish();
-                                    }
-                                });
-                            } else {
-                                BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
-                                UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
-                                finish();
-                            }
+                            launchNextActivity(chooseThemePagerView, alphaAnimator, translationAnimator);
                         })));
             }
             BugleAnalytics.logEvent("Start_ChooseTheme_Apply", true, "theme", themeInfo.mThemeKey);
@@ -121,6 +81,30 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
         BugleAnalytics.logEvent("Start_ChooseTheme_Show", true);
         BugleFirebaseAnalytics.logEvent("Start_ChooseTheme_Show");
         Preferences.getDefault().putBoolean(PREF_KEY_WELCOME_CHOOSE_THEME_SHOWN, true);
+    }
+
+    private void launchNextActivity(ChooseThemePagerView chooseThemePagerView, ObjectAnimator alphaAnimator, ObjectAnimator translationAnimator) {
+        if (NotificationAccessAutopilotUtils.getIsNotificationAccessSwitchOn()
+                && !Permissions.isNotificationAccessGranted()) {
+            chooseThemePagerView.setVisibility(View.GONE);
+            alphaAnimator.start();
+            translationAnimator.start();
+            translationAnimator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    super.onAnimationEnd(animation);
+                    BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
+                    Navigations.startActivitySafely(WelcomeChooseThemeActivity.this,
+                            new Intent(WelcomeChooseThemeActivity.this, NotificationAccessGuideActivity.class));
+                    overridePendingTransition(0, 0);
+                    finish();
+                }
+            });
+        } else {
+            BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
+            UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this);
+            finish();
+        }
     }
 
     @Override

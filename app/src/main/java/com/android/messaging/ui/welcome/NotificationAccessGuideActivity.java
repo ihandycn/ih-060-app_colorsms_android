@@ -20,13 +20,14 @@ import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.dialog.PermissionGuideManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
-import com.android.messaging.util.NotificationCleanerUtils;
 import com.ihs.app.framework.HSApplication;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Permissions;
 import com.superapps.util.Threads;
 
 public class NotificationAccessGuideActivity extends AppCompatActivity {
+    public static final String ACTION_NOTIFICATION_LISTENER_SETTINGS = "android.settings.ACTION_NOTIFICATION_LISTENER_SETTINGS";
     public static final int MSG_WHAT_NOTIFICATION_LISTENING_CHECK = 100;
     public static final int MSG_WHAT_NOTIFICATION_LISTENING_CANCEL = 101;
     public static final int INTERVAL_PERMISSION_CHECK = 1000;
@@ -40,7 +41,7 @@ public class NotificationAccessGuideActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case MSG_WHAT_NOTIFICATION_LISTENING_CHECK:
-                    if (!NotificationCleanerUtils.isNotificationAccessGranted(NotificationAccessGuideActivity.this)) {
+                    if (!Permissions.isNotificationAccessGranted()) {
                         sendEmptyMessageDelayed(MSG_WHAT_NOTIFICATION_LISTENING_CHECK, INTERVAL_PERMISSION_CHECK);
                         break;
                     }
@@ -117,7 +118,7 @@ public class NotificationAccessGuideActivity extends AppCompatActivity {
         confirmButton.setOnClickListener(v -> {
             BugleAnalytics.logEvent("Start_NApage_Click", true);
             BugleFirebaseAnalytics.logEvent("SMS_NotificationAccess", "NApage_click", "true");
-            Intent intent = new Intent(NotificationCleanerUtils.ACTION_NOTIFICATION_LISTENER_SETTINGS);
+            Intent intent = new Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS);
             startActivity(intent);
             PermissionGuideManager.getInstance()
                     .showPermissionGuide(HSApplication.getContext(),
@@ -143,7 +144,7 @@ public class NotificationAccessGuideActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (!NotificationCleanerUtils.isNotificationAccessGranted(NotificationAccessGuideActivity.this) && !mIsBackPressedFromNotificationAccessSettings) {
+        if (!Permissions.isNotificationAccessGranted() && !mIsBackPressedFromNotificationAccessSettings) {
             return;
         }
         Intent intent = new Intent(NotificationAccessGuideActivity.this, ConversationListActivity.class);
