@@ -17,12 +17,13 @@ import android.widget.TextView;
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
-import com.android.messaging.ui.dialog.PermissionGuideManager;
+import com.android.messaging.ui.dialog.NotificationAccessDialogActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.ihs.app.framework.HSApplication;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Navigations;
 import com.superapps.util.Permissions;
 import com.superapps.util.Threads;
 
@@ -34,6 +35,7 @@ public class NotificationAccessGuideActivity extends AppCompatActivity {
     public static final int DELAY_START_TO_PERMISSION_CHECK = 1000;
     public static final int DURATION_PERMISSION_CHECK_CONTINUED = 120000;
     private boolean mIsBackPressedFromNotificationAccessSettings;
+    protected final Handler mHandler = new Handler();
 
     @SuppressLint("HandlerLeak") // This mCheckPermissionHandler holds activity reference for no longer than 120s
     private Handler mCheckPermissionHandler = new Handler() {
@@ -47,7 +49,6 @@ public class NotificationAccessGuideActivity extends AppCompatActivity {
                     }
                     BugleAnalytics.logEvent("Start_NA_SetSuccess", true);
                     BugleFirebaseAnalytics.logEvent("SMS_NotificationAccess", "NA_setsuccess", "true");
-                    PermissionGuideManager.getInstance().removePermissionGuide(false);
                     Intent intentSelf = new Intent(HSApplication.getContext(), NotificationAccessGuideActivity.class);
                     intentSelf.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     HSApplication.getContext().startActivity(intentSelf);
@@ -120,9 +121,7 @@ public class NotificationAccessGuideActivity extends AppCompatActivity {
             BugleFirebaseAnalytics.logEvent("SMS_NotificationAccess", "NApage_click", "true");
             Intent intent = new Intent(ACTION_NOTIFICATION_LISTENER_SETTINGS);
             startActivity(intent);
-            PermissionGuideManager.getInstance()
-                    .showPermissionGuide(HSApplication.getContext(),
-                            PermissionGuideManager.PermissionGuideType.NOTIFICATION_CLEANER_ACCESS_FULL_SCREEN, false);
+            mHandler.postDelayed(() -> Navigations.startActivity(this, NotificationAccessDialogActivity.class), 800);
             BugleAnalytics.logEvent("Start_NAguide_Show", true);
             BugleFirebaseAnalytics.logEvent("SMS_NotificationAccess", "NAguide_show", "true");
             mIsBackPressedFromNotificationAccessSettings = true;

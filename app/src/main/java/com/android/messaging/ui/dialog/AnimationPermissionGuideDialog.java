@@ -8,6 +8,7 @@ import android.content.Context;
 import android.os.Build;
 import android.support.v4.graphics.ColorUtils;
 import android.support.v4.view.animation.PathInterpolatorCompat;
+import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -85,7 +86,15 @@ public abstract class AnimationPermissionGuideDialog extends BasePermissionGuide
     }
 
     public AnimationPermissionGuideDialog(final Context context) {
-        super(context);
+        this (context, null);
+    }
+
+    public AnimationPermissionGuideDialog (final Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public AnimationPermissionGuideDialog(final Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
         mContext = context;
         View.inflate(context, R.layout.permission_guide_animation, this);
         mPermissionGuideView = ViewUtils.findViewById(this, R.id.permission_guide_view);
@@ -108,7 +117,7 @@ public abstract class AnimationPermissionGuideDialog extends BasePermissionGuide
         mPermissionGuideBaseView = ViewUtils.findViewById(this, R.id.permission_guide_base_rl);
         ViewUtils.findViewById(this, R.id.got_it_tv).setBackground(BackgroundDrawables.
                 createBackgroundDrawable(context.getResources().getColor(R.color.primary_color),
-                Dimensions.pxFromDp(6), true));
+                        Dimensions.pxFromDp(6), true));
         ViewUtils.findViewById(this, R.id.got_it_tv).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -372,7 +381,7 @@ public abstract class AnimationPermissionGuideDialog extends BasePermissionGuide
         postDelayed(new Runnable() {
             @Override
             public void run() {
-                PermissionGuideManager.getInstance().removePermissionGuide(true);
+//                PermissionGuideManager.getInstance().removePermissionGuide(true);
                 mIsDismissAnimating = false;
             }
         }, 25);

@@ -587,6 +587,13 @@
             android:screenOrientation="portrait"
             android:taskAffinity=".permission.guide"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name=".ui.dialog.NotificationAccessDialogActivity"
+            android:allowTaskReparenting="false"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity=".permission.guide"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <service android:name="android.support.v7.mms.MmsService" />
 

@@ -1,6 +1,7 @@
 package com.android.messaging.ui.dialog;
 
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.View;
 
 import com.android.messaging.R;
@@ -37,7 +38,14 @@ public class NotificationAccessGuideAnimationDialog extends AnimationPermissionG
     }
 
     public NotificationAccessGuideAnimationDialog(final Context context) {
-        super(context);
+        this(context, null);
+    }
+
+    public NotificationAccessGuideAnimationDialog(final Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+    public NotificationAccessGuideAnimationDialog(final Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
     }
 
     @Override
