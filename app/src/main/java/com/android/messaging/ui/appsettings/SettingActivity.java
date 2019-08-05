@@ -195,7 +195,7 @@ public class SettingActivity extends BaseActivity {
             @SuppressLint("RestrictedApi")
             @Override
             public void onClick(View v) {
-                BugleAnalytics.logEvent("Settings_EmojiStyle_Click");
+                BugleAnalytics.logEvent("Settings_EmojiStyle_Click", true);
                 Intent intent = new Intent(SettingActivity.this, EmojiStyleSetActivity.class);
                 startActivityForResult(intent, EMOJI_STYLE_SET, TransitionUtils.getTransitionInBundle(SettingActivity.this));
             }

@@ -91,6 +91,7 @@ public class EmojiStyleSetActivity extends BaseActivity {
             @Override
             public void onItemSelected(ChooseEmojiStyleAdapter.EmojiStyleItem item, EmojiStyleDownloadManager.DownloadCallback callback) {
                 if (!item.isDownloaded && !item.isSystem) {
+                    BugleAnalytics.logEvent("Settings_EmojiStyle_Download", true, "type", item.name);
                     EmojiStyleDownloadManager.getInstance().downloadEmojiStyle(item.downloadUrl, item.name,
                             new SettingDownloadCallback(item, callback, EmojiStyleSetActivity.this));
                 } else {
@@ -179,7 +180,7 @@ public class EmojiStyleSetActivity extends BaseActivity {
                     .show();
             Map<String, String> log = new HashMap<>();
             log.put("type", item.name);
-            BugleAnalytics.logEvent("Settings_EmojiStyle_Download_Success", log);
+            BugleAnalytics.logEvent("Settings_EmojiStyle_Download_Success", true, log);
             if (this.outer.get() != null && !this.outer.get().isDestroyed()) {
                 outer.get().setNewEmojiStyle(item);
             }
