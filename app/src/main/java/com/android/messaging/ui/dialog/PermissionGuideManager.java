@@ -134,8 +134,8 @@ public class PermissionGuideManager {
         switch (type) {
             case FIVE_STAR_RATE:
                 return new FiveStarRateGuideDialog(context);
-            case NOTIFICATION_CLEANER_ACCESS_FULL_SCREEN:
-                return new NotificationAccessGuideAnimationDialog(context);
+//            case NOTIFICATION_CLEANER_ACCESS_FULL_SCREEN:
+//                return new NotificationAccessGuideAnimationDialog(context);
 //            case SET_AS_DEFAULT:
 //                return new SetAsDefaultGuide(context);
 //            case SET_AS_DEFAULT_HUAWEI_KITKAT:
