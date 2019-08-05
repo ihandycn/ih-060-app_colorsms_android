@@ -74,7 +74,7 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
                                                 super.onAnimationEnd(animation);
                                                 BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
                                                 Navigations.startActivitySafely(WelcomeChooseThemeActivity.this,
-                                                        new Intent(WelcomeChooseThemeActivity.this, NotificationGuideActivity.class));
+                                                        new Intent(WelcomeChooseThemeActivity.this, NotificationAccessGuideActivity.class));
                                                 overridePendingTransition(0, 0);
                                                 finish();
                                             }
@@ -102,7 +102,7 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
                                         super.onAnimationEnd(animation);
                                         BugleActivityUtil.cancelAdaptScreen(WelcomeChooseThemeActivity.this);
                                         Navigations.startActivitySafely(WelcomeChooseThemeActivity.this,
-                                                new Intent(WelcomeChooseThemeActivity.this, NotificationGuideActivity.class));
+                                                new Intent(WelcomeChooseThemeActivity.this, NotificationAccessGuideActivity.class));
                                         overridePendingTransition(0, 0);
                                         finish();
                                     }
@@ -135,7 +135,7 @@ public class WelcomeChooseThemeActivity extends AppCompatActivity {
         // apply default theme
         ThemeUtils.applyThemeFirstTime(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()),
                 () -> UIIntents.get().launchConversationListActivity(WelcomeChooseThemeActivity.this));
-        super.onBackPressed();
+        finish();
     }
 
     @Override

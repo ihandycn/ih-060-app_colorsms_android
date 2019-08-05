@@ -8,7 +8,7 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.ihs.commons.utils.HSLog;
 
-import static com.android.messaging.datamodel.NotificationServiceV18.EXTRA_FROM_CUSTOMIZE_NOTIFICATION;
+import static com.android.messaging.datamodel.NotificationServiceV18.EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -22,7 +22,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (!DefaultSMSUtils.isDefaultSmsApp()) {
-            if (getIntent() != null && getIntent().getBooleanExtra(EXTRA_FROM_CUSTOMIZE_NOTIFICATION, false)) {
+            if (getIntent() != null && getIntent().getBooleanExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, false)) {
                 BugleNotifications.cancelAllSmsNotifications();
             }
             UIIntents.get().launchWelcomeSetAsDefaultActivity(this);
@@ -37,7 +37,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
         if (!mJustCreated) {
             if (!DefaultSMSUtils.isDefaultSmsApp()) {
-                if (getIntent() != null && getIntent().getBooleanExtra(EXTRA_FROM_CUSTOMIZE_NOTIFICATION, false)) {
+                if (getIntent() != null && getIntent().getBooleanExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, false)) {
                     BugleNotifications.cancelAllSmsNotifications();
                 }
                 UIIntents.get().launchWelcomeSetAsDefaultActivity(this);

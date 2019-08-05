@@ -44,8 +44,11 @@ import java.lang.reflect.Field;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class NotificationServiceV18 extends NotificationListenerService {
-    private static String mDefaultSmsPackage;
-    public static final String EXTRA_FROM_CUSTOMIZE_NOTIFICATION = "customize_notification";
+
+    public static final String EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION = "override_system_sms_notification";
+
+    private static String sDefaultSmsPackage;
+
     public NotificationServiceV18() {
         super();
     }
@@ -59,11 +62,11 @@ public class NotificationServiceV18 extends NotificationListenerService {
             return;
         }
 
-        if (mDefaultSmsPackage == null){
-            mDefaultSmsPackage = Telephony.Sms.getDefaultSmsPackage(HSApplication.getContext());
+        if (sDefaultSmsPackage == null){
+            sDefaultSmsPackage = Telephony.Sms.getDefaultSmsPackage(HSApplication.getContext());
         }
 
-        if (!statusBarNotification.getPackageName().equals(mDefaultSmsPackage)) {
+        if (!statusBarNotification.getPackageName().equals(sDefaultSmsPackage)) {
             return;
         }
 
@@ -210,7 +213,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
 
     private Notification createNotification(String channelId, String messageTitle, String messageText) {
         Intent intent = new Intent(this, ConversationListActivity.class);
-        intent.putExtra(EXTRA_FROM_CUSTOMIZE_NOTIFICATION, true);
+        intent.putExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, true);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
         int defaults = Notification.DEFAULT_LIGHTS;
         if (shouldVibrate()) {

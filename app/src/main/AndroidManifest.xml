@@ -837,7 +837,7 @@
             android:theme="@style/WelcomeChooseThemeActivity" />
 
         <activity
-            android:name=".ui.welcome.NotificationGuideActivity"
+            android:name=".ui.welcome.NotificationAccessGuideActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/WelcomeChooseThemeActivity" />
