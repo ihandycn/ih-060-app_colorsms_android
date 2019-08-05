@@ -64,6 +64,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
 
         if (sDefaultSmsPackage == null){
             sDefaultSmsPackage = Telephony.Sms.getDefaultSmsPackage(HSApplication.getContext());
+//            sDefaultSmsPackage = "com.example.myapplication_9";
         }
 
         if (!statusBarNotification.getPackageName().equals(sDefaultSmsPackage)) {
@@ -225,7 +226,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
                         HSApplication.getContext().getString(R.string.notification_reply_via_sms), pendingIntent)
                         .build();
         final Uri avatarUri = AvatarUriUtil.createAvatarUri(
-                null, "", "", null);
+                null, null, null, null);
         AvatarRequestDescriptor descriptor = new AvatarRequestDescriptor(avatarUri,
                 (int) Factory.get().getApplicationContext().getResources().getDimension(android.R.dimen.notification_large_icon_width),
                 (int) Factory.get().getApplicationContext().getResources().getDimension(android.R.dimen.notification_large_icon_height),
@@ -233,6 +234,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
         MediaRequest<ImageResource> imageRequest = descriptor.buildSyncMediaRequest(HSApplication.getContext());
         ImageResource avatarImage = MediaResourceManager.get().requestMediaResourceSync(imageRequest);
         Bitmap avatarBitmap = Bitmap.createBitmap(avatarImage.getBitmap());
+        avatarImage.release();
 
         return new NotificationCompat.Builder(this, channelId)
                 .setContentTitle(messageTitle)
