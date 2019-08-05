@@ -24,4 +24,9 @@
     <dimen name="conversation_list_item_content_margin_start">76dp</dimen>
     <dimen name="work_profile_icon_margin_start">299dp</dimen>
     <dimen name="conversation_timestamp_margin_start">317dp</dimen>
+
+    <dimen name="navigation_drawer_logo_width">109dp</dimen>
+    <dimen name="navigation_drawer_logo_height">79dp</dimen>
+    <dimen name="navigation_drawer_logo_margin_top">41dp</dimen>
+    <dimen name="navigation_drawer_logo_margin_bottom">42dp</dimen>
 </resources>

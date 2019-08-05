@@ -57,6 +57,11 @@
     <dimen name="conversation_timestamp_margin_start">309dp</dimen>
     <dimen name="blocked_participant_list_item_view_padding">16dp</dimen>
 
+    <dimen name="navigation_drawer_logo_width">92dp</dimen>
+    <dimen name="navigation_drawer_logo_height">66.7dp</dimen>
+    <dimen name="navigation_drawer_logo_margin_top">35dp</dimen>
+    <dimen name="navigation_drawer_logo_margin_bottom">35dp</dimen>
+
     <dimen name="message_bubble_arrow_width">9dp</dimen>
     <dimen name="message_text_bottom_padding">6dp</dimen>
     <dimen name="message_text_top_padding">8dp</dimen>
