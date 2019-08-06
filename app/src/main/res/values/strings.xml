@@ -1336,5 +1336,9 @@
     <string name="chat_list_background_opacity">Background Opacity</string>
     <string name="chat_list_text_color">Text Color</string>
     <string name="system_font_display_name">System</string>
+
+    <!--schedule function-->
+    <string name="scheduled">Scheduled</string>
+    <string name="schedule_select_time_error">Select time in future</string>
 </resources>
 
