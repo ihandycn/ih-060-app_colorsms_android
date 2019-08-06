@@ -888,7 +888,6 @@ public class ComposeMessageView extends LinearLayout
                                             }
                                         }, 1600);
 
-                                        playSentSound();
                                         mHost.sendMessage(message);
                                         if (!TextUtils.isEmpty(mSignatureStr)) {
                                             BugleAnalytics.logEvent("SMS_WithSignature_Send", true,
@@ -956,19 +955,6 @@ public class ComposeMessageView extends LinearLayout
                 }
             }
         }).start();
-    }
-
-    public static void playSentSound() {
-        // Check if this setting is enabled before playing
-        final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
-        final Context context = Factory.get().getApplicationContext();
-        final String prefKey = context.getString(R.string.send_sound_pref_key);
-        final boolean defaultValue = context.getResources().getBoolean(
-                R.bool.send_sound_pref_default);
-        if (!prefs.getBoolean(prefKey, defaultValue)) {
-            return;
-        }
-        MediaUtil.get().playSound(context, R.raw.message_sent, null /* completionListener */);
     }
 
     /**

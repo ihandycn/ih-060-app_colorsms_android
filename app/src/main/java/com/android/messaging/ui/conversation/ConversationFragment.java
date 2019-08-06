@@ -68,6 +68,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.AdPlacement;
@@ -111,11 +112,13 @@ import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
+import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.ChangeDefaultSmsAppHelper;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
+import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.SafeAsyncTask;
@@ -2046,6 +2049,17 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             case DELAYED_SENDING_MESSAGE_COMPLETE:
                 if (hsBundle != null && TextUtils.equals(mConversationId, hsBundle.getString(BUNDLE_KEY_CONVERSATION_ID))) {
                     mComposeMessageView.onSendMessageActionTriggered();
+
+                    // Check if this setting is enabled before playing
+                    final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
+                    final Context context = Factory.get().getApplicationContext();
+                    final String prefKey = context.getString(R.string.send_sound_pref_key);
+                    final boolean defaultValue = context.getResources().getBoolean(
+                            R.bool.send_sound_pref_default);
+                    if (!prefs.getBoolean(prefKey, defaultValue)) {
+                        return;
+                    }
+                    MediaUtil.get().playSound(context, R.raw.message_sent, null /* completionListener */);
                 }
                 break;
         }
