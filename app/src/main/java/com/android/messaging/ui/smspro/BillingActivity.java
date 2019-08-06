@@ -69,7 +69,7 @@ public class BillingActivity extends AppCompatActivity implements INotificationO
         purchaseButton.setBackground(BackgroundDrawables.
                 createBackgroundDrawable(0xff1db255, Dimensions.pxFromDp(27), true));
         purchaseButton.setOnClickListener(v -> {
-            BillingManager.requestPurchase();
+            BillingManager.requestPurchase(null);
 
             BugleAnalytics.logEvent("SMS_Subscription_Click");
             BugleAnalytics.logEvent("Subscription_Analysis", "Subscription_Click", "true");

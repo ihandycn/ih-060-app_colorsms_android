@@ -27,6 +27,8 @@ public class BillingManager {
     public static final String PRODUCT_ID = "com.color.sms.messages.emoji.pid.adfree.tier1";
     private static final String PREF_KEY_USER_HAS_VERIFIED_SUCCESS = "iap.user.has.verified.success";
 
+    private static int sRetryCount = 0;
+
     public interface CheckIapStateCallBack {
         void onGetResult(boolean isPremiumUser);
     }
@@ -41,11 +43,13 @@ public class BillingManager {
         LocalBroadcastManager.getInstance(application).registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                    AcbIAPTransaction.State state = AcbIAPTransaction.getState(PRODUCT_ID);
-                    if (checkIapStateCallBack != null) {
-                        checkIapStateCallBack.onGetResult(AcbIAPTransaction.State.VERIFIED.equals(state));
-                    }
+                AcbIAPTransaction.State state = AcbIAPTransaction.getState(PRODUCT_ID);
+                if (AcbIAPTransaction.State.SHOULD_VERIFY.equals(state)) {
+                    requestPurchase(checkIapStateCallBack);
+                } else if (checkIapStateCallBack != null) {
+                    checkIapStateCallBack.onGetResult(AcbIAPTransaction.State.VERIFIED.equals(state));
                 }
+            }
 
         }, new IntentFilter(AcbIAPTransaction.INVENTORY_DID_UPDATE_NOTIFICATION));
     }
@@ -55,7 +59,7 @@ public class BillingManager {
         return BugleApplicationPrefs.getApplicationPrefs().getBoolean(PREF_KEY_USER_HAS_VERIFIED_SUCCESS, false);
     }
 
-    public static void requestPurchase() {
+    public static void requestPurchase(final CheckIapStateCallBack callBack) {
         AcbIAPTransaction.ItemType type = AcbIAPTransaction.ItemType.NON_CONSUMABLE;
         // 附加信息（可为null）
         JSONObject userInfo = new JSONObject();
@@ -87,7 +91,9 @@ public class BillingManager {
                 BugleAnalytics.logEvent("SMS_Subscription_Purchase_Success", true);
                 BugleAnalytics.logEvent("Subscription_Analysis", "Subscription_Purchase_Success", "true");
                 BugleFirebaseAnalytics.logEvent("Subscription_Analysis", "Subscription_Purchase_Success", "true");
-
+                if (callBack != null) {
+                    callBack.onGetResult(true);
+                }
             }
 
             @Override
@@ -95,7 +101,11 @@ public class BillingManager {
                 // 验证未通过（error.getKey() == AcbIAPErrorKey.InvalidReceipt，刚完成的购买会被消耗掉并从库中删除）
                 // 或在验证时出现其它错误（购买变为待验证状态）
                 // 交易结束
+
                 Toasts.showToast(R.string.purchase_failed);
+                if (++sRetryCount < 2) {
+                    requestPurchase(callBack);
+                }
             }
         }).start();
     }
