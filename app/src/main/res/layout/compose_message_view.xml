@@ -96,7 +96,7 @@
                     android:layout_width="7dp"
                     android:layout_height="1dp" />
 
-                <com.android.messaging.ui.emoji.EmojiEditText
+                <com.android.messaging.ui.conversation.GifSupportEditText
                     android:id="@+id/compose_message_text"
                     style="@style/ConversationComposeSendText"
                     android:layout_width="0dp"

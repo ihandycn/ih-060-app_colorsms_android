@@ -252,6 +252,12 @@ public class AttachmentPreview extends ScrollView implements OnAttachmentClickLi
                     }
                 }
             }
+
+            if (attachment instanceof MediaPickerMessagePartData) {
+                if (((MediaPickerMessagePartData) attachment).getStartRect() == null) {
+                    shouldAnimate = false;
+                }
+            }
             mAttachmentView.removeAllViews();
             final View attachmentView = AttachmentPreviewFactory.createAttachmentPreview(
                     layoutInflater, attachment, mAttachmentView,

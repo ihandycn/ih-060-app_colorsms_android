@@ -55,7 +55,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
@@ -67,6 +66,7 @@ import com.android.messaging.datamodel.data.DraftMessageData;
 import com.android.messaging.datamodel.data.DraftMessageData.CheckDraftForSendTask;
 import com.android.messaging.datamodel.data.DraftMessageData.CheckDraftTaskCallback;
 import com.android.messaging.datamodel.data.DraftMessageData.DraftMessageDataListener;
+import com.android.messaging.datamodel.data.MediaPickerMessagePartData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
@@ -90,12 +90,10 @@ import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleActivityUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
-import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
-import com.android.messaging.util.MediaUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.TextViewUtil;
 import com.android.messaging.util.UiUtils;
@@ -170,7 +168,7 @@ public class ComposeMessageView extends LinearLayout
 
     private static final int DEFAULT_EMOJI_PICKER_HEIGHT = Dimensions.pxFromDp(243);
 
-    private PlainTextEditText mComposeEditText;
+    private GifSupportEditText mComposeEditText;
     private ImageView mSendButton;
     private ImageView mSimButton;
     private ImageView mDelayCloseButton;
@@ -283,6 +281,15 @@ public class ComposeMessageView extends LinearLayout
                     mHost.onComposeEditTextFocused();
                 }
             }
+        });
+        mComposeEditText.setOnGetRichContentFromImeListener(contentInfoCompat -> {
+
+            String contentType = ContentType.IMAGE_GIF;
+            final List<MessagePartData> items = new ArrayList<>(1);
+            MediaPickerMessagePartData data = new MediaPickerMessagePartData(null, contentType, contentInfoCompat.getContentUri(),
+                    200, 200);
+            items.add(data);
+            onMediaItemsSelected(items);
         });
         mComposeEditText.setOnClickListener(new View.OnClickListener() {
             @Override

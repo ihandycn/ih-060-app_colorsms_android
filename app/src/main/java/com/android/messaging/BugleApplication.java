@@ -38,7 +38,6 @@ import android.text.TextUtils;
 
 import com.android.ex.photo.util.PhotoViewAnalytics;
 import com.android.messaging.ad.AdConfig;
-import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.ad.BillingManager;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.debug.BlockCanaryConfig;
