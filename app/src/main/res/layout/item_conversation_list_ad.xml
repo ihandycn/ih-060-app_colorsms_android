@@ -93,5 +93,5 @@
         android:layout_width="10dp"
         android:layout_height="10dp"
         android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"></FrameLayout>
+        android:layout_alignParentTop="true"/>
 </RelativeLayout>
