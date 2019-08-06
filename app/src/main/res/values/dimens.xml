@@ -42,6 +42,7 @@
     <dimen name="conversation_list_item_snippet_text_size">13sp</dimen>
     <dimen name="conversation_list_item_height">@dimen/conversation_list_contact_bg_size</dimen>
     <dimen name="conversation_list_item_content_margin_start">68dp</dimen>
+    <dimen name="conversation_list_ad_content_margin_start">13dp</dimen>
     <dimen name="conversation_list_item_content_margin_bottom">13dp</dimen>
     <dimen name="conversation_message_bubble_incoming_simple_style_top_padding">10dp</dimen>
     <dimen name="conversation_message_bubble_incoming_top_padding">20dp</dimen>

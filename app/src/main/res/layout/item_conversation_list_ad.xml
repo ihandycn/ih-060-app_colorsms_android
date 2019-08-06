@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="@dimen/conversation_list_contact_margin_start"
         app:radiusX="25dp"
         app:radiusY="25dp">
 
@@ -30,8 +30,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="14dp"
+        android:layout_marginEnd="15.7dp"
+        android:layout_marginStart="@dimen/conversation_list_ad_content_margin_start"
         android:layout_toEndOf="@id/banner_icon"
         android:layout_toStartOf="@+id/banner_action"
         android:orientation="vertical">

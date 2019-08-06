@@ -22,6 +22,7 @@
     <dimen name="conversation_list_item_height">69dp</dimen>
     <dimen name="conversation_list_error_icon_margin_start">45.3dp</dimen>
     <dimen name="conversation_list_item_content_margin_start">76dp</dimen>
+    <dimen name="conversation_list_ad_content_margin_start">12dp</dimen>
     <dimen name="work_profile_icon_margin_start">299dp</dimen>
     <dimen name="conversation_timestamp_margin_start">317dp</dimen>
 

@@ -123,6 +123,7 @@ public class ChooseFontDialog {
 
     private View createContentView(LayoutInflater inflater, ViewGroup root) {
         View v = inflater.inflate(R.layout.dialog_content_choice, root, false);
+        v.setClickable(true);
         configRadioGroup(v);
         TextView mTitleTv = ViewUtils.findViewById(v, R.id.dialog_title);
         mTitleTv.setText(R.string.setting_text_font);
