@@ -95,7 +95,7 @@ import net.appcloudbox.autopilot.AutopilotEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.android.messaging.ui.conversationlist.CustomizeGuideController.PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE;
+import static com.android.messaging.ui.conversationlist.LightWeightCustomizeGuideController.PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE;
 
 
 /**

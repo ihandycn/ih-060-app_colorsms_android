@@ -130,7 +130,7 @@ import hugo.weaving.DebugLog;
 
 import static com.android.messaging.ad.BillingManager.BILLING_VERIFY_SUCCESS;
 import static com.android.messaging.ui.conversation.ConversationActivity.PREF_KEY_WIRE_AD_SHOW_TIME_FOR_EXIT_WIRE_AD;
-import static com.android.messaging.ui.conversationlist.CustomizeGuideController.PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE;
+import static com.android.messaging.ui.conversationlist.LightWeightCustomizeGuideController.PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.DESKTOP_PREFS;
 import static com.android.messaging.ui.dialog.FiveStarRateDialog.PREF_KEY_MAIN_ACTIVITY_SHOW_TIME;
 import static com.ihs.app.framework.HSApplication.getContext;
@@ -203,7 +203,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private boolean mIsMessageMoving;
     private ConstraintLayout mExitAppAnimationViewContainer;
     private LottieAnimationView mLottieAnimationView;
-    private CustomizeGuide mCustomizeGuideController;
+    private LightWeightCustomizeGuideController mCustomizeGuideController;
     private final BuglePrefs mPrefs = Factory.get().getApplicationPrefs();
 
     @Override
@@ -357,7 +357,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
             }
         });
 
-        NavigationViewGuideTest.logHomePageShow();
     }
 
     private void onPostPageVisible() {
@@ -517,7 +516,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     BugleAnalytics.logEvent("Menu_Show_NewUser", true);
                     BugleAnalytics.logEvent("Menu_Show_NewUser_Backup", true);
                 }
-                NavigationViewGuideTest.logNavigationViewShow();
                 super.onDrawerOpened(drawerView);
             }
 
@@ -536,7 +534,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         Navigations.startActivity(ConversationListActivity.this, ThemeSelectActivity.class);
                         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_theme_new_text).setVisibility(View.GONE);
-                        NavigationViewGuideTest.logMenuThemeClick();
                         break;
 
                     case DRAWER_INDEX_THEME_COLOR:
@@ -562,7 +559,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             Navigations.startActivity(ConversationListActivity.this, CustomBubblesActivity.class);
                             overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         }
-                        NavigationViewGuideTest.logMenuBubbleClick();
                         break;
                     case DRAWER_INDEX_CHAT_BACKGROUND:
                         BugleAnalytics.logEvent("Menu_ChatBackground_Click", true);
@@ -573,19 +569,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         WallpaperPreviewActivity.startWallpaperPreview(ConversationListActivity.this);
                         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_background_new_text).setVisibility(View.GONE);
-                        NavigationViewGuideTest.logMenuBackgroundClick();
                         break;
                     case DRAWER_INDEX_CHAT_LIST:
                         Navigations.startActivitySafely(ConversationListActivity.this, ChatListCustomizeActivity.class);
                         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
-                        NavigationViewGuideTest.logMenuChatListClick();
                         break;
                     case DRAWER_INDEX_CHANGE_FONT:
                         BugleAnalytics.logEvent("Menu_ChangeFont_Click");
                         Navigations.startActivity(ConversationListActivity.this, ChangeFontActivity.class);
                         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_font_new_text).setVisibility(View.GONE);
-                        NavigationViewGuideTest.logMenuFontClick();
                         break;
                     case DRAWER_INDEX_EMOJI_STORE:
                         BugleAnalytics.logEvent("Menu_EmojiStore_Click", true);
@@ -790,11 +783,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         if (isInConversationListSelectMode()) {
             exitMultiSelectState();
-            return;
-        }
-
-        if (mCustomizeGuideController != null
-                && mCustomizeGuideController.closeCustomizeGuide(true)) {
             return;
         }
 
@@ -1223,11 +1211,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     Threads.postOnMainThreadDelayed(() -> {
                         if (mCustomizeGuideController == null) {
                             if (!isFinishing()) {
-                                if ("default".equals(NavigationViewGuideTest.getDefaultType())) {
-                                    mCustomizeGuideController = new LightWeightCustomizeGuideController();
-                                } else {
-                                    mCustomizeGuideController = new CustomizeGuideController();
-                                }
+                                mCustomizeGuideController = new LightWeightCustomizeGuideController();
                                 mCustomizeGuideController.showGuideIfNeed(this);
                             }
                         }

@@ -20,11 +20,11 @@ import com.superapps.util.Preferences;
 
 import static com.android.messaging.ui.conversationlist.ConversationListActivity.PREF_KEY_MAIN_DRAWER_OPENED;
 
-public class LightWeightCustomizeGuideController implements CustomizeGuide {
-    private static final String PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE = "pref_show_customize_guide";
+public class LightWeightCustomizeGuideController {
+    static final String PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE = "pref_show_customize_guide";
 
     @SuppressLint("ClickableViewAccessibility")
-    public void showGuideIfNeed(ConversationListActivity activity) {
+    void showGuideIfNeed(ConversationListActivity activity) {
         if (!Preferences.getDefault().getBoolean(PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE, true)) {
             return;
         }
@@ -166,19 +166,6 @@ public class LightWeightCustomizeGuideController implements CustomizeGuide {
         alphaAnimator.start();
         enlargeXAnimator.start();
         enlargeYAnimator.start();
-
-        logGuideShow();
-    }
-
-
-    @Override
-    public void logGuideShow() {
-        NavigationViewGuideTest.logGuideShow();
-    }
-
-    @Override
-    public boolean closeCustomizeGuide(boolean openDrawer) {
-        return false;
     }
 }
 
