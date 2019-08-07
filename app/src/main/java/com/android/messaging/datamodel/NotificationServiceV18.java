@@ -201,6 +201,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
                         notificationChannel.setShowBadge(true);
                         channelId = notificationChannel.getId();
                         notificationChannel.setImportance(priority);
+                        notifyMgr.createNotificationChannel(notificationChannel);
                     }
                     Notification notification = createNotification(channelId, messageTitle, messageText);
                     notifyMgr.notify(PendingIntentConstants.SMS_NOTIFICATION_ID, notification);
