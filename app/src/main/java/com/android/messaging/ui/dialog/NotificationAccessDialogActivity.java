@@ -7,7 +7,7 @@ import com.android.messaging.R;
 import com.ihs.app.framework.activity.HSActivity;
 
 public class NotificationAccessDialogActivity extends HSActivity {
-    private BasePermissionGuideDialog mPermissionGuide;
+    private NotificationAccessGuideAnimationDialog mPermissionGuide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +16,7 @@ public class NotificationAccessDialogActivity extends HSActivity {
         mPermissionGuide = findViewById(R.id.notification_access_guide_animation_dialog);
         mPermissionGuide.setShowContentImmediately(false);
         mPermissionGuide.onAddedToWindow();
+        mPermissionGuide.setHost(this);
     }
 
 
