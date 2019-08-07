@@ -91,7 +91,7 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
         }
     }
 
-    private void updateData(List<Media> list) {
+    private void updateData(List<GiphyInfo> list) {
         if (list.isEmpty()) {
             return;
         }
@@ -107,13 +107,7 @@ public class GiphyItemRecyclerAdapter extends RecyclerView.Adapter<GiphyItemRecy
         int preCount = mDataList.size();
         int totalCount = list.size();
         for (int i = preCount; i < totalCount; i++) {
-            GiphyInfo giphyInfo = new GiphyInfo();
-
-            Image image = list.get(i).getImages().getFixedWidthDownsampled();
-            giphyInfo.mFixedWidthGifUrl = image.getGifUrl();
-            giphyInfo.mGifOriginalWidth = image.getWidth();
-            giphyInfo.mGifOriginalHeight = image.getHeight();
-
+            GiphyInfo giphyInfo = list.get(i);
             mDataList.add(giphyInfo);
         }
         notifyItemRangeInserted(preCount, totalCount - preCount);
