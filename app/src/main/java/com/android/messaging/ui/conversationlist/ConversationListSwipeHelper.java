@@ -33,6 +33,7 @@ import android.view.animation.Interpolator;
 
 import com.android.messaging.R;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.BugleAnalytics;
 import com.superapps.util.Dimensions;
 
 /**
@@ -209,6 +210,9 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
                             animateShowOption(mListItemView, velocityX);
                         } else {
                             animateShowOption(mListItemView);
+                        }
+                        if (mInitTranslationX == 0) {
+                            BugleAnalytics.logEvent("SMS_Messages_Slide_Left", true);
                         }
                     } else {
                         animateRestore(mListItemView, velocityX);
