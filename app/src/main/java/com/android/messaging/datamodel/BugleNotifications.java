@@ -1358,6 +1358,13 @@ public class BugleNotifications {
         try {
             final NotificationManager notificationManager = (NotificationManager) Factory.get().getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(PendingIntentConstants.SMS_NOTIFICATION_ID);
+            HSLog.d("NotificationListener", "PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = " + PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER);
+            for (int i = 1; i <= PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER; i++) {
+                notificationManager.cancel(i);
+            }
+            if (PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER >= 2) {
+                notificationManager.cancel(-1);
+            }
             if (OsUtil.isAtLeastO()) {
                 notificationManager.deleteNotificationChannel(PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID);
             }

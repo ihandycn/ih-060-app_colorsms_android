@@ -35,6 +35,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                 final Intent intent = new Intent(this, WelcomeSetAsDefaultActivity.class);
                 intent.putExtra(UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION, true);
                 startActivity(intent, TransitionUtils.getTransitionInBundle(this));
+                BugleNotifications.cancelAllSmsNotifications();
             } else {
                 HSLog.d("NotificationListener", "UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION false");
                 UIIntents.get().launchWelcomeSetAsDefaultActivity(this);

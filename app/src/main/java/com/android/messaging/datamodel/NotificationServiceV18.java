@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -21,7 +20,6 @@ import android.service.notification.StatusBarNotification;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 
 import com.android.messaging.Factory;
@@ -32,7 +30,6 @@ import com.android.messaging.datamodel.media.ImageResource;
 import com.android.messaging.datamodel.media.MediaRequest;
 import com.android.messaging.datamodel.media.MediaResourceManager;
 import com.android.messaging.ui.UIIntents;
-import com.android.messaging.ui.conversation.ConversationActivity;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.AvatarUriUtil;
@@ -47,10 +44,8 @@ import com.superapps.util.ReflectionHelper;
 import com.superapps.util.Threads;
 
 import java.lang.reflect.Field;
-import java.util.Collections;
-
-import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID;
-import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_CONVERSATION_NAME;
+import java.util.ArrayList;
+import java.util.List;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class NotificationServiceV18 extends NotificationListenerService {
@@ -85,7 +80,8 @@ public class NotificationServiceV18 extends NotificationListenerService {
 
             return;
         }
-        HSLog.d("NotificationListener", "onNotificationPosted(), block, title = " + notificationInfo.title + ", text = " + notificationInfo.text);
+        HSLog.d("NotificationListener", "onNotificationPosted(), block, title = " + notificationInfo.title + ", text = " + notificationInfo.text +
+                ", notificationId = " + notificationInfo.notificationId);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !TextUtils.isEmpty(notificationInfo.key)) {
             try {
@@ -122,6 +118,20 @@ public class NotificationServiceV18 extends NotificationListenerService {
 
         pm.setComponentEnabledSetting(new ComponentName(context, NotificationServiceV18.class),
                 PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP);
+    }
+
+    @Override
+    public StatusBarNotification[] getActiveNotifications() {
+        StatusBarNotification[] notifications = null;
+        try {
+            notifications = super.getActiveNotifications();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (notifications == null) {
+            notifications = new StatusBarNotification[0];
+        }
+        return notifications;
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
@@ -212,13 +222,75 @@ public class NotificationServiceV18 extends NotificationListenerService {
                         notifyMgr.createNotificationChannel(notificationChannel);
                     }
                     Notification notification = createNotification(channelId, messageTitle, messageText);
-                    notifyMgr.notify(PendingIntentConstants.SMS_NOTIFICATION_ID, notification);
+                    StatusBarNotification[] allNotifications = getActiveNotifications();
+                    boolean isNotificationIdExisted = false;
+                    int notificationExistId = 0;
+                    int notificationIdNumber = 0;
+                    BlockedNotificationInfo notificationInfo;
+                    List<String> summaryNotificationMessageTitle = new ArrayList<>();
+                    List<String> summaryNotificationMessageText = new ArrayList<>();
+                    for (StatusBarNotification statusBarNotification : allNotifications) {
+                        String notificationPackageName = statusBarNotification.getPackageName();
+                        if (notificationPackageName.equals("com.color.sms.messages.emoji")) {
+                            notificationIdNumber++;
+                            notificationInfo = loadNotificationInfo(statusBarNotification);
+                            summaryNotificationMessageTitle.add(notificationInfo.title);
+                            summaryNotificationMessageText.add(notificationInfo.text);
+                            HSLog.d("NotificationListener", "notificationInfo.title = " + notificationInfo.title);
+                            HSLog.d("NotificationListener", "messageTitle = " + messageTitle);
+                            if (notificationInfo.title.equals(messageTitle)) {
+                                notificationExistId = statusBarNotification.getId();
+                                isNotificationIdExisted = true;
+                            }
+                        }
+                    }
+                    HSLog.d("NotificationListener", "notificationIdNumber = " + notificationIdNumber);
+                    HSLog.d("NotificationListener", "isNotificationIdExisted = " + isNotificationIdExisted);
+                    if (isNotificationIdExisted){
+                        notifyMgr.notify(notificationExistId, notification);
+                        if (notificationIdNumber >= 3) {
+                            PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = notificationIdNumber - 1;
+                        } else {
+                            PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = notificationIdNumber;
+                        }
+                    } else {
+                        if (notificationIdNumber == 1) {
+                            notifyMgr.notify(-1, createSummaryNotification(channelId, summaryNotificationMessageTitle, summaryNotificationMessageText));
+                        }
+                        if (notificationIdNumber >= 3) {
+                            PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = notificationIdNumber;
+                            notifyMgr.notify(notificationIdNumber, notification);
+                        } else {
+                            PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = notificationIdNumber + 1;
+                            notifyMgr.notify(notificationIdNumber + 1, notification);
+                        }
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         };
         Threads.postOnSingleThreadExecutor(notifyRunnable); // Keep notifications in original order
+    }
+
+    private Notification createSummaryNotification(String channelId, List<String> messageTitle, List<String> messageText) {
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+        for (int i = 0; i < messageTitle.size(); i++){
+            inboxStyle.addLine(messageTitle.get(i) + " " + messageText.get(i));
+        }
+        Intent intent = new Intent(this, ConversationListActivity.class);
+        intent.putExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, true);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        String groupKey = "groupkey";
+        return new NotificationCompat.Builder(this, channelId)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.drawable.ic_sms_light)
+                .setColor(PrimaryColors.getPrimaryColor())
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setGroup(groupKey)
+                .setGroupSummary(true)
+                .build();
     }
 
     private Notification createNotification(String channelId, String messageTitle, String messageText) {
@@ -271,7 +343,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
         ImageResource avatarImage = MediaResourceManager.get().requestMediaResourceSync(imageRequest);
         Bitmap avatarBitmap = Bitmap.createBitmap(avatarImage.getBitmap());
         avatarImage.release();
-
+        String groupKey = "groupkey";
         return new NotificationCompat.Builder(this, channelId)
                 .setContentTitle(messageTitle)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(messageText))
@@ -285,8 +357,11 @@ public class NotificationServiceV18 extends NotificationListenerService {
                 .setDefaults(defaults)
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setAutoCancel(true)
+                .setGroup(groupKey)
                 .addAction(action)
                 .build();
+
+
     }
 
     private boolean shouldVibrate() {
