@@ -144,6 +144,25 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
             UiUtils.showDialogFragment(SettingActivity.this, dialog);
         });
 
+        mVibrateView = findViewById(R.id.setting_item_vibrate);
+        updateVibrateSummary();
+        mVibrateView.setOnItemClickListener(() -> {
+            SelectVibrateModeDialog dialog = new SelectVibrateModeDialog();
+            dialog.setOnDismissOrCancelListener(new BaseDialogFragment.OnDismissOrCancelListener() {
+
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    updateVibrateSummary();
+                }
+
+                @Override
+                public void onCancel(DialogInterface dialog) {
+
+                }
+            });
+            UiUtils.showDialogFragment(SettingActivity.this, dialog);
+        });
+
         //send delay
         mSendDelayView = findViewById(R.id.setting_item_send_delay);
         updateSendDelaySummary();
@@ -180,9 +199,6 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
             onSoundItemClick();
             BugleAnalytics.logEvent("SMS_Settings_Sound_Click", true);
         });
-
-        //vibrate
-        setUpVibrateView();
 
         //notification
         setUpNotificationView();
@@ -365,19 +381,6 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
             GeneralSettingSyncManager.uploadMessageBoxSwitchToServer(b);
             BugleAnalytics.logEvent("SMS_Settings_Popups_Click", true);
         });
-
-    }
-
-    private void setUpVibrateView() {
-        mVibrateView = findViewById(R.id.setting_item_vibrate);
-        final String vibratePrefKey = getString(R.string.notification_vibration_pref_key);
-        final boolean vibrateDefaultValue = getResources().getBoolean(R.bool.notification_vibration_pref_default);
-        mVibrateView.setChecked(prefs.getBoolean(vibratePrefKey, vibrateDefaultValue));
-        mVibrateView.setOnItemClickListener(() -> {
-            prefs.putBoolean(vibratePrefKey, mVibrateView.isChecked());
-            GeneralSettingSyncManager.uploadVibrateSwitchToServer(mVibrateView.isChecked());
-            BugleAnalytics.logEvent("SMS_Settings_Vibrate_Click", true);
-        });
     }
 
     private void setUpSyncSettingsView() {
@@ -448,6 +451,11 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
         mPrivacyModeView.setSummary(PrivacyModeSettings.getPrivacyModeDescription(null));
     }
 
+
+    private void updateVibrateSummary() {
+        mVibrateView.setSummary(VibrateSettings.getVibrateDescription(null));
+    }
+
     private void updateSendDelaySummary() {
         mSendDelayView.setSummary(SendDelaySettings.getSendDelayDescription());
     }
@@ -515,7 +523,6 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
                 GeneralSettingSyncManager.overrideLocalData(() -> {
                     setUpNotificationView();
                     setUpPopUpsView();
-                    setUpVibrateView();
                 });
                 Toasts.showToast(R.string.firebase_login_succeed);
                 BugleAnalytics.logEvent("SyncSettings_LogIn_Success");

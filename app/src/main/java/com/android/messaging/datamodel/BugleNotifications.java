@@ -73,6 +73,7 @@ import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
+import com.android.messaging.ui.appsettings.VibrateSettings;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.util.Assert;
@@ -438,7 +439,7 @@ public class BugleNotifications {
     }
 
     private static void processAndSend(final NotificationState state, final boolean silent,
-                                       final boolean softSound, final boolean noHeadsUpAndVoice) {
+                                       final boolean softSound, String conversationId) {
         final Context context = Factory.get().getApplicationContext();
         final Uri ringtoneUri = RingtoneUtil.getNotificationRingtoneUri(state.getRingtoneUri());
 
@@ -446,10 +447,31 @@ public class BugleNotifications {
         String channelId = PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             int priority = state.getChannelPriority();
-            if (noHeadsUpAndVoice) {
+            if (TextUtils.isEmpty(conversationId)) {
                 priority = NotificationManager.IMPORTANCE_LOW;
             }
             notificationChannel = BugleNotificationChannelUtil.getSmsNotificationChannel(ringtoneUri, shouldVibrate(state), priority);
+            switch (VibrateSettings.getVibrateMode(conversationId)) {
+                case VibrateSettings.OFF:
+                    notificationChannel.enableVibration(false);
+                    notificationChannel.setVibrationPattern(VibrateSettings.getViratePattern(VibrateSettings.OFF));
+                    break;
+                case VibrateSettings.VIBRATE_NORMAL:
+                    notificationChannel.setVibrationPattern(VibrateSettings.getViratePattern(VibrateSettings.VIBRATE_NORMAL));
+                    break;
+                case VibrateSettings.VIBRATE_SHORT:
+                    notificationChannel.setVibrationPattern(VibrateSettings.getViratePattern(VibrateSettings.VIBRATE_SHORT));
+                    break;
+                case VibrateSettings.VIBRATE_LONG:
+                    notificationChannel.setVibrationPattern(VibrateSettings.getViratePattern(VibrateSettings.VIBRATE_LONG));
+                    break;
+                case VibrateSettings.VIBRATE_MULTIPLE_SHORT:
+                    notificationChannel.setVibrationPattern(VibrateSettings.getViratePattern(VibrateSettings.VIBRATE_MULTIPLE_SHORT));
+                    break;
+                case VibrateSettings.VIBRATE_MULTIPLE_LONG:
+                    notificationChannel.setVibrationPattern(VibrateSettings.getViratePattern(VibrateSettings.VIBRATE_MULTIPLE_LONG));
+                    break;
+            }
             notificationChannel.setShowBadge(true);
             channelId = notificationChannel.getId();
             notificationChannel.setImportance(priority);
@@ -460,8 +482,6 @@ public class BugleNotifications {
         if (OsUtil.isAtLeastL()) {
             notifBuilder.setCategory(Notification.CATEGORY_MESSAGE);
         }
-        // TODO: Need to fix this for multi conversation notifications to rate limit dings.
-        final String conversationId = state.mConversationIds.first();
         boolean isPrivateConversation = PrivateMessageManager.getInstance().isPrivateConversationId(conversationId);
 
         // If the notification's conversation is currently observable (focused or in the
@@ -488,7 +508,7 @@ public class BugleNotifications {
 
         updateBuilderAudioVibrate(state, notifBuilder, silent, ringtoneUri, conversationId);
 
-        if (noHeadsUpAndVoice) {
+        if (TextUtils.isEmpty(conversationId)) {
             notifBuilder.setPriority(Notification.PRIORITY_LOW);
         } else {
             notifBuilder.setPriority(state.getPriority());
@@ -693,7 +713,7 @@ public class BugleNotifications {
             HSLog.d(TAG, "should not pop up messagebox");
         }
         if (!isPrivateConversation || PrivateSettingManager.isNotificationEnable()) {
-            processAndSend(state, silent, softSound, conversationId == null);
+            processAndSend(state, silent, softSound, conversationId);
             boolean isPrivacyMode = PrivacyModeSettings.getPrivacyMode(conversationId) != PrivacyModeSettings.NONE;
             BugleAnalytics.logEvent("SMS_Notifications_Pushed", true,
                     "PrivacyMode", String.valueOf(isPrivacyMode));

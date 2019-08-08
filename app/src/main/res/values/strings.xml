@@ -1334,5 +1334,12 @@
     <string name="chat_list_background_opacity">Background Opacity</string>
     <string name="chat_list_text_color">Text Color</string>
     <string name="system_font_display_name">System</string>
+
+    <string name="settings_vibrate_off">Off</string>
+    <string name="settings_vibrate_normal">Normal</string>
+    <string name="settings_vibrate_short">Short</string>
+    <string name="settings_vibrate_long">Long</string>
+    <string name="settings_vibrate_multiple_short">Multiple Short</string>
+    <string name="settings_vibrate_multiple_long">Multiple Long</string>
 </resources>
 

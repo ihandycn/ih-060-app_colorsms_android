@@ -54,10 +54,9 @@
                     android:id="@+id/setting_item_vibrate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:key="@string/notification_vibration_pref_key"
                     app:hideDivideLine="true"
                     app:title="@string/notification_vibrate_pref_title"
-                    app:type="switchView" />
+                    app:type="withTriangle" />
 
                 <!--SMS Pop-ups-->
                 <com.android.messaging.ui.appsettings.GeneralSettingItemView

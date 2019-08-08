@@ -25,6 +25,7 @@ import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ConversationListItemData.ConversationListViewColumns;
 import com.android.messaging.ui.appsettings.GeneralSettingItemView;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
+import com.android.messaging.ui.appsettings.VibrateSettings;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.RingtoneUtil;
@@ -137,17 +138,10 @@ public class PeopleOptionsItemData {
 
             case SETTING_NOTIFICATION_VIBRATION:
                 mTitle = mContext.getString(R.string.notification_vibrate_pref_title);
-
-                if (cursor.getInt(INDEX_NOTIFICATION_VIBRATION) != -1) {
-                    mChecked = cursor.getInt(INDEX_NOTIFICATION_VIBRATION) == 1;
-                } else {
-                    final String prefKey = HSApplication.getContext().getString(R.string.notification_vibration_pref_key);
-                    final boolean defaultValue = HSApplication.getContext().getResources().getBoolean(
-                            R.bool.notification_vibration_pref_default);
-                    mChecked = BuglePrefs.getApplicationPrefs().getBoolean(prefKey, defaultValue);
-                }
+                mSubtitle = VibrateSettings.getVibrateDescription(conversationId);
+                mCheckable = false;
                 mEnabled = notificationEnabled;
-                mType = GeneralSettingItemView.SWITCH;
+                mType = GeneralSettingItemView.NORMAL;
                 break;
 
             case SETTING_BLOCKED:

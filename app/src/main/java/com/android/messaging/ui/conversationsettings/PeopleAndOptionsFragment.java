@@ -52,6 +52,8 @@ import com.android.messaging.ui.appsettings.BaseItemView;
 import com.android.messaging.ui.appsettings.GeneralSettingItemView;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.appsettings.SelectPrivacyModeDialog;
+import com.android.messaging.ui.appsettings.SelectVibrateModeDialog;
+import com.android.messaging.ui.appsettings.VibrateSettings;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
@@ -372,8 +374,19 @@ public class PeopleAndOptionsFragment extends Fragment
                 break;
 
             case SETTING_NOTIFICATION_VIBRATION:
-                mBinding.getData().enableConversationNotificationVibration(mBinding,
-                        isChecked);
+                SelectVibrateModeDialog vibrateModeDialog = SelectVibrateModeDialog.newInstance(mConversationId);
+                vibrateModeDialog.setOnDismissOrCancelListener(new BaseDialogFragment.OnDismissOrCancelListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        mVibrateItemView.setSummary(VibrateSettings.getVibrateDescription(mConversationId));
+                    }
+
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+
+                    }
+                });
+                UiUtils.showDialogFragment(getActivity(), vibrateModeDialog);
                 break;
 
             case SETTING_ADD_CONTACT:

@@ -7,9 +7,9 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
-import android.text.TextUtils;
 
 import com.android.messaging.R;
+import com.android.messaging.ui.appsettings.VibrateSettings;
 import com.android.messaging.util.PendingIntentConstants;
 import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Notifications;
@@ -40,7 +40,7 @@ public class BugleNotificationChannelUtil {
         channel.enableVibration(enableVibration);
 
         if (enableVibration) {
-            channel.setVibrationPattern(new long[]{100, 200, 300});
+            channel.setVibrationPattern(VibrateSettings.getViratePattern(VibrateSettings.VIBRATE_NORMAL));
         }
         return channel;
     }
