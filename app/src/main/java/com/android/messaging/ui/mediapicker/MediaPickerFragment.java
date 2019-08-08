@@ -59,6 +59,7 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
         mMediaLayout = view.findViewById(R.id.media_buttons);
         view.findViewById(R.id.media_camera).setOnClickListener(this);
         view.findViewById(R.id.media_photo).setOnClickListener(this);
+        view.findViewById(R.id.media_schedule).setOnClickListener(this);
         ImageView mediaVoice = view.findViewById(R.id.media_voice);
         mediaVoice.setOnClickListener(this);
         mediaVoice.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.primary_color),
@@ -76,7 +77,8 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
                 }
             }
 
-            @Override public int getConversationSelfSubId() {
+            @Override
+            public int getConversationSelfSubId() {
                 if (mSubscriptionDataProvider != null) {
                     return mSubscriptionDataProvider.getConversationSelfSubId();
                 }
@@ -106,6 +108,11 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
             case R.id.media_voice:
                 openAudio();
                 break;
+            case R.id.media_schedule:
+                if (mOnMediaItemListener != null) {
+                    mOnMediaItemListener.onScheduledIconClick();
+                }
+                break;
             default:
                 break;
         }
@@ -117,6 +124,8 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
         void showPhoto();
 
         void onAudioRecorded(MessagePartData item);
+
+        void onScheduledIconClick();
     }
 
     private void openCamera() {

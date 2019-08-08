@@ -1,4 +1,4 @@
-package com.android.messaging.scheduledsms;
+package com.android.messaging.scheduledmessage;
 
 import android.app.TimePickerDialog;
 import android.content.Context;

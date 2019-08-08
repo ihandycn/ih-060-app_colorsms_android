@@ -62,6 +62,7 @@ public class MessageData implements Parcelable {
             MessageColumns.RETRY_START_TIMESTAMP,
             MessageColumns.IS_LOCKED,
             MessageColumns.IS_DELIVERY_REPORT_OPEN,
+            MessageColumns.SCHEDULED_TIME
     };
 
     private static final int INDEX_ID = 0;
@@ -85,13 +86,15 @@ public class MessageData implements Parcelable {
     private static final int INDEX_RETRY_START_TIMESTAMP = 18;
     private static final int INDEX_IS_LOCKED = 19;
     private static final int INDEX_IS_DELIVERY_REPORT_OPEN = 20;
+    private static final int INDEX_SCHEDULED_TIME = 21;
 
     // SQL statement to insert a "complete" message row (columns based on the projection above).
     private static final String INSERT_MESSAGE_SQL =
             "INSERT INTO " + DatabaseHelper.MESSAGES_TABLE + " ( "
                     + TextUtils.join(", ", Arrays.copyOfRange(sProjection, 1,
-                    INDEX_IS_DELIVERY_REPORT_OPEN + 1))
-                    + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";  // when insert a new message, don't need param IS_LOCKED, use it default value 0.
+                    INDEX_SCHEDULED_TIME + 1))
+                    + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    // when insert a new message, don't need param IS_LOCKED, use it default value 0.
 
     private String mMessageId;
     private String mConversationId;
@@ -115,6 +118,7 @@ public class MessageData implements Parcelable {
     private long mRetryStartTimestamp;
     private boolean mIsLocked = false;
     private boolean mIsDeliveryReportOpen = false;
+    private long mScheduledTime;
 
     // PROTOCOL Values
     public static final int PROTOCOL_UNKNOWN = -1;              // Unknown type
@@ -136,6 +140,9 @@ public class MessageData implements Parcelable {
     public static final int BUGLE_STATUS_OUTGOING_AWAITING_RETRY = 7;
     public static final int BUGLE_STATUS_OUTGOING_FAILED = 8;
     public static final int BUGLE_STATUS_OUTGOING_FAILED_EMERGENCY_NUMBER = 9;
+
+    //scheduled sms, waiting to send
+    public static final int BUGLE_STATUS_OUTGOING_SCHEDULED = 10;
 
     // Incoming
     public static final int BUGLE_STATUS_INCOMING_COMPLETE = 100;
@@ -407,6 +414,7 @@ public class MessageData implements Parcelable {
 
         mIsLocked = cursor.getInt(INDEX_IS_LOCKED) == 1;
         mIsDeliveryReportOpen = cursor.getInt(INDEX_IS_DELIVERY_REPORT_OPEN) == 1;
+        mScheduledTime = cursor.getLong(INDEX_SCHEDULED_TIME);
     }
 
     /**
@@ -444,6 +452,7 @@ public class MessageData implements Parcelable {
         values.put(MessageColumns.RETRY_START_TIMESTAMP, mRetryStartTimestamp);
         values.put(MessageColumns.IS_LOCKED, mIsLocked);
         values.put(MessageColumns.IS_DELIVERY_REPORT_OPEN, mIsDeliveryReportOpen);
+        values.put(MessageColumns.SCHEDULED_TIME, mScheduledTime);
     }
 
     /**
@@ -480,9 +489,10 @@ public class MessageData implements Parcelable {
         }
         insert.bindLong(INDEX_RAW_TELEPHONY_STATUS, mRawStatus);
         insert.bindLong(INDEX_RETRY_START_TIMESTAMP, mRetryStartTimestamp);
+        // when insert new message, IS_LOCKED use default value 0.
         insert.bindLong(INDEX_IS_LOCKED, 0);
         insert.bindLong(INDEX_IS_DELIVERY_REPORT_OPEN, mIsDeliveryReportOpen ? 1 : 0);
-        // when insert new message, IS_LOCKED use default value 0.
+        insert.bindLong(INDEX_SCHEDULED_TIME, mScheduledTime);
         return insert;
     }
 
@@ -674,6 +684,17 @@ public class MessageData implements Parcelable {
         return (status >= MessageData.BUGLE_STATUS_FIRST_INCOMING);
     }
 
+    public long getScheduledTime() {
+        return mScheduledTime;
+    }
+
+    public void setScheduledTime(long scheduledTime) {
+        mScheduledTime = scheduledTime;
+        if (scheduledTime != 0) {
+            mStatus = BUGLE_STATUS_OUTGOING_SCHEDULED;
+        }
+    }
+
     public boolean getIsIncoming() {
         return getIsIncoming(mStatus);
     }
@@ -767,6 +788,15 @@ public class MessageData implements Parcelable {
         // may also want to make messages effectively immutable once they have a valid message id.
     }
 
+    public final void updateScheduledMessageStatus(final long timestamp) {
+        mRead = true;
+        mSeen = true;
+        mReceivedTimestamp = timestamp;
+        mSentTimestamp = timestamp;
+        mStatus = BUGLE_STATUS_OUTGOING_SCHEDULED;
+        mRetryStartTimestamp = timestamp;
+    }
+
     public final void updateSendingMessage(final String conversationId, final Uri messageUri,
                                            final long timestamp) {
         mConversationId = conversationId;
@@ -777,6 +807,7 @@ public class MessageData implements Parcelable {
         mSentTimestamp = timestamp;
         mStatus = BUGLE_STATUS_OUTGOING_YET_TO_SEND;
         mRetryStartTimestamp = timestamp;
+        mScheduledTime = 0;
     }
 
     public final void markMessageManualResend(final long timestamp) {
@@ -790,22 +821,26 @@ public class MessageData implements Parcelable {
         // Initial send
         mStatus = BUGLE_STATUS_OUTGOING_SENDING;
         mSentTimestamp = timestamp;
+        mScheduledTime = 0;
     }
 
     public final void markMessageResending(final long timestamp) {
         // Auto resend of message
         mStatus = BUGLE_STATUS_OUTGOING_RESENDING;
         mSentTimestamp = timestamp;
+        mScheduledTime = 0;
     }
 
     public final void markMessageSent(final long timestamp) {
         mSentTimestamp = timestamp;
         mStatus = BUGLE_STATUS_OUTGOING_COMPLETE;
+        mScheduledTime = 0;
     }
 
     public final void markMessageFailed(final long timestamp) {
         mSentTimestamp = timestamp;
         mStatus = BUGLE_STATUS_OUTGOING_FAILED;
+        mScheduledTime = 0;
     }
 
     public final void markMessageFailedEmergencyNumber(final long timestamp) {
@@ -876,6 +911,7 @@ public class MessageData implements Parcelable {
         mRawStatus = in.readInt();
         mRetryStartTimestamp = in.readLong();
         mIsDeliveryReportOpen = (in.readInt() != 0);
+        mScheduledTime = in.readLong();
 
         // Read parts
         mParts = new ArrayList<MessagePartData>();
@@ -913,6 +949,7 @@ public class MessageData implements Parcelable {
         dest.writeInt(mRawStatus);
         dest.writeLong(mRetryStartTimestamp);
         dest.writeInt(mIsDeliveryReportOpen ? 1 : 0);
+        dest.writeLong(mScheduledTime);
 
         // Write parts
         dest.writeInt(mParts.size());

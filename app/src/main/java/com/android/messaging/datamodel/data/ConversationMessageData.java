@@ -77,6 +77,8 @@ public class ConversationMessageData {
     private boolean mIsLocked;
     private boolean mIsDeleted;
     private boolean mIsDeliveryReportOpen;
+    private boolean mIsScheduledMessage;
+    private long mScheduledTime;
 
     /**
      * Are we similar enough to the previous/next messages that we can cluster them?
@@ -126,6 +128,8 @@ public class ConversationMessageData {
         mIsLocked = cursor.getInt(INDEX_IS_LOCKED) == 1;
         mIsDeleted = cursor.getInt(INDEX_IS_DELETED) == 1;
         mIsDeliveryReportOpen = cursor.getInt(INDEX_IS_DELIVERY_REPORT_OPEN) == 1;
+        mScheduledTime = cursor.getLong(INDEX_SCHEDULED_TIME);
+        mIsScheduledMessage = mScheduledTime != 0;
     }
 
     private static final Character QUOTE_CHAR = '\'';
@@ -603,6 +607,14 @@ public class ConversationMessageData {
         mCanClusterWithNextMessage = canClusterWithNextMessage;
     }
 
+    public long getScheduledTime() {
+        return mScheduledTime;
+    }
+
+    public boolean isScheduledMessage() {
+        return mIsScheduledMessage;
+    }
+
     @Override
     public String toString() {
         return MessageData.toString(mMessageId, mParts);
@@ -763,7 +775,9 @@ public class ConversationMessageData {
                     + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.CONTACT_ID
                     + " as " + ConversationMessageViewColumns.SENDER_CONTACT_ID + ", "
                     + DatabaseHelper.PARTICIPANTS_TABLE + '.' + ParticipantColumns.LOOKUP_KEY
-                    + " as " + ConversationMessageViewColumns.SENDER_CONTACT_LOOKUP_KEY + " ";
+                    + " as " + ConversationMessageViewColumns.SENDER_CONTACT_LOOKUP_KEY + ", "
+                    + DatabaseHelper.MESSAGES_TABLE + "." + MessageColumns.SCHEDULED_TIME
+                    + " as " + ConversationMessageViewColumns.SCHEDULED_TIME;
 
     private static final String CONVERSATION_MESSAGES_QUERY_FROM_WHERE_SQL =
             " FROM " + DatabaseHelper.MESSAGES_TABLE
@@ -839,6 +853,7 @@ public class ConversationMessageData {
         static final String PARTS_WIDTHS = "parts_widths";
         static final String PARTS_HEIGHTS = "parts_heights";
         static final String PARTS_TEXTS = "parts_texts";
+        static final String SCHEDULED_TIME = MessageColumns.SCHEDULED_TIME;
     }
 
     private static int sIndexIncrementer = 0;
@@ -880,7 +895,7 @@ public class ConversationMessageData {
     private static final int INDEX_SENDER_PROFILE_PHOTO_URI = sIndexIncrementer++;
     private static final int INDEX_SENDER_CONTACT_ID = sIndexIncrementer++;
     private static final int INDEX_SENDER_CONTACT_LOOKUP_KEY = sIndexIncrementer++;
-
+    private static final int INDEX_SCHEDULED_TIME = sIndexIncrementer++;
 
     private static String[] sProjection = {
             ConversationMessageViewColumns._ID,
@@ -918,6 +933,7 @@ public class ConversationMessageData {
             ConversationMessageViewColumns.SENDER_PROFILE_PHOTO_URI,
             ConversationMessageViewColumns.SENDER_CONTACT_ID,
             ConversationMessageViewColumns.SENDER_CONTACT_LOOKUP_KEY,
+            ConversationMessageViewColumns.SCHEDULED_TIME
     };
 
     public static String[] getProjection() {

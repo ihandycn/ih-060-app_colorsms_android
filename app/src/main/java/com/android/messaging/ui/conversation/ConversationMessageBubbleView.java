@@ -42,7 +42,7 @@ public class ConversationMessageBubbleView extends LinearLayout {
     private boolean mShouldAnimateWidthChange;
     private final ConversationMessageBubbleData mData;
     private int mRunningStartWidth;
-    private ViewGroup mBubbleBackground;
+    private ViewGroup mBubbleAndScheduledIconContainer;
 
     public ConversationMessageBubbleView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -52,7 +52,7 @@ public class ConversationMessageBubbleView extends LinearLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mBubbleBackground = (ViewGroup) findViewById(R.id.message_text_and_info);
+        mBubbleAndScheduledIconContainer = findViewById(R.id.message_text_and_scheduled_edit_container);
     }
 
     @Override
@@ -76,11 +76,11 @@ public class ConversationMessageBubbleView extends LinearLayout {
         }
 
         if (mMorphedWidth > 0) {
-            mBubbleBackground.getLayoutParams().width = mMorphedWidth;
+            mBubbleAndScheduledIconContainer.getLayoutParams().width = mMorphedWidth;
         } else {
-            mBubbleBackground.getLayoutParams().width = LayoutParams.WRAP_CONTENT;
+            mBubbleAndScheduledIconContainer.getLayoutParams().width = LayoutParams.WRAP_CONTENT;
         }
-        mBubbleBackground.requestLayout();
+        mBubbleAndScheduledIconContainer.requestLayout();
     }
 
     @VisibleForAnimation
@@ -124,8 +124,8 @@ public class ConversationMessageBubbleView extends LinearLayout {
                 // the animation.  This will snap to the bigger size if needed.  This is intentional
                 // as animating immediately after looks really bad and switching layout params
                 // during the original animation does not achieve the desired effect.
-                mBubbleBackground.getLayoutParams().width = LayoutParams.WRAP_CONTENT;
-                mBubbleBackground.requestLayout();
+                mBubbleAndScheduledIconContainer.getLayoutParams().width = LayoutParams.WRAP_CONTENT;
+                mBubbleAndScheduledIconContainer.requestLayout();
             }
 
             @Override

@@ -75,6 +75,7 @@ import com.android.messaging.ad.BillingManager;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.MessagingContentProvider;
+import com.android.messaging.datamodel.action.InsertNewMessageAction;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.binding.ImmutableBindingRef;
@@ -90,6 +91,9 @@ import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.datamodel.data.PendingAttachmentData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
 import com.android.messaging.privatebox.AppPrivateLockManager;
+import com.android.messaging.scheduledmessage.DatePickerDialogWithButtonEvent;
+import com.android.messaging.scheduledmessage.InsertScheduledMessageAction;
+import com.android.messaging.scheduledmessage.TimePickerDialogWithButtonEvent;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.ConversationDrawables;
@@ -113,6 +117,7 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.ChangeDefaultSmsAppHelper;
 import com.android.messaging.util.ContentType;
+import com.android.messaging.util.Dates;
 import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
@@ -147,6 +152,7 @@ import net.appcloudbox.autopilot.AutopilotEvent;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.List;
 
@@ -218,6 +224,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     private ConversationFastScroller mFastScroller;
     private ImageView mWallpaperView;
     private ImageView mOldRecommendImageView;
+    private View mScheduleEditContainer;
+    private TextView mScheduleEditTimeView;
+    private long mCurrentScheduledTime;
 
     private View mConversationComposeDivider;
     private ChangeDefaultSmsAppHelper mChangeDefaultSmsAppHelper;
@@ -951,6 +960,19 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             }
         });
 
+        mScheduleEditContainer = view.findViewById(R.id.scheduled_edit_container);
+        mScheduleEditContainer.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                Color.WHITE, Dimensions.pxFromDp(26.7f) / 2, true));
+        mScheduleEditTimeView = mScheduleEditContainer.findViewById(R.id.scheduled_edit_time);
+        mScheduleEditContainer.findViewById(R.id.scheduled_edit_cancel).setOnClickListener(v -> {
+            mCurrentScheduledTime = 0;
+            mScheduleEditContainer.setVisibility(View.GONE);
+        });
+
+        mScheduleEditContainer.setOnClickListener(v -> {
+            showScheduleTimeSelectDialog(mCurrentScheduledTime);
+        });
+
         return view;
     }
 
@@ -1393,8 +1415,26 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
                 boolean isDefaultSelf = mBinding.getData().isDefaultSelf(message.getSelfId());
 
-                SendDelayMessagesManager.sendMessageWithDelay(message, mBinding.getData().getConversationId(),
-                        isDefaultSelf);
+                if (mCurrentScheduledTime > 0) {
+                    if (mCurrentScheduledTime < System.currentTimeMillis()) {
+                        Toasts.showToast(R.string.schedule_select_time_error);
+                        return;
+                    }
+                    if (mCurrentScheduledTime < System.currentTimeMillis() + DateUtils.MINUTE_IN_MILLIS) {
+                        Threads.postOnMainThreadDelayed(
+                                () -> InsertNewMessageAction.insertNewMessage(message),
+                                mCurrentScheduledTime - System.currentTimeMillis());
+                    } else {
+                        message.setScheduledTime(mCurrentScheduledTime);
+                        InsertScheduledMessageAction.insertNewMessage(message, isDefaultSelf);
+                    }
+                    mCurrentScheduledTime = 0;
+                    mScheduleEditContainer.setVisibility(View.GONE);
+                    BugleAnalytics.logEvent("Schedule_Message_Set", true);
+                } else {
+                    SendDelayMessagesManager.sendMessageWithDelay(message,
+                            mBinding.getData().getConversationId(), isDefaultSelf);
+                }
 
                 mHasSentMessages = true;
             } else {
@@ -1854,6 +1894,13 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 excludeDefault);
     }
 
+    @Override
+    public void onScheduledEditClick(ConversationMessageData data, long scheduledTime) {
+        mComposeMessageView.onScheduledDataEditChanged(data);
+        mCurrentScheduledTime = scheduledTime;
+        mScheduleEditContainer.setVisibility(View.VISIBLE);
+        mScheduleEditTimeView.setText(Dates.getScheduledTimestamp(mCurrentScheduledTime));
+    }
 
     @Override
     public MediaPickerFragment createMediaPicker() {
@@ -2061,6 +2108,85 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 R.id.camera_photo_layout,
                 mCameraGalleryFragment,
                 CameraGalleryFragment.FRAGMENT_TAG).commitAllowingStateLoss();
+    }
+
+    @Override
+    public void onScheduledIconClick() {
+        showScheduleTimeSelectDialog(System.currentTimeMillis() + 10 * DateUtils.MINUTE_IN_MILLIS);
+    }
+
+    private void showScheduleTimeSelectDialog(long defaultTime) {
+        Context context = getContext();
+        if (context == null) {
+            return;
+        }
+        final Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(defaultTime);
+        Calendar selectedCalendar = Calendar.getInstance();
+
+        DatePickerDialogWithButtonEvent dateDialog = new DatePickerDialogWithButtonEvent(context,
+                (view, year, month, dayOfMonth) -> {
+                    selectedCalendar.set(Calendar.YEAR, year);
+                    selectedCalendar.set(Calendar.MONTH, month);
+                    selectedCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH));
+        dateDialog.getDatePicker().setMinDate(System.currentTimeMillis());
+        dateDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
+                getString(R.string.cancel),
+                (dialog, which) -> {
+                    if (which == DialogInterface.BUTTON_NEGATIVE) {
+                        dialog.cancel();
+                    }
+                });
+        dateDialog.setButton(DialogInterface.BUTTON_POSITIVE,
+                getString(R.string.ok),
+                (dialog, which) -> {
+                    if (which == DialogInterface.BUTTON_POSITIVE) {
+                        boolean is24HourFormat = android.text.format.DateFormat.is24HourFormat(context);
+
+                        TimePickerDialogWithButtonEvent timePickerDialog = new TimePickerDialogWithButtonEvent(context,
+                                (view, hourOfDay, minute) -> {
+                                    selectedCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+                                    selectedCalendar.set(Calendar.MINUTE, minute);
+                                    selectedCalendar.set(Calendar.SECOND, 0);
+                                    selectedCalendar.set(Calendar.MILLISECOND, 0);
+                                },
+                                calendar.get(Calendar.HOUR_OF_DAY),
+                                calendar.get(Calendar.MINUTE),
+                                is24HourFormat);
+
+                        timePickerDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
+                                getString(R.string.cancel),
+                                (dialog1, which1) -> {
+                                    if (which1 == DialogInterface.BUTTON_NEGATIVE) {
+                                        dialog1.cancel();
+                                    }
+                                });
+                        timePickerDialog.setButton(DialogInterface.BUTTON_POSITIVE,
+                                getString(R.string.ok),
+                                (dialog12, which12) -> {
+                                    if (which12 == DialogInterface.BUTTON_POSITIVE) {
+                                        mCurrentScheduledTime = selectedCalendar.getTimeInMillis();
+                                        if (mCurrentScheduledTime <= System.currentTimeMillis()) {
+                                            Toasts.showToast(R.string.schedule_select_time_error);
+                                        } else {
+                                            BugleAnalytics.logEvent("Schedule_TimePicker_Set_Success");
+                                            mScheduleEditContainer.setVisibility(View.VISIBLE);
+                                            mScheduleEditTimeView.setText(Dates.getScheduledTimestamp(mCurrentScheduledTime));
+                                        }
+                                        dialog.cancel();
+                                        dialog12.cancel();
+                                    }
+                                });
+                        timePickerDialog.setCancelable(false);
+                        timePickerDialog.show();
+                    }
+                });
+        dateDialog.show();
+        BugleAnalytics.logEvent("Schedule_TimePicker_Show");
     }
 
     private void initMediaPicker(boolean isCamera) {
