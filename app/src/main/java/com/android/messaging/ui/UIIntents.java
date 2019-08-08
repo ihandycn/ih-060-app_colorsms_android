@@ -118,6 +118,8 @@ public abstract class UIIntents {
 
     public static final String UI_INTENT_EXTRA_FROM_CREATE_CONVERSATION = "from_create_conversation";
 
+    public static final String UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION = "notification_to_conversation";
+
     /**
      * Launch the welcome activity
      */

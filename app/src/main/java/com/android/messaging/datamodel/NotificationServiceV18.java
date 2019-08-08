@@ -9,6 +9,8 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
@@ -19,6 +21,7 @@ import android.service.notification.StatusBarNotification;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 
 import com.android.messaging.Factory;
@@ -28,12 +31,15 @@ import com.android.messaging.datamodel.media.BugleNotificationChannelUtil;
 import com.android.messaging.datamodel.media.ImageResource;
 import com.android.messaging.datamodel.media.MediaRequest;
 import com.android.messaging.datamodel.media.MediaResourceManager;
+import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.conversation.ConversationActivity;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.PendingIntentConstants;
+import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.RingtoneUtil;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
@@ -41,6 +47,10 @@ import com.superapps.util.ReflectionHelper;
 import com.superapps.util.Threads;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
+
+import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID;
+import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_CONVERSATION_NAME;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class NotificationServiceV18 extends NotificationListenerService {
@@ -55,16 +65,14 @@ public class NotificationServiceV18 extends NotificationListenerService {
 
     @Override
     public void onNotificationPosted(StatusBarNotification statusBarNotification) {
-        HSLog.d("NotificationListener", "Notification posted");
         HSLog.d("NotificationListener", "onNotificationPosted(), statusBarNotification.getPackageName = "
                 + statusBarNotification.getPackageName());
         if (DefaultSMSUtils.isDefaultSmsApp()) {
             return;
         }
 
-        if (sDefaultSmsPackage == null){
+        if (sDefaultSmsPackage == null) {
             sDefaultSmsPackage = Telephony.Sms.getDefaultSmsPackage(HSApplication.getContext());
-//            sDefaultSmsPackage = "com.example.myapplication_9";
         }
 
         if (!statusBarNotification.getPackageName().equals(sDefaultSmsPackage)) {
@@ -214,9 +222,36 @@ public class NotificationServiceV18 extends NotificationListenerService {
     }
 
     private Notification createNotification(String channelId, String messageTitle, String messageText) {
-        Intent intent = new Intent(this, ConversationListActivity.class);
-        intent.putExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, true);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        final String[] conversationId = new String[1];
+        String normalizedMessageTitle = PhoneUtils.getDefault().getCanonicalBySimLocale(messageTitle);
+        String displayMessageTitle = PhoneUtils.getDefault().formatForDisplay(normalizedMessageTitle);
+        DatabaseWrapper db = DataModel.get().getDatabase();
+        Cursor cursor = db.query(DatabaseHelper.CONVERSATIONS_TABLE, new String[]{DatabaseHelper.ConversationColumns._ID},
+                DatabaseHelper.ConversationColumns.NAME + "=? OR " + DatabaseHelper.ConversationColumns.NAME + "=?",
+                new String[]{messageTitle, displayMessageTitle}, null, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                conversationId[0] = cursor.getString(0);
+                HSLog.d("NotificationListener", "conversationId = " + conversationId[0]);
+            }
+            cursor.close();
+        }
+        HSLog.d("NotificationListener", "messageTitle = " + messageTitle);
+        HSLog.d("NotificationListener", "normalizedMessageTitle = " + normalizedMessageTitle);
+        HSLog.d("NotificationListener", "displayMessageTitle = " + displayMessageTitle);
+        Intent intent;
+        PendingIntent pendingIntent;
+        if (TextUtils.isEmpty(conversationId[0])) {
+            HSLog.d("NotificationListener", "conversationId is empty");
+            intent = new Intent(this, ConversationListActivity.class);
+            intent.putExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, true);
+            pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        } else {
+            HSLog.d("NotificationListener", "conversationId is not empty");
+            pendingIntent = UIIntents.get()
+                    .getPendingIntentForConversationActivity(HSApplication.getContext(), conversationId[0], null /* draft */);
+        }
+
         int defaults = Notification.DEFAULT_LIGHTS;
         if (shouldVibrate()) {
             defaults |= Notification.DEFAULT_VIBRATE;
