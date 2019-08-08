@@ -494,7 +494,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                     mCrossSwipeDeleteContainer.setTranslationX(-getWidth() + translationX / 2);
                     mCrossSwipeDivideLine.setVisibility(GONE);
                 } else {
-                    int distance = (int) ((translationX - CROSS_SWIPE_ITEM_WIDTH * 2) * 0.15f + CROSS_SWIPE_ITEM_WIDTH * 2);
+                    float distance = calculationTranslationX(translationX);
                     mSwipeableContainer.setTranslationX(distance);
 
                     Rect rect = new Rect();
@@ -530,7 +530,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                     mCrossSwipeDeleteContainer.setTranslationX(getWidth() + translationX / 2);
                     mCrossSwipeDivideLine.setVisibility(GONE);
                 } else {
-                    int distance = (int) ((translationX + CROSS_SWIPE_ITEM_WIDTH * 2) * 0.15f - CROSS_SWIPE_ITEM_WIDTH * 2);
+                    float distance = -calculationTranslationX(-translationX);
                     mSwipeableContainer.setTranslationX(distance);
                     mCrossSwipeArchiveContainer.setTranslationX(getWidth() + distance);
                     mCrossSwipeArchiveContainer.getBackground().setLevel(-(int) (10000 * distance / 2.0f / PHONE_WIDTH));
@@ -546,6 +546,21 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
                     }
                 }
             }
+        }
+    }
+
+    public float calculationTranslationX(float swipeX) {
+        float transitionDistance = CROSS_SWIPE_ITEM_WIDTH * 0.7f;
+        if (swipeX <= 2 * CROSS_SWIPE_ITEM_WIDTH) {
+            return swipeX;
+        } else if (swipeX >= transitionDistance + 2 * CROSS_SWIPE_ITEM_WIDTH) {
+            return 2 * CROSS_SWIPE_ITEM_WIDTH
+                    + (1 + 0.15f) * transitionDistance / 2
+                    + (swipeX - 2 * CROSS_SWIPE_ITEM_WIDTH - transitionDistance) * 0.15f;
+        } else {
+            float velocityDecreasePosition = swipeX - 2 * CROSS_SWIPE_ITEM_WIDTH;
+            float endVelocityRatio = 1 - 0.85f * velocityDecreasePosition / transitionDistance;
+            return 2 * CROSS_SWIPE_ITEM_WIDTH + (velocityDecreasePosition * (1 + endVelocityRatio) / 2);
         }
     }
 
