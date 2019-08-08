@@ -561,7 +561,6 @@
     <string name="setting_text_size_hint_medium_small">小</string>
     <string name="setting_text_size_hint_small">特小</string>
     <string name="setting_text_size_hint_normal">デフォルト</string>
-    <string name="set_as_default_dialog_description_user_present">面白い絵文字や、ステッカー、GIFをColor SMSを介して友達に送信する。</string>
     <string name="set_as_default_dialog_title_default_change">デフォルトのSMSをオフにしました</string>
     <string name="set_as_default_dialog_description_default_change">Color SMSはデフォルトに設定しなければ正しく動作しません。</string>
     <string name="drag_hotseat_title">Color SMSをメインパネルにドラッグする</string>

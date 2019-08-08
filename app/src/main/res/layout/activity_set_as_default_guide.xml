@@ -38,7 +38,8 @@
             android:id="@+id/set_as_default_top_image"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:scaleType="fitXY"/>
 
         <com.android.messaging.ui.view.MessagesTextView
 

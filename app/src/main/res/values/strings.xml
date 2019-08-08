@@ -1032,7 +1032,20 @@
 
     <!--notification channel-->
     <string name="sms_notification_channel">SMS Notification</string>
+    <string name="sms_notification_channel_set_default">Set Default Notification</string>
     <string name="sms_notification_channel_description">Show a notification when received SMS</string>
+    <string name="sms_notification_channel_description_set_default">Set Default SMS</string>
+
+    <!--active push-->
+    <string name="active_push_title_theme">Amazing Themes!</string>
+    <string name="active_push_description_theme">Wow! Beautiful themes recommended for you!</string>
+    <string name="active_push_title_emojis">Funny Emojis!</string>
+    <string name="active_push_description_emojis">Make your chats come alive!</string>
+    <string name="active_push_title_send_message">Start Color SMS</string>
+    <string name="active_push_description_send_message">Try Color SMS to find more cool features!</string>
+
+    <string name="set_default_push_title">Set Color SMS as Default</string>
+    <string name="set_default_push_description">Get amazing themes everyday!</string>
 
     <!--customize-->
     <string name="bubble_customize_preview_incoming_message">Hi, there! Nice to meet you.</string>
@@ -1072,7 +1085,7 @@
     <string name="set_as_default_dialog_description_default_change">Color SMS can\'t work properly without being set as default.</string>
     <string name="set_as_default_dialog_button_ok_default_change">Set Now</string>
     <string name="set_as_default_dialog_title_user_present">Set Color SMS as Default</string>
-    <string name="set_as_default_dialog_description_user_present">Send funny emojis, stickers and GIFs to friends via Color SMS.</string>
+    <string name="set_as_default_dialog_description_user_present">Decorate your messages with splendid themes!</string>
     <string name="set_as_default_dialog_button_ok_user_present">OK</string>
     <string name="sms_got_it">Got it</string>
     <string name="drag_hotseat_content">Easier for you to send funny emojis and stickers via Color SMS.</string>

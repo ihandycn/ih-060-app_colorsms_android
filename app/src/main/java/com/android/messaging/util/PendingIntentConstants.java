@@ -20,13 +20,16 @@ package com.android.messaging.util;
 public class PendingIntentConstants {
     // Notifications
     public static final int SMS_NOTIFICATION_ID = 0;
+    public static final int SMS_NOTIFICATION_ID_SET_DEFAULT = 5;
+    public static final int SMS_NOTIFICATION_ID_ACTIVE_PUSH = 6;
+
     public static final int SMS_SECONDARY_USER_NOTIFICATION_ID = 1;
     public static final int MSG_SEND_ERROR = 2;
     public static final int SMS_STORAGE_LOW_NOTIFICATION_ID = 3;
     public static final int SMS_BACKGROUND_SERVICE_ID = 4;
 
     public static final String SMS_NOTIFICATION_CHANNEL_ID =  "sms_channel";
-
+    public static final String SMS_NOTIFICATION_CHANGLE_ID_SET_DEFAULT = "sms_channel_set_default";
 
     // Request codes
     public static final int UPDATE_NOTIFICATIONS_ALARM_ACTION_ID = 100;

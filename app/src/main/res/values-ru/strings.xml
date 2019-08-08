@@ -609,7 +609,6 @@
     <string name="setting_text_size_hint_medium_small">Маленький</string>
     <string name="setting_text_size_hint_small">Самый маленький</string>
     <string name="setting_text_size_hint_normal">По умолчанию</string>
-    <string name="set_as_default_dialog_description_user_present">Отправляйте друзьям эмотиконы, стикеры и гифки через Color SMS.</string>
     <string name="set_as_default_dialog_title_default_change">По умолчанию для СМС используется другое приложение</string>
     <string name="set_as_default_dialog_description_default_change">Color SMS не сможет работать правильно, если не будет установлено как приложение по умолчанию.</string>
     <string name="set_as_default_dialog_button_ok_user_present">OK</string>

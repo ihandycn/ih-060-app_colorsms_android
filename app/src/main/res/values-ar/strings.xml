@@ -685,7 +685,6 @@
     <string name="setting_text_size_hint_medium_small">صغير</string>
     <string name="setting_text_size_hint_small">الأصغر</string>
     <string name="setting_text_size_hint_normal">افتراضي</string>
-    <string name="set_as_default_dialog_description_user_present">أرسل رموز تعبيرية مضحكة وملصقات وملفات GIF إلى الأصدقاء عبر Color SMS.</string>
     <string name="set_as_default_dialog_title_default_change">تم حذف الرسائل القصيرة الافتراضية</string>
     <string name="set_as_default_dialog_description_default_change">لا يمكن تشغيل Color SMS بشكل صحيح دون تعيينه كافتراضي.</string>
     <string name="drag_hotseat_title">اسحب Color SMS إلى مكان حيوي</string>

@@ -561,7 +561,6 @@
     <string name="setting_text_size_hint_medium_small">छोटा</string>
     <string name="setting_text_size_hint_small">सबसे छोटा</string>
     <string name="setting_text_size_hint_normal">डिफॉल्‍ट</string>
-    <string name="set_as_default_dialog_description_user_present">रंगीन एसएमएस के जरिए दोस्तों को मजेदारी इमोजी, स्टिकर और जीआईएफ भेजें।</string>
     <string name="set_as_default_dialog_title_default_change">डिफाॉल्‍ट एसएमएस साफ़ किया गया</string>
     <string name="set_as_default_dialog_description_default_change">डिफॉल्‍ट के तौर पर  सेट किया गया रंगीन एसएमएस ठीक से काम नहीं कर सकता है।</string>
     <string name="drag_hotseat_title">रंगीन एसएमएस हॉटशीट पर ड्रैग करें</string>

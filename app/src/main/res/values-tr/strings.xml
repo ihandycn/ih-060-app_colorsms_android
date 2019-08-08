@@ -558,7 +558,6 @@
     <string name="setting_text_size_hint_medium_small">Küçük</string>
     <string name="setting_text_size_hint_small">En Küçük</string>
     <string name="setting_text_size_hint_normal">Varsayılan</string>
-    <string name="set_as_default_dialog_description_user_present">Color SMS ile arkadaşlarına komik emojiler, çıkartmalar ve GIFler gönder.</string>
     <string name="set_as_default_dialog_title_default_change">Varsayılan SMS Değiştirildi</string>
     <string name="set_as_default_dialog_description_default_change">Color SMS varsayılan olarak ayarlanmadan düzgün olarak işlemez.</string>
     <string name="drag_hotseat_title">Color SMS\'i Ana Çubuğa Sürükle</string>

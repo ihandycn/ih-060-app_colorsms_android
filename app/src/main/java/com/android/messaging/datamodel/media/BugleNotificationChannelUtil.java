@@ -7,7 +7,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
-import android.text.TextUtils;
 
 import com.android.messaging.R;
 import com.android.messaging.util.PendingIntentConstants;
@@ -42,6 +41,18 @@ public class BugleNotificationChannelUtil {
         if (enableVibration) {
             channel.setVibrationPattern(new long[]{100, 200, 300});
         }
+        return channel;
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
+    public static NotificationChannel getSetDefaultNotificationChannel() {
+        NotificationChannel channel = Notifications.getChannel(
+                PendingIntentConstants.SMS_NOTIFICATION_CHANGLE_ID_SET_DEFAULT,
+                HSApplication.getContext().getResources().getString(R.string.sms_notification_channel_set_default),
+                HSApplication.getContext().getResources().getString(R.string.sms_notification_channel_set_default),
+                NotificationManager.IMPORTANCE_HIGH);
+        channel.setSound(null, null);
+        channel.enableVibration(false);
         return channel;
     }
 

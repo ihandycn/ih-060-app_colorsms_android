@@ -561,7 +561,6 @@
     <string name="setting_text_size_hint_medium_small">Kecil</string>
     <string name="setting_text_size_hint_small">Terkecil</string>
     <string name="setting_text_size_hint_normal">Default</string>
-    <string name="set_as_default_dialog_description_user_present">Kirimkan emoji lucu, stiker, dan GIF kepada teman-teman melalui Color SMS</string>
     <string name="set_as_default_dialog_title_default_change">SMS Default Dibersihkan</string>
     <string name="set_as_default_dialog_description_default_change">Color SMS tidak berfungsi dengan baik jika tidak diatur sebagai default.</string>
     <string name="drag_hotseat_title">Seret Color SMS ke Hotseat</string>

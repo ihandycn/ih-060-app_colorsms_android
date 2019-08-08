@@ -1,5 +1,23 @@
 {
-  "custom_audience_properties": [],
+  "custom_audience_properties": [
+    {
+      "select_value": [
+        {
+          "name": "True",
+          "key": true
+        },
+        {
+          "name": "False",
+          "key": false
+        }
+      ],
+      "display_name": "设备语言是否为英文",
+      "field": "device_english",
+      "content_type": "boolean",
+      "attributes": "select_field",
+      "type": "App"
+    }
+  ],
   "console_url": "https://ap-console.appcloudbox.net",
   "app_meta": {
     "is_support_languages": false
@@ -128,6 +146,61 @@
         }
       ],
       "topic_id": "topic-771b35ehc"
+    },
+    "topic-77gqqjobm": {
+      "topic_type": "life_time",
+      "topic_name": "Test Notification Access",
+      "variations": {
+        "na_switch": {
+          "values": [
+            {
+              "value": false
+            }
+          ],
+          "type": "boolean",
+          "value": false,
+          "strategy": "sole"
+        }
+      },
+      "events": [
+        {
+          "name": "test"
+        },
+        {
+          "name": "homepage_show"
+        },
+        {
+          "name": "detailspage_show"
+        },
+        {
+          "name": "bannerad_chance"
+        },
+        {
+          "name": "bannerad_show"
+        },
+        {
+          "name": "topad_chance"
+        },
+        {
+          "name": "topad_show"
+        },
+        {
+          "name": "fullad_chance"
+        },
+        {
+          "name": "fullad_show"
+        },
+        {
+          "name": "notification_pushed"
+        },
+        {
+          "name": "notification_clicked"
+        },
+        {
+          "name": "notification_replied"
+        }
+      ],
+      "topic_id": "topic-77gqqjobm"
     },
     "topic-rp-73fiu9zuo": {
       "topic_type": "one_time",
@@ -313,6 +386,47 @@
       ],
       "topic_id": "topic-76bwea9b3"
     },
+    "topic-77jtl9kou": {
+      "topic_type": "life_time",
+      "topic_name": "Push Set Default Test",
+      "variations": {
+        "enable_push": {
+          "values": [
+            {
+              "value": false
+            }
+          ],
+          "type": "boolean",
+          "value": false,
+          "strategy": "sole"
+        },
+        "push_description": {
+          "values": [
+            {
+              "value": "cycle"
+            }
+          ],
+          "type": "string",
+          "value": "cycle",
+          "strategy": "sole"
+        }
+      },
+      "events": [
+        {
+          "name": "test"
+        },
+        {
+          "name": "push_show"
+        },
+        {
+          "name": "push_click"
+        },
+        {
+          "name": "push_success"
+        }
+      ],
+      "topic_id": "topic-77jtl9kou"
+    },
     "topic-768lyi3sp": {
       "topic_type": "life_time",
       "topic_name": "Test Popup Windows",
@@ -437,6 +551,46 @@
       ],
       "topic_id": "topic-76k40hett"
     },
+    "topic-77jtf18mt": {
+      "topic_type": "life_time",
+      "topic_name": "Push After Default Alert Test",
+      "variations": {
+        "push_afteralert": {
+          "values": [
+            {
+              "value": false
+            }
+          ],
+          "type": "boolean",
+          "value": false,
+          "strategy": "sole"
+        }
+      },
+      "events": [
+        {
+          "name": "test"
+        },
+        {
+          "name": "push_setdefault_show"
+        },
+        {
+          "name": "push_setdefault_click"
+        },
+        {
+          "name": "push_setdefault_success"
+        },
+        {
+          "name": "alert_setdefault_show"
+        },
+        {
+          "name": "alert_setdefault_click"
+        },
+        {
+          "name": "alert_setdefault_success"
+        }
+      ],
+      "topic_id": "topic-77jtf18mt"
+    },
     "topic-74azpj82p": {
       "topic_type": "one_day",
       "topic_name": "To Export Config",
@@ -488,7 +642,7 @@
   "autopilot_id": 10104,
   "service_url": "https://ap.appcloudbox.net",
   "other_app_events": [],
-  "json_id": "9d0e1f47-c34d-42ff-8654-4c26db36abc7",
+  "json_id": "6f191079-e9d8-4c18-9fd6-afe4af07d03d",
   "autopilot_name": "Bubble_A",
   "autopilot_type": "app"
 }

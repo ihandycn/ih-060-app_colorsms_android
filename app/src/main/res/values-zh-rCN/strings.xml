@@ -557,7 +557,6 @@
     <string name="setting_text_size_hint_medium_small">小</string>
     <string name="setting_text_size_hint_small">最小</string>
     <string name="setting_text_size_hint_normal">默认</string>
-    <string name="set_as_default_dialog_description_user_present">通过Color SMS给朋友发送有趣的Emoji、贴纸和动图。</string>
     <string name="set_as_default_dialog_title_default_change">默认短信应用被清除</string>
     <string name="set_as_default_dialog_description_default_change">如果不把Color SMS设为默认，软件将无法正常运行。</string>
     <string name="drag_hotseat_title">将Color SMS拖动到Dock栏</string>

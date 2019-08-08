@@ -16,9 +16,11 @@ import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.DefaultSMSUtils;
+import com.android.messaging.util.SetDefaultPushAutopilotUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
+import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
 
 public class SetAsDefaultGuideActivity extends AppCompatActivity {
@@ -26,6 +28,11 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
 
     public static final int USER_PRESENT = 1;
     public static final int DEFAULT_CHANGED = 2;
+
+    public static final String KEY_FOR_USER_PRESENT_DAYS_COUNT = "user_present_days_count";
+
+    private int userPresentTimes = 0;
+    private boolean mShouldPush = true;
 
     @IntDef({USER_PRESENT, DEFAULT_CHANGED})
     @interface DialogType {
@@ -35,6 +42,7 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
 
     public static void startActivity(Context context, @DialogType int type) {
         Intent intent = new Intent(context, SetAsDefaultGuideActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra("from", type);
         Navigations.startActivitySafely(context, intent);
         if (context instanceof Activity) {
@@ -47,9 +55,12 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_set_as_default_guide);
 
+        SetDefaultPushAutopilotUtils.logAlertSetDefaultShow();
+
         mType = getIntent().getIntExtra("from", USER_PRESENT);
 
         if (mType == USER_PRESENT) {
+            userPresentTimes = Preferences.getDefault().getInt(KEY_FOR_USER_PRESENT_DAYS_COUNT, 1);
             BugleAnalytics.logEvent("SMS_DefaultAlert_Show", true, "type", "Unlock");
         } else {
             BugleAnalytics.logEvent("SMS_DefaultAlert_Show", true, "type", "Cleared");
@@ -69,7 +80,11 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
         if (mType == USER_PRESENT) {
             title.setText(R.string.set_as_default_dialog_title_user_present);
             subtitle.setText(R.string.set_as_default_dialog_description_user_present);
-            topImage.setImageResource(R.drawable.set_as_default_top_image_user_present);
+            if (userPresentTimes >= 3) {
+                topImage.setImageResource(R.drawable.set_as_default_top_image_user_present);
+            } else {
+                topImage.setImageResource(R.drawable.theme_upgrade_banner);
+            }
             okBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.dialog_positive_button_color),
                     Dimensions.pxFromDp(3.3f), true));
             okBtn.setText(R.string.set_as_default_dialog_button_ok_user_present);
@@ -86,12 +101,15 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
 
         okBtn.setOnClickListener((v) -> {
             if (mType == USER_PRESENT) {
+                SetDefaultPushAutopilotUtils.logAlertSetDefaultClick();
                 BugleAnalytics.logEvent("SMS_DefaultAlert_BtnClick", true, "type", "Unlock");
             } else {
                 BugleAnalytics.logEvent("SMS_DefaultAlert_BtnClick", true, "type", "Cleared");
             }
             final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(SetAsDefaultGuideActivity.this);
             startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
+
+            mShouldPush = false;
         });
     }
 
@@ -128,6 +146,8 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
                     Navigations.startActivitySafely(this, intent);
                     overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
+
+                    SetDefaultPushAutopilotUtils.logAlertSetDefaultSuccess();
                 }
             } else {
                 Toasts.showToast(R.string.welcome_set_default_failed_toast, Toast.LENGTH_LONG);
@@ -139,5 +159,16 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
     public void onBackPressed() {
         finish();
         overridePendingTransition(0, R.anim.app_lock_fade_out_long);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if(mType == USER_PRESENT && mShouldPush) {
+            SetDefaultNotification notification = new SetDefaultNotification(this);
+            if (notification.getEnablePush()) {
+                notification.sendNotification();
+            }
+        }
+        super.onDestroy();
     }
 }

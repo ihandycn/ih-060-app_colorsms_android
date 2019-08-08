@@ -561,7 +561,6 @@
     <string name="setting_text_size_hint_medium_small">Pequeña</string>
     <string name="setting_text_size_hint_small">Más pequeña</string>
     <string name="setting_text_size_hint_normal">Predeterminada</string>
-    <string name="set_as_default_dialog_description_user_present">Envía emojis, pegatinas y GIF divertidos a tus amigos por Color SMS.</string>
     <string name="set_as_default_dialog_title_default_change">SMS predeterminado eliminado</string>
     <string name="set_as_default_dialog_description_default_change">Color SMS no funciona correctamente si no se establece como predeterminada.</string>
     <string name="drag_hotseat_title">Arrastra Color SMS a la barra principal.</string>
