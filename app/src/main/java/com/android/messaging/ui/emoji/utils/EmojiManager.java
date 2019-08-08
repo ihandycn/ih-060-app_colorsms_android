@@ -410,7 +410,7 @@ public class EmojiManager {
             Preferences.get(PREF_FILE_NAME).putString(PREF_EMOJI_STYLE, style);
             EmojiCache.getInstance().flush();
             LoadEmojiManager.getInstance().flush();
-            EmojiSpannableWorker.install();
+            EmojiSpannableWorker.loadAndInstall();
             HSGlobalNotificationCenter.sendNotification(NOTIFICATION_EMOJI_STYLE_CHANGE);
         }
     }

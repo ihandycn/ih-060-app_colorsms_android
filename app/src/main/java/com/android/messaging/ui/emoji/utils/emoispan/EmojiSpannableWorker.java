@@ -6,8 +6,9 @@ import android.text.TextUtils;
 import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.EmojiPackageInfo;
-import com.android.messaging.ui.emoji.utils.EmojiDataProducer;
-import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.android.messaging.ui.emoji.utils.LoadEmojiManager;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.superapps.util.Threads;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,11 +19,9 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import hugo.weaving.DebugLog;
-
 // work for EmojiEditText and EmojiTextView, swap emoji unicode to spannable drawable
 public final class EmojiSpannableWorker {
-    private static final EmojiSpannableWorker INSTANCE = new EmojiSpannableWorker();
+    private static final EmojiSpannableWorker sInstance = new EmojiSpannableWorker();
     private static final Comparator<String> STRING_LENGTH_COMPARATOR = new Comparator<String>() {
         public int compare(String str, String str2) {
             int length = str.length();
@@ -36,32 +35,32 @@ public final class EmojiSpannableWorker {
     private List<EmojiPackageInfo> categories;
     private final Map<String, EmojiInfo> emojiMap = new LinkedHashMap<>(3000);
     private Pattern emojiPattern;
-    private Pattern emojiRepetitivePattern;
+    private volatile boolean mInstalled = false;
+
+    public static final String NOTIFICATION = "emoji_spannable_worker_install";
 
     private EmojiSpannableWorker() {
     }
 
     public static EmojiSpannableWorker getInstance() {
-        return INSTANCE;
+        return sInstance;
     }
 
-    @DebugLog
-    public static void install() {
+    private void install() {
         int size;
-        INSTANCE.categories = EmojiDataProducer.loadEmojiData(EmojiManager.getEmojiStyle());
-        INSTANCE.emojiMap.clear();
+        emojiMap.clear();
         ArrayList<String> arrayList = new ArrayList<>(3000);
-        for (EmojiPackageInfo emojiPackage : INSTANCE.categories) {
+        for (EmojiPackageInfo emojiPackage : sInstance.categories) {
             for (BaseEmojiInfo item : emojiPackage.mEmojiInfoList) {
-                EmojiInfo emoji = (EmojiInfo)item;
+                EmojiInfo emoji = (EmojiInfo) item;
                 String text = emoji.mEmoji;
                 EmojiInfo[] variants = emoji.mVariants;
-                INSTANCE.emojiMap.put(text, emoji);
+                emojiMap.put(text, emoji);
                 arrayList.add(text);
                 for (int i = 0; i < variants.length; i++) {
                     EmojiInfo variant = variants[i];
                     String variantText = variant.mEmoji;
-                    INSTANCE.emojiMap.put(variantText, variant);
+                    emojiMap.put(variantText, variant);
                     arrayList.add(variantText);
                 }
             }
@@ -77,9 +76,7 @@ public final class EmojiSpannableWorker {
             stringBuilder.append('|');
         }
         stringBuilder = stringBuilder.deleteCharAt(stringBuilder.length() - 1);
-        INSTANCE.emojiPattern = Pattern.compile(stringBuilder.toString());
-
-        INSTANCE.emojiRepetitivePattern = Pattern.compile("(" + stringBuilder + ")+");
+        sInstance.emojiPattern = Pattern.compile(stringBuilder.toString());
     }
 
     public static void replaceWithImages(Spannable spannable, float emojiSize) {
@@ -100,20 +97,7 @@ public final class EmojiSpannableWorker {
         }
     }
 
-    /* Access modifiers changed, original: 0000 */
-    public List<EmojiPackageInfo> getCategories() {
-        verifyInstalled();
-        return this.categories;
-    }
-
-    /* Access modifiers changed, original: 0000 */
-    public Pattern getEmojiRepetitivePattern() {
-        return this.emojiRepetitivePattern;
-    }
-
-    /* Access modifiers changed, original: 0000 */
-    public List<EmojiRange> findAllEmojis(CharSequence charSequence) {
-        verifyInstalled();
+    private List<EmojiRange> findAllEmojis(CharSequence charSequence) {
         ArrayList<EmojiRange> arrayList = new ArrayList<>();
         if (!TextUtils.isEmpty(charSequence)) {
             Matcher matcher = this.emojiPattern.matcher(charSequence);
@@ -127,16 +111,23 @@ public final class EmojiSpannableWorker {
         return arrayList;
     }
 
-    /* Access modifiers changed, original: 0000 */
-    public EmojiInfo findEmoji(CharSequence charSequence) {
-        verifyInstalled();
+    private EmojiInfo findEmoji(CharSequence charSequence) {
         return this.emojiMap.get(charSequence.toString());
     }
 
-    /* Access modifiers changed, original: 0000 */
-    public void verifyInstalled() {
-        if (this.categories == null) {
-            throw new IllegalStateException("Please install an EmojiProvider through the EmojiSpannableWorker.install() method first.");
-        }
+    public static void loadAndInstall() {
+        Threads.postOnThreadPoolExecutor(new Runnable() {
+            @Override
+            public void run() {
+                sInstance.categories = LoadEmojiManager.getInstance().getEmojiDataSync()[0];
+                sInstance.install();
+                sInstance.mInstalled = true;
+                HSGlobalNotificationCenter.sendNotificationOnMainThread(NOTIFICATION);
+            }
+        });
+    }
+
+    public boolean getIsInstalled() {
+        return mInstalled;
     }
 }

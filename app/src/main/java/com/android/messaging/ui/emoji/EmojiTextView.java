@@ -25,9 +25,7 @@ public class EmojiTextView extends MessagesTextView implements INotificationObse
 
     public EmojiTextView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        if (!isInEditMode()) {
-            EmojiSpannableWorker.getInstance().verifyInstalled();
-        }
+
         useSystemEmoji = EmojiManager.isSystemEmojiStyle();
 
         FontMetrics fontMetrics = getPaint().getFontMetrics();
@@ -45,9 +43,13 @@ public class EmojiTextView extends MessagesTextView implements INotificationObse
             charSequence = "";
         }
 
-        SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(charSequence);
-        EmojiSpannableWorker.replaceWithImages(spannableStringBuilder, this.emojiSize);
-        super.setText(spannableStringBuilder, bufferType);
+        if (EmojiSpannableWorker.getInstance().getIsInstalled()) {
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(charSequence);
+            EmojiSpannableWorker.replaceWithImages(spannableStringBuilder, EmojiTextView.this.emojiSize);
+            super.setText(spannableStringBuilder, bufferType);
+        } else {
+            super.setText(charSequence, bufferType);
+        }
     }
 
 
@@ -69,6 +71,7 @@ public class EmojiTextView extends MessagesTextView implements INotificationObse
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         HSGlobalNotificationCenter.addObserver(EmojiManager.NOTIFICATION_EMOJI_STYLE_CHANGE, this);
+        HSGlobalNotificationCenter.addObserver(EmojiSpannableWorker.NOTIFICATION, this);
     }
 
     @Override

@@ -5,27 +5,28 @@ import com.superapps.util.Threads;
 
 import java.util.List;
 
-public class LoadEmojiManager{
+public class LoadEmojiManager {
     private static LoadEmojiManager loadEmojiManager = new LoadEmojiManager();
     private boolean mIsDataPrepared = false;
     private List<EmojiPackageInfo> mEmojiData;
     private List<EmojiPackageInfo> mStickerData;
     private boolean mNeedFlush = false;
 
-    private LoadEmojiManager(){}
+    private LoadEmojiManager() {
+    }
 
-    public void flush(){
+    public void flush() {
         mNeedFlush = true;
     }
 
-    public static LoadEmojiManager getInstance(){
+    public static LoadEmojiManager getInstance() {
         return loadEmojiManager;
     }
 
-    public void getEmojiData(EmojiDataCallback callback){
-        if(mIsDataPrepared && !mNeedFlush){
+    public synchronized void getEmojiData(EmojiDataCallback callback) {
+        if (mIsDataPrepared && !mNeedFlush) {
             callback.onDataPrepared(mEmojiData, mStickerData);
-            return ;
+            return;
         }
         Threads.postOnThreadPoolExecutor(new Runnable() {
             @Override
@@ -44,6 +45,16 @@ public class LoadEmojiManager{
         mNeedFlush = false;
     }
 
+    public synchronized List<EmojiPackageInfo>[] getEmojiDataSync() {
+        if (mIsDataPrepared && !mNeedFlush) {
+            return new List[]{mEmojiData, mStickerData};
+        }
+        mEmojiData = EmojiDataProducer.loadEmojiData(EmojiManager.getEmojiStyle());
+        mStickerData = EmojiDataProducer.loadStickerData();
+        mIsDataPrepared = true;
+        mNeedFlush = false;
+        return new List[]{mEmojiData, mStickerData};
+    }
 
     public interface EmojiDataCallback {
         void onDataPrepared(List<EmojiPackageInfo> emojiData, List<EmojiPackageInfo> stickerData);

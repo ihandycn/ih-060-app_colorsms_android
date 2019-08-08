@@ -55,7 +55,6 @@ import com.android.messaging.ui.customize.theme.ThemeDownloadManager;
 import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
-import com.android.messaging.ui.emoji.utils.emoispan.EmojiCache;
 import com.android.messaging.ui.emoji.utils.emoispan.EmojiSpannableWorker;
 import com.android.messaging.ui.emoji.utils.emoji.Emoji;
 import com.android.messaging.ui.emoji.utils.emoji.EmojiCategory;
@@ -108,7 +107,6 @@ import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
 import net.appcloudbox.AcbAds;
-import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
 import net.appcloudbox.autopilot.AutopilotConfig;
 import net.appcloudbox.autopilot.core.PrefsUtils;
 import net.appcloudbox.common.analytics.publisher.AcbPublisherMgr;
@@ -228,10 +226,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
     @DebugLog
     private void prepareEmoji() {
-        EmojiSpannableWorker.install();
-
-        // initialize emoji cache
-        EmojiCache.getInstance();
+        EmojiSpannableWorker.loadAndInstall();
     }
 
     // use for debug

@@ -3,17 +3,11 @@ package com.android.messaging.ui.emoji.utils.emoispan;
 import android.graphics.drawable.Drawable;
 import android.util.LruCache;
 
-import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
-import com.android.messaging.ui.emoji.EmojiPackageInfo;
-import com.android.messaging.ui.emoji.utils.EmojiDataProducer;
-import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.ihs.app.framework.HSApplication;
 
-import java.util.List;
-
 public class EmojiCache {
-    private int mCacheSize = 1500;
+    private int mCacheSize = 500;
     private int mCacheVersion;
     private LruCache<String, Drawable> mMemoryCache;
 
@@ -35,19 +29,6 @@ public class EmojiCache {
                 return 1;
             }
         };
-        preload();
-    }
-
-    private void preload() {
-        List<EmojiInfo> recentPage = EmojiDataProducer.loadEmojiRecentData();
-        EmojiPackageInfo firstPage = EmojiDataProducer.loadEmojiData(EmojiManager.getEmojiStyle()).get(0);
-        for (EmojiInfo info : recentPage) {
-            addToCache(info.getDrawable(), info.mResource);
-        }
-        for (BaseEmojiInfo item : firstPage.mEmojiInfoList) {
-            EmojiInfo info = (EmojiInfo) item;
-            addToCache(info.getDrawable(), info.mResource);
-        }
     }
 
     public void addToCache(final Drawable drawable, final String resource) {

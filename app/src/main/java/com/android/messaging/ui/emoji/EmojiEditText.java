@@ -8,8 +8,11 @@ import android.view.KeyEvent;
 import com.android.messaging.ui.PlainTextEditText;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.emoji.utils.emoispan.EmojiSpannableWorker;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.notificationcenter.INotificationObserver;
+import com.ihs.commons.utils.HSBundle;
 
-public class EmojiEditText extends PlainTextEditText {
+public class EmojiEditText extends PlainTextEditText implements INotificationObserver {
     private float emojiSize;
 
     public EmojiEditText(Context context) {
@@ -18,9 +21,6 @@ public class EmojiEditText extends PlainTextEditText {
 
     public EmojiEditText(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
-        if (!isInEditMode()) {
-            EmojiSpannableWorker.getInstance().verifyInstalled();
-        }
         FontMetrics fontMetrics = getPaint().getFontMetrics();
         emojiSize = fontMetrics.descent - fontMetrics.ascent;
 
@@ -28,9 +28,23 @@ public class EmojiEditText extends PlainTextEditText {
     }
 
     @Override
+    protected void onAttachedToWindow() {
+        HSGlobalNotificationCenter.addObserver(EmojiSpannableWorker.NOTIFICATION, this);
+        super.onAttachedToWindow();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        HSGlobalNotificationCenter.removeObserver(EmojiSpannableWorker.NOTIFICATION, this);
+        super.onDetachedFromWindow();
+    }
+
+    @Override
     public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
         if (!useSystemEmoji()) {
-            EmojiSpannableWorker.replaceWithImages(getText(), this.emojiSize);
+            if (EmojiSpannableWorker.getInstance().getIsInstalled()) {
+                EmojiSpannableWorker.replaceWithImages(getText(), EmojiEditText.this.emojiSize);
+            }
         }
     }
 
@@ -71,5 +85,10 @@ public class EmojiEditText extends PlainTextEditText {
 
     public final void setEmojiSizeRes(int i, boolean z) {
         setEmojiSize(getResources().getDimensionPixelSize(i), z);
+    }
+
+    @Override
+    public void onReceive(String s, HSBundle hsBundle) {
+        setText(getText());
     }
 }
