@@ -75,6 +75,7 @@ public class PrivateConversationListFragment extends Fragment
     private ConversationListAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
     private boolean mIsConversationListEmpty = true;
+    private boolean mHasWallpaper;
 
     // Saved Instance State Data - only for temporal data which is nice to maintain but not
     // critical for correctness.
@@ -142,6 +143,7 @@ public class PrivateConversationListFragment extends Fragment
         ImageView conversationListBg = rootView.findViewById(R.id.private_conversation_list_bg);
         Drawable customDrawable = ChatListCustomizeManager.getWallpaperDrawable();
         Drawable bgDrawable = customDrawable != null ? customDrawable : WallpaperDrawables.getConversationListWallpaperDrawable();
+        mHasWallpaper = bgDrawable == null;
         conversationListBg.setImageDrawable(bgDrawable);
         mEmptyListMessageView = rootView.findViewById(R.id.private_box_empty_container);
         mRecyclerView = rootView.findViewById(android.R.id.list);
@@ -352,6 +354,16 @@ public class PrivateConversationListFragment extends Fragment
 
     @Override
     public boolean isArchived() {
+        return false;
+    }
+
+    @Override
+    public boolean hasWallpaper() {
+        return mHasWallpaper;
+    }
+
+    @Override
+    public boolean animateDismissOption() {
         return false;
     }
 }

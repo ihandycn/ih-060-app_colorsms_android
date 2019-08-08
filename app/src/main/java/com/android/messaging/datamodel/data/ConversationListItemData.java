@@ -289,7 +289,7 @@ public class ConversationListItemData {
         return mUnreadCount;
     }
 
-    void deleteConversation() {
+    public void deleteConversation() {
         DeleteConversationAction.deleteConversation(mConversationId, mTimestamp);
     }
 

@@ -22,16 +22,17 @@ import android.animation.TimeInterpolator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnItemTouchListener;
 import android.view.MotionEvent;
 import android.view.VelocityTracker;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.animation.Interpolator;
 
 import com.android.messaging.R;
 import com.android.messaging.util.Assert;
-import com.android.messaging.util.UiUtils;
 import com.superapps.util.Dimensions;
 
 /**
@@ -42,27 +43,30 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
     private static final boolean ANIMATING = true;
 
     private static final float ERROR_FACTOR_MULTIPLIER = 1.2f;
-    private static final float PERCENTAGE_OF_WIDTH_TO_DISMISS = 0.4f;
-    private static final float FLING_PERCENTAGE_OF_WIDTH_TO_DISMISS = 0.1f;
-    private static final int MIN_TOUCH_POINT_TO_LEFT_SIDE = Dimensions.pxFromDp(35);
+    private static final float PERCENTAGE_OF_WIDTH_TO_DISMISS = 0.08f;
+    private static final float FLING_PERCENTAGE_OF_WIDTH_TO_DISMISS = 0.02f;
+    private static final int OPTIONS_VIEW_WIDTH = Dimensions.pxFromDp(78.7f) * 2;
 
-    private static final int SWIPE_DIRECTION_NONE = 0;
-    private static final int SWIPE_DIRECTION_LEFT = 1;
-    private static final int SWIPE_DIRECTION_RIGHT = 2;
+    private static final long DEFAULT_RESTORE_ANIMATION_DURATION = 520;
+    private static final long DEFAULT_SHOW_ANIMATION_DURATION = 600;
+    private static final long MAX_TRANSLATION_ANIMATION_DURATION = 600;
 
     private final RecyclerView mRecyclerView;
-    private final long mDefaultRestoreAnimationDuration;
-    private final long mDefaultDismissAnimationDuration;
-    private final long mMaxTranslationAnimationDuration;
     private final int mTouchSlop;
     private final int mMinimumFlingVelocity;
     private final int mMaximumFlingVelocity;
     private final boolean mIsRtl = Dimensions.isRtl();
 
+    private final Interpolator mShowOrDismissOptionsInterpolator =
+            PathInterpolatorCompat.create(0.26f, 1f, 0.48f, 1);
+    private final Interpolator mShowOptionsReboundInterpolator =
+            PathInterpolatorCompat.create(0.32f, 0.94f, 0.6f, 1);
+
     /* Valid throughout a single gesture. */
     private VelocityTracker mVelocityTracker;
     private float mInitialX;
     private float mInitialY;
+    private float mInitTranslationX;
     private boolean mIsSwiping;
     private ConversationListItemView mListItemView;
 
@@ -71,9 +75,6 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
 
         final Context context = mRecyclerView.getContext();
         final Resources res = context.getResources();
-        mDefaultRestoreAnimationDuration = res.getInteger(R.integer.swipe_duration_ms);
-        mDefaultDismissAnimationDuration = res.getInteger(R.integer.swipe_duration_ms);
-        mMaxTranslationAnimationDuration = res.getInteger(R.integer.swipe_duration_ms);
 
         final ViewConfiguration viewConfiguration = ViewConfiguration.get(context);
         mTouchSlop = viewConfiguration.getScaledPagingTouchSlop();
@@ -95,19 +96,20 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
         final int action = event.getActionMasked();
         switch (action) {
             case MotionEvent.ACTION_DOWN:
+                final View viewAtPoint = mRecyclerView.findChildViewUnder(event.getX(), event.getY());
+                animateDismissOtherItemOptions(viewAtPoint);
                 if (!hasGestureSwipeTarget()) {
                     onGestureStart();
 
                     mVelocityTracker.addMovement(event);
                     mInitialX = event.getX();
                     mInitialY = event.getY();
-
-                    final View viewAtPoint = mRecyclerView.findChildViewUnder(mInitialX, mInitialY);
                     if (viewAtPoint instanceof ConversationListItemView) {
                         final ConversationListItemView child = (ConversationListItemView) viewAtPoint;
                         if (child != null && child.isSwipeAnimatable()) {
                             // Begin detecting swipe on the target for the rest of the gesture.
                             mListItemView = child;
+                            mInitTranslationX = mListItemView.getSwipeTranslationX();
                             if (mListItemView.isAnimating()) {
                                 mListItemView = null;
                             }
@@ -145,9 +147,7 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
                             return false;
                         }
 
-                        if (absDeltaX > mTouchSlop && mListItemView.isSwipeAnimatable()
-                                && (!mIsRtl ? mInitialX > MIN_TOUCH_POINT_TO_LEFT_SIDE
-                                : mInitialX < mListItemView.getWidth() - MIN_TOUCH_POINT_TO_LEFT_SIDE)) {
+                        if (absDeltaX > mTouchSlop && mListItemView.isSwipeAnimatable()) {
                             // Swipe detected. Return true so we can handle the gesture in
                             // onTouchEvent.
                             mIsSwiping = true;
@@ -187,55 +187,45 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
             case MotionEvent.ACTION_OUTSIDE:
             case MotionEvent.ACTION_MOVE:
                 if (hasValidGestureSwipeTarget()) {
-                    mListItemView.setSwipeTranslationX(event.getX() - mInitialX);
+                    //if (mListItemView.isSwipeOptionsShowing()) {
+                    mListItemView.setSwipeTranslationX(mInitTranslationX + event.getX() - mInitialX);
+                    //}
                 }
                 break;
             case MotionEvent.ACTION_UP:
+            case MotionEvent.ACTION_CANCEL:
                 if (hasValidGestureSwipeTarget()) {
                     final float maxVelocity = mMaximumFlingVelocity;
                     mVelocityTracker.computeCurrentVelocity(UNIT_SECONDS, maxVelocity);
                     final float velocityX = getLastComputedXVelocity();
 
-                    final float translationX = mListItemView.getSwipeTranslationX();
-
-                    int swipeDirection = SWIPE_DIRECTION_NONE;
-                    if (translationX != 0) {
-                        swipeDirection =
-                                translationX > 0 ? SWIPE_DIRECTION_RIGHT : SWIPE_DIRECTION_LEFT;
-                    } else if (velocityX != 0) {
-                        swipeDirection =
-                                velocityX > 0 ? SWIPE_DIRECTION_RIGHT : SWIPE_DIRECTION_LEFT;
-                    }
-
                     final boolean fastEnough = isTargetSwipedFastEnough();
                     final boolean farEnough = isTargetSwipedFarEnough();
 
-                    final boolean shouldDismiss = (fastEnough || farEnough);
+                    final boolean shouldShowOption = (fastEnough || farEnough);
 
-                    if (shouldDismiss) {
+                    if (shouldShowOption) {
                         if (fastEnough) {
-                            animateDismiss(mListItemView, velocityX);
+                            animateShowOption(mListItemView, velocityX);
                         } else {
-                            animateDismiss(mListItemView, swipeDirection);
+                            animateShowOption(mListItemView);
                         }
                     } else {
                         animateRestore(mListItemView, velocityX);
                     }
 
-                    onSwipeGestureEnd(mListItemView,
-                            shouldDismiss ? swipeDirection : SWIPE_DIRECTION_NONE);
+                    onSwipeGestureEnd(mListItemView);
                 } else {
                     onGestureEnd();
                 }
                 break;
-            case MotionEvent.ACTION_CANCEL:
-                if (hasValidGestureSwipeTarget()) {
-                    animateRestore(mListItemView, 0f);
-                    onSwipeGestureEnd(mListItemView, SWIPE_DIRECTION_NONE);
-                } else {
-                    onGestureEnd();
-                }
-                break;
+//                if (hasValidGestureSwipeTarget()) {
+//                    animateRestore(mListItemView, 0f);
+//                    onSwipeGestureEnd(mListItemView);
+//                } else {
+//                    onGestureEnd();
+//                }
+//                break;
         }
     }
 
@@ -272,12 +262,7 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
     /**
      * The current swipe gesture is complete.
      */
-    private void onSwipeGestureEnd(final ConversationListItemView itemView,
-                                   final int swipeDirection) {
-        if (swipeDirection == SWIPE_DIRECTION_RIGHT || swipeDirection == SWIPE_DIRECTION_LEFT) {
-            itemView.onSwipeComplete(swipeDirection == SWIPE_DIRECTION_LEFT);
-        }
-
+    private void onSwipeGestureEnd(final ConversationListItemView itemView) {
         // Balances out onSwipeGestureStart.
         itemView.setAnimating(false);
 
@@ -293,6 +278,20 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
         mVelocityTracker = null;
         mIsSwiping = false;
         mListItemView = null;
+    }
+
+    public boolean animateDismissOtherItemOptions(View touchedView) {
+        boolean hasViewNeedDismiss = false;
+        for (int i = 0; i < mRecyclerView.getChildCount(); i++) {
+            if (mRecyclerView.getChildAt(i) instanceof ConversationListItemView) {
+                ConversationListItemView view = (ConversationListItemView) mRecyclerView.getChildAt(i);
+                if (view != touchedView && view.getSwipeTranslationX() != 0) {
+                    animateRestore(view, 0);
+                    hasViewNeedDismiss = true;
+                }
+            }
+        }
+        return hasViewNeedDismiss;
     }
 
     /**
@@ -320,40 +319,44 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
      * the animation duration. Whether the item is dismissed to the left or right is dependent on
      * the given velocityX.
      */
-    private void animateDismiss(final ConversationListItemView itemView, final float velocityX) {
+    private void animateShowOption(final ConversationListItemView itemView, final float velocityX) {
         Assert.isTrue(velocityX != 0);
-        final int direction = velocityX > 0 ? SWIPE_DIRECTION_RIGHT : SWIPE_DIRECTION_LEFT;
-        animateDismiss(itemView, direction, velocityX);
+        animateShowOption(itemView, true, velocityX);
     }
 
     /**
      * Animate the dismissal of the given item. The velocityX is assumed to be 0.
      */
-    private void animateDismiss(final ConversationListItemView itemView, final int swipeDirection) {
-        animateDismiss(itemView, swipeDirection, 0f);
+    private void animateShowOption(final ConversationListItemView itemView) {
+        animateShowOption(itemView, true, 0f);
     }
 
     /**
      * Animate the dismissal of the given item.
      */
-    private void animateDismiss(final ConversationListItemView itemView,
-                                final int swipeDirection, final float velocityX) {
-        Assert.isTrue(swipeDirection != SWIPE_DIRECTION_NONE);
+    private void animateShowOption(final ConversationListItemView itemView,
+                                   final boolean showOption, final float velocityX) {
 
         onSwipeAnimationStart(itemView);
 
-        final float animateTo = (swipeDirection == SWIPE_DIRECTION_RIGHT) ?
-                mRecyclerView.getWidth() : -mRecyclerView.getWidth();
+        final float animateTo = showOption ? mIsRtl ? OPTIONS_VIEW_WIDTH : -OPTIONS_VIEW_WIDTH : 0;
         final long duration;
-        if (velocityX != 0) {
-            final float deltaX = animateTo - itemView.getSwipeTranslationX();
-            duration = calculateTranslationDuration(deltaX, velocityX);
+        ObjectAnimator animator;
+        if (mIsRtl ? itemView.getSwipeTranslationX() > OPTIONS_VIEW_WIDTH
+                : itemView.getSwipeTranslationX() < -OPTIONS_VIEW_WIDTH) {
+            animator = getSwipeTranslationXAnimator(
+                    itemView, animateTo, mShowOptionsReboundInterpolator);
+            animator.setDuration(400);
         } else {
-            duration = mDefaultDismissAnimationDuration;
+            animator = getSwipeTranslationXAnimator(
+                    itemView, animateTo, mShowOrDismissOptionsInterpolator);
+            if (velocityX != 0) {
+                final float deltaX = animateTo - itemView.getSwipeTranslationX();
+                duration = calculateTranslationDuration(deltaX, velocityX);
+                animator.setDuration(duration);
+            }
         }
 
-        final ObjectAnimator animator = getSwipeTranslationXAnimator(
-                itemView, animateTo, duration, UiUtils.DEFAULT_INTERPOLATOR);
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(final Animator animation) {
@@ -371,15 +374,14 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
         onSwipeAnimationStart(itemView);
 
         final float translationX = itemView.getSwipeTranslationX();
-        final long duration;
+        final ObjectAnimator animator = getSwipeTranslationXAnimator(
+                itemView, 0f, mShowOrDismissOptionsInterpolator);
+
         if (velocityX != 0 // Has velocity.
                 && velocityX > 0 != translationX > 0) { // Right direction.
-            duration = calculateTranslationDuration(translationX, velocityX);
-        } else {
-            duration = mDefaultRestoreAnimationDuration;
+            long duration = calculateTranslationDuration(translationX, velocityX);
+            animator.setDuration(duration);
         }
-        final ObjectAnimator animator = getSwipeTranslationXAnimator(
-                itemView, 0f, duration, UiUtils.DEFAULT_INTERPOLATOR);
         animator.addListener(new AnimatorListenerAdapter() {
             @Override
             public void onAnimationEnd(final Animator animation) {
@@ -394,10 +396,10 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
      * from its current value to the value given by animateTo.
      */
     private ObjectAnimator getSwipeTranslationXAnimator(final ConversationListItemView itemView,
-                                                        final float animateTo, final long duration, final TimeInterpolator interpolator) {
+                                                        final float animateTo, final TimeInterpolator interpolator) {
         final ObjectAnimator animator =
                 ObjectAnimator.ofFloat(itemView, "swipeTranslationX", animateTo);
-        animator.setDuration(duration);
+        animator.setDuration(animateTo == 0 ? DEFAULT_RESTORE_ANIMATION_DURATION : DEFAULT_SHOW_ANIMATION_DURATION);
         animator.setInterpolator(interpolator);
         return animator;
     }
@@ -428,15 +430,15 @@ public class ConversationListSwipeHelper implements OnItemTouchListener {
         final float translationX = mListItemView.getSwipeTranslationX();
         final float width = mListItemView.getWidth();
 
-        return (velocityX >= 0) == (translationX > 0) // Right direction.
-                && Math.abs(translationX) >
-                PERCENTAGE_OF_WIDTH_TO_DISMISS * width; // Enough movement.
+        //return Math.abs(translationX) > PERCENTAGE_OF_WIDTH_TO_DISMISS * width; // Enough movement.
+        return (velocityX == 0 || (velocityX > 0) == (translationX > 0)) // Right direction.
+                && Math.abs(translationX) > PERCENTAGE_OF_WIDTH_TO_DISMISS * width; // Enough movement.
     }
 
     private long calculateTranslationDuration(final float deltaPosition, final float velocity) {
         Assert.isTrue(velocity != 0);
         final float durationInSeconds = Math.abs(deltaPosition / velocity);
-        return Math.min((int) (durationInSeconds * UNIT_SECONDS), mMaxTranslationAnimationDuration);
+        return Math.min((int) (durationInSeconds * UNIT_SECONDS), MAX_TRANSLATION_ANIMATION_DURATION);
     }
 
     private boolean hasGestureSwipeTarget() {

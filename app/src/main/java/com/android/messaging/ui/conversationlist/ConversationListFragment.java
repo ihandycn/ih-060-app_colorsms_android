@@ -116,6 +116,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     private boolean adFirstPrepared = true;
     private boolean conversationFirstUpdated = true;
     private boolean isFirstOnResume = true;
+    private boolean mHasWallpaper;
+    private ConversationListSwipeHelper mSwipeHelper;
 
     private AcbNativeAd mNativeAd;
     private AcbNativeAdLoader mNativeAdLoader;
@@ -253,8 +255,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         Drawable bgDrawable = customDrawable != null ? customDrawable : WallpaperDrawables.getConversationListWallpaperDrawable();
         getActivity().getWindow().getDecorView().setBackground(null);
         if (bgDrawable == null) {
+            mHasWallpaper = false;
             getActivity().getWindow().getDecorView().setBackgroundColor(Color.WHITE);
         } else {
+            mHasWallpaper = true;
             conversationListBg.setImageDrawable(bgDrawable);
         }
 
@@ -330,7 +334,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             }
         });
 
-        mRecyclerView.addOnItemTouchListener(new ConversationListSwipeHelper(mRecyclerView));
+        mSwipeHelper = new ConversationListSwipeHelper(mRecyclerView);
+        mRecyclerView.addOnItemTouchListener(mSwipeHelper);
 
         if (savedInstanceState != null) {
             mListState = savedInstanceState.getParcelable(SAVED_INSTANCE_STATE_LIST_VIEW_STATE_KEY);
@@ -790,4 +795,13 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         return mArchiveMode;
     }
 
+    @Override
+    public boolean hasWallpaper() {
+        return mHasWallpaper;
+    }
+
+    @Override
+    public boolean animateDismissOption() {
+        return mSwipeHelper.animateDismissOtherItemOptions(null);
+    }
 }

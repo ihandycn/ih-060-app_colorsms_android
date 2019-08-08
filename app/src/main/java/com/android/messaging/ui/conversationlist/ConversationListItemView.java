@@ -15,22 +15,27 @@
  */
 package com.android.messaging.ui.conversationlist;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.LayoutTransition;
+import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.graphics.drawable.ClipDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.annotation.Keep;
+import android.support.v4.view.ViewCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLayoutChangeListener;
@@ -47,6 +52,7 @@ import com.android.messaging.datamodel.action.UpdateConversationArchiveStatusAct
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.font.FontUtils;
+import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.ContactIconView;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SnackBar;
@@ -63,7 +69,6 @@ import com.android.messaging.util.ContentType;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
 import com.ihs.app.framework.HSApplication;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -76,16 +81,14 @@ import hugo.weaving.DebugLog;
  */
 public class ConversationListItemView extends FrameLayout implements OnClickListener,
         OnLongClickListener, OnLayoutChangeListener {
+    private static final int CROSS_SWIPE_ITEM_WIDTH = Dimensions.pxFromDp(78.7f);
+    private static final int PHONE_WIDTH = Dimensions.getPhoneWidth(HSApplication.getContext());
+
     static final int SNIPPET_LINE_COUNT = 1;
     static final int ERROR_MESSAGE_LINE_COUNT = 1;
-    private int mConversationNameColor;
-    private int mSnippetColor;
-    private int mTimestampColor;
-    private static String sPlusOneString;
-    private static String sPlusNString;
-    private boolean isLastMutiMode = false;
 
     public interface HostInterface {
+
         boolean isConversationSelected(final String conversationId);
 
         void onConversationClicked(final ConversationListItemData conversationListItemData,
@@ -98,7 +101,20 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         boolean isSelectionMode();
 
         boolean isArchived();
+
+        boolean hasWallpaper();
+
+        boolean animateDismissOption();
+
     }
+
+    private int mConversationNameColor;
+    private int mSnippetColor;
+    private int mTimestampColor;
+    private static String sPlusOneString;
+    private static String sPlusNString;
+    private boolean isLastMutiMode = false;
+    private boolean mIsRtl = Dimensions.isRtl();
 
     private ConversationListItemData mData;
 
@@ -110,9 +126,10 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private ContactIconView mContactIconView;
     private ImageView mContactBackground;
 
-    private View mCrossSwipeArchiveLeftContainer;
-    private View mCrossSwipeArchiveRightContainer;
-    private View mCrossSwipeBg;
+    private View mCrossSwipeArchiveContainer;
+    private View mCrossSwipeDeleteContainer;
+    private View mCrossSwipeDivideLine;
+    private View mCrossSwipeArchiveContent;
     private HostInterface mHostInterface;
     private TextView mUnreadMessagesCountView;
 
@@ -128,6 +145,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     protected void onFinishInflate() {
         super.onFinishInflate();
         mSwipeableContainer = findViewById(R.id.conversation_item_swipeable_container);
+
         mConversationNameView = findViewById(R.id.conversation_name);
         FrameLayout.LayoutParams params = (LayoutParams) mConversationNameView.getLayoutParams();
         params.width = Dimensions.getPhoneWidth(HSApplication.getContext())
@@ -143,11 +161,13 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mTimestampTextView = findViewById(R.id.conversation_timestamp);
         mContactIconView = findViewById(R.id.conversation_icon);
 
-        mCrossSwipeArchiveLeftContainer = findViewById(R.id.cross_swipe_archive_left_container);
-        mCrossSwipeArchiveRightContainer = findViewById(R.id.cross_swipe_archive_right_container);
+        mCrossSwipeArchiveContainer = findViewById(R.id.conversation_list_item_archive_container);
+        mCrossSwipeDeleteContainer = findViewById(R.id.conversation_list_item_delete_container);
+        mCrossSwipeDivideLine = findViewById(R.id.conversation_list_swipe_divide_line);
+        mCrossSwipeArchiveContent = findViewById(R.id.cross_swipe_archive_left_container);
+        mCrossSwipeArchiveContainer.setOnClickListener(v -> onArchiveClick());
 
-        mCrossSwipeBg = findViewById(R.id.cross_swipe_archive_background);
-        mCrossSwipeBg.setBackgroundColor(PrimaryColors.getPrimaryColor());
+        mCrossSwipeDeleteContainer.setOnClickListener(v -> onDeleteClick());
 
         mUnreadMessagesCountView = findViewById(R.id.conversation_unread_messages_count);
 
@@ -284,22 +304,34 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
 
         if (mIsFirstBind) {
             if (!mHostInterface.isArchived()) {
-                ((ImageView) findViewById(R.id.cross_swipe_archive_icon_left))
+                ((ImageView) findViewById(R.id.cross_swipe_archive_icon))
                         .setImageDrawable(ConversationDrawables.get().getArchiveSwipeDrawable());
-                ((ImageView) findViewById(R.id.cross_swipe_archive_icon_right))
-                        .setImageDrawable(ConversationDrawables.get().getArchiveSwipeDrawable());
-                ((TextView) findViewById(R.id.cross_swipe_archive_text_left)).setText(R.string.action_archive);
-                ((TextView) findViewById(R.id.cross_swipe_archive_text_right)).setText(R.string.action_archive);
+                ((TextView) findViewById(R.id.cross_swipe_archive_text)).setText(R.string.action_archive);
             } else {
-                ((ImageView) findViewById(R.id.cross_swipe_archive_icon_left))
+                ((ImageView) findViewById(R.id.cross_swipe_archive_icon))
                         .setImageDrawable(ConversationDrawables.get().getUnarchiveSwipeDrawable());
-                ((ImageView) findViewById(R.id.cross_swipe_archive_icon_right))
-                        .setImageDrawable(ConversationDrawables.get().getUnarchiveSwipeDrawable());
-                ((TextView) findViewById(R.id.cross_swipe_archive_text_left)).setText(R.string.action_unarchive);
-                ((TextView) findViewById(R.id.cross_swipe_archive_text_right)).setText(R.string.action_unarchive);
+                ((TextView) findViewById(R.id.cross_swipe_archive_text)).setText(R.string.action_unarchive);
+            }
+            if (mHostInterface.hasWallpaper()) {
+                mCrossSwipeDivideLine.setVisibility(VISIBLE);
+                //opacity 80%
+                int bgColor = PrimaryColors.getPrimaryColor() & 0x00ffffff | 0xCD000000;
+                Drawable drawable = BackgroundDrawables.createBackgroundDrawable(bgColor,
+                        HSApplication.getContext().getResources().getColor(com.superapps.R.color.ripples_ripple_color),
+                        0, true, true);
+                mCrossSwipeArchiveContainer.setBackground(new ClipDrawable(drawable, Gravity.START, ClipDrawable.HORIZONTAL));
+                //mCrossSwipeArchiveContainer.setBackgroundColor(bgColor);
+                mCrossSwipeDeleteContainer.setBackground(BackgroundDrawables.createBackgroundDrawable(bgColor,
+                        HSApplication.getContext().getResources().getColor(com.superapps.R.color.ripples_ripple_color),
+                        0, true, true));
+            } else {
+                mCrossSwipeDivideLine.setVisibility(GONE);
             }
             mIsFirstBind = false;
         }
+
+        mCrossSwipeArchiveContainer.setTranslationX(PHONE_WIDTH);
+        mCrossSwipeDeleteContainer.setTranslationX(PHONE_WIDTH);
 
         final Resources resources = getContext().getResources();
 
@@ -439,64 +471,105 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         return mSwipeableContainer.getTranslationX();
     }
 
+    @Keep
     @VisibleForAnimation
     public void setSwipeTranslationX(final float translationX) {
-        mSwipeableContainer.setTranslationX(translationX);
-        if (translationX == 0) {
-            mCrossSwipeArchiveLeftContainer.setVisibility(GONE);
-            mCrossSwipeArchiveRightContainer.setVisibility(GONE);
-            mCrossSwipeBg.setVisibility(INVISIBLE);
-            mCrossSwipeBg.setTranslationX(-getWidth());
-
-            //mSwipeableContainer.setBackgroundResource(R.drawable.conversation_list_item_bg);
-        } else {
-            int padding = getResources().getDimensionPixelSize(R.dimen.conversation_item_view_swipe_padding);
-            if (translationX > 0) {
-                mCrossSwipeBg.setVisibility(VISIBLE);
-                mCrossSwipeBg.setTranslationX(translationX - getWidth());
-                if (translationX > padding) {
-                    mCrossSwipeArchiveLeftContainer.setVisibility(VISIBLE);
-                    Rect rect = new Rect(0, 0, (int) translationX - padding,
-                            mCrossSwipeArchiveLeftContainer.getHeight());
-                    mCrossSwipeArchiveLeftContainer.setClipBounds(rect);
-                } else {
-                    mCrossSwipeArchiveLeftContainer.setVisibility(GONE);
-                }
-
-                mCrossSwipeArchiveRightContainer.setVisibility(GONE);
+        if (mIsRtl) {
+            if (translationX <= 0) {
+                mSwipeableContainer.setTranslationX(0);
+                mCrossSwipeArchiveContainer.setTranslationX(-getWidth());
+                mCrossSwipeDeleteContainer.setTranslationX(-getWidth());
+                mCrossSwipeDivideLine.setVisibility(GONE);
             } else {
-                mCrossSwipeBg.setVisibility(VISIBLE);
-                mCrossSwipeBg.setTranslationX(getWidth() + translationX);
+                if (translationX < CROSS_SWIPE_ITEM_WIDTH * 2) {
+                    mSwipeableContainer.setTranslationX(translationX);
+                    mCrossSwipeArchiveContainer.setTranslationX(-getWidth() + translationX);
+                    mCrossSwipeArchiveContainer.getBackground().setLevel((int) (10000 * translationX / 2.0f / PHONE_WIDTH));
 
-                if (-translationX > padding) {
-                    mCrossSwipeArchiveRightContainer.setVisibility(VISIBLE);
+                    Rect rect = new Rect();
+                    mCrossSwipeArchiveContent.getLocalVisibleRect(rect);
+                    rect.left = (int) (rect.right - translationX / 2);
+                    mCrossSwipeArchiveContent.setClipBounds(rect);
 
-                    Rect rect = new Rect(
-                            (int) (mCrossSwipeArchiveRightContainer.getWidth() + padding + translationX),
-                            0,
-                            mCrossSwipeArchiveRightContainer.getWidth(),
-                            mCrossSwipeArchiveRightContainer.getHeight());
-
-                    mCrossSwipeArchiveRightContainer.setClipBounds(rect);
+                    mCrossSwipeDeleteContainer.setTranslationX(-getWidth() + translationX / 2);
+                    mCrossSwipeDivideLine.setVisibility(GONE);
                 } else {
-                    mCrossSwipeArchiveRightContainer.setVisibility(GONE);
-                }
+                    int distance = (int) ((translationX - CROSS_SWIPE_ITEM_WIDTH * 2) * 0.15f + CROSS_SWIPE_ITEM_WIDTH * 2);
+                    mSwipeableContainer.setTranslationX(distance);
 
-                mCrossSwipeArchiveLeftContainer.setVisibility(GONE);
+                    Rect rect = new Rect();
+                    mCrossSwipeArchiveContent.getLocalVisibleRect(rect);
+                    rect.left = rect.right - CROSS_SWIPE_ITEM_WIDTH;
+                    mCrossSwipeArchiveContent.setClipBounds(rect);
+
+                    mCrossSwipeArchiveContainer.setTranslationX(-getWidth() + distance);
+                    mCrossSwipeArchiveContainer.getBackground().setLevel(-(int) (10000 * distance / 2.0f / PHONE_WIDTH));
+                    mCrossSwipeDeleteContainer.setTranslationX(-getWidth() + distance / 2);
+                    if (mHostInterface != null && mHostInterface.hasWallpaper()) {
+                        mCrossSwipeDivideLine.setVisibility(VISIBLE);
+                    }
+                }
+            }
+        } else {
+            if (translationX >= 0) {
+                mSwipeableContainer.setTranslationX(0);
+                mCrossSwipeArchiveContainer.setTranslationX(getWidth());
+                mCrossSwipeDeleteContainer.setTranslationX(getWidth());
+                mCrossSwipeDivideLine.setVisibility(GONE);
+            } else {
+                if (translationX > -CROSS_SWIPE_ITEM_WIDTH * 2) {
+                    mSwipeableContainer.setTranslationX(translationX);
+                    mCrossSwipeArchiveContainer.setTranslationX(getWidth() + translationX);
+                    mCrossSwipeArchiveContainer.getBackground().setLevel(-(int) (10000 * translationX / 2.0f / PHONE_WIDTH));
+
+                    Rect rect = new Rect();
+                    mCrossSwipeArchiveContent.getLocalVisibleRect(rect);
+                    rect.right = (int) (-translationX / 2);
+                    mCrossSwipeArchiveContent.setClipBounds(rect);
+
+                    mCrossSwipeDeleteContainer.setTranslationX(getWidth() + translationX / 2);
+                    mCrossSwipeDivideLine.setVisibility(GONE);
+                } else {
+                    int distance = (int) ((translationX + CROSS_SWIPE_ITEM_WIDTH * 2) * 0.15f - CROSS_SWIPE_ITEM_WIDTH * 2);
+                    mSwipeableContainer.setTranslationX(distance);
+                    mCrossSwipeArchiveContainer.setTranslationX(getWidth() + distance);
+                    mCrossSwipeArchiveContainer.getBackground().setLevel(-(int) (10000 * distance / 2.0f / PHONE_WIDTH));
+
+                    Rect rect = new Rect();
+                    mCrossSwipeArchiveContent.getLocalVisibleRect(rect);
+                    rect.right = CROSS_SWIPE_ITEM_WIDTH;
+                    mCrossSwipeArchiveContent.setClipBounds(rect);
+
+                    mCrossSwipeDeleteContainer.setTranslationX(getWidth() + distance / 2);
+                    if (mHostInterface != null && mHostInterface.hasWallpaper()) {
+                        mCrossSwipeDivideLine.setVisibility(VISIBLE);
+                    }
+                }
             }
         }
     }
 
-    public void onSwipeComplete(boolean isLeft) {
+    public void onDeleteClick() {
+        animateDismissOptions();
+        BugleAnalytics.logEvent("SMS_Messages_Slide_Left_Click", true, "type", "delete");
+        new BaseAlertDialog.Builder(getContext())
+                .setTitle(getResources().getQuantityString(
+                        R.plurals.delete_conversations_confirmation_dialog_title, 1))
+                .setPositiveButton(R.string.delete_conversation_confirmation_button,
+                        (dialog, button) -> mData.deleteConversation())
+                .setNegativeButton(R.string.delete_conversation_decline_button, null)
+                .show();
+    }
+
+    public void onArchiveClick() {
+        BugleAnalytics.logEvent("SMS_Messages_Slide_Left_Click", true, "type", "archive");
         final String conversationId = mData.getConversationId();
         if (mHostInterface.isArchived()) {
             UpdateConversationArchiveStatusAction.unarchiveConversation(conversationId);
-            BugleAnalytics.logEvent("SMS_Messages_Unarchive", true, "from",
-                    isLeft ? "slide_left" : "slide_right");
+            BugleAnalytics.logEvent("SMS_Messages_Unarchive", true, "from", "slide");
         } else {
             UpdateConversationArchiveStatusAction.archiveConversation(conversationId);
-            BugleAnalytics.logEvent("SMS_Messages_Archive", true, "from",
-                    isLeft ? "slide_left" : "slide_right");
+            BugleAnalytics.logEvent("SMS_Messages_Archive", true, "from", "slide");
         }
 
         final int textId = !mHostInterface.isArchived() ? R.string.archived_toast_message : R.string.unarchived_toast_message;
@@ -578,11 +651,44 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     private boolean processClick(final View v, final boolean isLongClick) {
         Assert.notNull(mData.getName());
 
+        if (getSwipeTranslationX() != 0) {
+            animateDismissOptions();
+            return true;
+        }
+
+        if (mHostInterface != null && mHostInterface.animateDismissOption()) {
+            return true;
+        }
+
         if (mHostInterface != null) {
             mHostInterface.onConversationClicked(mData, isLongClick, this);
             return true;
         }
         return false;
+    }
+
+    private void animateDismissOptions() {
+        setAnimating(true);
+        ViewCompat.setHasTransientState(this, true);
+        setLayerType(View.LAYER_TYPE_HARDWARE, null);
+        if (getWindowToken() != null) {
+            buildLayer();
+        }
+
+        final long duration = getResources().getInteger(R.integer.swipe_duration_ms);
+        ObjectAnimator animator =
+                ObjectAnimator.ofFloat(this, "swipeTranslationX", 0);
+        animator.setDuration(duration);
+        animator.setInterpolator(UiUtils.DEFAULT_INTERPOLATOR);
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(final Animator animation) {
+                setAnimating(false);
+                ViewCompat.setHasTransientState(ConversationListItemView.this, false);
+                setLayerType(View.LAYER_TYPE_NONE, null);
+            }
+        });
+        animator.start();
     }
 
     private String getSnippetText() {
