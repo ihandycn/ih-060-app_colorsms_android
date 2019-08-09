@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -75,8 +76,10 @@ public class SetDefaultNotification {
         builder.setContent(createRemoteView());
         builder.setContentIntent(pendingIntent);
         builder.setDefaults(NotificationCompat.FLAG_ONLY_ALERT_ONCE);
-        builder.setPriority(Notification.PRIORITY_HIGH);
-        builder.setVibrate(new long[]{0});
+        if(Build.VERSION.SDK_INT < 24) {
+            builder.setPriority(Notification.PRIORITY_HIGH);
+            builder.setVibrate(new long[]{0});
+        }
         Notification notification = builder.build();
 
         Notifications.notifySafely(PendingIntentConstants.SMS_NOTIFICATION_ID_SET_DEFAULT, notification, notificationChannel);

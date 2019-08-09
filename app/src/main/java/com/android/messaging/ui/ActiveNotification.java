@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -163,8 +164,10 @@ public class ActiveNotification {
         mBuilder.setSmallIcon(R.drawable.ic_sms_light);
         mBuilder.setContent(createRemoteView());
         mBuilder.setOnlyAlertOnce(true);
-        mBuilder.setPriority(Notification.PRIORITY_HIGH);
-        mBuilder.setVibrate(new long[]{0});
+        if(Build.VERSION.SDK_INT < 24) {
+            mBuilder.setPriority(Notification.PRIORITY_HIGH);
+            mBuilder.setVibrate(new long[]{0});
+        }
 
         Intent i = new Intent(mContext, WelcomeSetAsDefaultActivity.class);
         i.putExtra(WelcomeSetAsDefaultActivity.EXTRA_FROM_PUSH_START, true);
