@@ -25,7 +25,6 @@ import android.text.TextUtils;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.media.AvatarRequestDescriptor;
-import com.android.messaging.datamodel.media.BugleNotificationChannelUtil;
 import com.android.messaging.datamodel.media.ImageResource;
 import com.android.messaging.datamodel.media.MediaRequest;
 import com.android.messaging.datamodel.media.MediaResourceManager;
@@ -221,6 +220,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
                     HSApplication.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
             if (notifyMgr != null) {
                 try {
+                    // create channel
                     final Uri ringtoneUri = RingtoneUtil.getNotificationRingtoneUri(null);
                     String channelId = null;
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -241,13 +241,15 @@ public class NotificationServiceV18 extends NotificationListenerService {
                     }
 
                     StatusBarNotification[] allNotifications = getActiveNotifications();
+                    List<String> summaryNotificationMessageTitle = new ArrayList<>();
+                    List<String> summaryNotificationMessageText = new ArrayList<>();
+                    BlockedNotificationInfo notificationInfo;
                     boolean isNotificationIdExisted = false;
                     int notificationExistId = 0;
                     int notificationIdNumber = 0;
-                    BlockedNotificationInfo notificationInfo;
                     CharSequence[] textLines = null;
-                    List<String> summaryNotificationMessageTitle = new ArrayList<>();
-                    List<String> summaryNotificationMessageText = new ArrayList<>();
+
+                    // find the existed notification
                     for (StatusBarNotification statusBarNotification : allNotifications) {
                         String notificationPackageName = statusBarNotification.getPackageName();
                         HSLog.d("NotificationListener", "notificationPackageName = " + notificationPackageName);
@@ -271,7 +273,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
                     }
                     HSLog.d("NotificationListener", "notificationIdNumber = " + notificationIdNumber);
                     HSLog.d("NotificationListener", "isNotificationIdExisted = " + isNotificationIdExisted);
-                    if (isNotificationIdExisted){
+                    if (isNotificationIdExisted) {
                         notifyMgr.notify(notificationExistId, notification);
                         if (notificationIdNumber >= 3) {
                             PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = notificationIdNumber - 1;
@@ -299,14 +301,14 @@ public class NotificationServiceV18 extends NotificationListenerService {
     }
 
     private Notification createSummaryNotification(String channelId, List<String> messageTitle, List<String> messageText) {
-        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-        for (int i = 0; i < messageTitle.size(); i++){
-            inboxStyle.addLine(messageTitle.get(i) + " " + messageText.get(i));
-        }
+        String groupKey = "groupkey";
         Intent intent = new Intent(this, ConversationListActivity.class);
         intent.putExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, true);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        String groupKey = "groupkey";
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+        for (int i = 0; i < messageTitle.size(); i++) {
+            inboxStyle.addLine(messageTitle.get(i) + " " + messageText.get(i));
+        }
         return new NotificationCompat.Builder(this, channelId)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.ic_sms_light)
@@ -319,7 +321,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
     }
 
     private Notification createNotification(String channelId, String messageTitle, String messageText, CharSequence[] textLines) {
-        if (messageTitle.contains("new messages")){
+        if (messageTitle.contains("new messages")) {
             return null;
         }
         final String[] conversationId = new String[1];
@@ -336,9 +338,15 @@ public class NotificationServiceV18 extends NotificationListenerService {
             }
             cursor.close();
         }
+
         HSLog.d("NotificationListener", "messageTitle = " + messageTitle);
         HSLog.d("NotificationListener", "normalizedMessageTitle = " + normalizedMessageTitle);
         HSLog.d("NotificationListener", "displayMessageTitle = " + displayMessageTitle);
+
+        //group
+        String groupKey = "groupkey";
+
+        //pending intent
         Intent intent;
         PendingIntent pendingIntent;
         if (TextUtils.isEmpty(conversationId[0])) {
@@ -352,15 +360,19 @@ public class NotificationServiceV18 extends NotificationListenerService {
                     .getPendingIntentForConversationActivity(HSApplication.getContext(), conversationId[0], null /* draft */);
         }
 
+        //defaults
         int defaults = Notification.DEFAULT_LIGHTS;
         if (shouldVibrate()) {
             defaults |= Notification.DEFAULT_VIBRATE;
         }
 
+        //action
         NotificationCompat.Action action =
                 new NotificationCompat.Action.Builder(R.drawable.ic_wear_reply,
                         HSApplication.getContext().getString(R.string.notification_reply_via_sms), pendingIntent)
                         .build();
+
+        //large icon
         final Uri avatarUri = AvatarUriUtil.createAvatarUri(
                 null, null, null, null);
         AvatarRequestDescriptor descriptor = new AvatarRequestDescriptor(avatarUri,
@@ -371,7 +383,8 @@ public class NotificationServiceV18 extends NotificationListenerService {
         ImageResource avatarImage = MediaResourceManager.get().requestMediaResourceSync(imageRequest);
         Bitmap avatarBitmap = Bitmap.createBitmap(avatarImage.getBitmap());
         avatarImage.release();
-        String groupKey = "groupkey";
+
+        //style
         NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
         inboxStyle.setBigContentTitle(messageTitle);
         if (textLines != null && textLines.length > 0) {
