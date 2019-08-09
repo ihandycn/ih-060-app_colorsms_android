@@ -23,6 +23,7 @@ public class SetDefaultNotification {
 
     private Context mContext;
     public static final String TYPE = "set_default";
+    public static final int REQUEST_CODE = 3;
 
     public SetDefaultNotification(Context context) {
         mContext = context;
@@ -31,7 +32,7 @@ public class SetDefaultNotification {
     private RemoteViews createRemoteView() {
         RemoteViews view = new RemoteViews(mContext.getPackageName(), R.layout.notification_set_default_push);
         Resources resources = mContext.getResources();
-        view.setInt(R.id.container, "setBackgroundResource", R.drawable.notification_set_default_bg);
+        view.setImageViewResource(R.id.background, R.drawable.notification_set_default_bg);
 
         SpannableString sp = new SpannableString(resources.getString(R.string.set_default_push_title));
 //        TypefaceSpan typefaceSpan = new TypefaceSpan(Typeface.createFromAsset(mContext.getAssets(), "fonts/Custom-Bold.ttf"));
@@ -49,6 +50,9 @@ public class SetDefaultNotification {
     public void sendNotification() {
         SetDefaultPushAutopilotUtils.logPushSetDefaultShow();
 
+        // cancel exist same notification
+        Notifications.cancelSafely(PendingIntentConstants.SMS_NOTIFICATION_ID_SET_DEFAULT);
+
         NotificationCompat.Builder builder;
         NotificationChannel notificationChannel = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -60,11 +64,11 @@ public class SetDefaultNotification {
 
         Intent i = new Intent(mContext, WelcomeSetAsDefaultActivity.class);
         i.putExtra(WelcomeSetAsDefaultActivity.EXTRA_FROM_PUSH_START, true);
-        i.putExtra(ActiveNotification.EXTRA_CUR_TYPE, SetDefaultNotification.TYPE);
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, i, PendingIntent.FLAG_ONE_SHOT);
+        i.putExtra(WelcomeSetAsDefaultActivity.EXTRA_FROM_PUSH_TYPE, SetDefaultNotification.TYPE);
+        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, PendingIntentConstants.SMS_NOTIFICATION_ID_SET_DEFAULT, i, PendingIntent.FLAG_ONE_SHOT);
 
         builder.setAutoCancel(true);
-        builder.setSmallIcon(R.mipmap.ic_launcher);
+        builder.setSmallIcon(R.drawable.ic_sms_light);
         builder.setContentTitle(mContext.getResources().getString(R.string.set_default_push_title));
         builder.setContentText(mContext.getResources().getString(R.string.set_default_push_description));
         builder.setOnlyAlertOnce(true);

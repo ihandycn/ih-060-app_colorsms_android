@@ -21,6 +21,7 @@ import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.SetDefaultPushAutopilotUtils;
 import com.ihs.commons.config.HSConfig;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
@@ -79,6 +80,7 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
             if (mIsFromPush) {
                 mPushType = getIntent().getStringExtra(EXTRA_FROM_PUSH_TYPE);
                 if (mPushType != null) {
+                    HSLog.i("test_test", "push_click: " + mPushType);
                     if (mPushType.equals(SetDefaultNotification.TYPE)) {
                         SetDefaultPushAutopilotUtils.logPushSetDefaultClick();
                     } else {
@@ -142,7 +144,6 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
             if (DefaultSMSUtils.isDefaultSmsApp(true)) {
                 if (mIsFromPush) {
                     if (mPushType.equals(SetDefaultNotification.TYPE)) {
-                        // set_default_notification has no push type
                         SetDefaultPushAutopilotUtils.logPushSetDefaultSuccess();
                     } else {
                         ActivePushAutopilotUtils.logPushSuccess();

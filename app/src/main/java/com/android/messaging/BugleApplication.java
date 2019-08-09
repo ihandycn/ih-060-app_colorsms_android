@@ -486,8 +486,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
                     if (notification.getEnablePush()) {
                         notification.sendNotification();
                     }
-                } else  //in 3 days, after 9:00, show popup window when unlock phone in most 3 times.
-                {
+                } else { //in 3 days, after 9:00, show popup window when unlock phone in most 3 times.
                     SetAsDefaultGuideActivity.startActivity(getApplicationContext(), SetAsDefaultGuideActivity.USER_PRESENT);
                 }
 

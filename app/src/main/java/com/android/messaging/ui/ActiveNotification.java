@@ -27,7 +27,6 @@ public class ActiveNotification {
 
     private final int PUSH_TYPE_COUNT = 3;
     private final String PREF_SET_DEFAULT_CUR_TYPE = "pref_set_default_cur_type";
-    public static final String EXTRA_CUR_TYPE = "cur_type";
 
     public static final String TYPE_THEME = "theme";
     public static final String TYPE_EMOJIS = "emojis";
@@ -53,7 +52,7 @@ public class ActiveNotification {
     private RemoteViews getViewTypeTheme() {
         RemoteViews view = new RemoteViews(HSApplication.getContext().getPackageName(), R.layout.notification_set_default_push);
         Resources resources = mContext.getResources();
-        view.setInt(R.id.container, "setBackgroundResource", R.drawable.notification_active_push_theme);
+        view.setImageViewResource(R.id.background, R.drawable.notification_active_push_theme);
 
         SpannableString sp = new SpannableString(resources.getString(R.string.active_push_title_theme));
 //        TypefaceSpan typefaceSpan = new TypefaceSpan(Typeface.createFromAsset(mContext.getAssets(), "fonts/Custom-Bold.ttf"));
@@ -71,7 +70,7 @@ public class ActiveNotification {
     private RemoteViews getViewTypeEmojis() {
         RemoteViews view = new RemoteViews(HSApplication.getContext().getPackageName(), R.layout.notification_set_default_push_text_shadow);
         Resources resources = mContext.getResources();
-        view.setInt(R.id.container, "setBackgroundResource", R.drawable.notification_active_push_emojis);
+        view.setImageViewResource(R.id.background, R.drawable.notification_active_push_emojis);
 
         SpannableString sp = new SpannableString(resources.getString(R.string.active_push_title_emojis));
 //        TypefaceSpan typefaceSpan = new TypefaceSpan(Typeface.createFromAsset(mContext.getAssets(), "fonts/Custom-Bold.ttf"));
@@ -90,7 +89,7 @@ public class ActiveNotification {
     private RemoteViews getViewTypeSendMessage() {
         RemoteViews view = new RemoteViews(HSApplication.getContext().getPackageName(), R.layout.notification_set_default_push);
         Resources resources = mContext.getResources();
-        view.setInt(R.id.container, "setBackgroundResource", R.drawable.notification_active_push_sms);
+        view.setImageViewResource(R.id.background, R.drawable.notification_active_push_sms);
 
         SpannableString sp = new SpannableString(resources.getString(R.string.active_push_title_send_message));
 //        TypefaceSpan typefaceSpan = new TypefaceSpan(Typeface.createFromAsset(mContext.getAssets(), "fonts/Custom-Bold.ttf"));
@@ -149,6 +148,9 @@ public class ActiveNotification {
     public void sendNotification() {
         ActivePushAutopilotUtils.logPushShow();
 
+        // cancel exist same notification
+        Notifications.cancelSafely(PendingIntentConstants.SMS_NOTIFICATION_ID_ACTIVE_PUSH);
+
         NotificationChannel notificationChannel = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             notificationChannel = BugleNotificationChannelUtil.getSetDefaultNotificationChannel();
@@ -158,7 +160,7 @@ public class ActiveNotification {
         }
 
         mBuilder.setAutoCancel(true);
-        mBuilder.setSmallIcon(R.mipmap.ic_launcher);
+        mBuilder.setSmallIcon(R.drawable.ic_sms_light);
         mBuilder.setContent(createRemoteView());
         mBuilder.setOnlyAlertOnce(true);
 
@@ -167,7 +169,7 @@ public class ActiveNotification {
         if (mCurType != null) {
             i.putExtra(WelcomeSetAsDefaultActivity.EXTRA_FROM_PUSH_TYPE, mCurType);
         }
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0, i, PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, PendingIntentConstants.SMS_NOTIFICATION_ID_ACTIVE_PUSH, i, PendingIntent.FLAG_ONE_SHOT);
         mBuilder.setContentIntent(pendingIntent);
         mBuilder.setDefaults(NotificationCompat.FLAG_ONLY_ALERT_ONCE);
 
