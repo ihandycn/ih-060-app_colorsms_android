@@ -162,7 +162,7 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
                 }
             });
             UiUtils.showDialogFragment(SettingActivity.this, dialog);
-            BugleAnalytics.logEvent("SMS_Settings_Vibrate_Click");
+            BugleAnalytics.logEvent("SMS_Settings_Vibrate_Click", true);
         });
 
         mLedColorView = findViewById(R.id.setting_item_led_color);
@@ -182,7 +182,7 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
                 }
             });
             UiUtils.showDialogFragment(SettingActivity.this, dialog);
-            BugleAnalytics.logEvent("SMS_Settings_LEDColor_Click");
+            BugleAnalytics.logEvent("SMS_Settings_LEDColor_Click", true);
         });
 
         //send delay

@@ -159,9 +159,9 @@ public class SelectVibrateModeDialog extends BaseDialogFragment {
             vibrate(VibrateSettings.getViratePattern(changedMode));
 
             if (TextUtils.isEmpty(mConversationId)) {
-                BugleAnalytics.logEvent("SMS_Settings_Vibrate_Set", "type", VibrateSettings.getVibrateDescription(""));
+                BugleAnalytics.logEvent("SMS_Settings_Vibrate_Set", true, "type", VibrateSettings.getVibrateDescription(""));
             } else {
-                BugleAnalytics.logEvent("SMS_Detailspage_Settings_Vibrate_Set", "type", VibrateSettings.getVibrateDescription(mConversationId));
+                BugleAnalytics.logEvent("SMS_Detailspage_Settings_Vibrate_Set", true, "type", VibrateSettings.getVibrateDescription(mConversationId));
             }
         });
 

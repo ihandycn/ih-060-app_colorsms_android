@@ -76,17 +76,17 @@ public class LedSettings {
             case LedSettings.NONE:
                 return 0xffffffff;
             case COLOR_RED:
-                return 0xffff2929;
+                return 0xffff0000;
             case COLOR_YELLOW:
-                return 0xffffdc0d;
+                return 0xffffff00;
             case COLOR_GREEN:
-                return 0xff5ff91e;
+                return 0xff00ff00;
             case COLOR_CYAN:
-                return 0xff22e7fc;
+                return 0xff00ffff;
             case COLOR_BLUE:
-                return 0xff1f7aff;
+                return 0xff0000ff;
             case COLOR_PURPLE:
-                return 0xff6f24ff;
+                return 0xffff00ff;
             case COLOR_WHITE:
             default:
                 return 0xffffffff;

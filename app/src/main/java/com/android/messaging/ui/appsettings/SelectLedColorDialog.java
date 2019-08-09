@@ -160,9 +160,9 @@ public class SelectLedColorDialog extends BaseDialogFragment {
             LedSettings.setLedColor(mConversationId, changedMode);
 
             if (TextUtils.isEmpty(mConversationId)) {
-                BugleAnalytics.logEvent("SMS_Settings_LEDColor_Set", "type", LedSettings.getLedDescription(""));
+                BugleAnalytics.logEvent("SMS_Settings_LEDColor_Set", true, "type", LedSettings.getLedDescription(""));
             } else {
-                BugleAnalytics.logEvent("SMS_Detailspage_Settings_LEDColor_Set", "type", LedSettings.getLedDescription(""));
+                BugleAnalytics.logEvent("SMS_Detailspage_Settings_LEDColor_Set", true,"type", LedSettings.getLedDescription(mConversationId));
             }
         });
 
