@@ -1001,7 +1001,14 @@ public class ConversationListActivity extends AbstractConversationListActivity
         findViewById(R.id.selection_mode_bg).setVisibility(View.VISIBLE);
         BugleAnalytics.logEvent("SMS_EditMode_Show", true);
         BugleFirebaseAnalytics.logEvent("SMS_EditMode_Show");
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         return super.startActionMode(callback);
+    }
+
+    @Override
+    public void dismissActionMode() {
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+        super.dismissActionMode();
     }
 
     void openDrawer() {
