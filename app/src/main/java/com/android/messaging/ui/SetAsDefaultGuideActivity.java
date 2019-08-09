@@ -35,6 +35,7 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
 
     public static void startActivity(Context context, @DialogType int type) {
         Intent intent = new Intent(context, SetAsDefaultGuideActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra("from", type);
         Navigations.startActivitySafely(context, intent);
         if (context instanceof Activity) {
