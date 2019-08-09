@@ -40,6 +40,7 @@ import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.RingtoneUtil;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
+import com.superapps.util.Notifications;
 import com.superapps.util.ReflectionHelper;
 import com.superapps.util.Threads;
 
@@ -87,6 +88,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
             try {
                 cancelNotification(notificationInfo.key);
                 HSLog.d("NotificationListener", "onNotificationPosted(), cancelNotification(notificationInfo.key);");
+                HSLog.d("NotificationListener", "onNotificationPosted(), notificationInfo.key = " + notificationInfo.key);
             } catch (SecurityException ignored) {
                 HSLog.d("NotificationListener", "catch (SecurityException ignored) ");
             }
@@ -125,10 +127,17 @@ public class NotificationServiceV18 extends NotificationListenerService {
         StatusBarNotification[] notifications = null;
         try {
             notifications = super.getActiveNotifications();
+            HSLog.d("NotificationListener", "getActiveNotifications Test 1");
+            for (StatusBarNotification statusBarNotification : notifications) {
+                String notificationPackageName = statusBarNotification.getPackageName();
+                HSLog.d("NotificationListener", "Test 1 notificationPackageName = " + notificationPackageName);
+            }
         } catch (Exception e) {
+            HSLog.d("NotificationListener", "getActiveNotifications Test 2");
             e.printStackTrace();
         }
         if (notifications == null) {
+            HSLog.d("NotificationListener", "getActiveNotifications Test 3");
             notifications = new StatusBarNotification[0];
         }
         return notifications;
@@ -215,13 +224,24 @@ public class NotificationServiceV18 extends NotificationListenerService {
                     String channelId = null;
                     if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                         int priority = NotificationManager.IMPORTANCE_HIGH;
-                        NotificationChannel notificationChannel = BugleNotificationChannelUtil.getSmsNotificationChannel(ringtoneUri, shouldVibrate(), priority);
+                        NotificationChannel notificationChannel = Notifications.getChannel(
+                                PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID + "_set_default_app",
+                                HSApplication.getContext().getResources().getString(R.string.sms_notification_channel),
+                                HSApplication.getContext().getResources().getString(R.string.sms_notification_channel_description), priority);
+                        notificationChannel.setSound(ringtoneUri, Notification.AUDIO_ATTRIBUTES_DEFAULT);
+                        notificationChannel.enableVibration(shouldVibrate());
+                        if (shouldVibrate()) {
+                            notificationChannel.setVibrationPattern(new long[]{100, 200, 300});
+                        }
                         notificationChannel.setShowBadge(true);
                         channelId = notificationChannel.getId();
                         notificationChannel.setImportance(priority);
                         notifyMgr.createNotificationChannel(notificationChannel);
                     }
                     Notification notification = createNotification(channelId, messageTitle, messageText);
+                    if (notification == null) {
+                        return;
+                    }
                     StatusBarNotification[] allNotifications = getActiveNotifications();
                     boolean isNotificationIdExisted = false;
                     int notificationExistId = 0;
@@ -231,6 +251,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
                     List<String> summaryNotificationMessageText = new ArrayList<>();
                     for (StatusBarNotification statusBarNotification : allNotifications) {
                         String notificationPackageName = statusBarNotification.getPackageName();
+                        HSLog.d("NotificationListener", "notificationPackageName = " + notificationPackageName);
                         if (notificationPackageName.equals("com.color.sms.messages.emoji")) {
                             notificationIdNumber++;
                             notificationInfo = loadNotificationInfo(statusBarNotification);
@@ -294,6 +315,9 @@ public class NotificationServiceV18 extends NotificationListenerService {
     }
 
     private Notification createNotification(String channelId, String messageTitle, String messageText) {
+        if (messageTitle.contains("new messages")){
+            return null;
+        }
         final String[] conversationId = new String[1];
         String normalizedMessageTitle = PhoneUtils.getDefault().getCanonicalBySimLocale(messageTitle);
         String displayMessageTitle = PhoneUtils.getDefault().formatForDisplay(normalizedMessageTitle);
