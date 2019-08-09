@@ -90,6 +90,7 @@ public class ChooseFontDialog {
         Dialog builder = new Dialog(mActivity, R.style.BaseDialogTheme);
 
         mRootView = mLayoutInflater.inflate(R.layout.dialog_no_btn, null);
+        mRootView.findViewById(R.id.cancel_btn).setVisibility(View.GONE);
         mRootView.setOnClickListener(v -> dismissSafely());
 
         configDialog(builder);
