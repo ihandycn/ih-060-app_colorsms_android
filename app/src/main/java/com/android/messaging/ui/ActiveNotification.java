@@ -163,6 +163,8 @@ public class ActiveNotification {
         mBuilder.setSmallIcon(R.drawable.ic_sms_light);
         mBuilder.setContent(createRemoteView());
         mBuilder.setOnlyAlertOnce(true);
+        mBuilder.setPriority(Notification.PRIORITY_HIGH);
+        mBuilder.setVibrate(new long[]{0});
 
         Intent i = new Intent(mContext, WelcomeSetAsDefaultActivity.class);
         i.putExtra(WelcomeSetAsDefaultActivity.EXTRA_FROM_PUSH_START, true);

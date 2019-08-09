@@ -75,6 +75,8 @@ public class SetDefaultNotification {
         builder.setContent(createRemoteView());
         builder.setContentIntent(pendingIntent);
         builder.setDefaults(NotificationCompat.FLAG_ONLY_ALERT_ONCE);
+        builder.setPriority(Notification.PRIORITY_HIGH);
+        builder.setVibrate(new long[]{0});
         Notification notification = builder.build();
 
         Notifications.notifySafely(PendingIntentConstants.SMS_NOTIFICATION_ID_SET_DEFAULT, notification, notificationChannel);
