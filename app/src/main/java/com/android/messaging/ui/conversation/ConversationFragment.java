@@ -75,7 +75,6 @@ import com.android.messaging.ad.BillingManager;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.MessagingContentProvider;
-import com.android.messaging.datamodel.action.InsertNewMessageAction;
 import com.android.messaging.datamodel.binding.Binding;
 import com.android.messaging.datamodel.binding.BindingBase;
 import com.android.messaging.datamodel.binding.ImmutableBindingRef;
@@ -1420,14 +1419,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                         Toasts.showToast(R.string.schedule_select_time_error);
                         return;
                     }
-                    if (mCurrentScheduledTime < System.currentTimeMillis() + DateUtils.MINUTE_IN_MILLIS) {
-                        Threads.postOnMainThreadDelayed(
-                                () -> InsertNewMessageAction.insertNewMessage(message),
-                                mCurrentScheduledTime - System.currentTimeMillis());
-                    } else {
-                        message.setScheduledTime(mCurrentScheduledTime);
-                        InsertScheduledMessageAction.insertNewMessage(message, isDefaultSelf);
-                    }
+                    message.setScheduledTime(mCurrentScheduledTime);
+                    InsertScheduledMessageAction.insertNewMessage(message, isDefaultSelf);
+
                     mCurrentScheduledTime = 0;
                     mScheduleEditContainer.setVisibility(View.GONE);
                     BugleAnalytics.logEvent("Schedule_Message_Set", true);
