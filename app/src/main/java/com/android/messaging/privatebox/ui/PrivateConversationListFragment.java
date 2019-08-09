@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.view.ViewGroupCompat;
@@ -31,7 +30,6 @@ import com.android.messaging.privatebox.ui.addtolist.AddToListDialog;
 import com.android.messaging.privatebox.ui.addtolist.ContactsSelectActivity;
 import com.android.messaging.privatebox.ui.addtolist.ConversationSelectActivity;
 import com.android.messaging.ui.SnackBarInteraction;
-import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListAdapter;
 import com.android.messaging.ui.conversationlist.ConversationListItemView;
 import com.android.messaging.ui.customize.ConversationColors;
@@ -146,6 +144,9 @@ public class PrivateConversationListFragment extends Fragment
         mHasWallpaper = bgDrawable == null;
         conversationListBg.setImageDrawable(bgDrawable);
         mEmptyListMessageView = rootView.findViewById(R.id.private_box_empty_container);
+        ((ImageView) mEmptyListMessageView.findViewById(R.id.private_box_empty_bg))
+                .setImageResource(mHasWallpaper ? R.drawable.private_box_theme_empty
+                        : R.drawable.private_box_empty);
         mRecyclerView = rootView.findViewById(android.R.id.list);
         mRecyclerView.setHasFixedSize(true);
         final Activity activity = getActivity();
@@ -194,14 +195,6 @@ public class PrivateConversationListFragment extends Fragment
 
         setHasOptionsMenu(true);
         return rootView;
-    }
-
-    public void onThemeChanged(boolean hasTheme) {
-        if (mEmptyListMessageView != null) {
-            ((ImageView) mEmptyListMessageView.findViewById(R.id.private_box_empty_bg))
-                    .setImageResource(hasTheme ? R.drawable.private_box_theme_empty
-                            : R.drawable.private_box_empty);
-        }
     }
 
     @Override
@@ -295,7 +288,6 @@ public class PrivateConversationListFragment extends Fragment
     public List<SnackBarInteraction> getSnackBarInteractions() {
         return null;
     }
-
 
 
     // Show and hide empty list UI as needed with appropriate text based on view specifics

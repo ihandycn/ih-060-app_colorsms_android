@@ -30,6 +30,7 @@
             android:id="@+id/private_box_empty_bg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@null"
             android:src="@drawable/private_box_empty" />
 
         <com.android.messaging.ui.view.MessagesTextView

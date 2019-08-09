@@ -274,7 +274,6 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
             accessoryContainer.setBackgroundColor(PrimaryColors.getPrimaryColor());
             findViewById(R.id.accessory_bg).setVisibility(View.GONE);
         }
-        mConversationListFragment.onThemeChanged(mHasTheme);
 
         View mStatusBarInset = findViewById(R.id.status_bar_inset);
         ViewGroup.LayoutParams layoutParams = mStatusBarInset.getLayoutParams();
