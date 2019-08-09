@@ -61,6 +61,7 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
     private SignatureItemView mSignature;
     private GeneralSettingItemView mSoundView;
     private GeneralSettingItemView mVibrateView;
+    private GeneralSettingItemView mLedColorView;
     private GeneralSettingItemView mPrivacyModeView;
     private GeneralSettingItemView mSyncSettingsView;
     private GeneralSettingItemView mSendDelayView;
@@ -153,6 +154,25 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
                 @Override
                 public void onDismiss(DialogInterface dialog) {
                     updateVibrateSummary();
+                }
+
+                @Override
+                public void onCancel(DialogInterface dialog) {
+
+                }
+            });
+            UiUtils.showDialogFragment(SettingActivity.this, dialog);
+        });
+
+        mLedColorView = findViewById(R.id.setting_item_led_color);
+        updateLedSummary();
+        mLedColorView.setOnItemClickListener(() -> {
+            SelectLedColorDialog dialog = new SelectLedColorDialog();
+            dialog.setOnDismissOrCancelListener(new BaseDialogFragment.OnDismissOrCancelListener() {
+
+                @Override
+                public void onDismiss(DialogInterface dialog) {
+                    updateLedSummary();
                 }
 
                 @Override
@@ -451,9 +471,12 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
         mPrivacyModeView.setSummary(PrivacyModeSettings.getPrivacyModeDescription(null));
     }
 
-
     private void updateVibrateSummary() {
         mVibrateView.setSummary(VibrateSettings.getVibrateDescription(null));
+    }
+
+    private void updateLedSummary() {
+        mLedColorView.setSummary(LedSettings.getLedDescription(null));
     }
 
     private void updateSendDelaySummary() {

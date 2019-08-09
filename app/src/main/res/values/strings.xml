@@ -976,7 +976,7 @@
     <string name="welcome_set_default_feature">Other SMS basic features</string>
     <string name="welcome_set_default_failed_toast">Color SMS was not set up properly</string>
 
-    
+
     <!-- News -->
     <string name="reload">Reload</string>
 
@@ -1341,5 +1341,15 @@
     <string name="settings_vibrate_long">Long</string>
     <string name="settings_vibrate_multiple_short">Multiple Short</string>
     <string name="settings_vibrate_multiple_long">Multiple Long</string>
+
+    <string name="settings_led_color">LED Color</string>
+    <string name="settings_led_none">None</string>
+    <string name="settings_led_white">White</string>
+    <string name="settings_led_red">Red</string>
+    <string name="settings_led_blue">Blue</string>
+    <string name="settings_led_yellow">Yellow</string>
+    <string name="settings_led_green">Green</string>
+    <string name="settings_led_purple">Purple</string>
+    <string name="settings_led_cyan">Cyan</string>
 </resources>
 

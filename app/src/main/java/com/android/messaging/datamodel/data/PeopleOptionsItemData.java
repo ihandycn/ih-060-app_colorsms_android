@@ -24,12 +24,11 @@ import android.net.Uri;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ConversationListItemData.ConversationListViewColumns;
 import com.android.messaging.ui.appsettings.GeneralSettingItemView;
+import com.android.messaging.ui.appsettings.LedSettings;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.appsettings.VibrateSettings;
 import com.android.messaging.util.Assert;
-import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.RingtoneUtil;
-import com.ihs.app.framework.HSApplication;
 
 public class PeopleOptionsItemData {
     public static final String[] PROJECTION = {
@@ -57,12 +56,8 @@ public class PeopleOptionsItemData {
     public static final int SETTING_BLOCKED = 6;
     public static final int SETTING_DELETE = 7;
     public static final int SETTING_RENAME_GROUP = 8;
-    public static final int SETTINGS_COUNT = 9;
-
-
-    // Type of UI switch to show for the toggle button.
-    public static final int TOGGLE_TYPE_CHECKBOX = 0;
-    public static final int TOGGLE_TYPE_SWITCH = 1;
+    public static final int SETTING_NOTIFICATION_LED_COLOR = 9;
+    public static final int SETTINGS_COUNT = 10;
 
     private String mTitle;
     private String mSubtitle;
@@ -139,6 +134,14 @@ public class PeopleOptionsItemData {
             case SETTING_NOTIFICATION_VIBRATION:
                 mTitle = mContext.getString(R.string.notification_vibrate_pref_title);
                 mSubtitle = VibrateSettings.getVibrateDescription(conversationId);
+                mCheckable = false;
+                mEnabled = notificationEnabled;
+                mType = GeneralSettingItemView.NORMAL;
+                break;
+
+            case SETTING_NOTIFICATION_LED_COLOR:
+                mTitle = mContext.getString(R.string.settings_led_color);
+                mSubtitle = LedSettings.getLedDescription(conversationId);
                 mCheckable = false;
                 mEnabled = notificationEnabled;
                 mType = GeneralSettingItemView.NORMAL;

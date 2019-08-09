@@ -50,7 +50,9 @@ import com.android.messaging.ui.PersonItemView;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.appsettings.BaseItemView;
 import com.android.messaging.ui.appsettings.GeneralSettingItemView;
+import com.android.messaging.ui.appsettings.LedSettings;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
+import com.android.messaging.ui.appsettings.SelectLedColorDialog;
 import com.android.messaging.ui.appsettings.SelectPrivacyModeDialog;
 import com.android.messaging.ui.appsettings.SelectVibrateModeDialog;
 import com.android.messaging.ui.appsettings.VibrateSettings;
@@ -75,6 +77,7 @@ import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_BLOCKED;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_DELETE;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_NOTIFICATION_ENABLED;
+import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_NOTIFICATION_LED_COLOR;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_NOTIFICATION_SOUND_URI;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_NOTIFICATION_VIBRATION;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_PRIVACY_MODE;
@@ -102,6 +105,7 @@ public class PeopleAndOptionsFragment extends Fragment
     private PeopleOptionsItemView mNotificationItemView;
     private PeopleOptionsItemView mSoundItemView;
     private PeopleOptionsItemView mVibrateItemView;
+    private PeopleOptionsItemView mLedColorItemView;
     private PeopleOptionsItemView mPrivacyModeItemView;
     private PeopleOptionsItemView mPinItemView;
     private PeopleOptionsItemView mBlockItemView;
@@ -133,6 +137,7 @@ public class PeopleAndOptionsFragment extends Fragment
         mNotificationItemView = view.findViewById(R.id.setting_item_notifications);
         mSoundItemView = view.findViewById(R.id.setting_item_sound);
         mVibrateItemView = view.findViewById(R.id.setting_item_vibrate);
+        mLedColorItemView = view.findViewById(R.id.setting_item_led_color);
         mPrivacyModeItemView = view.findViewById(R.id.setting_item_privacy_mode);
         mPinItemView = view.findViewById(R.id.setting_item_pin_to_top);
         mBlockItemView = view.findViewById(R.id.setting_item_block);
@@ -238,6 +243,7 @@ public class PeopleAndOptionsFragment extends Fragment
         mPrivacyModeItemView.bind(cursor, SETTING_PRIVACY_MODE, mOtherParticipantData, PeopleAndOptionsFragment.this, mConversationId);
         mSoundItemView.bind(cursor, SETTING_NOTIFICATION_SOUND_URI, mOtherParticipantData, PeopleAndOptionsFragment.this, mConversationId);
         mVibrateItemView.bind(cursor, SETTING_NOTIFICATION_VIBRATION, mOtherParticipantData, PeopleAndOptionsFragment.this, mConversationId);
+        mLedColorItemView.bind(cursor, SETTING_NOTIFICATION_LED_COLOR, mOtherParticipantData, PeopleAndOptionsFragment.this, mConversationId);
         mDeleteItemView.bind(cursor, SETTING_DELETE, mOtherParticipantData, PeopleAndOptionsFragment.this, mConversationId);
 
         showNotificationListItemView();
@@ -387,6 +393,22 @@ public class PeopleAndOptionsFragment extends Fragment
                     }
                 });
                 UiUtils.showDialogFragment(getActivity(), vibrateModeDialog);
+                break;
+
+            case SETTING_NOTIFICATION_LED_COLOR:
+                SelectLedColorDialog ledColorDialog = SelectLedColorDialog.newInstance(mConversationId);
+                ledColorDialog.setOnDismissOrCancelListener(new BaseDialogFragment.OnDismissOrCancelListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        mLedColorItemView.setSummary(LedSettings.getLedDescription(mConversationId));
+                    }
+
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+
+                    }
+                });
+                UiUtils.showDialogFragment(getActivity(), ledColorDialog);
                 break;
 
             case SETTING_ADD_CONTACT:

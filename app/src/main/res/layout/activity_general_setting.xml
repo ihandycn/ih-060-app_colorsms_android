@@ -58,6 +58,15 @@
                     app:title="@string/notification_vibrate_pref_title"
                     app:type="withTriangle" />
 
+                <!--LED Color-->
+                <com.android.messaging.ui.appsettings.GeneralSettingItemView
+                    android:id="@+id/setting_item_led_color"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:hideDivideLine="true"
+                    app:title="@string/settings_led_color"
+                    app:type="withTriangle" />
+
                 <!--SMS Pop-ups-->
                 <com.android.messaging.ui.appsettings.GeneralSettingItemView
                     android:id="@+id/setting_item_sms_pop_ups"

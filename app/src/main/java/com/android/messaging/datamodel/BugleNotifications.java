@@ -72,6 +72,7 @@ import com.android.messaging.privatebox.PrivateSettingManager;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.ui.appsettings.LedSettings;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.appsettings.VibrateSettings;
 import com.android.messaging.ui.customize.PrimaryColors;
@@ -451,33 +452,28 @@ public class BugleNotifications {
                 priority = NotificationManager.IMPORTANCE_LOW;
             }
             notificationChannel = BugleNotificationChannelUtil.getSmsNotificationChannel(ringtoneUri, shouldVibrate(state), priority);
-            switch (VibrateSettings.getVibrateMode(conversationId)) {
-                case VibrateSettings.OFF:
-                    notificationChannel.enableVibration(false);
-                    notificationChannel.setVibrationPattern(VibrateSettings.getViratePattern(VibrateSettings.OFF));
-                    break;
-                case VibrateSettings.VIBRATE_NORMAL:
-                    notificationChannel.setVibrationPattern(VibrateSettings.getViratePattern(VibrateSettings.VIBRATE_NORMAL));
-                    break;
-                case VibrateSettings.VIBRATE_SHORT:
-                    notificationChannel.setVibrationPattern(VibrateSettings.getViratePattern(VibrateSettings.VIBRATE_SHORT));
-                    break;
-                case VibrateSettings.VIBRATE_LONG:
-                    notificationChannel.setVibrationPattern(VibrateSettings.getViratePattern(VibrateSettings.VIBRATE_LONG));
-                    break;
-                case VibrateSettings.VIBRATE_MULTIPLE_SHORT:
-                    notificationChannel.setVibrationPattern(VibrateSettings.getViratePattern(VibrateSettings.VIBRATE_MULTIPLE_SHORT));
-                    break;
-                case VibrateSettings.VIBRATE_MULTIPLE_LONG:
-                    notificationChannel.setVibrationPattern(VibrateSettings.getViratePattern(VibrateSettings.VIBRATE_MULTIPLE_LONG));
-                    break;
+            if (VibrateSettings.getVibrateMode(conversationId) == VibrateSettings.OFF) {
+                notificationChannel.enableVibration(false);
             }
+            notificationChannel.setVibrationPattern(VibrateSettings.getViratePattern(VibrateSettings.getVibrateMode(conversationId)));
+            if (LedSettings.getLedColor(conversationId) == LedSettings.NONE) {
+                notificationChannel.enableLights(false);
+            }
+            notificationChannel.setLightColor(LedSettings.getLedHex(LedSettings.getLedColor(conversationId)));
             notificationChannel.setShowBadge(true);
             channelId = notificationChannel.getId();
             notificationChannel.setImportance(priority);
         }
 
         final NotificationCompat.Builder notifBuilder = new NotificationCompat.Builder(context, channelId);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            notifBuilder.setVibrate(VibrateSettings.getViratePattern(VibrateSettings.getVibrateMode(conversationId)));
+            if (LedSettings.getLedColor(conversationId) == LedSettings.NONE) {
+                notifBuilder.setLights(0xff000000, 0, 0);
+            } else {
+                notifBuilder.setLights(LedSettings.getLedHex(LedSettings.getLedColor(conversationId)), 1000, 1000);
+            }
+        }
 
         if (OsUtil.isAtLeastL()) {
             notifBuilder.setCategory(Notification.CATEGORY_MESSAGE);

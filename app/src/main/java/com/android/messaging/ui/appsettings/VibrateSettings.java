@@ -26,7 +26,7 @@ public class VibrateSettings {
     private static BuglePrefs sPrefs = Factory.get().getCustomizePrefs();
 
     @VibrateMode
-    public static int getPrivacyMode() {
+    public static int getVibrateMode() {
         return getVibrateMode("");
     }
 
@@ -35,7 +35,7 @@ public class VibrateSettings {
         if (TextUtils.isEmpty(conversationId)) {
             return sPrefs.getInt(PREF_KEY_VIBRATE_MODE, VIBRATE_NORMAL);
         }
-        return sPrefs.getInt(PREF_KEY_VIBRATE_MODE + conversationId, getPrivacyMode());
+        return sPrefs.getInt(PREF_KEY_VIBRATE_MODE + conversationId, getVibrateMode());
     }
 
     public static void setVibrateMode(String conversationId, @VibrateMode int mode) {
@@ -45,10 +45,6 @@ public class VibrateSettings {
             sPrefs.putInt(PREF_KEY_VIBRATE_MODE + conversationId
                     , mode);
         }
-    }
-
-    public static void setVibrateMode(@VibrateMode int mode) {
-        sPrefs.putInt(PREF_KEY_VIBRATE_MODE, mode);
     }
 
     public static String getVibrateDescription(String conversationId) {
