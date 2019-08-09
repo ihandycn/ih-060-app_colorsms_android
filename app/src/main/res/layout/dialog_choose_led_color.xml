@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/dialog_btn_margin_left"
         android:lineSpacingExtra="3.3sp"
-        android:text="@string/settings_led_color"
+        android:text="@string/settings_led_color_title"
         android:textColor="#6e717b"
         android:textSize="13.3sp"
         app:layout_constraintEnd_toEndOf="parent"

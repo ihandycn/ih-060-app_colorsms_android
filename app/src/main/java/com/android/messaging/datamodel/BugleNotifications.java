@@ -767,7 +767,6 @@ public class BugleNotifications {
     private static void updateBuilderAudioVibrate(final NotificationState state,
                                                   final NotificationCompat.Builder notifBuilder, final boolean silent,
                                                   final Uri ringtoneUri, final String conversationId) {
-        int defaults = Notification.DEFAULT_LIGHTS;
         if (!silent) {
             final BuglePrefs prefs = Factory.get().getApplicationPrefs();
             final long latestNotificationTimestamp = prefs.getLong(
@@ -790,15 +789,10 @@ public class BugleNotifications {
                             || SystemClock.elapsedRealtime() - lastTime > sTimeBetweenDingsMs) {
                         sLastMessageDingTime.put(conversationId, SystemClock.elapsedRealtime());
                         notifBuilder.setSound(ringtoneUri);
-
-                        if (shouldVibrate(state)) {
-                            defaults |= Notification.DEFAULT_VIBRATE;
-                        }
                     }
                 }
             }
         }
-        notifBuilder.setDefaults(defaults);
     }
 
     // TODO: this doesn't seem to be defined in NotificationCompat yet. Temporarily

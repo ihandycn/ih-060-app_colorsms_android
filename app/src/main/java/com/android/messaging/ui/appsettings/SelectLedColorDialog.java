@@ -14,6 +14,7 @@ import android.widget.RadioGroup;
 import com.android.messaging.R;
 import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.OsUtil;
 import com.superapps.util.Fonts;
 import com.superapps.util.Threads;
@@ -159,7 +160,9 @@ public class SelectLedColorDialog extends BaseDialogFragment {
             LedSettings.setLedColor(mConversationId, changedMode);
 
             if (TextUtils.isEmpty(mConversationId)) {
+                BugleAnalytics.logEvent("SMS_Settings_LEDColor_Set", "type", LedSettings.getLedDescription(""));
             } else {
+                BugleAnalytics.logEvent("SMS_Detailspage_Settings_LEDColor_Set", "type", LedSettings.getLedDescription(""));
             }
         });
 

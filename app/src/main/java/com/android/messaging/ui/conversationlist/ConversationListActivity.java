@@ -67,8 +67,10 @@ import com.android.messaging.ui.ThemeUpgradeActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
 import com.android.messaging.ui.appsettings.ChooseThemeColorRecommendViewHolder;
+import com.android.messaging.ui.appsettings.LedSettings;
 import com.android.messaging.ui.appsettings.SendDelaySettings;
 import com.android.messaging.ui.appsettings.ThemeColorSelectActivity;
+import com.android.messaging.ui.appsettings.VibrateSettings;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.CustomBubblesActivity;
@@ -1280,7 +1282,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                 "chat_list_background", bgString,
                                 "chat_list_text_color", Preferences.getDefault()
                                         .getString(ChatListCustomizeActivity.PREF_KEY_EVENT_CHANGE_COLOR_TYPE, "theme"),
-                                "chat_list_opacity", opacityStr);
+                                "chat_list_opacity", opacityStr,
+                                "vibrate", VibrateSettings.getVibrateDescription(""),
+                                "led", LedSettings.getLedDescription(""));
 
                         BugleFirebaseAnalytics.logEvent("SMS_Messages_Show_2",
                                 "subscription", String.valueOf(BillingManager.isPremiumUser()),
@@ -1288,7 +1292,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                 "chat_list_background", bgString,
                                 "chat_list_text_color", Preferences.getDefault()
                                         .getString(ChatListCustomizeActivity.PREF_KEY_EVENT_CHANGE_COLOR_TYPE, "theme"),
-                                "chat_list_opacity", opacityStr);
+                                "chat_list_opacity", opacityStr,
+                                "vibrate", VibrateSettings.getVibrateDescription(""),
+                                "led", LedSettings.getLedDescription(""));
                     });
                 }
                 break;

@@ -1343,6 +1343,7 @@
     <string name="settings_vibrate_multiple_long">Multiple Long</string>
 
     <string name="settings_led_color">LED Color</string>
+    <string name="settings_led_color_title">LED Color\n(some device may not support)</string>
     <string name="settings_led_none">None</string>
     <string name="settings_led_white">White</string>
     <string name="settings_led_red">Red</string>

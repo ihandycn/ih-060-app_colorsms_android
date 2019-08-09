@@ -16,6 +16,7 @@ import android.widget.RadioGroup;
 import com.android.messaging.R;
 import com.android.messaging.ui.BaseDialogFragment;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.OsUtil;
 import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Fonts;
@@ -158,7 +159,9 @@ public class SelectVibrateModeDialog extends BaseDialogFragment {
             vibrate(VibrateSettings.getViratePattern(changedMode));
 
             if (TextUtils.isEmpty(mConversationId)) {
+                BugleAnalytics.logEvent("SMS_Settings_Vibrate_Set", "type", VibrateSettings.getVibrateDescription(""));
             } else {
+                BugleAnalytics.logEvent("SMS_Detailspage_Settings_Vibrate_Set", "type", VibrateSettings.getVibrateDescription(mConversationId));
             }
         });
 
@@ -172,16 +175,6 @@ public class SelectVibrateModeDialog extends BaseDialogFragment {
     }
 
     private Vibrator vibrator;
-
-    private void vibrate(long timeInMs) {
-        if (null == vibrator) {
-            vibrator = (Vibrator) HSApplication.getContext().getSystemService(Context.VIBRATOR_SERVICE);
-        }
-        try {
-            vibrator.vibrate(timeInMs);
-        } catch (SecurityException | NullPointerException exception) {
-        }
-    }
 
     private void vibrate(long[] timeInMs) {
         if (null == vibrator) {
