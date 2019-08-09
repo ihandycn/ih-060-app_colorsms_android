@@ -47,6 +47,7 @@ import com.superapps.util.Threads;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class NotificationServiceV18 extends NotificationListenerService {
@@ -238,15 +239,13 @@ public class NotificationServiceV18 extends NotificationListenerService {
                         notificationChannel.setImportance(priority);
                         notifyMgr.createNotificationChannel(notificationChannel);
                     }
-                    Notification notification = createNotification(channelId, messageTitle, messageText);
-                    if (notification == null) {
-                        return;
-                    }
+
                     StatusBarNotification[] allNotifications = getActiveNotifications();
                     boolean isNotificationIdExisted = false;
                     int notificationExistId = 0;
                     int notificationIdNumber = 0;
                     BlockedNotificationInfo notificationInfo;
+                    CharSequence[] textLines = null;
                     List<String> summaryNotificationMessageTitle = new ArrayList<>();
                     List<String> summaryNotificationMessageText = new ArrayList<>();
                     for (StatusBarNotification statusBarNotification : allNotifications) {
@@ -260,10 +259,15 @@ public class NotificationServiceV18 extends NotificationListenerService {
                             HSLog.d("NotificationListener", "notificationInfo.title = " + notificationInfo.title);
                             HSLog.d("NotificationListener", "messageTitle = " + messageTitle);
                             if (notificationInfo.title.equals(messageTitle)) {
+                                textLines = Objects.requireNonNull(getExtras(notificationInfo.notification)).getCharSequenceArray("android.textLines");
                                 notificationExistId = statusBarNotification.getId();
                                 isNotificationIdExisted = true;
                             }
                         }
+                    }
+                    Notification notification = createNotification(channelId, messageTitle, messageText, textLines);
+                    if (notification == null) {
+                        return;
                     }
                     HSLog.d("NotificationListener", "notificationIdNumber = " + notificationIdNumber);
                     HSLog.d("NotificationListener", "isNotificationIdExisted = " + isNotificationIdExisted);
@@ -314,7 +318,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
                 .build();
     }
 
-    private Notification createNotification(String channelId, String messageTitle, String messageText) {
+    private Notification createNotification(String channelId, String messageTitle, String messageText, CharSequence[] textLines) {
         if (messageTitle.contains("new messages")){
             return null;
         }
@@ -368,10 +372,23 @@ public class NotificationServiceV18 extends NotificationListenerService {
         Bitmap avatarBitmap = Bitmap.createBitmap(avatarImage.getBitmap());
         avatarImage.release();
         String groupKey = "groupkey";
+        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+        inboxStyle.setBigContentTitle(messageTitle);
+        if (textLines != null && textLines.length > 0) {
+            HSLog.d("NotificationListener", "textLines =  " + textLines[textLines.length - 1].toString());
+            for (CharSequence textLine : textLines) {
+                inboxStyle.addLine(textLine);
+            }
+            inboxStyle.addLine(messageText);
+        } else {
+            HSLog.d("NotificationListener", "textLines = null");
+            inboxStyle.addLine(messageText);
+        }
+
         return new NotificationCompat.Builder(this, channelId)
                 .setContentTitle(messageTitle)
-                .setStyle(new NotificationCompat.BigTextStyle().bigText(messageText))
                 .setContentText(messageText)
+                .setStyle(inboxStyle)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.ic_sms_light)
                 .setLargeIcon(avatarBitmap)
