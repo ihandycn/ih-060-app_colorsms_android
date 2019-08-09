@@ -577,13 +577,14 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
     }
 
     public void onArchiveClick() {
-        BugleAnalytics.logEvent("SMS_Messages_Slide_Left_Click", true, "type", "archive");
         final String conversationId = mData.getConversationId();
         if (mHostInterface.isArchived()) {
             UpdateConversationArchiveStatusAction.unarchiveConversation(conversationId);
+            BugleAnalytics.logEvent("SMS_Messages_Slide_Left_Click", true, "type", "unarchive");
             BugleAnalytics.logEvent("SMS_Messages_Unarchive", true, "from", "slide");
         } else {
             UpdateConversationArchiveStatusAction.archiveConversation(conversationId);
+            BugleAnalytics.logEvent("SMS_Messages_Slide_Left_Click", true, "type", "archive");
             BugleAnalytics.logEvent("SMS_Messages_Archive", true, "from", "slide");
         }
 
