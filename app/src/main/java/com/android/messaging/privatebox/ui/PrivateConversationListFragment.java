@@ -141,7 +141,7 @@ public class PrivateConversationListFragment extends Fragment
         ImageView conversationListBg = rootView.findViewById(R.id.private_conversation_list_bg);
         Drawable customDrawable = ChatListCustomizeManager.getWallpaperDrawable();
         Drawable bgDrawable = customDrawable != null ? customDrawable : WallpaperDrawables.getConversationListWallpaperDrawable();
-        mHasWallpaper = bgDrawable == null;
+        mHasWallpaper = bgDrawable != null;
         conversationListBg.setImageDrawable(bgDrawable);
         mEmptyListMessageView = rootView.findViewById(R.id.private_box_empty_container);
         ((ImageView) mEmptyListMessageView.findViewById(R.id.private_box_empty_bg))
