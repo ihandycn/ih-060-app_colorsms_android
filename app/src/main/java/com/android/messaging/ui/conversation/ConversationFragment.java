@@ -2181,7 +2181,6 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                                         }
                                     }
                                 });
-                        timePickerDialog.setCancelable(false);
                         timePickerDialog.show();
                     }
                 });

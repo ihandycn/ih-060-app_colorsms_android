@@ -1,5 +1,6 @@
 package com.android.messaging.scheduledmessage;
 
+import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -32,5 +33,26 @@ public class TimePickerDialogWithButtonEvent extends TimePickerDialog {
         if (mNegativeButtonListener != null && which == DialogInterface.BUTTON_NEGATIVE) {
             mNegativeButtonListener.onClick(this, DialogInterface.BUTTON_NEGATIVE);
         }
+    }
+
+    /**
+     * we don't want the dialog dismiss automatically,
+     * but the dismiss() method will be called
+     * when positive button click.
+     * {@link TimePickerDialog#show()}
+     **/
+    @Override
+    public void dismiss() {
+
+    }
+
+    /**
+     * the {@link Dialog#cancel()} method will call
+     * {@link TimePickerDialogWithButtonEvent#dismiss()} method which does nothing,
+     * so we use super.dismiss{@link Dialog#dismiss()} to cancel the dialog
+     **/
+    @Override
+    public void cancel() {
+        super.dismiss();
     }
 }
