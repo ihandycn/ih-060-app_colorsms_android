@@ -535,8 +535,8 @@ public class ConversationActivity extends BugleActionBarActivity
 
                     }
                 });
-                mInterstitialAd.setSoundEnable(false);
-                mInterstitialAd.show();
+                mInterstitialAd.setMuted(true);
+                mInterstitialAd.show(null);
                 BugleAnalytics.logEvent("Detailspage_FullAd_Show", true);
                 BugleFirebaseAnalytics.logEvent("Detailspage_FullAd_Show");
                 AutopilotEvent.logTopicEvent("topic-768lyi3sp", "fullad_show");

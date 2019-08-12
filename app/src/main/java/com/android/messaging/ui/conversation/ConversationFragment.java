@@ -789,7 +789,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         ivAdPreview.getDrawable().setColorFilter(ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
 
         mAdContentView.hideAdCorner();
-        mAdContentView.fillNativeAd(mNativeAd);
+        mAdContentView.fillNativeAd(mNativeAd, null);
 
         mRecyclerView.setPadding(0, Dimensions.pxFromDp(53), 0, 0);
         mRecyclerView.setClipToPadding(true);

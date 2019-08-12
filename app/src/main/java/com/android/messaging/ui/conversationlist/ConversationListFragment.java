@@ -517,7 +517,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         ChatListCustomizeManager.changeDrawableColorIfNeed(ivAdPreview.getDrawable(), false);
 
         mAdContentView.hideAdCorner();
-        mAdContentView.fillNativeAd(mNativeAd);
+        mAdContentView.fillNativeAd(mNativeAd, null);
 
         if (!mAdapter.hasHeader()) {
             mAdapter.setHeader(mAdContainer);

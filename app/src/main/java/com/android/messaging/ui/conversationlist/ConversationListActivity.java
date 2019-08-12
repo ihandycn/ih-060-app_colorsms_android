@@ -964,8 +964,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 }
             });
 
-            mInterstitialAd.setSoundEnable(false);
-            mInterstitialAd.show();
+            mInterstitialAd.setMuted(true);
+            mInterstitialAd.show(null);
             BugleAnalytics.logEvent("SMS_ExitAd_Show", true);
             BugleAnalytics.logEvent("SMS_Ad", "type", "exitad_show");
             BugleFirebaseAnalytics.logEvent("SMS_Ad", "type", "exitad_show");
