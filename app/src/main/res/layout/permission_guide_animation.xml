@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/permission_guide_base_rl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/new_dialog_background"
+    android:orientation="vertical">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.09" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/guideline_end"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.91" />
+
+    <LinearLayout
+        android:id="@+id/permission_guide_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/new_dialog_bg"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="@id/guideline"
+        app:layout_constraintEnd_toEndOf="@id/guideline_end"
+        android:layout_centerInParent="true"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <com.android.messaging.ui.welcome.PermissionGuideView
+            android:id="@+id/permission_guide_view"
+            android:background="@drawable/dialog_desktop_corners_bg"
+            android:layout_width="match_parent"
+            android:layout_height="165dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/accessibility_dialog_bottom_corner_bg"
+            android:orientation="vertical"
+            android:layout_marginTop="22dp"
+            android:layout_marginEnd="@dimen/dialog_content_margin_right"
+            android:layout_marginStart="@dimen/dialog_content_margin_left">
+
+            <com.superapps.view.TypefacedTextView
+                android:id="@+id/permission_guide_description_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:text="@string/permission_guide_description"
+                android:textColor="@color/color_dialog_title_text"
+                android:alpha="@dimen/dialog_content_title"
+                android:textSize="16sp"
+                app:typeface="@string/custom_font_medium"/>
+
+            <com.superapps.view.TypefacedTextView
+                android:id="@+id/got_it_tv"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dialog_btn_height"
+                android:layout_marginTop="25dp"
+                android:gravity="center"
+                android:text="@string/sms_got_it"
+                android:textColor="@android:color/white"
+                android:textSize="@dimen/dialog_ok_btn_text_size"
+                android:textAllCaps="true"
+                android:includeFontPadding="false"
+                android:layout_marginBottom="@dimen/dialog_btn_margin_bottom"
+                app:typeface="@string/custom_font_semibold" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.AppCompatImageView
+        android:id="@+id/finger_iv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:alpha="0.0"
+        app:layout_constraintStart_toStartOf="@+id/permission_guide_container"
+        app:layout_constraintTop_toTopOf="@+id/permission_guide_container"
+        app:srcCompat="@drawable/permission_guide_hand_svg"
+        tools:ignore="ContentDescription" />
+
+</android.support.constraint.ConstraintLayout>

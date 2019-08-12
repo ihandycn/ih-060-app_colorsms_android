@@ -71,6 +71,7 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
+import com.android.messaging.util.NotificationAccessAutopilotUtils;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.ViewUtils;
 import com.google.common.annotations.VisibleForTesting;
@@ -427,6 +428,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true);
         BugleFirebaseAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show");
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "bannerad_chance");
+        NotificationAccessAutopilotUtils.logBannerAdShouldShow();
 
         List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_BANNER, 1);
         if (nativeAds.size() > 0) {
@@ -528,6 +530,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         BugleFirebaseAnalytics.logEvent("SMS_Messages_BannerAd_Show",
                 "theme", String.valueOf(ThemeUtils.isDefaultTheme()));
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "bannerad_show");
+        NotificationAccessAutopilotUtils.logBannerAdShow();
     }
 
     public void disableTopNativeAd() {

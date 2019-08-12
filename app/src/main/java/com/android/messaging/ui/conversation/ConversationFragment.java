@@ -119,6 +119,7 @@ import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.MediaUtil;
+import com.android.messaging.util.NotificationAccessAutopilotUtils;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.SafeAsyncTask;
@@ -698,6 +699,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         BugleAnalytics.logEvent("Detailspage_TopAd_Should_Show", true);
         BugleFirebaseAnalytics.logEvent("Detailspage_TopAd_Should_Show");
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "topad_chance");
+        NotificationAccessAutopilotUtils.logTopAdShouldShow();
 
         List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_DETAIL_NATIVE, 1);
         if (nativeAds.size() > 0) {
@@ -809,6 +811,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         BugleAnalytics.logEvent("Detailspage_TopAd_Show", true);
         BugleFirebaseAnalytics.logEvent("Detailspage_TopAd_Show");
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "topad_show");
+        NotificationAccessAutopilotUtils.logTopAdShow();
 
         enqueueNextAd();
     }

@@ -426,6 +426,15 @@
             </intent-filter>
         </service>
 
+        <service
+            android:name=".datamodel.NotificationServiceV18"
+            android:label="@string/app_name"
+            android:permission="android.permission.BIND_NOTIFICATION_LISTENER_SERVICE">
+            <intent-filter>
+                <action android:name="android.service.notification.NotificationListenerService" />
+            </intent-filter>
+        </service>
+
         <activity
             android:name=".ui.ClassZeroActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
@@ -544,6 +553,7 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
+
         <activity
             android:name=".ui.emoji.StickerMagicDetailActivity"
             android:excludeFromRecents="true"
@@ -554,16 +564,19 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity"/>
+
         <activity
             android:name=".ui.emoji.EmojiDetailActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/WindowBgWhiteAndTranslucent"/>
+
         <activity
             android:name=".feedback.FeedbackActivity"
             android:screenOrientation="portrait"
             android:taskAffinity=".feedback"
             android:theme="@style/ThemeAppBarActivity.NoBG"/>
+
         <activity
             android:name=".ui.dialog.PermissionGuideActivity"
             android:allowTaskReparenting="false"
@@ -571,6 +584,14 @@
             android:screenOrientation="portrait"
             android:taskAffinity=".permission.guide"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
+        <activity
+            android:name=".ui.dialog.NotificationAccessDialogActivity"
+            android:allowTaskReparenting="false"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity=".permission.guide"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
         <service android:name="android.support.v7.mms.MmsService"/>
 
@@ -819,6 +840,12 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:theme="@style/WelcomeChooseThemeActivity"/>
+
+        <activity
+            android:name=".ui.welcome.NotificationAccessGuideActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:theme="@style/WelcomeChooseThemeActivity" />
 
         <activity
             android:name=".ui.smspro.BillingActivity"

@@ -15,11 +15,14 @@ import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.OsUtil;
 import com.ihs.commons.config.HSConfig;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
+
+import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION;
 
 public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
 
@@ -27,6 +30,7 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
     private static final int REQUEST_SET_DEFAULT_SMS_APP = 3;
     private boolean mAllowBackKey = true;
     private boolean mIsFromWelcomeStart = false;
+    private boolean mIsFromConversationNotification = false;
 
     private static final int EVENT_RETRY_NAVIGATION = 0;
     private Handler mHandler = new Handler() {
@@ -40,7 +44,11 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
                             new Intent(WelcomeSetAsDefaultActivity.this, WelcomeChooseThemeActivity.class));
                     overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                 } else {
-                    UIIntents.get().launchConversationListActivity(WelcomeSetAsDefaultActivity.this);
+                    HSLog.d("NotificationListener", "mIsFromConversationNotification");
+                    if (!mIsFromConversationNotification) {
+                        HSLog.d("NotificationListener", "mIsFromConversationNotification false");
+                        UIIntents.get().launchConversationListActivity(WelcomeSetAsDefaultActivity.this);
+                    }
                 }
                 if (mIsFromWelcomeStart) {
                     BugleAnalytics.logEvent("Start_SetAsDefault_Success", true, "step", "setasdefault page");
@@ -63,6 +71,9 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
 
         if (getIntent() != null) {
             mIsFromWelcomeStart = getIntent().getBooleanExtra(EXTRA_FROM_WELCOME_START, false);
+            if (getIntent().getBooleanExtra(UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION, false)){
+                mIsFromConversationNotification = true;
+            }
         }
 
         findViewById(R.id.welcome_set_default_button).setBackgroundDrawable(

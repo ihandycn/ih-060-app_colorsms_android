@@ -90,6 +90,7 @@ import com.android.messaging.util.ConversationIdSet;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.LogUtil;
+import com.android.messaging.util.NotificationAccessAutopilotUtils;
 import com.android.messaging.util.NotificationPlayer;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
@@ -715,6 +716,7 @@ public class BugleNotifications {
                     "PrivacyMode", String.valueOf(isPrivacyMode));
             BugleFirebaseAnalytics.logEvent("SMS_Notifications_Pushed", "PrivacyMode", String.valueOf(isPrivacyMode));
             AutopilotEvent.logTopicEvent("topic-768lyi3sp", "notification_pushed");
+            NotificationAccessAutopilotUtils.logNotificationPushed();
             if (isPrivacyMode) {
                 BugleAnalytics.logEvent("SMS_PrivacyNotifications_Pushed");
                 BugleFirebaseAnalytics.logEvent("SMS_PrivacyNotifications_Pushed");
@@ -1366,6 +1368,13 @@ public class BugleNotifications {
         try {
             final NotificationManager notificationManager = (NotificationManager) Factory.get().getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.cancel(PendingIntentConstants.SMS_NOTIFICATION_ID);
+            HSLog.d("NotificationListener", "PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = " + PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER);
+            for (int i = 1; i <= PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER; i++) {
+                notificationManager.cancel(i);
+            }
+            if (PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER >= 2) {
+                notificationManager.cancel(-1);
+            }
             if (OsUtil.isAtLeastO()) {
                 notificationManager.deleteNotificationChannel(PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID);
             }

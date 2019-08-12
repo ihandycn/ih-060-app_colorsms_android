@@ -134,6 +134,7 @@ class FireBaseEventIdMap {
 
         EVENTS_MAP.put("SMS_DetailsPage_Privacy_Click", true);
         EVENTS_MAP.put("SMS_Settings_Privacy_Click", true);
+        EVENTS_MAP.put("SMS_NotificationAccess", true);
     }
 
     static boolean getIsValidEventId(String eventId) {

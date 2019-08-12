@@ -478,6 +478,7 @@ public class UIIntentsImpl extends UIIntents {
                                                                  final String conversationId, final MessageData draft) {
         final Intent intent = getConversationActivityIntent(context, conversationId, draft,
                 false /* withCustomTransition */);
+        intent.putExtra(UIIntents.UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION, true);
         // Ensure that the platform doesn't reuse PendingIntents across conversations
         intent.setData(MessagingContentProvider.buildConversationMetadataUri(conversationId));
         return getPendingIntentWithParentStack(context, intent, 0);

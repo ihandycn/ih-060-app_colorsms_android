@@ -2,6 +2,7 @@ package com.android.messaging.ui.dialog;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,7 +18,15 @@ public abstract class BasePermissionGuideDialog extends FrameLayout {
     protected boolean mIsShowImmediately;
 
     public BasePermissionGuideDialog(Context context) {
-        super(context);
+        this(context, null);
+    }
+
+    public BasePermissionGuideDialog(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public BasePermissionGuideDialog(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
         setVisibility(INVISIBLE);
     }
 
