@@ -219,9 +219,7 @@ public class ProcessSentMessageAction extends Action {
         HashMap<String, String> params = new HashMap<>();
         params.put("mobileAvailable", String.valueOf(phoneUtils.isMobileDataEnabled()));
         params.put("success", String.valueOf(successful));
-        if (!isMobileDataAvailable) {
-            params.put("mcc&mnc", PhoneUtils.getMccMncString(PhoneUtils.get(subId).getMccMnc()));
-        }
+        params.put("mcc&mnc", PhoneUtils.getMccMncString(PhoneUtils.get(subId).getMccMnc()));
         params.put("isSms", String.valueOf(isSms));
         BugleAnalytics.logEvent("Send_Mms_Analytics", true, params);
         BugleFirebaseAnalytics.logEvent("Send_Mms_Analytics", params);

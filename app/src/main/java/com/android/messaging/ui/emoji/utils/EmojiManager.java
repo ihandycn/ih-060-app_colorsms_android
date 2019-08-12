@@ -406,7 +406,7 @@ public class EmojiManager {
 
     public static void setEmojiStyle(String style) {
         if (!style.equals(getEmojiStyle())) {
-            BugleAnalytics.logEvent("Settings_EmojiStyle_Change", "type", style);
+            BugleAnalytics.logEvent("Settings_EmojiStyle_Change", true,"type", style);
             Preferences.get(PREF_FILE_NAME).putString(PREF_EMOJI_STYLE, style);
             EmojiCache.getInstance().flush();
             LoadEmojiManager.getInstance().flush();
