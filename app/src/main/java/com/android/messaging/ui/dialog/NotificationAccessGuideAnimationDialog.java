@@ -22,7 +22,8 @@ public class NotificationAccessGuideAnimationDialog extends AnimationPermissionG
 
     @Override
     protected String getDescription() {
-        return getResources().getString(R.string.permission_guide_description);
+        return String.format(getResources().getString(R.string.permission_guide_description),
+                getResources().getString(R.string.app_name));
     }
 
     @Override

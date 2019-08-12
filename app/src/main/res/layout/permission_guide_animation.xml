@@ -55,7 +55,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
-                android:text="@string/permission_guide_description"
                 android:textColor="@color/color_dialog_title_text"
                 android:alpha="@dimen/dialog_content_title"
                 android:textSize="16sp"
