@@ -48,6 +48,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import static android.support.v4.app.NotificationCompat.isGroupSummary;
+
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class NotificationServiceV18 extends NotificationListenerService {
 
@@ -98,7 +100,12 @@ public class NotificationServiceV18 extends NotificationListenerService {
                     "cancelNotification(notificationInfo.packageId, notificationInfo.tag, notificationInfo.notificationId);");
         }
 
-        sendNotification(notificationInfo.title, notificationInfo.text);
+        if (!isGroupSummary(notificationInfo.notification)) {
+            HSLog.d("NotificationListener", "is not group summary");
+            sendNotification(notificationInfo.title, notificationInfo.text);
+        } else {
+            HSLog.d("NotificationListener", "is group summary");
+        }
     }
 
     @Override
@@ -267,10 +274,8 @@ public class NotificationServiceV18 extends NotificationListenerService {
                             }
                         }
                     }
+
                     Notification notification = createNotification(channelId, messageTitle, messageText, textLines);
-                    if (notification == null) {
-                        return;
-                    }
                     HSLog.d("NotificationListener", "notificationIdNumber = " + notificationIdNumber);
                     HSLog.d("NotificationListener", "isNotificationIdExisted = " + isNotificationIdExisted);
                     if (isNotificationIdExisted) {
@@ -321,10 +326,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
     }
 
     private Notification createNotification(String channelId, String messageTitle, String messageText, CharSequence[] textLines) {
-        if (messageTitle.contains("new messages")) {
-            return null;
-        }
-        final String[] conversationId = new String[1];
+        String conversationId = null;
         String normalizedMessageTitle = PhoneUtils.getDefault().getCanonicalBySimLocale(messageTitle);
         String displayMessageTitle = PhoneUtils.getDefault().formatForDisplay(normalizedMessageTitle);
         DatabaseWrapper db = DataModel.get().getDatabase();
@@ -333,8 +335,8 @@ public class NotificationServiceV18 extends NotificationListenerService {
                 new String[]{messageTitle, displayMessageTitle}, null, null, null);
         if (cursor != null) {
             if (cursor.moveToFirst()) {
-                conversationId[0] = cursor.getString(0);
-                HSLog.d("NotificationListener", "conversationId = " + conversationId[0]);
+                conversationId = cursor.getString(0);
+                HSLog.d("NotificationListener", "conversationId = " + conversationId);
             }
             cursor.close();
         }
@@ -349,7 +351,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
         //pending intent
         Intent intent;
         PendingIntent pendingIntent;
-        if (TextUtils.isEmpty(conversationId[0])) {
+        if (TextUtils.isEmpty(conversationId)) {
             HSLog.d("NotificationListener", "conversationId is empty");
             intent = new Intent(this, ConversationListActivity.class);
             intent.putExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, true);
@@ -357,7 +359,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
         } else {
             HSLog.d("NotificationListener", "conversationId is not empty");
             pendingIntent = UIIntents.get()
-                    .getPendingIntentForConversationActivity(HSApplication.getContext(), conversationId[0], null /* draft */);
+                    .getPendingIntentForConversationActivity(HSApplication.getContext(), conversationId, null /* draft */);
         }
 
         //defaults
