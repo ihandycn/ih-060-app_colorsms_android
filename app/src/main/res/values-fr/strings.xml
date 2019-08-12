@@ -805,4 +805,14 @@
 	<string name="customize_new_guide_content">Personnalisez vos conversations pour les rendre uniques !</string>
 	<string name="select_image">Sélectionner une photo</string>
 
+
+	<string name="emoji_style_current_set">Série actuelle</string>
+	<string name="emoji_style_setting">Style d\'emoji</string>
+	<string name="emoji_first_long_click">La couleur de peau de tous les emojis peut se régler dans les paramètres.</string>
+	<string name="emoji_page_first_click">Plus de styles d\'emoji peuvent se régler dans les paramètres.</string>
+	<string name="scheduled">Programmé</string>
+	<string name="schedule_select_time_error">Sélectionnez une heure dans le futur.</string>
+	<string name="scheduled_edit_send_now">Envoyer maintenant</string>
+	<string name="scheduled_edit_title">Message programmé</string>
+
 </resources>

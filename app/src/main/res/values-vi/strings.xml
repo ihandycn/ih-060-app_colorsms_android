@@ -810,4 +810,14 @@
 	<string name="customize_new_guide_content">Tùy chỉnh trò chuyện của bạn để khiến nó đặc biệt!</string>
 	<string name="select_image">Chọn hình ảnh</string>
 
+
+	<string name="emoji_style_current_set">Bộ hiện tại</string>
+	<string name="emoji_style_setting">Kiểu emoji</string>
+	<string name="emoji_first_long_click">Có thể thiết lập màu da cho tất cả biểu tượng cảm xúc trong phần Cài đặt.</string>
+	<string name="emoji_page_first_click">Có thể thiết lập các kiểu biểu tượng cảm xúc khác trong phần Cài đặt.</string>
+	<string name="scheduled">Đã lên lịch</string>
+	<string name="schedule_select_time_error">Chọn thời gian trong tương lai.</string>
+	<string name="scheduled_edit_send_now">Gửi ngay</string>
+	<string name="scheduled_edit_title">Tin nhắn theo lịch</string>
+
 </resources>

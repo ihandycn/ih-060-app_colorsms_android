@@ -810,4 +810,14 @@
 	<string name="customize_new_guide_content">カスタマイズでチャットを目立たせよう！</string>
 	<string name="select_image">画像を選択</string>
 
+
+	<string name="emoji_style_current_set">現在のセット</string>
+	<string name="emoji_style_setting">絵文字スタイル</string>
+	<string name="emoji_first_long_click">全ての絵文字の肌の色は設定でセットできます。</string>
+	<string name="emoji_page_first_click">その他の絵文字のスタイルは設定でセットできます。</string>
+	<string name="scheduled">計画</string>
+	<string name="schedule_select_time_error">今後の時間を選択する。</string>
+	<string name="scheduled_edit_send_now">今すぐ送信</string>
+	<string name="scheduled_edit_title">計画されたメッセージ</string>
+
 </resources>

@@ -803,4 +803,14 @@
 	<string name="customize_new_guide_content">Richten Sie Ihren Chat individuell ein, um ihn zu etwas Besonderem zu machen!</string>
 	<string name="select_image">Bild auswählen</string>
 
+
+	<string name="emoji_style_current_set">Aktuelle Einstellung</string>
+	<string name="emoji_style_setting">Emoji-Stil</string>
+	<string name="emoji_first_long_click">Die Hautfarbe kann für alle Emojis in den Einstellungen festgelegt werden.</string>
+	<string name="emoji_page_first_click">Weitere Emoji-Stile können in den Einstellungen festgelegt werden.</string>
+	<string name="scheduled">Geplant</string>
+	<string name="schedule_select_time_error">Zukünftige Zeit auswählen.</string>
+	<string name="scheduled_edit_send_now">Jetzt senden</string>
+	<string name="scheduled_edit_title">Geplante Nachricht</string>
+
 </resources>

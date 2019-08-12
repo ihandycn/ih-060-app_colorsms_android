@@ -809,4 +809,14 @@
 	<string name="customize_new_guide_content">¡Personaliza tu chat para hacerlo especial!</string>
 	<string name="select_image">Seleccionar imagen</string>
 
+
+	<string name="emoji_style_current_set">Conjunto actual</string>
+	<string name="emoji_style_setting">Estilo de emoji</string>
+	<string name="emoji_first_long_click">El tono de aspecto de todos los emojis se puede establecer en los Ajustes.</string>
+	<string name="emoji_page_first_click">Se pueden establecer más estilos de emojis en los Ajustes.</string>
+	<string name="scheduled">Programado</string>
+	<string name="schedule_select_time_error">Seleccionar hora en el futuro.</string>
+	<string name="scheduled_edit_send_now">Enviar ahora</string>
+	<string name="scheduled_edit_title">Mensaje programado</string>
+
 </resources>

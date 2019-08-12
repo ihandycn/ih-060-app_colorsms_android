@@ -814,4 +814,14 @@
 	<string name="customize_new_guide_content">Personalize seu bate-papo para torná-lo especial!</string>
 	<string name="select_image">Selecionar imagem</string>
 
+
+	<string name="emoji_style_current_set">Conjunto atual</string>
+	<string name="emoji_style_setting">Estilo de emoji</string>
+	<string name="emoji_first_long_click">O tom de pele de todos os emojis pode ser definido nas Configurações.</string>
+	<string name="emoji_page_first_click">Mais estilos de emoji podem ser definidos nas Configurações.</string>
+	<string name="scheduled">Programado</string>
+	<string name="schedule_select_time_error">Selecione a hora no futuro.</string>
+	<string name="scheduled_edit_send_now">Enviar agora</string>
+	<string name="scheduled_edit_title">Mensagem programada</string>
+
 </resources>

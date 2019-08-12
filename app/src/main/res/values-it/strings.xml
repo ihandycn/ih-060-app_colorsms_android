@@ -808,4 +808,14 @@
 	<string name="customize_new_guide_content">Personalizza la chat e rendila speciale!</string>
 	<string name="select_image">Seleziona immagine</string>
 
+
+	<string name="emoji_style_current_set">Set attuale</string>
+	<string name="emoji_style_setting">Stile emoji</string>
+	<string name="emoji_first_long_click">Imposta colori di pelle per tutti gli emoji su Impostazioni.</string>
+	<string name="emoji_page_first_click">Imposta altri stili di emoji su Impostazioni.</string>
+	<string name="scheduled">Programmato</string>
+	<string name="schedule_select_time_error">Seleziona ora futura.</string>
+	<string name="scheduled_edit_send_now">Invia ora</string>
+	<string name="scheduled_edit_title">Messaggio programmato</string>
+
 </resources>

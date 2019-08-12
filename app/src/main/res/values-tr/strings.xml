@@ -801,4 +801,14 @@
 	<string name="customize_new_guide_content">Özel olması için sohbetinizi kişiselleştirin!</string>
 	<string name="select_image">Görsel Seç</string>
 
+
+	<string name="emoji_style_current_set">Güncel Set</string>
+	<string name="emoji_style_setting">Emoji Stili</string>
+	<string name="emoji_first_long_click">Tüm emojiler için ten rengi Ayarlar\'dan ayarlanabilir.</string>
+	<string name="emoji_page_first_click">Daha fazla emoji stili Ayarlar\'dan ayarlanabilir.</string>
+	<string name="scheduled">Planlanmış</string>
+	<string name="schedule_select_time_error">Gelecekte bir zamanı seçin.</string>
+	<string name="scheduled_edit_send_now">Hemen gönder</string>
+	<string name="scheduled_edit_title">Planlanmış mesaj</string>
+
 </resources>

@@ -808,4 +808,14 @@
 	<string name="customize_new_guide_content">ปรับแต่งการสนทนาให้พิเศษสำหรับคุณ!</string>
 	<string name="select_image">เลือกรูปภาพ</string>
 
+
+	<string name="emoji_style_current_set">ชุดปัจจุบัน</string>
+	<string name="emoji_style_setting">รูปแบบอิโมจิ</string>
+	<string name="emoji_first_long_click">สามารถกำหนดสีผิวอิโมจิทั้งหมดได้ในการตั้งค่า</string>
+	<string name="emoji_page_first_click">สามารถกำหนดรูปแบบอิโมจิเพิ่มเติมได้ในการตั้งค่า</string>
+	<string name="scheduled">ตั้งเวลาแล้ว</string>
+	<string name="schedule_select_time_error">เลือกเวลาที่ยังไม่ถึง</string>
+	<string name="scheduled_edit_send_now">ส่งทันที</string>
+	<string name="scheduled_edit_title">ข้อความตั้งเวลา</string>
+
 </resources>

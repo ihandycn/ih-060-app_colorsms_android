@@ -902,4 +902,14 @@
 	<string name="customize_new_guide_content">خصص دردشتك لتجعلها مميزة!</string>
 	<string name="select_image">حدد صورة</string>
 
+
+	<string name="emoji_style_current_set">المجموعة الحالية</string>
+	<string name="emoji_style_setting">نمط الإيموجي</string>
+	<string name="emoji_first_long_click">يمكن تغيير لون البشرة لكل صور الإيموجي في الإعدادات</string>
+	<string name="emoji_page_first_click">يمكن تعيين أنماط إيموجي أُخرى في الإعدادات</string>
+	<string name="scheduled">مجدول</string>
+	<string name="schedule_select_time_error">اختر وقتًا مستقبليًا.</string>
+	<string name="scheduled_edit_send_now">أرسل الآن</string>
+	<string name="scheduled_edit_title">رسالة مجدولة</string>
+
 </resources>
