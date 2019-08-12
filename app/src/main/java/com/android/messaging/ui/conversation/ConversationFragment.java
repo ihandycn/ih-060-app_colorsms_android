@@ -1396,6 +1396,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     @Override
     public void sendMessage(final MessageData message) {
+        if (mCurrentScheduledTime != 0 && mCurrentScheduledTime < System.currentTimeMillis()) {
+            Toasts.showToast(R.string.schedule_select_time_error);
+            return;
+        }
+
         if (isReadyForAction()) {
             if (ensureKnownRecipients()) {
                 String name = mBinding.getData().getConversationName();
@@ -2078,6 +2083,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     @Override
     public void showCamera() {
+        mScheduleEditContainer.setVisibility(View.GONE);
         mMediaLayout.setVisibility(View.VISIBLE);
         if (mCameraGalleryFragment == null) {
             initMediaPicker(true);
@@ -2092,7 +2098,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     @Override
     public void showPhoto() {
         setOptionsMenuVisibility(false);
-
+        mScheduleEditContainer.setVisibility(View.GONE);
         mMediaLayout.setVisibility(View.VISIBLE);
         if (mCameraGalleryFragment == null) {
             initMediaPicker(false);
@@ -2163,16 +2169,16 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                                 getString(R.string.ok),
                                 (dialog12, which12) -> {
                                     if (which12 == DialogInterface.BUTTON_POSITIVE) {
-                                        mCurrentScheduledTime = selectedCalendar.getTimeInMillis();
-                                        if (mCurrentScheduledTime <= System.currentTimeMillis()) {
+                                        if (selectedCalendar.getTimeInMillis() <= System.currentTimeMillis()) {
                                             Toasts.showToast(R.string.schedule_select_time_error);
                                         } else {
+                                            mCurrentScheduledTime = selectedCalendar.getTimeInMillis();
                                             BugleAnalytics.logEvent("Schedule_TimePicker_Set_Success");
                                             mScheduleEditContainer.setVisibility(View.VISIBLE);
                                             mScheduleEditTimeView.setText(Dates.getScheduledTimestamp(mCurrentScheduledTime));
+                                            dialog.cancel();
+                                            dialog12.cancel();
                                         }
-                                        dialog.cancel();
-                                        dialog12.cancel();
                                     }
                                 });
                         timePickerDialog.setCancelable(false);
@@ -2239,6 +2245,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     public void hideMediaPicker() {
         mMediaLayout.setVisibility(View.GONE);
+        mScheduleEditContainer.setVisibility(View.VISIBLE);
         if (mCameraGalleryFragment != null) {
             mCameraGalleryFragment.dismiss(false);
             getFragmentManagerToUse()

@@ -10,6 +10,7 @@ public class TimePickerDialogWithButtonEvent extends TimePickerDialog {
 
     public TimePickerDialogWithButtonEvent(Context context, OnTimeSetListener listener, int hourOfDay, int minute, boolean is24HourView) {
         super(context, listener, hourOfDay, minute, is24HourView);
+        setCanceledOnTouchOutside(true);
     }
 
     @Override

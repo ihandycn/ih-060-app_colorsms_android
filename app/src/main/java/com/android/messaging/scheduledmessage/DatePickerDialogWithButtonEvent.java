@@ -12,6 +12,7 @@ public class DatePickerDialogWithButtonEvent extends DatePickerDialog {
 
     public DatePickerDialogWithButtonEvent(@NonNull Context context, @Nullable OnDateSetListener listener, int year, int month, int dayOfMonth) {
         super(context, listener, year, month, dayOfMonth);
+        setCanceledOnTouchOutside(true);
     }
 
     @Override
