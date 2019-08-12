@@ -180,7 +180,7 @@ class SyncCursorPair {
                             localMessage.getTimestampInMillis()
                                     > remoteMessage.getTimestampInMillis())) {
                 // Found a local message that is not in remote db
-                if (!PrivateMessageManager.getInstance().isPrivateUri(localMessage.getUri())){
+                if (!PrivateMessageManager.getInstance().isPrivateUri(localMessage.getUri())) {
                     // Delete the local message
                     messagesToDelete.add((LocalDatabaseMessage) localMessage);
                     lastTimestampMillis = Math.min(lastTimestampMillis,
@@ -340,7 +340,8 @@ class SyncCursorPair {
     private static final String LOCAL_MESSAGES_SELECTION = String.format(
             Locale.US,
             "(%s NOTNULL) AND " + MessageColumns.SMS_MESSAGE_URI + " NOT LIKE '"
-                    + PrivateMessageContentProvider.BASE_CONTENT_URI.toString() + "%%' ",
+                    + PrivateMessageContentProvider.BASE_CONTENT_URI.toString() + "%%' "
+                    + " AND " + MessageColumns.STATUS + "!=" + MessageData.BUGLE_STATUS_OUTGOING_SCHEDULED + " ",
             MessageColumns.SMS_MESSAGE_URI);
 
     private static final String ORDER_BY_TIMESTAMP_DESC =

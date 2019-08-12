@@ -110,7 +110,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     private MultiAttachmentLayout mMultiAttachmentView;
     private AsyncImageView mMessageImageView;
     private TextView mMessageTextView;
-    private boolean mMessageTextHasLinks;
     private ImageView mMessageIsLockView;
     private ViewGroup mStatusContainer;
     private TextView mStatusTextView;
@@ -180,7 +179,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         mMessageMetadataView = findViewById(R.id.message_metadata);
         mMessageTextAndInfoView = findViewById(R.id.message_text_and_info);
         checkBox = findViewById(R.id.check_box);
-        mScheduledEditView = findViewById(R.id.scheduled_edit_icon);
         LayoutTransition layoutTransition = new LayoutTransition();
         layoutTransition.disableTransitionType(LayoutTransition.DISAPPEARING);
         this.setLayoutTransition(layoutTransition);
@@ -297,6 +295,11 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             mContactIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg(false, mHasCustomBackground));
         }
 
+        if (mData.getIsMms() && !mData.hasText()) {
+            mScheduledEditView = findViewById(R.id.scheduled_edit_icon_attachments);
+        } else {
+            mScheduledEditView = findViewById(R.id.scheduled_edit_icon);
+        }
         // Update text and image content for the view.
         updateViewContent();
 
@@ -728,7 +731,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             // Linkify phone numbers, web urls, emails, and map addresses to allow users to
             // click on them and take the default intent.
             try {
-                mMessageTextHasLinks = Linkify.addLinks(mMessageTextView, Linkify.ALL);
             } catch (Exception e) {
                 // catch crash: https://fabric.io/smsgroup/android/apps/com.color.sms.messages.emoji/issues/5c5616d4f8b88c296372d310?time=last-seven-days
                 // ignore framework error
@@ -736,7 +738,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             mMessageTextView.setVisibility(View.VISIBLE);
         } else {
             mMessageTextView.setVisibility(View.GONE);
-            mMessageTextHasLinks = false;
         }
     }
 
@@ -830,13 +831,11 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         // Update the message text/info views
         ImageUtils.setBackgroundDrawableOnView(mMessageTextAndInfoView, textBackground);
         mMessageTextAndInfoView.setMinimumHeight(textMinHeight);
-        final LinearLayout.LayoutParams textAndInfoLayoutParams =
-                (LinearLayout.LayoutParams) mMessageTextAndInfoView.getLayoutParams();
-        textAndInfoLayoutParams.topMargin = textTopMargin;
 
         // Update the message row and message bubble views
         setPadding(getPaddingLeft(), messageTopPadding, getPaddingRight(), 0);
         mMessageBubble.setGravity(gravity);
+        ((LinearLayout)findViewById(R.id.message_text_and_scheduled_edit_container)).setGravity(gravity);
         updateMessageAttachmentsAppearance(gravity);
 
         mMessageMetadataView.setPadding(0, metadataTopPadding, 0, 0);
