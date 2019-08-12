@@ -684,6 +684,10 @@ public class MessageData implements Parcelable {
         return (status >= MessageData.BUGLE_STATUS_FIRST_INCOMING);
     }
 
+    public boolean isScheduledMessage() {
+        return mStatus == BUGLE_STATUS_OUTGOING_SCHEDULED && mScheduledTime != 0;
+    }
+
     public long getScheduledTime() {
         return mScheduledTime;
     }

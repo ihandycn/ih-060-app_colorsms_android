@@ -17,6 +17,7 @@ package com.android.messaging.ui.conversation;
 
 import android.animation.LayoutTransition;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -56,6 +57,7 @@ import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.AsyncImageView;
 import com.android.messaging.ui.AsyncImageView.AsyncImageViewDelayLoader;
 import com.android.messaging.ui.AudioAttachmentView;
+import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.ContactIconView;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.MultiAttachmentLayout;
@@ -81,6 +83,7 @@ import com.google.common.base.Predicate;
 import com.ihs.app.framework.HSApplication;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Threads;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -519,8 +522,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         }
 
         if (!mData.getIsIncoming()
-                && mData.isScheduledMessage()
-                && mData.getScheduledTime() > System.currentTimeMillis()) {
+                && mData.isScheduledMessage()) {
             mScheduledEditView.setVisibility(VISIBLE);
             int bgColor;
             if (ThemeUtils.isDefaultTheme() && !hasWallPaper) {
@@ -536,7 +538,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                 dialog.setOnButtonClickListener(new ScheduledEditChooseDialog.OnButtonClickListener() {
                     @Override
                     public void onSendNowClick() {
-                        MessageScheduleManager.cancelScheduledTask(Integer.parseInt(mData.getMessageId()));
+                        MessageScheduleManager.cancelScheduledTask(mData.getMessageId());
                         SendScheduledMessageAction.sendMessage(mData.getMessageId());
                         dialog.dismiss();
                         BugleAnalytics.logEvent("Schedule_Message_Edit_Click", "button", "send");
@@ -544,8 +546,18 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
                     @Override
                     public void onDeleteClick() {
-                        MessageScheduleManager.cancelScheduledTask(Integer.parseInt(mData.getMessageId()));
-                        DeleteMessageAction.deleteMessage(mData.getMessageId());
+                        final BaseAlertDialog.Builder builder = new BaseAlertDialog.Builder(getContext())
+                                .setTitle(R.string.delete_message_confirmation_dialog_title)
+                                .setMessage(R.string.delete_message_confirmation_dialog_text)
+                                .setPositiveButton(R.string.delete_message_confirmation_button,
+                                        (dialog12, which) -> {
+                                            MessageScheduleManager.cancelScheduledTask(mData.getMessageId());
+                                            DeleteMessageAction.deleteMessage(mData.getMessageId());
+                                        })
+                                .setNegativeButton(android.R.string.cancel, null);
+                        builder.setOnDismissListener(dialog1 -> {
+                        });
+                        builder.show();
                         dialog.dismiss();
                         BugleAnalytics.logEvent("Schedule_Message_Edit_Click", "button", "delete");
                     }
@@ -554,7 +566,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                     public void onEditClick() {
                         mHost.onScheduledEditClick(mData, mData.getScheduledTime());
                         DeleteMessageAction.deleteMessage(mData.getMessageId());
-                        MessageScheduleManager.cancelScheduledTask(Integer.parseInt(mData.getMessageId()));
+                        MessageScheduleManager.cancelScheduledTask(mData.getMessageId());
                         dialog.dismiss();
                         BugleAnalytics.logEvent("Schedule_Message_Edit_Click", "button", "edit");
                     }

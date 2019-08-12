@@ -97,7 +97,7 @@ public class InsertScheduledMessageAction extends Action implements Parcelable {
         }
 
         if (!TextUtils.isEmpty(message.getMessageId())) {
-            MessageScheduleManager.addScheduledTask(Integer.parseInt(message.getMessageId()), message.getScheduledTime());
+            MessageScheduleManager.addScheduledTask(Long.parseLong(message.getMessageId()), message.getScheduledTime());
         }
 
         MessagingContentProvider.notifyConversationListChanged();

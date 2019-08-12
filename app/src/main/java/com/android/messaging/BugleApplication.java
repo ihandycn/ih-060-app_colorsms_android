@@ -227,7 +227,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
             }
         });
 
-       // MessageScheduleManager.resetAllScheduledTask();
+        MessageScheduleManager.resetAllScheduledTaskIfNeed();
     }
 
     @DebugLog

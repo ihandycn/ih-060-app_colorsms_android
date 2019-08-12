@@ -129,7 +129,8 @@ public class ConversationMessageData {
         mIsDeleted = cursor.getInt(INDEX_IS_DELETED) == 1;
         mIsDeliveryReportOpen = cursor.getInt(INDEX_IS_DELIVERY_REPORT_OPEN) == 1;
         mScheduledTime = cursor.getLong(INDEX_SCHEDULED_TIME);
-        mIsScheduledMessage = mScheduledTime != 0;
+        mIsScheduledMessage =
+                mStatus == MessageData.BUGLE_STATUS_OUTGOING_SCHEDULED && mScheduledTime != 0;
     }
 
     private static final Character QUOTE_CHAR = '\'';
