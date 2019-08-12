@@ -46,8 +46,11 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.ThreadUtil;
 import com.android.messaging.util.UiUtils;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.commons.utils.HSLog;
 
 import java.util.HashSet;
+
+import hugo.weaving.DebugLog;
 
 /**
  * An ImageView used to asynchronously request an image from MediaResourceManager and render it.
@@ -178,6 +181,7 @@ public class AsyncImageView extends ImageView implements MediaResourceLoadListen
         setImage(resource, false /* isCached */);
     }
 
+    @DebugLog
     protected void setImage(final ImageResource resource, final boolean isCached) {
         // Switch reference to the new ImageResource. Make sure we release the current
         // resource and addRef() on the new resource so that the underlying bitmaps don't
@@ -213,7 +217,7 @@ public class AsyncImageView extends ImageView implements MediaResourceLoadListen
                 } else {
                     LogUtil.v(TAG, "setImage size: " + mImageResource.getMediaSize() +
                             " width: " + mImageResource.getBitmap().getWidth() +
-                            " heigh: " + mImageResource.getBitmap().getHeight());
+                            " height: " + mImageResource.getBitmap().getHeight());
                 }
             }
         }
@@ -234,6 +238,7 @@ public class AsyncImageView extends ImageView implements MediaResourceLoadListen
             final ImageResource resource, final boolean isCached) {
         if (mImageResource != resource) {
             setImage(resource, isCached);
+            HSLog.d("gdtest", isCached + "asyncImageView load ended" + System.currentTimeMillis());
         }
     }
 

@@ -234,6 +234,21 @@ public class MediaResourceManager {
         if (bindableRequest != null && !bindableRequest.isBound()) {
             return; // Request is obsolete
         }
+
+        T cachedResource = null;
+        Exception loadException = null;
+        try {
+            cachedResource = loadMediaFromCache(mediaRequest);
+        } catch (Exception e) {
+            loadException = e;
+        }
+        if (cachedResource != null && !cachedResource.isEncoded()) {
+            final List<MediaRequest<T>> chainedRequests = new ArrayList<>();
+            MediaLoadingResult<T> result = new MediaLoadingResult<>(cachedResource, true /* fromCache */, chainedRequests);
+            executeLoadedResult(result, loadException, bindableRequest, mediaRequest);
+            return;
+        }
+
         // We don't use SafeAsyncTask here since it enforces the shared thread pool executor
         // whereas we want a dedicated thread pool executor.
         AsyncTask<Void, Void, MediaLoadingResult<T>> mediaLoadingTask =
@@ -256,34 +271,41 @@ public class MediaResourceManager {
 
             @Override
             protected void onPostExecute(final MediaLoadingResult<T> result) {
-                if (result != null) {
-                    Assert.isNull(mException);
-                    Assert.isTrue(result.loadedResource.getRefCount() > 0);
-                    try {
-                        if (bindableRequest != null) {
-                            bindableRequest.onMediaResourceLoaded(
-                                    bindableRequest, result.loadedResource, result.fromCache);
-                        }
-                    } finally {
-                        result.loadedResource.release();
-                        result.scheduleChainedRequests();
-                    }
-                } else if (mException != null) {
-                    LogUtil.e(LogUtil.BUGLE_TAG, "Asynchronous media loading failed, key=" +
-                            mediaRequest.getKey(), mException);
-                    if (bindableRequest != null) {
-                        bindableRequest.onMediaResourceLoadError(bindableRequest, mException);
-                    }
-                } else {
-                    Assert.isTrue(bindableRequest == null || !bindableRequest.isBound());
-                    if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
-                        LogUtil.v(TAG, "media request not processed, no longer bound; key=" +
-                                LogUtil.sanitizePII(mediaRequest.getKey()) /* key with phone# */);
-                    }
-                }
+                executeLoadedResult(result, mException, bindableRequest, mediaRequest);
             }
         };
         mediaLoadingTask.executeOnExecutor(executor, (Void) null);
+    }
+
+    private <T extends RefCountedMediaResource> void executeLoadedResult(final MediaLoadingResult<T> result,
+                                                                         Exception mException,
+                                                                         BindableMediaRequest<T> bindableRequest,
+                                                                         final MediaRequest<T> mediaRequest) {
+        if (result != null) {
+            Assert.isNull(mException);
+            Assert.isTrue(result.loadedResource.getRefCount() > 0);
+            try {
+                if (bindableRequest != null) {
+                    bindableRequest.onMediaResourceLoaded(
+                            bindableRequest, result.loadedResource, result.fromCache);
+                }
+            } finally {
+                result.loadedResource.release();
+                result.scheduleChainedRequests();
+            }
+        } else if (mException != null) {
+            LogUtil.e(LogUtil.BUGLE_TAG, "Asynchronous media loading failed, key=" +
+                    mediaRequest.getKey(), mException);
+            if (bindableRequest != null) {
+                bindableRequest.onMediaResourceLoadError(bindableRequest, mException);
+            }
+        } else {
+            Assert.isTrue(bindableRequest == null || !bindableRequest.isBound());
+            if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
+                LogUtil.v(TAG, "media request not processed, no longer bound; key=" +
+                        LogUtil.sanitizePII(mediaRequest.getKey()) /* key with phone# */);
+            }
+        }
     }
 
     @VisibleForTesting
