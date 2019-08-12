@@ -80,7 +80,6 @@ public class NotificationServiceV18 extends NotificationListenerService {
         final BlockedNotificationInfo notificationInfo = loadNotificationInfo(statusBarNotification);
         if (TextUtils.isEmpty(notificationInfo.title) && TextUtils.isEmpty(notificationInfo.text)) {
             HSLog.d("NotificationListener", "onNotificationPosted(), not block, title or text is empty");
-
             return;
         }
         HSLog.d("NotificationListener", "onNotificationPosted(), block, title = " + notificationInfo.title + ", text = " + notificationInfo.text +
@@ -89,15 +88,10 @@ public class NotificationServiceV18 extends NotificationListenerService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !TextUtils.isEmpty(notificationInfo.key)) {
             try {
                 cancelNotification(notificationInfo.key);
-                HSLog.d("NotificationListener", "onNotificationPosted(), cancelNotification(notificationInfo.key);");
-                HSLog.d("NotificationListener", "onNotificationPosted(), notificationInfo.key = " + notificationInfo.key);
             } catch (SecurityException ignored) {
-                HSLog.d("NotificationListener", "catch (SecurityException ignored) ");
             }
         } else {
             cancelNotification(notificationInfo.packageId, notificationInfo.tag, notificationInfo.notificationId);
-            HSLog.d("NotificationListener", "onNotificationPosted(), " +
-                    "cancelNotification(notificationInfo.packageId, notificationInfo.tag, notificationInfo.notificationId);");
         }
 
         if (!isGroupSummary(notificationInfo.notification)) {
@@ -134,17 +128,10 @@ public class NotificationServiceV18 extends NotificationListenerService {
         StatusBarNotification[] notifications = null;
         try {
             notifications = super.getActiveNotifications();
-            HSLog.d("NotificationListener", "getActiveNotifications Test 1");
-            for (StatusBarNotification statusBarNotification : notifications) {
-                String notificationPackageName = statusBarNotification.getPackageName();
-                HSLog.d("NotificationListener", "Test 1 notificationPackageName = " + notificationPackageName);
-            }
         } catch (Exception e) {
-            HSLog.d("NotificationListener", "getActiveNotifications Test 2");
             e.printStackTrace();
         }
         if (notifications == null) {
-            HSLog.d("NotificationListener", "getActiveNotifications Test 3");
             notifications = new StatusBarNotification[0];
         }
         return notifications;
