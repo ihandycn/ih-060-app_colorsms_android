@@ -37,6 +37,7 @@ public class MessageScheduleManager {
                     DatabaseHelper.MessageColumns.SCHEDULED_TIME);
 
             if (cursor.getCount() == 0) {
+                cursor.close();
                 return;
             }
 
@@ -55,6 +56,7 @@ public class MessageScheduleManager {
                     addScheduledTask(messageId, scheduledTime);
                 }
             }
+            cursor.close();
         });
     }
 

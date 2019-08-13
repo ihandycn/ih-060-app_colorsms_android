@@ -2140,7 +2140,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 calendar.get(Calendar.YEAR),
                 calendar.get(Calendar.MONTH),
                 calendar.get(Calendar.DAY_OF_MONTH));
-        dateDialog.getDatePicker().setMinDate(System.currentTimeMillis());
+        dateDialog.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis() - 1000);
         dateDialog.setButton(DialogInterface.BUTTON_NEGATIVE,
                 getString(R.string.cancel),
                 (dialog, which) -> {
