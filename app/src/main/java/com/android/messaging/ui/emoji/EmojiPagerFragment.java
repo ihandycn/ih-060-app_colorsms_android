@@ -187,7 +187,7 @@ public class EmojiPagerFragment extends Fragment implements INotificationObserve
         view.setLayoutParams(lp);
 
         ObjectAnimator animator = ObjectAnimator.ofFloat(view, View.ALPHA, 0, 1f);
-        animator.setDuration(1000);
+        animator.setDuration(160);
         animator.setInterpolator(PathInterpolatorCompat.create(0f, 0f, 0.58f, 1f));
         animator.start();
     }

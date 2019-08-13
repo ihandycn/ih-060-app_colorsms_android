@@ -199,10 +199,10 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
                 }
 
 
-//                if (!mIsOnlyEmoji && position == EMOJI_PAGE_INDEX
-//                        && EmojiManager.getEnableEmojiStyleGuide()
-//                        && !EmojiManager.getEmojiStyle().equals("Twitter")
-//                        && EmojiManager.getConfigEmojiStyleGuide())
+                if (!mIsOnlyEmoji && position == EMOJI_PAGE_INDEX
+                        && EmojiManager.getEnableEmojiStyleGuide()
+                        && !EmojiManager.getEmojiStyle().equals("Twitter")
+                        && EmojiManager.getConfigEmojiStyleGuide())
                 {
                     mEmojiFragment.enableEmojiStyleGuide(true);
                 }
