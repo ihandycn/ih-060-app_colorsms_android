@@ -28,23 +28,22 @@
             android:shadowDy="4"
             android:shadowRadius="7"
             android:textColor="#ffffff"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/description"
-            android:layout_width="wrap_content"
+            android:layout_width="290dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="15.7dp"
             android:layout_marginTop="1dp"
             android:ellipsize="end"
             android:includeFontPadding="false"
-            android:maxWidth="250dp"
             android:maxLines="1"
             android:shadowColor="#cc0088d7"
             android:shadowDx="2.4492935982947064e-16"
             android:shadowDy="4"
             android:shadowRadius="7"
             android:textColor="#ffffff"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 </FrameLayout>
