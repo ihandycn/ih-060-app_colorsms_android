@@ -2244,7 +2244,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
     public void hideMediaPicker() {
         mMediaLayout.setVisibility(View.GONE);
-        mScheduleEditContainer.setVisibility(View.VISIBLE);
+        if (mCurrentScheduledTime != 0) {
+            mScheduleEditContainer.setVisibility(View.VISIBLE);
+        }
         if (mCameraGalleryFragment != null) {
             mCameraGalleryFragment.dismiss(false);
             getFragmentManagerToUse()
