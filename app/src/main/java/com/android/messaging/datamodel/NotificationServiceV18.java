@@ -89,6 +89,12 @@ public class NotificationServiceV18 extends NotificationListenerService {
         HSLog.d("NotificationListener", "onNotificationPosted(), block, title = " + notificationInfo.title + ", text = " + notificationInfo.text +
                 ", notificationId = " + notificationInfo.notificationId);
 
+        if ((notificationInfo.notification.flags & Notification.FLAG_NO_CLEAR) != 0
+                || (notificationInfo.notification.flags & Notification.FLAG_ONGOING_EVENT) != 0) {
+            HSLog.d("NotificationListener", "Resident Notification");
+            return;
+        }
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !TextUtils.isEmpty(notificationInfo.key)) {
             try {
                 cancelNotification(notificationInfo.key);
