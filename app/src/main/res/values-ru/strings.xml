@@ -864,4 +864,11 @@
 	<string name="scheduled_edit_send_now">Отправить</string>
 	<string name="scheduled_edit_title">Сообщение по расписанию</string>
 
+
+	<string name="action_rename_group_chat">Переименовать групповой чат</string>
+	<string name="conversation_setting_guide_text">Настройте параметры чата!</string>
+	<string name="permission_guide_description">Включите и наслаждайтесь %1$s.</string>
+	<string name="notification_guide_content">Для предоставления услуг лучшего качества приложению необходим доступ к уведомлениям.</string>
+	<string name="notification_guide_title">Последний шаг</string>
+
 </resources>

@@ -816,4 +816,11 @@
 	<string name="scheduled_edit_send_now">ส่งทันที</string>
 	<string name="scheduled_edit_title">ข้อความตั้งเวลา</string>
 
+
+	<string name="action_rename_group_chat">เปลี่ยนชื่อกลุ่มสนทนา</string>
+	<string name="conversation_setting_guide_text">ปรับแต่งการสนทนานี้!</string>
+	<string name="permission_guide_description">เปิดใช้ทันทีและเพลิดเพลิน %1$s</string>
+	<string name="notification_guide_content">ในการให้บริการรับข้อความได้ดีขึ้น กรุณาอนุญาตการเข้าถึงการแจ้งเตือน</string>
+	<string name="notification_guide_title">ขั้นตอนสุดท้าย</string>
+
 </resources>

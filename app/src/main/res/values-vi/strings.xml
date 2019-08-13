@@ -818,4 +818,11 @@
 	<string name="scheduled_edit_send_now">Gửi ngay</string>
 	<string name="scheduled_edit_title">Tin nhắn theo lịch</string>
 
+
+	<string name="action_rename_group_chat">Đổi tên Nhóm trò chuyện</string>
+	<string name="conversation_setting_guide_text">Tùy chỉnh trò chuyện này!</string>
+	<string name="permission_guide_description">Kích hoạt ngay và tận hưởng %1$s.</string>
+	<string name="notification_guide_content">Để phục vụ bạn tốt hơn khi nhận tin nhắn, vui lòng cấp Quyền truy cập thông báo.</string>
+	<string name="notification_guide_title">Bước cuối cùng</string>
+
 </resources>

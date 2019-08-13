@@ -910,4 +910,11 @@
 	<string name="scheduled_edit_send_now">أرسل الآن</string>
 	<string name="scheduled_edit_title">رسالة مجدولة</string>
 
+
+	<string name="action_rename_group_chat">إعادة تسمية الدردشة الجماعية</string>
+	<string name="conversation_setting_guide_text">خصص هذه الدردشة!</string>
+	<string name="permission_guide_description">مكّن هذه الخاصية الآن للاستمتاع بـ %1$s</string>
+	<string name="notification_guide_content">لنخدمك بشكل أفضل في تلقي الرسائل، يرجى منح إذن الإخطارات.</string>
+	<string name="notification_guide_title">الخطوة الأخيرة</string>
+
 </resources>

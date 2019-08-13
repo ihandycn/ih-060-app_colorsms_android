@@ -822,4 +822,11 @@
 	<string name="scheduled_edit_send_now">Enviar agora</string>
 	<string name="scheduled_edit_title">Mensagem programada</string>
 
+
+	<string name="action_rename_group_chat">Renomear bate-papo em grupo</string>
+	<string name="conversation_setting_guide_text">Personalize este bate-papo</string>
+	<string name="permission_guide_description">Ative agora e aproveite o %1$s.</string>
+	<string name="notification_guide_content">Para atendê-lo melhor para receber mensagens, conceda o acesso de notificações.</string>
+	<string name="notification_guide_title">Último Passo</string>
+
 </resources>

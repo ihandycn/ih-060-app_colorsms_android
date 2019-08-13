@@ -809,4 +809,11 @@
 	<string name="scheduled_edit_send_now">Hemen gönder</string>
 	<string name="scheduled_edit_title">Planlanmış mesaj</string>
 
+
+	<string name="action_rename_group_chat">Grup Sohbetini Yeniden Adlandır</string>
+	<string name="conversation_setting_guide_text">Bu sohbeti özelleştir!</string>
+	<string name="permission_guide_description">Hemen etkinleştir ve %1$s\'den faydalan.</string>
+	<string name="notification_guide_content">Mesaj alırken size daha iyi hizmet verebilmemiz için lütfen Bildirim Erişimine izin verin.</string>
+	<string name="notification_guide_title">Son Adım</string>
+
 </resources>

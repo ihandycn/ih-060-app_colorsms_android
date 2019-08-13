@@ -823,4 +823,11 @@
 	<string name="scheduled_edit_send_now">Kirim sekarang</string>
 	<string name="scheduled_edit_title">Pesan terjadwal</string>
 
+
+	<string name="action_rename_group_chat">Ganti Nama Obrolan Grup</string>
+	<string name="conversation_setting_guide_text">Sesuaikan obrolan ini!</string>
+	<string name="permission_guide_description">Aktifkan sekarang dan nikmati %1$s</string>
+	<string name="notification_guide_content">Agar menerima pesan lebih menyenangkan, berikan kami Akses Notifikasi.</string>
+	<string name="notification_guide_title">Langkah Terakhir</string>
+
 </resources>

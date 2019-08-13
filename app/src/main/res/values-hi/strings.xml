@@ -816,4 +816,11 @@
 	<string name="scheduled_edit_send_now">अभी भेजें</string>
 	<string name="scheduled_edit_title">निर्धारित संदेश</string>
 
+
+	<string name="action_rename_group_chat">ग्रूप चैट नाम बदलें</string>
+	<string name="conversation_setting_guide_text">इस चैट को अनुकूलित करें!</string>
+	<string name="permission_guide_description">अभी सक्षम करें और रंगीन एसएमएस का आनंद लें।</string>
+	<string name="notification_guide_content">संदेश प्राप्</string>
+	<string name="notification_guide_title">आखिरी चरण</string>
+
 </resources>

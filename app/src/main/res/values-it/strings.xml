@@ -816,4 +816,11 @@
 	<string name="scheduled_edit_send_now">Invia ora</string>
 	<string name="scheduled_edit_title">Messaggio programmato</string>
 
+
+	<string name="action_rename_group_chat">Rinomina chat di gruppo</string>
+	<string name="conversation_setting_guide_text">Personalizza la chat!</string>
+	<string name="permission_guide_description">Abilita ora e sfrutta %1$s.</string>
+	<string name="notification_guide_content">Per offrirti un miglior servizio di ricezione di messaggi, autorizza l\'Accesso alle notifiche.</string>
+	<string name="notification_guide_title">Ultimo passaggio</string>
+
 </resources>

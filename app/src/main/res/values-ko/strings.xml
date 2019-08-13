@@ -816,4 +816,11 @@
 	<string name="scheduled_edit_send_now">지금 전송</string>
 	<string name="scheduled_edit_title">예정된 메시지</string>
 
+
+	<string name="action_rename_group_chat">그룹 채팅 이름 변경</string>
+	<string name="conversation_setting_guide_text">이 채팅 사용자 정의!</string>
+	<string name="permission_guide_description">지금 활성화하여 %1$s를 즐기세요.</string>
+	<string name="notification_guide_content">메시지 수신을 더 원활하게 하기 위해 알림 권한을 부여하세요.</string>
+	<string name="notification_guide_title">마지막 단계</string>
+
 </resources>

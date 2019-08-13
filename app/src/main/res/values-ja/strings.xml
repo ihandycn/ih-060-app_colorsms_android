@@ -818,4 +818,11 @@
 	<string name="scheduled_edit_send_now">今すぐ送信</string>
 	<string name="scheduled_edit_title">計画されたメッセージ</string>
 
+
+	<string name="action_rename_group_chat">グループチャット名を変更</string>
+	<string name="conversation_setting_guide_text">このチャットをカスタマイズ！</string>
+	<string name="permission_guide_description">今すぐ有効にして%1$sをお楽しみください。</string>
+	<string name="notification_guide_content">メッセージをよりうまく受信するために、通知のアクセスを許可してください。</string>
+	<string name="notification_guide_title">最後のステップ</string>
+
 </resources>

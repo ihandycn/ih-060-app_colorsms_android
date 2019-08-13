@@ -811,4 +811,11 @@
 	<string name="scheduled_edit_send_now">Jetzt senden</string>
 	<string name="scheduled_edit_title">Geplante Nachricht</string>
 
+
+	<string name="action_rename_group_chat">Gruppenchat umbenennen</string>
+	<string name="conversation_setting_guide_text">Diesen Chat individualisieren!</string>
+	<string name="permission_guide_description">Jetzt %1$s aktivieren und genießen.</string>
+	<string name="notification_guide_content">Um Ihren einen besseren Empfang von Nachrichten zu bieten, geben Sie bitte die Erlaubnis für den Benachrichtigungszugang.</string>
+	<string name="notification_guide_title">Letzter Schritt</string>
+
 </resources>
