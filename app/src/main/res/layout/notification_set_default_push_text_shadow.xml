@@ -38,7 +38,7 @@
             android:layout_marginTop="1dp"
             android:ellipsize="end"
             android:includeFontPadding="false"
-            android:maxWidth="225.3dp"
+            android:maxWidth="250dp"
             android:maxLines="1"
             android:shadowColor="#cc0088d7"
             android:shadowDx="2.4492935982947064e-16"

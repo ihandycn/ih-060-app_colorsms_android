@@ -24,7 +24,7 @@
             android:layout_marginTop="12.3dp"
             android:includeFontPadding="false"
             android:textColor="#ffffff"
-            android:textSize="16.7sp" />
+            android:textSize="17sp" />
 
         <TextView
             android:id="@+id/description"
@@ -34,9 +34,9 @@
             android:layout_marginTop="3dp"
             android:ellipsize="end"
             android:includeFontPadding="false"
-            android:maxWidth="225.3dp"
+            android:maxWidth="250dp"
             android:maxLines="1"
             android:textColor="#ffffff"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 </FrameLayout>
