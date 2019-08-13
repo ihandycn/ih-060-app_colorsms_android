@@ -2116,7 +2116,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     private void showScheduleTimeSelectDialog(long defaultTime) {
-        Context context = getContext();
+        Context context = getActivity();
         if (context == null) {
             return;
         }
