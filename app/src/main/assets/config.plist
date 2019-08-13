@@ -6,6 +6,8 @@
 	<dict>
 		<key>Application</key>
 		<dict>
+			<key>ScheduleMessage</key>
+			<true/>
 			<key>EmojiStyle</key>
 			<array>
 				<dict>

@@ -10,6 +10,8 @@
         android:id="@+id/media_buttons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:minHeight="180dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -94,15 +96,17 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="30.7dp"
+            android:layout_marginBottom="15.7dp"
             android:layout_marginTop="21.3dp"
             android:orientation="horizontal"
             android:paddingLeft="18dp"
             android:paddingRight="18dp">
 
             <LinearLayout
+                android:id="@+id/media_schedule_container"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
                 android:layout_weight="1"
                 android:gravity="center_horizontal"
                 android:orientation="vertical">
@@ -125,7 +129,7 @@
 
             <View
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="1dp"
                 android:layout_weight="2" />
         </LinearLayout>
     </LinearLayout>

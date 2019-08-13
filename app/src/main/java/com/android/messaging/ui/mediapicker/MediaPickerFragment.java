@@ -16,6 +16,7 @@ import com.android.messaging.datamodel.data.DraftMessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.OsUtil;
+import com.ihs.commons.config.HSConfig;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -85,7 +86,8 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
                 return 0;
             }
         });
-
+        view.findViewById(R.id.media_schedule_container).setVisibility(
+                HSConfig.optBoolean(false, "Application", "ScheduleMessage") ? View.VISIBLE : View.GONE);
     }
 
     @Override
