@@ -25,7 +25,7 @@ import android.os.Bundle;
  * Class providing interface for the ActionService - can be stubbed for testing
  */
 public class ActionService {
-    protected static PendingIntent makeStartActionPendingIntent(final Context context,
+    public static PendingIntent makeStartActionPendingIntent(final Context context,
                                                                 final Action action, final int requestCode, final boolean launchesAnActivity) {
         return ActionServiceImpl.makeStartActionPendingIntent(context, action, requestCode,
                 launchesAnActivity);

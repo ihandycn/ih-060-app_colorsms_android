@@ -76,6 +76,8 @@ public class ConversationInputManager implements ConversationInput.ConversationI
         void showCamera();
 
         void showPhoto();
+
+        void onScheduledIconClick();
     }
 
     /**
@@ -407,6 +409,12 @@ public class ConversationInputManager implements ConversationInput.ConversationI
 
                     mHost.invalidateActionBar();
                     mSink.resumeComposeMessage(true);
+                }
+
+                @Override
+                public void onScheduledIconClick() {
+                    BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Schedule", true);
+                    mHost.onScheduledIconClick();
                 }
             });
         }

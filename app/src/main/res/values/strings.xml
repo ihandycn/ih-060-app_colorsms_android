@@ -1360,5 +1360,10 @@
     <string name="permission_guide_switch_off">Off</string>
     <string name="permission_guide_enable_button">ENABLE</string>
     
+    <!--schedule function-->
+    <string name="scheduled">Scheduled</string>
+    <string name="schedule_select_time_error">Select time in future</string>
+    <string name="scheduled_edit_title">Scheduled message</string>
+    <string name="scheduled_edit_send_now">Send now</string>
 </resources>
 

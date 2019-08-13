@@ -17,6 +17,7 @@ package com.android.messaging.ui.conversation;
 
 import android.animation.LayoutTransition;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -42,16 +43,21 @@ import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.DataModel;
+import com.android.messaging.datamodel.action.DeleteMessageAction;
 import com.android.messaging.datamodel.data.ConversationMessageData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionListEntry;
 import com.android.messaging.datamodel.media.ImageRequestDescriptor;
 import com.android.messaging.datamodel.media.MessagePartImageRequestDescriptor;
+import com.android.messaging.scheduledmessage.MessageScheduleManager;
+import com.android.messaging.scheduledmessage.ScheduledEditChooseDialog;
+import com.android.messaging.scheduledmessage.SendScheduledMessageAction;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.AsyncImageView;
 import com.android.messaging.ui.AsyncImageView.AsyncImageViewDelayLoader;
 import com.android.messaging.ui.AudioAttachmentView;
+import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.ContactIconView;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.MultiAttachmentLayout;
@@ -62,18 +68,22 @@ import com.android.messaging.ui.VideoThumbnailView;
 import com.android.messaging.ui.customize.AvatarBgDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContentType;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.UiUtils;
 import com.google.common.base.Predicate;
+import com.ihs.app.framework.HSApplication;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Threads;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -91,6 +101,8 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         SubscriptionListEntry getSubscriptionEntryForSelfParticipant(String selfParticipantId,
                                                                      boolean excludeDefault);
+
+        void onScheduledEditClick(ConversationMessageData data, long scheduledTime);
     }
 
     private ConversationMessageData mData;
@@ -98,7 +110,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     private MultiAttachmentLayout mMultiAttachmentView;
     private AsyncImageView mMessageImageView;
     private TextView mMessageTextView;
-    private boolean mMessageTextHasLinks;
     private ImageView mMessageIsLockView;
     private ViewGroup mStatusContainer;
     private TextView mStatusTextView;
@@ -114,6 +125,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     private ViewGroup mMessageTextAndInfoView;
     private ConversationMessageViewHost mHost;
     private ImageView checkBox;
+    private View mScheduledEditView;
     private int mOffset;
     private boolean mHasCustomBackground;
 
@@ -189,7 +201,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             final int iconMeasureSpec = MeasureSpec.makeMeasureSpec(iconContainerSize, MeasureSpec.EXACTLY);
             mContactIconContainer.measure(iconMeasureSpec, iconMeasureSpec);
         }
-
 
         final int arrowWidth =
                 getResources().getDimensionPixelSize(R.dimen.message_bubble_arrow_width);
@@ -273,7 +284,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
     /**
      * Fills in the data associated with this view.
-     *
      */
     public void bind(final ConversationMessageData data, boolean isMultiSelected) {
 
@@ -285,6 +295,11 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             mContactIconBg.setImageDrawable(AvatarBgDrawables.getAvatarBg(false, mHasCustomBackground));
         }
 
+        if (mData.getIsMms() && !mData.hasText()) {
+            mScheduledEditView = findViewById(R.id.scheduled_edit_icon_attachments);
+        } else {
+            mScheduledEditView = findViewById(R.id.scheduled_edit_icon);
+        }
         // Update text and image content for the view.
         updateViewContent();
 
@@ -465,6 +480,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                     statusResId = R.string.message_status_send_failed_emergency_number;
                     break;
 
+                case MessageData.BUGLE_STATUS_OUTGOING_SCHEDULED_FAILED:
                 case MessageData.BUGLE_STATUS_OUTGOING_FAILED:
                     // don't show the error state unless we're the default sms app
                     if (DefaultSMSUtils.isDefaultSmsApp()) {
@@ -480,6 +496,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
                 case MessageData.BUGLE_STATUS_OUTGOING_COMPLETE:
                 case MessageData.BUGLE_STATUS_INCOMING_COMPLETE:
+                case MessageData.BUGLE_STATUS_OUTGOING_SCHEDULED:
                 default:
                     statusText = mData.getFormattedReceivedTimeStamp();
                     break;
@@ -508,7 +525,64 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             mMessageIsLockView.setVisibility(GONE);
         }
 
-        final boolean metadataVisible =  statusVisible
+        if (!mData.getIsIncoming()
+                && mData.isScheduledMessage()) {
+            mScheduledEditView.setVisibility(VISIBLE);
+            int bgColor;
+            if (ThemeUtils.isDefaultTheme() && !hasWallPaper) {
+                bgColor = 0xffc8d4dc;
+            } else {
+                bgColor = PrimaryColors.getPrimaryColor() & 0x00ffffff | 0x80000000;
+            }
+            mScheduledEditView.setBackground(BackgroundDrawables.createBackgroundDrawable(bgColor,
+                    HSApplication.getContext().getResources().getColor(com.superapps.R.color.ripples_ripple_color),
+                    Dimensions.pxFromDp(23.3f), true, true));
+            mScheduledEditView.setOnClickListener(v -> {
+                ScheduledEditChooseDialog dialog = new ScheduledEditChooseDialog(getContext());
+                dialog.setOnButtonClickListener(new ScheduledEditChooseDialog.OnButtonClickListener() {
+                    @Override
+                    public void onSendNowClick() {
+                        MessageScheduleManager.cancelScheduledTask(mData.getMessageId());
+                        SendScheduledMessageAction.sendMessage(mData.getMessageId());
+                        dialog.dismiss();
+                        BugleAnalytics.logEvent("Schedule_Message_Edit_Click", "button", "send");
+                    }
+
+                    @Override
+                    public void onDeleteClick() {
+                        final BaseAlertDialog.Builder builder = new BaseAlertDialog.Builder(getContext())
+                                .setTitle(R.string.delete_message_confirmation_dialog_title)
+                                .setMessage(R.string.delete_message_confirmation_dialog_text)
+                                .setPositiveButton(R.string.delete_message_confirmation_button,
+                                        (dialog12, which) -> {
+                                            MessageScheduleManager.cancelScheduledTask(mData.getMessageId());
+                                            DeleteMessageAction.deleteMessage(mData.getMessageId());
+                                        })
+                                .setNegativeButton(android.R.string.cancel, null);
+                        builder.setOnDismissListener(dialog1 -> {
+                        });
+                        builder.show();
+                        dialog.dismiss();
+                        BugleAnalytics.logEvent("Schedule_Message_Edit_Click", "button", "delete");
+                    }
+
+                    @Override
+                    public void onEditClick() {
+                        mHost.onScheduledEditClick(mData, mData.getScheduledTime());
+                        DeleteMessageAction.deleteMessage(mData.getMessageId());
+                        MessageScheduleManager.cancelScheduledTask(mData.getMessageId());
+                        dialog.dismiss();
+                        BugleAnalytics.logEvent("Schedule_Message_Edit_Click", "button", "edit");
+                    }
+                });
+                dialog.show();
+                BugleAnalytics.logEvent("Schedule_Message_Edit_Show");
+            });
+        } else {
+            mScheduledEditView.setVisibility(GONE);
+        }
+
+        final boolean metadataVisible = statusVisible
                 || deliveredBadgeVisible || simNameVisible;
         mMessageMetadataView.setVisibility(metadataVisible ? VISIBLE : GONE);
 
@@ -658,7 +732,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             // Linkify phone numbers, web urls, emails, and map addresses to allow users to
             // click on them and take the default intent.
             try {
-                mMessageTextHasLinks = Linkify.addLinks(mMessageTextView, Linkify.ALL);
             } catch (Exception e) {
                 // catch crash: https://fabric.io/smsgroup/android/apps/com.color.sms.messages.emoji/issues/5c5616d4f8b88c296372d310?time=last-seven-days
                 // ignore framework error
@@ -666,7 +739,6 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
             mMessageTextView.setVisibility(View.VISIBLE);
         } else {
             mMessageTextView.setVisibility(View.GONE);
-            mMessageTextHasLinks = false;
         }
     }
 
@@ -760,13 +832,11 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         // Update the message text/info views
         ImageUtils.setBackgroundDrawableOnView(mMessageTextAndInfoView, textBackground);
         mMessageTextAndInfoView.setMinimumHeight(textMinHeight);
-        final LinearLayout.LayoutParams textAndInfoLayoutParams =
-                (LinearLayout.LayoutParams) mMessageTextAndInfoView.getLayoutParams();
-        textAndInfoLayoutParams.topMargin = textTopMargin;
 
         // Update the message row and message bubble views
         setPadding(getPaddingLeft(), messageTopPadding, getPaddingRight(), 0);
         mMessageBubble.setGravity(gravity);
+        ((LinearLayout)findViewById(R.id.message_text_and_scheduled_edit_container)).setGravity(gravity);
         updateMessageAttachmentsAppearance(gravity);
 
         mMessageMetadataView.setPadding(0, metadataTopPadding, 0, 0);
@@ -845,6 +915,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         } else {
             switch (mData.getStatus()) {
 
+                case MessageData.BUGLE_STATUS_OUTGOING_SCHEDULED_FAILED:
                 case MessageData.BUGLE_STATUS_OUTGOING_FAILED:
                 case MessageData.BUGLE_STATUS_OUTGOING_FAILED_EMERGENCY_NUMBER:
                     timestampColorResId = R.color.message_failed_timestamp_text;

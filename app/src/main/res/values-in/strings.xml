@@ -813,4 +813,14 @@
 	<string name="customize_new_guide_content">Sesuaikan obrolan Anda untuk membuatnya istimewa!</string>
 	<string name="select_image">Pilih Gambar</string>
 
+
+	<string name="emoji_style_current_set">Set Saat Ini</string>
+	<string name="emoji_style_setting">Gaya Emoji</string>
+	<string name="emoji_first_long_click">Warna kulit untuk semua emoji bisa diatur di Pengaturan.</string>
+	<string name="emoji_page_first_click">Gaya emoji bisa diatur di Pengaturan.</string>
+	<string name="scheduled">Terjadwal</string>
+	<string name="schedule_select_time_error">Pilih waktu di masa mendatang.</string>
+	<string name="scheduled_edit_send_now">Kirim sekarang</string>
+	<string name="scheduled_edit_title">Pesan terjadwal</string>
+
 </resources>

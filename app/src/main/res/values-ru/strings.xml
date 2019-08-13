@@ -854,4 +854,14 @@
 	<string name="customize_new_guide_content">Сделайте свой чат индивидуальным!</string>
 	<string name="select_image">Выбрать изображение</string>
 
+
+	<string name="emoji_style_current_set">Текущий набор</string>
+	<string name="emoji_style_setting">Стиль эмодзи</string>
+	<string name="emoji_first_long_click">Цвет кожи всех эмодзи можно изменить в настройках.</string>
+	<string name="emoji_page_first_click">Другие стили эмодзи можно выбрать в настройках.</string>
+	<string name="scheduled">Расписание</string>
+	<string name="schedule_select_time_error">Выберите время в будущем.</string>
+	<string name="scheduled_edit_send_now">Отправить</string>
+	<string name="scheduled_edit_title">Сообщение по расписанию</string>
+
 </resources>

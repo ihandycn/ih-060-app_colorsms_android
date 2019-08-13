@@ -62,6 +62,7 @@ import com.android.messaging.datamodel.binding.ImmutableBindingRef;
 import com.android.messaging.datamodel.data.ConversationData;
 import com.android.messaging.datamodel.data.ConversationData.ConversationDataListener;
 import com.android.messaging.datamodel.data.ConversationData.SimpleConversationDataListener;
+import com.android.messaging.datamodel.data.ConversationMessageData;
 import com.android.messaging.datamodel.data.DraftMessageData;
 import com.android.messaging.datamodel.data.DraftMessageData.CheckDraftForSendTask;
 import com.android.messaging.datamodel.data.DraftMessageData.CheckDraftTaskCallback;
@@ -1019,6 +1020,24 @@ public class ComposeMessageView extends LinearLayout
             updateOnSelfSubscriptionChange();
         }
         updateVisualsOnDraftChanged();
+    }
+
+    public void onScheduledDataEditChanged(final ConversationMessageData message) {
+        DraftMessageData draft = mBinding.getData();
+        int changeFlags;
+        if (message.getIsSms()) {
+            draft.setMessageText(message.getText());
+            changeFlags = DraftMessageData.MESSAGE_TEXT_CHANGED;
+        } else {
+            draft.addAttachments(message.getAttachments());
+            String text = message.getText();
+            changeFlags = DraftMessageData.ATTACHMENTS_CHANGED;
+            if (!TextUtils.isEmpty(text)) {
+                draft.setMessageText(text);
+                changeFlags = 0x3;
+            }
+        }
+        onDraftChanged(draft, changeFlags);
     }
 
     @Override   // From DraftMessageDataListener

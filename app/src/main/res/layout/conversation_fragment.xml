@@ -13,8 +13,9 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -30,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/message_compose_view_container"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <!-- Message list -->
     <android.support.v7.widget.RecyclerView
@@ -39,7 +40,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/message_compose_view_container"
         android:clipToPadding="false"
-        android:listSelector="@android:color/transparent"/>
+        android:listSelector="@android:color/transparent" />
 
     <FrameLayout
         android:id="@+id/top_banner_ad_container"
@@ -55,18 +56,58 @@
         android:layout_above="@+id/message_compose_view_container"
         android:alpha="0"
         android:background="@color/transparent"
-        android:importantForAccessibility="no"/>
+        android:importantForAccessibility="no" />
+
+    <LinearLayout
+        android:id="@+id/scheduled_edit_container"
+        android:layout_width="wrap_content"
+        android:layout_height="26.7dp"
+        android:layout_above="@+id/message_compose_view_container"
+        android:layout_marginBottom="6dp"
+        android:layout_marginStart="50dp"
+        android:elevation="2dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        tools:ignore="UnusedAttribute">
+
+        <ImageView
+            android:layout_width="15.3dp"
+            android:layout_height="15.3dp"
+            android:layout_marginStart="5.7dp"
+            android:contentDescription="@null"
+            android:src="@drawable/scheduled_time_edit" />
+
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/scheduled_edit_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="15.3dp"
+            android:layout_marginStart="6.3dp"
+            android:includeFontPadding="false"
+            android:textColor="#4b7ef2"
+            android:textSize="11.3sp"
+            app:typeface="@string/custom_font_medium" />
+
+        <ImageView
+            android:id="@+id/scheduled_edit_cancel"
+            android:layout_width="20.7dp"
+            android:layout_height="20.7dp"
+            android:layout_marginEnd="3dp"
+            android:contentDescription="@null"
+            android:src="@drawable/scheduled_time_close" />
+    </LinearLayout>
 
     <include
         android:id="@+id/message_compose_view_container"
         layout="@layout/compose_message_view"
         android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
 
     <FrameLayout
         android:id="@+id/camera_photo_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 </RelativeLayout>

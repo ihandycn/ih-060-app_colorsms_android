@@ -806,4 +806,14 @@
 	<string name="customize_new_guide_content">इसे विशेष बनाने के लिए अपनी चैट अनुकूलित करें!</string>
 	<string name="select_image">छवि चुनें</string>
 
+
+	<string name="emoji_style_current_set">मौजूदा सेट</string>
+	<string name="emoji_style_setting">इमोजी शैली</string>
+	<string name="emoji_first_long_click">सभी इमोजी के लिए स्किन टोन को सेटिंग में सेट किया जा सकता है।</string>
+	<string name="emoji_page_first_click">सेटिंग्स में और इमोजी शैलियों को सेट किया जा सकता है।</string>
+	<string name="scheduled">निर्धारित</string>
+	<string name="schedule_select_time_error">भविष्य में समय का चयन करें।</string>
+	<string name="scheduled_edit_send_now">अभी भेजें</string>
+	<string name="scheduled_edit_title">निर्धारित संदेश</string>
+
 </resources>

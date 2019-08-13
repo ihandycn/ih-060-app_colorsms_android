@@ -16,6 +16,7 @@ import com.android.messaging.datamodel.data.DraftMessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.OsUtil;
+import com.ihs.commons.config.HSConfig;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -59,6 +60,7 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
         mMediaLayout = view.findViewById(R.id.media_buttons);
         view.findViewById(R.id.media_camera).setOnClickListener(this);
         view.findViewById(R.id.media_photo).setOnClickListener(this);
+        view.findViewById(R.id.media_schedule).setOnClickListener(this);
         ImageView mediaVoice = view.findViewById(R.id.media_voice);
         mediaVoice.setOnClickListener(this);
         mediaVoice.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.primary_color),
@@ -76,14 +78,16 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
                 }
             }
 
-            @Override public int getConversationSelfSubId() {
+            @Override
+            public int getConversationSelfSubId() {
                 if (mSubscriptionDataProvider != null) {
                     return mSubscriptionDataProvider.getConversationSelfSubId();
                 }
                 return 0;
             }
         });
-
+        view.findViewById(R.id.media_schedule_container).setVisibility(
+                HSConfig.optBoolean(false, "Application", "ScheduleMessage") ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -106,6 +110,11 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
             case R.id.media_voice:
                 openAudio();
                 break;
+            case R.id.media_schedule:
+                if (mOnMediaItemListener != null) {
+                    mOnMediaItemListener.onScheduledIconClick();
+                }
+                break;
             default:
                 break;
         }
@@ -117,6 +126,8 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
         void showPhoto();
 
         void onAudioRecorded(MessagePartData item);
+
+        void onScheduledIconClick();
     }
 
     private void openCamera() {

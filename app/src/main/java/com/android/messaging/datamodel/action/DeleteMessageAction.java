@@ -31,6 +31,7 @@ import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.mmslib.SqliteWrapper;
 import com.android.messaging.privatebox.PrivateMessageManager;
+import com.android.messaging.scheduledmessage.MessageScheduleManager;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.util.LogUtil;
 import com.ihs.app.framework.HSApplication;
@@ -79,6 +80,9 @@ public class DeleteMessageAction extends Action implements Parcelable {
             }
 
             if (message != null) {
+                if (message.isScheduledMessage()) {
+                    MessageScheduleManager.cancelScheduledTask(messageId);
+                }
                 // Delete from local DB
                 int count = BugleDatabaseOperations.deleteMessage(db, messageId);
                 if (count > 0) {

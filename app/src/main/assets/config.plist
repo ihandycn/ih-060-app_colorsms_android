@@ -8,6 +8,8 @@
 		<dict>
 			<key>DeliveryReportDefaultSwitch</key>
 			<true/>
+			<key>ScheduleMessage</key>
+			<true/>
 			<key>EmojiStyle</key>
 			<array>
 				<dict>

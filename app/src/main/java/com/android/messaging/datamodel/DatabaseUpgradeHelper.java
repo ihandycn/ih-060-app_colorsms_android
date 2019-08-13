@@ -69,6 +69,9 @@ public class DatabaseUpgradeHelper {
         if (currentVersion < 7) {
             currentVersion = upgradeToVersion7(db);
         }
+        if (currentVersion < 8) {
+            currentVersion = upgradeToVersion8(db);
+        }
 
         // Rebuild all the views
         final Context context = Factory.get().getApplicationContext();
@@ -180,6 +183,26 @@ public class DatabaseUpgradeHelper {
             }
         }
         return 7;
+    }
+
+    private int upgradeToVersion8(SQLiteDatabase db) {
+        //add column 'scheduled_time' to messages table and rebuild view
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery("SELECT * FROM " + DatabaseHelper.MESSAGES_TABLE + " LIMIT 0"
+                    , null);
+            if (cursor != null && cursor.getColumnIndex(DatabaseHelper.MessageColumns.SCHEDULED_TIME) == -1) {
+                db.execSQL("ALTER TABLE " + DatabaseHelper.MESSAGES_TABLE
+                        + " ADD COLUMN " + DatabaseHelper.MessageColumns.SCHEDULED_TIME
+                        + " INT DEFAULT(0)");
+            }
+        } catch (Exception e) {
+        } finally {
+            if (null != cursor && !cursor.isClosed()) {
+                cursor.close();
+            }
+        }
+        return 8;
     }
 
     /**

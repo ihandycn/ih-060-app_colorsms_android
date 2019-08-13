@@ -40,6 +40,7 @@ import com.android.messaging.datamodel.data.MessagePartData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.privatebox.PrivateContactsManager;
 import com.android.messaging.privatebox.PrivateMessageManager;
+import com.android.messaging.scheduledmessage.MessageScheduleManager;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ArchivedConversationListActivity;
@@ -526,6 +527,22 @@ public class BugleDatabaseOperations {
         dbWrapper.beginTransaction();
         boolean conversationDeleted = false;
         try {
+            //cancel alarm if the message is scheduled
+            Cursor cursor = dbWrapper.query(DatabaseHelper.MESSAGES_TABLE,
+                    new String[]{
+                            MessageColumns._ID
+                    },
+                    MessageColumns.CONVERSATION_ID + "=?"
+                            + " AND " + MessageColumns.STATUS + "=" + MessageData.BUGLE_STATUS_OUTGOING_SCHEDULED
+                            + " AND " + MessageColumns.SCHEDULED_TIME + "!=0",
+                    new String[]{
+                            conversationId
+                    },
+                    null, null, null);
+            while (cursor.moveToNext()) {
+                long messageId = cursor.getLong(0);
+                MessageScheduleManager.cancelScheduledTask(messageId);
+            }
             // Delete existing messages
             if (cutoffTimestamp == Long.MAX_VALUE) {
                 // Delete parts and messages

@@ -793,4 +793,13 @@
     <string name="customize_new_guide_title">新功能</string>
     <string name="customize_new_guide_content">自定義聊天以使其與眾不同！</string>
     <string name="select_image">選擇圖片</string>
+
+    <string name="emoji_style_current_set">當前表情</string>
+    <string name="emoji_style_setting">表情種類</string>
+    <string name="emoji_first_long_click">設置內修改默認表情膚色</string>
+    <string name="emoji_page_first_click">設置內體驗更多表情種類</string>
+    <string name="scheduled">定時短信</string>
+    <string name="schedule_select_time_error">選擇未來日期時間</string>
+    <string name="scheduled_edit_send_now">現在發送</string>
+    <string name="scheduled_edit_title">定時短信</string>
 </resources>

@@ -56,7 +56,7 @@ public class SendMessageAction extends Action implements Parcelable {
     /**
      * Queue sending of existing message (can only be called during execute of action)
      */
-    static boolean queueForSendInBackground(final String messageId,
+    public static boolean queueForSendInBackground(final String messageId,
                                             final Action processingAction) {
         final SendMessageAction action = new SendMessageAction();
         return action.queueAction(messageId, processingAction);

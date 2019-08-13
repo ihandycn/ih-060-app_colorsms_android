@@ -60,6 +60,7 @@ class FireBaseEventIdMap {
 
         EVENTS_MAP.put("SMS_Received_Default", true);
         EVENTS_MAP.put("SMS_Received", true);
+        EVENTS_MAP.put("MMS_Received", true);
 
         EVENTS_MAP.put("SMS_Notifications_Pushed", true);
         EVENTS_MAP.put("SMS_Notifications_Clicked", true);

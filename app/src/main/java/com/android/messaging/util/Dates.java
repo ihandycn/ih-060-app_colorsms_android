@@ -140,6 +140,19 @@ public class Dates {
         }
     }
 
+    @VisibleForTesting
+    public static CharSequence getScheduledTimestamp(final long time) {
+        final Context context = getContext();
+        int flags;
+        if (android.text.format.DateFormat.is24HourFormat(context)) {
+            flags = FORCE_24_HOUR;
+        } else {
+            flags = FORCE_12_HOUR;
+        }
+
+        return getExplicitFormattedTime(time, flags, "yyyy/MM/dd HH:mm", "yyyy/MM/dd h:mmaa");
+    }
+
     private static CharSequence getTodayTimeStamp(final long time, final int flags) {
         return getExplicitFormattedTime(time, flags, "HH:mm", "h:mmaa");
     }

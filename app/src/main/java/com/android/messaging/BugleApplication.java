@@ -47,6 +47,7 @@ import com.android.messaging.debug.CrashGuard;
 import com.android.messaging.debug.UploadLeakService;
 import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.receiver.SmsReceiver;
+import com.android.messaging.scheduledmessage.MessageScheduleManager;
 import com.android.messaging.sms.ApnDatabase;
 import com.android.messaging.sms.BugleApnSettingsLoader;
 import com.android.messaging.sms.BugleUserAgentInfoLoader;
@@ -224,6 +225,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 AcbService.setGDPRConsentGranted(false);
             }
         });
+
+        MessageScheduleManager.resetAllScheduledTaskIfNeed();
     }
 
     @DebugLog
