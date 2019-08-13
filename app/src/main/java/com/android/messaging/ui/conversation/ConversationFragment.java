@@ -1414,7 +1414,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
                 final String deliveryReportsKey = HSApplication.getContext().getString(R.string.delivery_reports_pref_key);
                 message.setIsDeliveryReportOpen(Preferences.getDefault().getBoolean(deliveryReportsKey,
-                        HSApplication.getContext().getResources().getBoolean(R.bool.delivery_reports_pref_default)));
+                        HSConfig.optBoolean(true, "Application", "DeliveryReportDefaultSwitch")));
 
                 boolean isDefaultSelf = mBinding.getData().isDefaultSelf(message.getSelfId());
 

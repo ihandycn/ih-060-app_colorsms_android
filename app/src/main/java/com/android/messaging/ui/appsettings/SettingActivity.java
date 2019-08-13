@@ -42,6 +42,7 @@ import com.android.messaging.util.TransitionUtils;
 import com.android.messaging.util.UiUtils;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
+import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
@@ -288,7 +289,7 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
         final String deliveryReportsKey = getString(R.string.delivery_reports_pref_key);
         final Preferences prefs = Preferences.getDefault();
         mSMSDeliveryReports.setChecked(prefs.getBoolean(deliveryReportsKey,
-                getResources().getBoolean(R.bool.delivery_reports_pref_default)));
+                HSConfig.optBoolean(true, "Application", "DeliveryReportDefaultSwitch")));
         mSMSDeliveryReports.setOnItemClickListener(() -> {
             prefs.putBoolean(deliveryReportsKey, mSMSDeliveryReports.isChecked());
             BugleAnalytics.logEvent("SMS_Settings_Advanced_DeliveryReports_Click", true);

@@ -63,6 +63,7 @@ class FireBaseEventIdMap {
 
         EVENTS_MAP.put("SMS_Notifications_Pushed", true);
         EVENTS_MAP.put("SMS_Notifications_Clicked", true);
+        EVENTS_MAP.put("SMS_Notifications_Reply", true);
         EVENTS_MAP.put("SMS_PrivacyNotifications_Pushed", true);
 
         EVENTS_MAP.put("Menu_Show", true);

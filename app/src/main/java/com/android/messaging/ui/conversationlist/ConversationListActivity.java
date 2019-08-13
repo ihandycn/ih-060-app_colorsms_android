@@ -339,7 +339,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         "Signal", String.valueOf(DataModelImpl.get().getConnectivityUtil().getSignalLevel(0)),
                         "Popups", String.valueOf(MessageBoxSettings.isSMSAssistantModuleEnabled()),
                         "DeliveryReport", String.valueOf(Preferences.getDefault().getBoolean(getString(R.string.delivery_reports_pref_key),
-                                getResources().getBoolean(R.bool.delivery_reports_pref_default))),
+                                HSConfig.optBoolean(true, "Application", "DeliveryReportDefaultSwitch"))),
                         "NA", Permissions.isNotificationAccessGranted() ? "YES" : "NO");
 
                 if (Compats.IS_HUAWEI_DEVICE) {

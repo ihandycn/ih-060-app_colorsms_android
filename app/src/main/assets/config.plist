@@ -6,6 +6,8 @@
 	<dict>
 		<key>Application</key>
 		<dict>
+			<key>DeliveryReportDefaultSwitch</key>
+			<true/>
 			<key>EmojiStyle</key>
 			<array>
 				<dict>

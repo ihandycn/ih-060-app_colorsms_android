@@ -84,6 +84,7 @@ import com.android.messaging.util.MediaMetadataRetrieverWrapper;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
 import com.google.common.base.Joiner;
+import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Preferences;
 
 import java.io.BufferedOutputStream;
@@ -2587,8 +2588,7 @@ public class MmsUtils {
         final Resources res = context.getResources();
         final Preferences prefs = Preferences.getDefault();
         final String deliveryReportKey = res.getString(R.string.delivery_reports_pref_key);
-        final boolean defaultValue = res.getBoolean(R.bool.delivery_reports_pref_default);
-        return prefs.getBoolean(deliveryReportKey, defaultValue);
+        return prefs.getBoolean(deliveryReportKey, HSConfig.optBoolean(true, "Application", "DeliveryReportDefaultSwitch"));
     }
 
     public static int sendSmsMessage(final String recipient, final String messageText,

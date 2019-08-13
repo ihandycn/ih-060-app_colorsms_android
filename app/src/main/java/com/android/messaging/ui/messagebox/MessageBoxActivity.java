@@ -299,6 +299,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         switch (id) {
             case R.id.action_close:
                 finish(CLOSE);
+                BugleAnalytics.logEvent("SMS_Popups_Close", true);
                 break;
             case R.id.action_open:
                 if (!TextUtils.isEmpty(mCurrentConversationView.getConversationId())) {
@@ -310,6 +311,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                     }
                 }
                 finish(OPEN);
+                BugleAnalytics.logEvent("SMS_Popups_OpenApp", true);
                 BugleAnalytics.logEvent("SMS_PopUp_Open_Click", "type", getConversationType(),
                         "privacyMode", String.valueOf(mHasPrivacyModeConversation));
                 BugleFirebaseAnalytics.logEvent("SMS_PopUp_Open_Click", "type", getConversationType(),
@@ -379,14 +381,17 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         Threads.postOnMainThread(() -> {
             if (NOTIFICATION_FINISH_MESSAGE_BOX.equals(s)) {
                 finish(CLICK_CONTENT);
+                BugleAnalytics.logEvent("SMS_Popups_ClickContent");
             } else if (NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED.equals(s)) {
                 Toasts.showToast(R.string.message_box_send_failed_toast);
                 removeCurrentPage(REPLY);
+                BugleAnalytics.logEvent("SMS_Popups_Reply", true);
             } else if (NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEED.equals(s)) {
                 Toast toast = Toast.makeText(HSApplication.getContext(), R.string.message_box_send_successfully_toast, Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.BOTTOM, 0, Dimensions.pxFromDp(44));
                 toast.show();
                 removeCurrentPage(REPLY);
+                BugleAnalytics.logEvent("SMS_Popups_Reply", true);
             }
         });
 
@@ -399,6 +404,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             return;
         }
         finish(BACK);
+        BugleAnalytics.logEvent("SMS_Popups_Back", true);
     }
 
     private void finish(String source) {

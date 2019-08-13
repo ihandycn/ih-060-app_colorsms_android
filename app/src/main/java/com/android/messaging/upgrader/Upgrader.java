@@ -23,6 +23,7 @@ import com.android.messaging.ui.welcome.WelcomeStartActivity;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.PhoneUtils;
+import com.ihs.commons.config.HSConfig;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
@@ -94,7 +95,7 @@ public class Upgrader extends BaseUpgrader {
         int subId = PhoneUtils.getDefault().getDefaultSmsSubscriptionId();
         final BuglePrefs prefs = BuglePrefs.getSubscriptionPrefs(subId);
         final String deliveryReportKey = context.getResources().getString(R.string.delivery_reports_pref_key);
-        final boolean defaultValue = context.getResources().getBoolean(R.bool.delivery_reports_pref_default);
+        final boolean defaultValue = HSConfig.optBoolean(true, "Application", "DeliveryReportDefaultSwitch");
         boolean originalValue = prefs.getBoolean(deliveryReportKey, defaultValue);
         if (originalValue != defaultValue) {
             Preferences preferences = Preferences.getDefault();

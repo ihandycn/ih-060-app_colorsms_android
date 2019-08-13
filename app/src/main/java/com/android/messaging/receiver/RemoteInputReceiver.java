@@ -9,6 +9,7 @@ import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.NoConfirmationSmsSendService;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.NotificationAccessAutopilotUtils;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -40,6 +41,7 @@ public class RemoteInputReceiver extends BroadcastReceiver {
 
             HSApplication.getContext().startService(sendIntent);
             BugleAnalytics.logEvent("SMS_Notifications_Reply", true);
+            BugleFirebaseAnalytics.logEvent("SMS_Notifications_Reply");
             AutopilotEvent.logTopicEvent("topic-768lyi3sp", "notification_replied");
             NotificationAccessAutopilotUtils.logNotificationReplied();
             HSGlobalNotificationCenter.sendNotification(NOTIFICATION_FINISH_MESSAGE_BOX);
