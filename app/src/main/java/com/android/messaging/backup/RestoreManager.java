@@ -2,6 +2,7 @@ package com.android.messaging.backup;
 
 import android.database.sqlite.SQLiteException;
 
+import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CheckPermissionUtil;
 import com.android.messaging.util.OsUtil;
@@ -60,6 +61,9 @@ public class RestoreManager {
                 cursors.close();
             }
         }
+
+        MessagingContentProvider.notifyAllMessagesChanged();
+        MessagingContentProvider.notifyConversationListChanged();
 
         if (lastTimestampMillis == RestoreSyncCursorPair.SYNC_COMPLETE) {
             listener.onRestoreSuccess();
