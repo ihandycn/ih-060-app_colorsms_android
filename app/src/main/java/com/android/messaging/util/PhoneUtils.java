@@ -45,6 +45,7 @@ import com.android.i18n.phonenumbers.Phonenumber;
 import com.android.messaging.BuildConfig;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.datamodel.NotificationServiceV18;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.sms.MmsSmsUtils;
 import com.superapps.util.Toasts;
@@ -893,7 +894,11 @@ public abstract class PhoneUtils {
             @Override
             public void onChange(boolean selfChange) {
                 super.onChange(selfChange);
-                if (!context.getPackageName().equals(getDefaultSmsApp())) {
+
+                String defaultSmsApp = getDefaultSmsApp();
+                NotificationServiceV18.updateDefaultSmsPackage(defaultSmsApp);
+
+                if (!context.getPackageName().equals((defaultSmsApp))) {
                     if (clearedRunnable != null) {
                         clearedRunnable.run();
                     }

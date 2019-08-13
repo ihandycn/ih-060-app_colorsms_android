@@ -55,7 +55,11 @@ public class NotificationServiceV18 extends NotificationListenerService {
 
     public static final String EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION = "override_system_sms_notification";
 
-    private static String sDefaultSmsPackage;
+    private static String sDefaultSmsApp;
+
+    public static void updateDefaultSmsPackage(String defaultSmsApp) {
+        sDefaultSmsApp = defaultSmsApp;
+    }
 
     public NotificationServiceV18() {
         super();
@@ -69,11 +73,11 @@ public class NotificationServiceV18 extends NotificationListenerService {
             return;
         }
 
-        if (sDefaultSmsPackage == null) {
-            sDefaultSmsPackage = Telephony.Sms.getDefaultSmsPackage(HSApplication.getContext());
+        if (sDefaultSmsApp == null) {
+            sDefaultSmsApp = Telephony.Sms.getDefaultSmsPackage(HSApplication.getContext());
         }
 
-        if (!statusBarNotification.getPackageName().equals(sDefaultSmsPackage)) {
+        if (!statusBarNotification.getPackageName().equals(sDefaultSmsApp)) {
             return;
         }
 
