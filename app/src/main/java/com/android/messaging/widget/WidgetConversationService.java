@@ -319,6 +319,7 @@ public class WidgetConversationService extends RemoteViewsService {
                     showInRed = true;
                     break;
 
+                case MessageData.BUGLE_STATUS_OUTGOING_SCHEDULED_FAILED:
                 case MessageData.BUGLE_STATUS_OUTGOING_FAILED:
                     // don't show the error state unless we're the default sms app
                     if (DefaultSMSUtils.isDefaultSmsApp()) {

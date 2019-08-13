@@ -143,6 +143,7 @@ public class MessageData implements Parcelable {
 
     //scheduled sms, waiting to send
     public static final int BUGLE_STATUS_OUTGOING_SCHEDULED = 10;
+    public static final int BUGLE_STATUS_OUTGOING_SCHEDULED_FAILED = 11;
 
     // Incoming
     public static final int BUGLE_STATUS_INCOMING_COMPLETE = 100;
@@ -635,12 +636,17 @@ public class MessageData implements Parcelable {
 
     static boolean getShowResendMessage(final int status) {
         // Should show option to resend iff status is failed
-        return (status == BUGLE_STATUS_OUTGOING_FAILED);
+        return (status == BUGLE_STATUS_OUTGOING_FAILED || status == BUGLE_STATUS_OUTGOING_SCHEDULED_FAILED);
     }
 
     static boolean getOneClickResendMessage(final int status, final int rawStatus) {
         // Should show option to resend iff status is failed
         return (status == BUGLE_STATUS_OUTGOING_FAILED
+                && rawStatus == RAW_TELEPHONY_STATUS_UNDEFINED);
+    }
+
+    static boolean getOneClickResendScheduledMessage(final int status, final int rawStatus) {
+        return (status == BUGLE_STATUS_OUTGOING_SCHEDULED_FAILED
                 && rawStatus == RAW_TELEPHONY_STATUS_UNDEFINED);
     }
 

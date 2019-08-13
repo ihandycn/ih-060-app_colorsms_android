@@ -24,6 +24,7 @@ import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.conversationlist.ArchivedConversationListActivity;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PhoneUtils;
+import com.ihs.app.framework.HSApplication;
 
 import java.util.ArrayList;
 
@@ -182,7 +183,7 @@ public class SendScheduledMessageAction extends Action implements Parcelable {
     private MessageData insertSendingSmsMessage(final MessageData content, final int subId,
                                                 final String recipient, final long timestamp,
                                                 final String sendingConversationId) {
-        final Context context = Factory.get().getApplicationContext();
+        final Context context = HSApplication.getContext();
 
         // Inform sync that message is being added at timestamp
         final SyncManager syncManager = DataModel.get().getSyncManager();
@@ -252,7 +253,7 @@ public class SendScheduledMessageAction extends Action implements Parcelable {
 
     private MessageData updateSingleSendingSmsMessage(final MessageData message, final int subId,
                                                       final String recipient, final long timestamp) {
-        final Context context = Factory.get().getApplicationContext();
+        final Context context = HSApplication.getContext();
 
         // Inform sync that message is being added at timestamp
         final SyncManager syncManager = DataModel.get().getSyncManager();

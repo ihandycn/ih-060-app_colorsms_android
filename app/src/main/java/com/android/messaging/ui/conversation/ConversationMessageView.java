@@ -480,6 +480,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
                     statusResId = R.string.message_status_send_failed_emergency_number;
                     break;
 
+                case MessageData.BUGLE_STATUS_OUTGOING_SCHEDULED_FAILED:
                 case MessageData.BUGLE_STATUS_OUTGOING_FAILED:
                     // don't show the error state unless we're the default sms app
                     if (DefaultSMSUtils.isDefaultSmsApp()) {
@@ -914,6 +915,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         } else {
             switch (mData.getStatus()) {
 
+                case MessageData.BUGLE_STATUS_OUTGOING_SCHEDULED_FAILED:
                 case MessageData.BUGLE_STATUS_OUTGOING_FAILED:
                 case MessageData.BUGLE_STATUS_OUTGOING_FAILED_EMERGENCY_NUMBER:
                     timestampColorResId = R.color.message_failed_timestamp_text;

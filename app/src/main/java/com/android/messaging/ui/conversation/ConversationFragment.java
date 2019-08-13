@@ -92,6 +92,7 @@ import com.android.messaging.datamodel.data.SubscriptionListData.SubscriptionLis
 import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.scheduledmessage.DatePickerDialogWithButtonEvent;
 import com.android.messaging.scheduledmessage.InsertScheduledMessageAction;
+import com.android.messaging.scheduledmessage.SendScheduledMessageAction;
 import com.android.messaging.scheduledmessage.TimePickerDialogWithButtonEvent;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.BugleActionBarActivity;
@@ -482,7 +483,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     break;
                 case R.id.action_send:
                     if (mSelectedMessageData != null) {
-                        retrySend(messageId);
+                        if (mSelectedMessageData.getStatus() == MessageData.BUGLE_STATUS_OUTGOING_SCHEDULED_FAILED) {
+                            SendScheduledMessageAction.sendMessage(messageId);
+                        } else {
+                            retrySend(messageId);
+                        }
                         resetActionModeAndAnimation();
                     }
                     break;
@@ -1688,7 +1693,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         if (longPress) {
             selectMessage(data, attachment);
             return true;
-        } else if (data.getOneClickResendMessage()) {
+        } else if (data.getOneClickResendMessage() || data.getOneClickResendScheduledMessage()) {
             handleMessageClick(data);
             return true;
         }
@@ -1710,6 +1715,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             if (data.getOneClickResendMessage()) {
                 // Directly resend the message on tap if it's failed
                 retrySend(data.getMessageId());
+            } else if (data.getOneClickResendScheduledMessage()) {
+                SendScheduledMessageAction.sendMessage(data.getMessageId());
             } else if (data.getShowResendMessage() && isReadyToSend) {
                 // Select the message to show the resend/download/delete options
                 selectMessage(data);

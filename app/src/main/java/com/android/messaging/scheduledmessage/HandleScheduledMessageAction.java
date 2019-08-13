@@ -60,7 +60,7 @@ public class HandleScheduledMessageAction extends Action implements Parcelable {
 
     private void markMessageFailed(DatabaseWrapper db, String messageId) {
         ContentValues values = new ContentValues();
-        values.put(DatabaseHelper.MessageColumns.STATUS, MessageData.BUGLE_STATUS_OUTGOING_FAILED);
+        values.put(DatabaseHelper.MessageColumns.STATUS, MessageData.BUGLE_STATUS_OUTGOING_SCHEDULED_FAILED);
         values.put(DatabaseHelper.MessageColumns.SCHEDULED_TIME, 0);
         db.update(DatabaseHelper.MESSAGES_TABLE, values,
                 DatabaseHelper.MessageColumns._ID + "=?", new String[]{messageId});

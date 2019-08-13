@@ -577,6 +577,10 @@ public class ConversationMessageData {
         return MessageData.getOneClickResendMessage(mStatus, mRawTelephonyStatus);
     }
 
+    public boolean getOneClickResendScheduledMessage() {
+        return MessageData.getOneClickResendScheduledMessage(mStatus, mRawTelephonyStatus);
+    }
+
     /**
      * Get sender's lookup uri.
      * This method doesn't support corp contacts.

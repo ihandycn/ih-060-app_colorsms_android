@@ -217,8 +217,9 @@ public class ConversationListItemData {
     }
 
     public boolean isNotificationVibrateChanged() {
-        return  mNotificationVibrateValue != -1;
+        return mNotificationVibrateValue != -1;
     }
+
     public boolean getNotificationVibrate() {
         return mNotificationVibrateValue == 1;
     }
@@ -227,7 +228,8 @@ public class ConversationListItemData {
         return (mMessageStatus == MessageData.BUGLE_STATUS_OUTGOING_FAILED ||
                 mMessageStatus == MessageData.BUGLE_STATUS_OUTGOING_FAILED_EMERGENCY_NUMBER ||
                 mMessageStatus == MessageData.BUGLE_STATUS_INCOMING_DOWNLOAD_FAILED ||
-                mMessageStatus == MessageData.BUGLE_STATUS_INCOMING_EXPIRED_OR_NOT_AVAILABLE);
+                mMessageStatus == MessageData.BUGLE_STATUS_INCOMING_EXPIRED_OR_NOT_AVAILABLE ||
+                mMessageStatus == MessageData.BUGLE_STATUS_OUTGOING_SCHEDULED_FAILED);
     }
 
     public final boolean getIsSendRequested() {

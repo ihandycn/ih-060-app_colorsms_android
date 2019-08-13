@@ -341,7 +341,9 @@ class SyncCursorPair {
             Locale.US,
             "(%s NOTNULL) AND " + MessageColumns.SMS_MESSAGE_URI + " NOT LIKE '"
                     + PrivateMessageContentProvider.BASE_CONTENT_URI.toString() + "%%' "
-                    + " AND " + MessageColumns.STATUS + "!=" + MessageData.BUGLE_STATUS_OUTGOING_SCHEDULED + " ",
+                    + " AND " + MessageColumns.STATUS + " NOT IN ("
+                    + MessageData.BUGLE_STATUS_OUTGOING_SCHEDULED + ","
+                    + MessageData.BUGLE_STATUS_OUTGOING_SCHEDULED_FAILED + ") ",
             MessageColumns.SMS_MESSAGE_URI);
 
     private static final String ORDER_BY_TIMESTAMP_DESC =
