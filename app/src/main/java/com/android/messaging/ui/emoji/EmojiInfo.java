@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
+import android.util.Log;
 
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.emoji.utils.EmojiStyleDownloadManager;
@@ -47,7 +48,12 @@ public class EmojiInfo extends BaseEmojiInfo {
     public static EmojiInfo convert(Emoji emoji, String emojiStyle) {
         boolean useSystemStyle = emojiStyle.equals(EmojiManager.EMOJI_STYLE_SYSTEM);
         if (useSystemStyle && !emoji.isSupport()) {
-            throw new IllegalArgumentException("the emoji unicode is not support in current system " + emoji);
+            Log.e("emoji_not_support", "the emoji unicode is not support in current system " + emoji.getUnicode());
+            EmojiInfo info = new EmojiInfo(emoji.getUnicode());
+            info.mEmoji = emoji.getUnicode();
+            info.mResource = emoji.getResource();
+            info.mEmojiStyle = emojiStyle;
+            return info;
         }
         String unicode = emoji.getUnicode();
         // append 0xFEOF.  Force to show emoji colorful, not white-black
