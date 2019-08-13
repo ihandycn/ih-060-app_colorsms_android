@@ -24,24 +24,17 @@ import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.ActionMode;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.ScaleAnimation;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -59,7 +52,6 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.ToolbarDrawables;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
-import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
@@ -180,8 +172,7 @@ public class ConversationActivity extends BugleActionBarActivity
         ViewUtils.setMargins(findViewById(R.id.conversation_fragment_container),
                 0, -Dimensions.getStatusBarHeight(HSApplication.getContext()), 0, 0);
 
-        if (Preferences.getDefault().getBoolean(PREF_KEY_FIRST_IN_CONVERSATION_PAGE, true))
-        {
+        if (Preferences.getDefault().getBoolean(PREF_KEY_FIRST_IN_CONVERSATION_PAGE, true)) {
             Preferences.getDefault().putBoolean(PREF_KEY_FIRST_IN_CONVERSATION_PAGE, false);
             mNeedShowGuide = true;
         }
@@ -237,83 +228,32 @@ public class ConversationActivity extends BugleActionBarActivity
     private void showSettingGuide() {
         BugleAnalytics.logEvent("SMS_Detailspage_Guide_Show", true);
         ViewGroup root = this.findViewById(android.R.id.content);
-        FrameLayout container = (FrameLayout) LayoutInflater.from(this).inflate(R.layout.conversation_setting_guide_view, root, false);
-        MessagesTextView tv = container.findViewById(R.id.view);
-        FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) tv.getLayoutParams();
-        lp.topMargin = Dimensions.pxFromDp(33.3f) + Dimensions.getStatusBarHeight(this);
-        lp.rightMargin = Dimensions.pxFromDp(30.3f);
-        tv.setLayoutParams(lp);
-
-        // start animation
-        AnimationSet animationSet = new AnimationSet(false);
-        Animation alpha = new AlphaAnimation(0, 100);
-        alpha.setDuration(80);
-        Animation scale = new ScaleAnimation(0.6f, 1.03f, 0.6f, 1.03f, Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0);
-        scale.setDuration(160);
-        scale.setInterpolator(PathInterpolatorCompat.create(0.32f, 0.66f, 0.6f, 1f));
-        Animation scale2 = new ScaleAnimation(1f, 1 / 1.03f, 1f, 1 / 1.03f, Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0);
-        scale2.setDuration(70);
-        scale2.setStartOffset(160);
-        animationSet.addAnimation(scale);
-        animationSet.addAnimation(scale2);
-        animationSet.addAnimation(alpha);
-        tv.startAnimation(animationSet);
-
-        container.setOnClickListener(new View.OnClickListener() {
+        ConversationSettingGuide view = new ConversationSettingGuide(this);
+        view.setAimationEndCallback(new ConversationSettingGuide.AnimationEndCallback() {
             @Override
-            public void onClick(View v) {
-                // end animation
-                AnimationSet animationSet = new AnimationSet(false);
-                Animation alpha = new AlphaAnimation(100, 0);
-                alpha.setDuration(80);
-                alpha.setStartOffset(120);
-                Animation scale = new ScaleAnimation(1f, 1.06f, 1f, 1.06f, Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0);
-                scale.setDuration(100);
-                scale.setInterpolator(PathInterpolatorCompat.create(0.32f, 0.66f, 0.6f, 1f));
-                Animation scale2 = new ScaleAnimation(1f, 0.6f / 1.06f, 1f, 0.6f / 1.06f, Animation.RELATIVE_TO_SELF, 1f, Animation.RELATIVE_TO_SELF, 0);
-                scale2.setDuration(100);
-                scale2.setStartOffset(100);
-                animationSet.addAnimation(scale);
-                animationSet.addAnimation(scale2);
-                animationSet.addAnimation(alpha);
-                tv.startAnimation(animationSet);
-
-                animationSet.setAnimationListener(new Animation.AnimationListener() {
+            public void onAnimationEndCallback(TextView tv) {
+                if (ConversationActivity.this.isDestroyed()) {
+                    return;
+                }
+                root.removeView(view);
+                Threads.postOnMainThreadDelayed(new Runnable() {
                     @Override
-                    public void onAnimationStart(Animation animation) {
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        if (ConversationActivity.this.isDestroyed()) {
-                            return;
+                    public void run() {
+                        ConversationFragment fragment = getConversationFragment();
+                        if (fragment != null) {
+                            fragment.unBLockAd();
+                        } else {
+                            HSLog.e(TAG, "beginAdLoad failed: fragment is null");
                         }
-                        root.removeView(container);
-                        Threads.postOnMainThreadDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                ConversationFragment fragment = getConversationFragment();
-                                if (fragment != null) {
-                                    fragment.unBLockAd();
-                                } else {
-                                    HSLog.e(TAG, "beginAdLoad failed: fragment is null");
-                                }
-                            }
-                        }, 500);
-
                     }
+                }, 500);
 
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-                    }
-                });
             }
         });
-
-
-        root.addView(container);
-
-
+        root.addView(view);
+        ViewGroup.LayoutParams lp = view.getLayoutParams();
+        lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        lp.height = ViewGroup.LayoutParams.MATCH_PARENT;
     }
 
     @Override
