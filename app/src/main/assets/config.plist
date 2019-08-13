@@ -6,6 +6,8 @@
 	<dict>
 		<key>Application</key>
 		<dict>
+			<key>EmojiStyleGuide</key>
+			<string>YES</string>
 			<key>EmojiStyle</key>
 			<array>
 				<dict>

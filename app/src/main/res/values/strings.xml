@@ -1116,6 +1116,7 @@
     <string name="emoji_style_default">Default</string>
     <string name="emoji_first_long_click">Skin tone for all emojis can be set in Settings.</string>
     <string name="emoji_page_first_click">More emoji styles can be set in Settings.</string>
+    <string name="emoji_style_set_guide">Try Twitter Emoji!</string>
 
     <string name="privacy_mode_settings">Privacy Mode</string>
     <string name="privacy_mode_disable">None</string>

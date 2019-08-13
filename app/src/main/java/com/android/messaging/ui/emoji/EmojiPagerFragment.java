@@ -1,5 +1,7 @@
 package com.android.messaging.ui.emoji;
 
+import android.animation.ObjectAnimator;
+import android.app.ActionBar;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -7,29 +9,43 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
+import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
+import com.ihs.commons.notificationcenter.INotificationObserver;
+import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Threads;
 import com.superapps.view.ViewPagerFixed;
 
 import java.util.List;
 
-public class EmojiPagerFragment extends Fragment {
+public class EmojiPagerFragment extends Fragment implements INotificationObserver {
 
     private EmojiPackageType mType;
     private AbstractEmojiItemPagerAdapter mAdapter;
     private OnEmojiClickListener mOnEmojiClickListener;
     private final String TAG = EmojiPagerFragment.class.getSimpleName();
     private boolean mIsViewInited = false;
+    private boolean mEmojiStyleGuideEnable = false;
     private View mView;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        HSGlobalNotificationCenter.addObserver(EmojiManager.NOTIFICATION_EMOJI_STYLE_CHANGE, this);
+    }
 
     @Nullable
     @Override
@@ -104,12 +120,20 @@ public class EmojiPagerFragment extends Fragment {
         }
         HSLog.i(TAG, "EmojiPagerFragment: onCrateView: OnFinish");
 
+        if (mEmojiStyleGuideEnable) {
+            Threads.postOnMainThreadDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showEmojiStyleGuide();
+                }
+            }, 400);
+        }
     }
 
     @Override
     public void onDestroy() {
-        HSLog.i(TAG, "onDestroy: ");
         super.onDestroy();
+        HSGlobalNotificationCenter.removeObserver(this);
     }
 
     public void loadData(List<EmojiPackageInfo> data) {
@@ -148,6 +172,34 @@ public class EmojiPagerFragment extends Fragment {
             mAdapter.updateRecentItem();
         }
     }
+
+    public void enableEmojiStyleGuide(boolean enable) {
+        mEmojiStyleGuideEnable = enable;
+    }
+
+    private void showEmojiStyleGuide() {
+        ViewGroup root = (ViewGroup) mView;
+        View view = new EmojiStyleGuideView(getActivity());
+        root.addView(view);
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(view.getLayoutParams());
+        lp.width = ActionBar.LayoutParams.MATCH_PARENT;
+        lp.height = ActionBar.LayoutParams.MATCH_PARENT;
+        view.setLayoutParams(lp);
+
+        ObjectAnimator animator = ObjectAnimator.ofFloat(view, View.ALPHA, 0, 1f);
+        animator.setDuration(1000);
+        animator.setInterpolator(PathInterpolatorCompat.create(0f, 0f, 0.58f, 1f));
+        animator.start();
+    }
+
+    @Override
+    public void onReceive(String s, HSBundle hsBundle) {
+        if (mType != EmojiPackageType.EMOJI) {
+            return;
+        }
+        ((EmojiItemPagerAdapter) mAdapter).onEmojiStyleChange();
+    }
+
 
     public interface OnEmojiClickListener {
 

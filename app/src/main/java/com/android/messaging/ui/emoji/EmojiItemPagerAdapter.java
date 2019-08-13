@@ -17,6 +17,7 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.superapps.util.Dimensions;
 import com.android.messaging.ui.emoji.EmojiPagerFragment.OnEmojiClickListener;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,6 +100,17 @@ public class EmojiItemPagerAdapter extends AbstractEmojiItemPagerAdapter {
     @Override
     public void setTabLayout(TabLayout tabLayout) {
         this.mTabLayout = tabLayout;
+    }
+
+    public void onEmojiStyleChange() {
+        String emojiStyle = EmojiManager.getEmojiStyle();
+        for (EmojiPackageInfo packageInfo : mData) {
+            for (BaseEmojiInfo info : packageInfo.mEmojiInfoList) {
+                ((EmojiInfo) info).mEmojiStyle = emojiStyle;
+            }
+        }
+        notifyDataSetChanged();
+        updateTabView();
     }
 
     @Override

@@ -81,7 +81,7 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
                 case "Android Pie":
                     holder.sampleImage.setImageResource(R.drawable.emoji_style_pie);
                     break;
-                case "Android Twitter":
+                case "Twitter":
                     holder.sampleImage.setImageResource(R.drawable.emoji_style_twitter);
                     break;
                 default:

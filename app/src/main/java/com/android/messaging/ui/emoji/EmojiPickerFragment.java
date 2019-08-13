@@ -8,11 +8,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.MediaPickerMessagePartData;
@@ -82,6 +82,10 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
             if (mOnEmojiPickerListener != null) {
                 mOnEmojiPickerListener.addEmoji(emojiInfo.mEmoji);
                 updateRecentEmoji(emojiInfo, saveRecent);
+            }
+
+            if (EmojiManager.getEnableEmojiStyleGuide()) {
+                EmojiManager.disableEmojiStyleGuide();
             }
         }
 
@@ -195,22 +199,27 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
                 }
 
 
-                if(mCurrentPos == position){
-                    return ;
+//                if (!mIsOnlyEmoji && position == EMOJI_PAGE_INDEX
+//                        && EmojiManager.getEnableEmojiStyleGuide()
+//                        && !EmojiManager.getEmojiStyle().equals("Twitter")
+//                        && EmojiManager.getConfigEmojiStyleGuide())
+                {
+                    mEmojiFragment.enableEmojiStyleGuide(true);
                 }
-                
-                if(!mIsOnlyEmoji && position == EMOJI_PAGE_INDEX && EmojiManager.isFirstEmojiPageClick()){
-                    Toast.makeText(activity, activity.getResources().getString(R.string.emoji_page_first_click), Toast.LENGTH_LONG).show();
+
+                if (mCurrentPos == position) {
+                    return;
                 }
+
                 FragmentManager fm = getChildFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 Fragment to = mFragments[position];
-                if(mCurrentPos == -1){
+                if (mCurrentPos == -1) {
                     ft.replace(R.id.fragment_container, to).commit();
                     mCurrentPos = position;
-                    return ;
+                    return;
                 }
-                if(!to.isAdded()){
+                if (!to.isAdded()) {
                     ft.add(R.id.fragment_container, to);
                 }
                 ft.hide(mFragments[mCurrentPos]);
@@ -284,7 +293,6 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
     }
 
     private void updateRecentEmoji(EmojiInfo info, boolean saveRecent) {
-        HSLog.d("ui_test", "" + saveRecent);
         if (saveRecent) {
             EmojiManager.saveRecentInfo(info.toString(), EmojiPackageType.EMOJI);
             mEmojiFragment.updateRecent();
