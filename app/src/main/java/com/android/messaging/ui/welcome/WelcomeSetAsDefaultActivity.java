@@ -22,6 +22,7 @@ import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
 
+import static com.android.messaging.datamodel.NotificationServiceV18.EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION;
 import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION;
 
 public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
@@ -31,6 +32,7 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
     private boolean mAllowBackKey = true;
     private boolean mIsFromWelcomeStart = false;
     private boolean mIsFromConversationNotification = false;
+    private boolean mIsFromOverrideNotification = false;
 
     private static final int EVENT_RETRY_NAVIGATION = 0;
     private Handler mHandler = new Handler() {
@@ -54,6 +56,11 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
                     BugleAnalytics.logEvent("Start_SetAsDefault_Success", true, "step", "setasdefault page");
                     BugleFirebaseAnalytics.logEvent("Start_SetAsDefault_Success",  "step", "setasdefault page");
                 } else {
+                    if (mIsFromOverrideNotification){
+                        BugleAnalytics.logEvent("SetAsDefault_GuidePage_Success",true,"TYPE", "PUSH");
+                    } else {
+                        BugleAnalytics.logEvent("SetAsDefault_GuidePage_Success",true,"TYPE", "OTHER");
+                    }
                     BugleAnalytics.logEvent("SetAsDefault_GuidePage_Success", true);
                     BugleFirebaseAnalytics.logEvent("SetAsDefault_GuidePage_Success");
                 }
@@ -74,6 +81,9 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
             if (getIntent().getBooleanExtra(UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION, false)){
                 mIsFromConversationNotification = true;
             }
+            if (mIsFromConversationNotification || getIntent().getBooleanExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, false)){
+                mIsFromOverrideNotification = true;
+            }
         }
 
         findViewById(R.id.welcome_set_default_button).setBackgroundDrawable(
@@ -85,7 +95,11 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
                 BugleAnalytics.logEvent("Start_SetAsDefault_Click", true);
                 BugleFirebaseAnalytics.logEvent("Start_SetAsDefault_Click");
             } else {
-                BugleAnalytics.logEvent("SetAsDefault_GuidePage_Click", true);
+                if (mIsFromOverrideNotification){
+                    BugleAnalytics.logEvent("SetAsDefault_GuidePage_Click",true,"TYPE", "PUSH");
+                } else {
+                    BugleAnalytics.logEvent("SetAsDefault_GuidePage_Click",true,"TYPE", "OTHER");
+                }
                 BugleFirebaseAnalytics.logEvent("SetAsDefault_GuidePage_Click");
             }
         });
@@ -101,7 +115,11 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
             BugleAnalytics.logEvent("Start_SetAsDefault_Show", true);
             BugleFirebaseAnalytics.logEvent("Start_SetAsDefault_Show");
         } else {
-            BugleAnalytics.logEvent("SetAsDefault_GuidePage_Show", true);
+            if (mIsFromOverrideNotification){
+                BugleAnalytics.logEvent("SetAsDefault_GuidePage_Show",true,"TYPE", "PUSH");
+            } else {
+                BugleAnalytics.logEvent("SetAsDefault_GuidePage_Show",true,"TYPE", "OTHER");
+            }
             BugleFirebaseAnalytics.logEvent("SetAsDefault_GuidePage_Show");
         }
     }

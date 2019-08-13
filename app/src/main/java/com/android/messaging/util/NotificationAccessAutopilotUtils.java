@@ -43,6 +43,14 @@ public class NotificationAccessAutopilotUtils {
         AutopilotEvent.logTopicEvent(NOTIFICATION_ACCESS_TOPIC_ID, "fullad_show");
     }
 
+    public static void logExitAdShouldShow(){
+        AutopilotEvent.logTopicEvent(NOTIFICATION_ACCESS_TOPIC_ID, "exitad_chance");
+    }
+
+    public static void logExitAdShow(){
+        AutopilotEvent.logTopicEvent(NOTIFICATION_ACCESS_TOPIC_ID, "exitad_show");
+    }
+
     public static void logNotificationPushed() {
         AutopilotEvent.logTopicEvent(NOTIFICATION_ACCESS_TOPIC_ID, "notification_pushed");
     }

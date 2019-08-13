@@ -26,16 +26,19 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (!DefaultSMSUtils.isDefaultSmsApp()) {
-            if (getIntent() != null && getIntent().getBooleanExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, false)) {
-                HSLog.d("NotificationListener", "EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION true");
-                BugleNotifications.cancelAllSmsNotifications();
-            }
             if (getIntent() != null && getIntent().getBooleanExtra(UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION, false)) {
                 HSLog.d("NotificationListener", "UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION true");
                 final Intent intent = new Intent(this, WelcomeSetAsDefaultActivity.class);
                 intent.putExtra(UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION, true);
                 startActivity(intent, TransitionUtils.getTransitionInBundle(this));
                 BugleNotifications.cancelAllSmsNotifications();
+            } else if (getIntent() != null && getIntent().getBooleanExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, false)){
+                HSLog.d("NotificationListener", "EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION true");
+                final Intent intent = new Intent(this, WelcomeSetAsDefaultActivity.class);
+                intent.putExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, true);
+                startActivity(intent, TransitionUtils.getTransitionInBundle(this));
+                BugleNotifications.cancelAllSmsNotifications();
+                finish();
             } else {
                 HSLog.d("NotificationListener", "UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION false");
                 UIIntents.get().launchWelcomeSetAsDefaultActivity(this);

@@ -890,9 +890,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
         BugleAnalytics.logEvent("SMS_Messages_Back", true, "type", "exitadchance");
         BugleAnalytics.logEvent("SMS_ExitAd_Chance", true);
-
         BugleFirebaseAnalytics.logEvent("SMS_Ad", "type", "exitad_chance");
         ExitAdAutopilotUtils.logExitAdChance();
+        NotificationAccessAutopilotUtils.logExitAdShouldShow();
         List<AcbInterstitialAd> ads = AcbInterstitialAdManager.fetch(AdPlacement.AD_EXIT_WIRE, 1);
         if (ads.size() > 0) {
             ExitAdAutopilotUtils.logSmsExitApp();
@@ -971,6 +971,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
             BugleFirebaseAnalytics.logEvent("SMS_Ad", "type", "exitad_show");
 
             ExitAdAutopilotUtils.logExitAdShow();
+            NotificationAccessAutopilotUtils.logExitAdShow();
             mPrefs.putInt(PREF_KEY_EXIT_WIRE_AD_SHOW_COUNT_IN_ONE_DAY, exitAdShownCountInOneDay + 1);
             mPrefs.putLong(PREF_KEY_EXIT_WIRE_AD_SHOW_TIME, System.currentTimeMillis());
             return true;
