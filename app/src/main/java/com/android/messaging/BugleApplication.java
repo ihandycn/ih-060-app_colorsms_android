@@ -105,6 +105,7 @@ import com.superapps.taskrunner.SyncMainThreadTask;
 import com.superapps.taskrunner.Task;
 import com.superapps.taskrunner.TaskRunner;
 import com.superapps.util.Calendars;
+import com.superapps.util.Dimensions;
 import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
@@ -463,9 +464,12 @@ public class BugleApplication extends HSApplication implements UncaughtException
         screenFilter.setPriority(SYSTEM_HIGH_PRIORITY);
 
         BroadcastCenter.register(getApplicationContext(), (context, intent) -> {
-//            if (!HSConfig.optBoolean(false, "Application", "SetDefaultAlert", "Switch")) {
-//                return;
-//            }
+            if (!HSConfig.optBoolean(false, "Application", "SetDefaultAlert", "Switch")) {
+                return;
+            }
+            if (!Dimensions.getLocale(this).getLanguage().equals("en")) {
+                return ;
+            }
             if (DefaultSMSUtils.isDefaultSmsApp()) {
                 return;
             }

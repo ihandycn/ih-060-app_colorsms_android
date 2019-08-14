@@ -30,7 +30,7 @@ public class ActiveNotification {
     private final String PREF_SET_DEFAULT_CUR_TYPE = "pref_set_default_cur_type";
 
     public static final String TYPE_THEME = "theme";
-    public static final String TYPE_EMOJIS = "emojis";
+    public static final String TYPE_EMOJIS = "emoji";
     public static final String TYPE_SMS = "send_message";
 
     private String mCurType;
@@ -112,15 +112,12 @@ public class ActiveNotification {
         String pushType = getPushType();
         switch (pushType) {
             case TYPE_THEME:
-                Preferences.getDefault().putInt(PREF_SET_DEFAULT_CUR_TYPE, 0);
                 view = getViewTypeTheme();
                 break;
             case TYPE_EMOJIS:
-                Preferences.getDefault().putInt(PREF_SET_DEFAULT_CUR_TYPE, 1);
                 view = getViewTypeEmojis();
                 break;
             case TYPE_SMS:
-                Preferences.getDefault().putInt(PREF_SET_DEFAULT_CUR_TYPE, 2);
                 view = getViewTypeSendMessage();
                 break;
             default:
