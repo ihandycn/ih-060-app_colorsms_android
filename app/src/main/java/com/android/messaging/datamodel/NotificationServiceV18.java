@@ -277,18 +277,27 @@ public class NotificationServiceV18 extends NotificationListenerService {
                     HSLog.d("NotificationListener", "isNotificationIdExisted = " + isNotificationIdExisted);
                     if (isNotificationIdExisted) {
                         notifyMgr.notify(notificationExistId, notification);
-                        if (notificationIdNumber >= 3) {
-                            PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = notificationIdNumber - 1;
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                            if (notificationIdNumber >= 3) {
+                                PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = notificationIdNumber - 1;
+                            } else {
+                                PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = notificationIdNumber;
+                            }
                         } else {
                             PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = notificationIdNumber;
                         }
                     } else {
-                        if (notificationIdNumber == 1) {
-                            notifyMgr.notify(-1, createSummaryNotification(channelId, summaryNotificationMessageTitle, summaryNotificationMessageText));
-                        }
-                        if (notificationIdNumber >= 3) {
-                            PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = notificationIdNumber;
-                            notifyMgr.notify(notificationIdNumber, notification);
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+                            if (notificationIdNumber == 1) {
+                                notifyMgr.notify(-1, createSummaryNotification(channelId, summaryNotificationMessageTitle, summaryNotificationMessageText));
+                            }
+                            if (notificationIdNumber >= 3) {
+                                PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = notificationIdNumber;
+                                notifyMgr.notify(notificationIdNumber, notification);
+                            } else {
+                                PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = notificationIdNumber + 1;
+                                notifyMgr.notify(notificationIdNumber + 1, notification);
+                            }
                         } else {
                             PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = notificationIdNumber + 1;
                             notifyMgr.notify(notificationIdNumber + 1, notification);
