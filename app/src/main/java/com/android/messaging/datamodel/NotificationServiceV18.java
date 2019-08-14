@@ -32,8 +32,10 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.AvatarUriUtil;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.DefaultSMSUtils;
+import com.android.messaging.util.NotificationAccessAutopilotUtils;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.PhoneUtils;
@@ -47,7 +49,6 @@ import com.superapps.util.Threads;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static android.support.v4.app.NotificationCompat.isGroupSummary;
 
@@ -55,6 +56,7 @@ import static android.support.v4.app.NotificationCompat.isGroupSummary;
 public class NotificationServiceV18 extends NotificationListenerService {
 
     public static final String EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION = "override_system_sms_notification";
+    public static final String EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION_ACTION = "override_system_sms_notification_action";
 
     private static String sDefaultSmsApp;
 
@@ -249,7 +251,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
                 List<String> summaryNotificationMessageText = new ArrayList<>();
                 BlockedNotificationInfo notificationInfo;
 
-                CharSequence[] textLines = null;
+                String existBigText = null;
                 // find the existed notification
                 int num = 0;
                 StatusBarNotification lastNotification = null;
@@ -263,7 +265,9 @@ public class NotificationServiceV18 extends NotificationListenerService {
                         HSLog.d("NotificationListener", "notificationInfo.title = " + notificationInfo.title);
                         HSLog.d("NotificationListener", "messageTitle = " + messageTitle);
                         if (notificationInfo.title.equals(messageTitle)) {
-                            textLines = Objects.requireNonNull(getExtras(notificationInfo.notification)).getCharSequenceArray("android.textLines");
+                            Bundle extras = statusBarNotification.getNotification().extras;
+                            Object bigText = extras.get(NotificationCompat.EXTRA_BIG_TEXT);
+                            existBigText = (bigText == null ? null : bigText.toString());
                         }
                         lastNotification = statusBarNotification;
                         num++;
@@ -277,7 +281,9 @@ public class NotificationServiceV18 extends NotificationListenerService {
                     notifyMgr.notify(id, createSummaryNotification(channelId, summaryNotificationMessageTitle, summaryNotificationMessageText));
                 }
 
-                Notification notification = createNotification(channelId, messageTitle, messageText, textLines);
+                Notification notification = createNotification(channelId, messageTitle, messageText, existBigText);
+                NotificationAccessAutopilotUtils.logNotificationPushed();
+                BugleAnalytics.logEvent("Notification_Pushed_NA", true);
                 notifyMgr.notify(tag, id, notification);
             }
         };
@@ -304,7 +310,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
                 .build();
     }
 
-    private Notification createNotification(String channelId, String messageTitle, String messageText, CharSequence[] textLines) {
+    private Notification createNotification(String channelId, String messageTitle, String messageText, String existBigText) {
         String conversationId = null;
         String normalizedMessageTitle = PhoneUtils.getDefault().getCanonicalBySimLocale(messageTitle);
         String displayMessageTitle = PhoneUtils.getDefault().formatForDisplay(normalizedMessageTitle);
@@ -327,18 +333,31 @@ public class NotificationServiceV18 extends NotificationListenerService {
         //group
         String groupKey = "groupkey";
 
-        //pending intent
-        Intent intent;
-        PendingIntent pendingIntent;
+        //pending destinationIntent
+        Intent destinationIntent;
+        PendingIntent destinationPendingIntent;
+
+
+        //pending replyActionIntent
+        Intent replyActionIntent;
+        PendingIntent replyActionPendingIntent;
         if (TextUtils.isEmpty(conversationId)) {
             HSLog.d("NotificationListener", "conversationId is empty");
-            intent = new Intent(this, ConversationListActivity.class);
-            intent.putExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, true);
-            pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            destinationIntent = new Intent(this, ConversationListActivity.class);
+            destinationIntent.putExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, true);
+            destinationPendingIntent = PendingIntent.getActivity(this, 0, destinationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+            replyActionIntent = new Intent(this, ConversationListActivity.class);
+            replyActionIntent.putExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, true);
+            replyActionIntent.putExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION_ACTION, true);
+            replyActionPendingIntent = PendingIntent.getActivity(this, 0, replyActionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         } else {
             HSLog.d("NotificationListener", "conversationId is not empty");
-            pendingIntent = UIIntents.get()
-                    .getPendingIntentForConversationActivity(HSApplication.getContext(), conversationId, null /* draft */);
+            destinationPendingIntent = UIIntents.get()
+                    .getPendingIntentForConversationActivityFromFakeDefaultSmsNotification(HSApplication.getContext(), conversationId, false);
+            replyActionPendingIntent = UIIntents.get()
+                    .getPendingIntentForConversationActivityFromFakeDefaultSmsNotification(HSApplication.getContext(), conversationId, true);
+
         }
 
         //defaults
@@ -350,7 +369,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
         //action
         NotificationCompat.Action action =
                 new NotificationCompat.Action.Builder(R.drawable.ic_wear_reply,
-                        HSApplication.getContext().getString(R.string.notification_reply_via_sms), pendingIntent)
+                        HSApplication.getContext().getString(R.string.notification_reply_via_sms), replyActionPendingIntent)
                         .build();
 
         //large icon
@@ -366,29 +385,24 @@ public class NotificationServiceV18 extends NotificationListenerService {
         avatarImage.release();
 
         //style
-        NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-        inboxStyle.setBigContentTitle(messageTitle);
-        if (textLines != null && textLines.length > 0) {
-            HSLog.d("NotificationListener", "textLines =  " + textLines[textLines.length - 1].toString());
-            for (CharSequence textLine : textLines) {
-                inboxStyle.addLine(textLine);
-            }
-            inboxStyle.addLine(messageText);
+        NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle();
+        bigTextStyle.setBigContentTitle(messageTitle);
+        if (existBigText != null) {
+            bigTextStyle.bigText(existBigText + "\n" + messageText);
         } else {
-            HSLog.d("NotificationListener", "textLines = null");
-            inboxStyle.addLine(messageText);
+            bigTextStyle.bigText(messageText);
         }
 
         return new NotificationCompat.Builder(this, channelId)
                 .setContentTitle(messageTitle)
                 .setContentText(messageText)
-                .setStyle(inboxStyle)
+                .setStyle(bigTextStyle)
                 .setWhen(System.currentTimeMillis())
                 .setSmallIcon(R.drawable.ic_sms_light)
                 .setLargeIcon(avatarBitmap)
                 .setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
                 .setColor(PrimaryColors.getPrimaryColor())
-                .setContentIntent(pendingIntent)
+                .setContentIntent(destinationPendingIntent)
                 .setDefaults(defaults)
                 .setSound(RingtoneUtil.getNotificationRingtoneUri(null))
                 .setPriority(Notification.PRIORITY_HIGH)
@@ -396,8 +410,6 @@ public class NotificationServiceV18 extends NotificationListenerService {
                 .setGroup(groupKey)
                 .addAction(action)
                 .build();
-
-
     }
 
     private boolean shouldVibrate() {

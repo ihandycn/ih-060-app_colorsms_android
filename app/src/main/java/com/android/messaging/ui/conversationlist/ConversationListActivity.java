@@ -362,7 +362,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 navigationView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
-        NotificationAccessAutopilotUtils.logHomePageShow();
     }
 
     private void onPostPageVisible() {
@@ -412,6 +411,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         BugleAnalytics.logEvent("SMS_Messages_Show_Corrected", true);
         BugleFirebaseAnalytics.logEvent("SMS_Messages_Show_Corrected");
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "homepage_show");
+        NotificationAccessAutopilotUtils.logHomePageShow();
         showThemeUpgradeDialog();
 
         if (drawerLayout != null) {

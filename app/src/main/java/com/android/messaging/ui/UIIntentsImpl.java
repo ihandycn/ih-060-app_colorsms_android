@@ -46,6 +46,7 @@ import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.ConversationImagePartsView;
 import com.android.messaging.datamodel.MediaScratchFileProvider;
 import com.android.messaging.datamodel.MessagingContentProvider;
+import com.android.messaging.datamodel.NotificationServiceV18;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
@@ -83,6 +84,8 @@ import com.android.messaging.util.TransitionUtils;
 import com.android.messaging.util.UriUtil;
 import com.ihs.app.framework.HSApplication;
 import com.superapps.util.Navigations;
+
+import static com.android.messaging.datamodel.NotificationServiceV18.EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION_ACTION;
 
 /**
  * A central repository of Intents used to start activities.
@@ -478,7 +481,6 @@ public class UIIntentsImpl extends UIIntents {
                                                                  final String conversationId, final MessageData draft) {
         final Intent intent = getConversationActivityIntent(context, conversationId, draft,
                 false /* withCustomTransition */);
-        intent.putExtra(UIIntents.UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION, true);
         // Ensure that the platform doesn't reuse PendingIntents across conversations
         intent.setData(MessagingContentProvider.buildConversationMetadataUri(conversationId));
         return getPendingIntentWithParentStack(context, intent, 0);
@@ -492,6 +494,21 @@ public class UIIntentsImpl extends UIIntents {
         // Ensure that the platform doesn't reuse PendingIntents across conversations
         intent.setData(MessagingContentProvider.buildConversationMetadataUri(conversationId));
         intent.putExtra(BugleNotifications.EXTRA_FROM_NOTIFICATION, true);
+        return getPendingIntentWithParentStack(context, intent, 0);
+    }
+
+    @Override
+    public PendingIntent getPendingIntentForConversationActivityFromFakeDefaultSmsNotification(final Context context,
+                                                                                               final String conversationId,
+                                                                                               boolean isNotificationAction) {
+        final Intent intent = getConversationActivityIntent(context, conversationId, null,
+                false /* withCustomTransition */);
+        // Ensure that the platform doesn't reuse PendingIntents across conversations
+        intent.setData(MessagingContentProvider.buildConversationMetadataUri(conversationId));
+        if (isNotificationAction) {
+            intent.putExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION_ACTION, true);
+        }
+        intent.putExtra(UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION, true);
         return getPendingIntentWithParentStack(context, intent, 0);
     }
 

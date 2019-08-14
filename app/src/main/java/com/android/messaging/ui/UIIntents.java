@@ -351,6 +351,11 @@ public abstract class UIIntents {
                                                                           final String conversationId, final MessageData draft);
 
     /**
+     * Get a PendingIntent for showing a conversation from notification action.
+     */
+    public abstract PendingIntent getPendingIntentForConversationActivityFromFakeDefaultSmsNotification(final Context context,
+                                                                                                        final String conversationId, boolean isNotificationAction);
+    /**
      * Get a PendingIntent for showing a conversation from notifications.
      */
     public abstract PendingIntent getPendingIntentForConversationActivityFromNotification(final Context context,
