@@ -132,6 +132,7 @@ import com.android.messaging.util.TextUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
 import com.android.messaging.util.ViewUtils;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.annotations.VisibleForTesting;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
@@ -139,6 +140,7 @@ import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.ihs.commons.utils.HSLog;
+import com.superapps.debug.CrashlyticsLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Compats;
 import com.superapps.util.Dimensions;
@@ -750,6 +752,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     }
 
     public void showTopBannerAd() {
+        if (getActivity() == null || UiUtils.isDestroyed(getActivity())) {
+            HSLog.e("ad received after activity destroyed");
+            CrashlyticsCore.getInstance().logException(new CrashlyticsLog("ad received after activity destroyed"));
+            return;
+        }
         if (((ConversationActivity) getActivity()).shouldShowContactPickerFragment()) {
             BugleAnalytics.logEvent("Detailspage_TopAd_Not_Show", "reason", "isFromContactPicker");
             return;
