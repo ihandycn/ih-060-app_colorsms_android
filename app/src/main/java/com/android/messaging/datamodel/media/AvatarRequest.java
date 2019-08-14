@@ -26,16 +26,17 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
 import android.net.Uri;
 
 import com.android.messaging.R;
+import com.android.messaging.font.FontUtils;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.LogUtil;
-import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UriUtil;
 
 import java.io.FileNotFoundException;
@@ -176,7 +177,7 @@ public class AvatarRequest extends UriImageRequest<AvatarRequestDescriptor> {
                 backgroundColor);
         final Resources resources = mContext.getResources();
         final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        paint.setTypeface(Typefaces.getCustomSemiBold());
+        paint.setTypeface(FontUtils.getTypeface(R.string.custom_font_semibold, Typeface.NORMAL));
         paint.setColor(getDescriptor().useForegroundColor ?
                 Color.parseColor(ThemeUtils.getCurrentTheme().avatarForegroundColor) : 0xffffffff);
         final float letterToTileRatio = resources.getFraction(R.dimen.letter_to_tile_ratio, 1, 1);
