@@ -61,7 +61,7 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
     private Choreographer mChoreographer;
     private Choreographer.FrameCallback mFrameCallback;
     private INotificationObserver mNotificationObserver;
-    private boolean mHasTheme;
+    private boolean mHasWallpaper;
     private boolean mIsActivityFirstStart = true;
 
     @Override
@@ -243,7 +243,7 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         if (mTitle != null) {
             mTitle.setVisibility(View.GONE);
         }
-        if (mHasTheme) {
+        if (mHasWallpaper) {
             findViewById(R.id.selection_mode_bg).setVisibility(View.VISIBLE);
         }
         return super.startActionMode(callback);
@@ -266,11 +266,12 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         accessoryContainer.setLayoutParams(lp);
         Drawable customToolBar = ChatListCustomizeManager.getToolbarDrawable();
         if (customToolBar != null) {
+            mHasWallpaper = true;
             ImageView ivAccessoryBg = accessoryContainer.findViewById(R.id.accessory_bg);
             ivAccessoryBg.setVisibility(View.VISIBLE);
             ivAccessoryBg.setImageDrawable(customToolBar);
         } else if (ToolbarDrawables.getToolbarBg() != null) {
-            mHasTheme = true;
+            mHasWallpaper = true;
             findViewById(R.id.accessory_bg).setBackground(ToolbarDrawables.getToolbarBg());
         } else {
             accessoryContainer.setBackgroundColor(PrimaryColors.getPrimaryColor());
