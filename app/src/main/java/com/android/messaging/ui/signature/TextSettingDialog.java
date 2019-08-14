@@ -111,7 +111,7 @@ public abstract class TextSettingDialog extends DialogFragment {
         saveBtn.setOnClickListener(v -> {
             String text = mInputEditText.getText().toString();
             if (TextUtils.isEmpty(text)) {
-                return;
+                text = "";
             }
             onSave(text);
             if (mHost != null) {
