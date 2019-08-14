@@ -5,11 +5,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
+import android.net.Uri;
 import android.provider.Telephony;
 import android.provider.Telephony.Sms;
 import android.text.TextUtils;
 
 import com.android.messaging.datamodel.DataModel;
+import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseWrapper;
 import com.android.messaging.mmslib.SqliteWrapper;
 import com.android.messaging.sms.MmsUtils;
@@ -18,6 +20,7 @@ import com.google.common.collect.Sets;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
 
+import java.security.cert.Extension;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -253,13 +256,46 @@ class RestoreSyncCursorPair {
         if (OsUtil.isAtLeastL_MR1()) {
             values.put(BackupDatabaseHelper.MessageColumn.SUBSCRIPTION_ID, sms.mSubId);
         }
-        resolver.insert(Telephony.Sms.CONTENT_URI, values);
 
+        Uri uri = resolver.insert(Telephony.Sms.CONTENT_URI, values);
         DatabaseWrapper db = DataModel.get().getDatabase();
+        updateMessageData(db, uri, sms);
+
         db.delete(BackupDatabaseHelper.BACKUP_MESSAGE_TABLE,
                 BackupDatabaseHelper.MessageColumn.ADDRESS + "=? AND "
                         + BackupDatabaseHelper.MessageColumn.DATE + "=? AND "
                         + BackupDatabaseHelper.MessageColumn.BODY + "=? ",
                 new String[]{sms.mAddress, String.valueOf(sms.getTimestampInMillis()), sms.mBody});
+    }
+
+    public void updateMessageData(DatabaseWrapper db, Uri telephonyUri, BackupSmsMessage sms) {
+        String selectSql = "SELECT " + DatabaseHelper.MESSAGES_TABLE + "." + DatabaseHelper.MessageColumns._ID
+                + " FROM " + DatabaseHelper.MESSAGES_TABLE + " LEFT JOIN " + DatabaseHelper.PARTS_TABLE
+                + " ON (" + DatabaseHelper.PARTS_TABLE + "." + DatabaseHelper.PartColumns.MESSAGE_ID
+                + " = " + DatabaseHelper.MESSAGES_TABLE + "." + DatabaseHelper.MessageColumns._ID + ") "
+                + " WHERE " + DatabaseHelper.MessageColumns.RECEIVED_TIMESTAMP + "=" + sms.getTimestampInMillis()
+                + " AND " + DatabaseHelper.PartColumns.TEXT + " =? "
+                + " AND " + DatabaseHelper.MessageColumns.IS_LOCKED + "=1";
+        Cursor cursor = null;
+        try {
+            cursor = db.rawQuery(selectSql, new String[]{sms.mBody});
+            if (cursor.getCount() == 0) {
+                return;
+            }
+            while (cursor.moveToNext()) {
+                String messageId = cursor.getString(0);
+                ContentValues values = new ContentValues();
+                values.put(DatabaseHelper.MessageColumns.IS_DELETED, 0);
+                values.put(DatabaseHelper.MessageColumns.SMS_MESSAGE_URI, telephonyUri.toString());
+                db.update(DatabaseHelper.MESSAGES_TABLE, values,
+                        DatabaseHelper.MessageColumns._ID + "=?", new String[]{messageId});
+            }
+        } catch (Exception ignored) {
+
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
     }
 }
