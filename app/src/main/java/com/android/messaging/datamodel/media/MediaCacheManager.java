@@ -41,7 +41,9 @@ public abstract class MediaCacheManager implements MemoryCache {
     public void reclaim() {
         final int count = mCaches.size();
         for (int i = 0; i < count; i++) {
-            mCaches.valueAt(i).destroy();
+            if (mCaches.valueAt(i) != null) {
+                mCaches.valueAt(i).destroy();
+            }
         }
         mCaches.clear();
     }
