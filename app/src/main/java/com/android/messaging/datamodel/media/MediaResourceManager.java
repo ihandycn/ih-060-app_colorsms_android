@@ -22,6 +22,7 @@ import com.android.messaging.util.Assert;
 import com.android.messaging.util.Assert.RunsOnAnyThread;
 import com.android.messaging.util.LogUtil;
 import com.google.common.annotations.VisibleForTesting;
+import com.superapps.util.Threads;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -245,7 +246,8 @@ public class MediaResourceManager {
         if (cachedResource != null && !cachedResource.isEncoded()) {
             final List<MediaRequest<T>> chainedRequests = new ArrayList<>();
             MediaLoadingResult<T> result = new MediaLoadingResult<>(cachedResource, true /* fromCache */, chainedRequests);
-            executeLoadedResult(result, loadException, bindableRequest, mediaRequest);
+            final Exception exceptionFinal = loadException;
+            Threads.postOnMainThread(() -> executeLoadedResult(result, exceptionFinal, bindableRequest, mediaRequest));
             return;
         }
 

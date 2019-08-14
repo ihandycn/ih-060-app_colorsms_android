@@ -14,10 +14,20 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<fragment
+
+<LinearLayout
+    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    class="com.android.messaging.ui.VCardDetailFragment"
-    android:id="@+id/vcard_detail_fragment"
-    android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent">
+
+    <include
+        layout="@layout/top_tool_bar_view"/>
+
+    <fragment
+        android:id="@+id/vcard_detail_fragment"
+        class="com.android.messaging.ui.VCardDetailFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:theme="@style/Theme.AppCompat.Light.DarkActionBar"/>
+</LinearLayout>

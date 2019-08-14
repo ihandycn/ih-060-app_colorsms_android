@@ -274,9 +274,8 @@
         <activity
             android:name=".ui.VCardDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="@string/vcard_detail_activity_title"
             android:screenOrientation="portrait"
-            android:theme="@style/BugleTheme">
+            android:theme="@style/BaseSettingsActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.conversation.ConversationActivity"/>

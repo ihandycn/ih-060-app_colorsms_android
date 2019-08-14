@@ -18,10 +18,13 @@ package com.android.messaging.ui;
 import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.android.messaging.R;
 import com.android.messaging.util.Assert;
+import com.android.messaging.util.UiUtils;
 
 /**
  * An activity that hosts VCardDetailFragment that shows the content of a VCard that contains one
@@ -32,7 +35,18 @@ public class VCardDetailActivity extends BugleActionBarActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.vcard_detail_activity);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        UiUtils.setTitleBarBackground(toolbar, this);
+        TextView title = toolbar.findViewById(R.id.toolbar_title);
+        title.setText(getString(R.string.vcard_detail_activity_title));
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
     }
 
     @Override
