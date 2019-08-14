@@ -45,6 +45,11 @@ public class ConversationSettingGuide extends FrameLayout {
         lp.topMargin = Dimensions.pxFromDp(33.3f) + Dimensions.getStatusBarHeight(context);
         lp.rightMargin = Dimensions.pxFromDp(30.3f);
         tv.setLayoutParams(lp);
+        if (Dimensions.getPhoneWidth(context) >= 1080) {
+            tv.setTextSize(16);
+            tv.setMaxWidth(Dimensions.pxFromDp(300));
+            tv.setPadding(Dimensions.pxFromDp(30), Dimensions.pxFromDp(18), Dimensions.pxFromDp(30), Dimensions.pxFromDp(14));
+        }
 
         // start animation
         AnimationSet animationSet = new AnimationSet(false);
