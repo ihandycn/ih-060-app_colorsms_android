@@ -72,9 +72,9 @@ public class MessageScheduleManager {
         AlarmManager alarmManager = (AlarmManager) HSApplication.getContext().getSystemService(Context.ALARM_SERVICE);
         PendingIntent intent = HandleScheduledMessageAction.getPendingIntentForHandleScheduledMessage(messageId);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, scheduledTime - 100, intent);
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, scheduledTime, intent);
         } else {
-            alarmManager.setExact(AlarmManager.RTC_WAKEUP, scheduledTime - 100, intent);
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, scheduledTime, intent);
         }
     }
 
