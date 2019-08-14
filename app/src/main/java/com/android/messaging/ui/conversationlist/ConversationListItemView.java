@@ -445,7 +445,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             Drawable pinDrawable = getResources().getDrawable(R.drawable.ic_small_pin);
             pinDrawable.setColorFilter(
                     ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
-            ChatListCustomizeManager.changeDrawableColorIfNeed(pinDrawable);
+            ChatListCustomizeManager.changeDrawableColorIfNeed(pinDrawable, false);
             pinDrawable.setBounds(0, 0, pinDrawable.getIntrinsicWidth(), pinDrawable.getIntrinsicHeight());
             CenteredImageSpan span = new CenteredImageSpan(pinDrawable);
             sp.setSpan(span, bj * 2 - 2, bj * 2 - 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
@@ -455,7 +455,7 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
             Drawable muteDrawable = getResources().getDrawable(R.drawable.ic_small_mute);
             muteDrawable.setColorFilter(
                     ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
-            ChatListCustomizeManager.changeDrawableColorIfNeed(muteDrawable);
+            ChatListCustomizeManager.changeDrawableColorIfNeed(muteDrawable, false);
             muteDrawable.setBounds(0, 0, muteDrawable.getIntrinsicWidth(), muteDrawable.getIntrinsicHeight());
             CenteredImageSpan span = new CenteredImageSpan(muteDrawable);
             sp.setSpan(span, bj * 2 - 2, bj * 2 - 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
