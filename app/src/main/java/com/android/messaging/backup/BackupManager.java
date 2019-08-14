@@ -110,104 +110,100 @@ public class BackupManager {
         return sInstance;
     }
 
-    public void restoreMessages(BackupInfo backupInfo, MessageRestoreListener messageRestoreListener) {
+    public void restoreMessages(BackupInfo backupInfo,final MessageRestoreListener messageRestoreListener) {
         Threads.postOnThreadPoolExecutor(() -> {
             WeakReference<MessageRestoreListener> weakListener = new WeakReference<>(messageRestoreListener);
-            CloudFileDownloadListener listener = new CloudFileDownloadListener() {
-                @Override
-                public void onDownloadSuccess(File file) {
-                    if (weakListener.get() != null
-                            && backupInfo.getLocationType() == BackupInfo.CLOUD) {
-                        weakListener.get().onDownloadSuccess();
-                    }
-                    //2.resolve file messages
-                    List<BackupSmsMessage> backupMessages = BackupPersistManager.get().resolveMessages(file);
-                    if (backupMessages.size() <= 0) {
-                        BugleAnalytics.logEvent("Backup_RestorePage_Restore_Failed",
-                                "reason", "no_message_in_file");
-                        if (weakListener.get() != null) {
-                            weakListener.get().onRestoreFailed();
-                        }
-                        return;
-                    }
-
-                    //3.sync messages
-                    Threads.postOnThreadPoolExecutor(() -> {
-                        MessageRestoreToDBListener listener1 = new MessageRestoreToDBListener() {
-                            @Override
-                            public void onRestoreStart() {
-                                Threads.postOnMainThread(() -> {
-                                    if (weakListener.get() != null) {
-                                        weakListener.get().onRestoreStart(backupMessages.size());
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onRestoreUpdate(int restoredCount) {
-                                Threads.postOnMainThread(() -> {
-                                    if (weakListener.get() != null) {
-                                        weakListener.get().onRestoreUpdate(restoredCount);
-                                    }
-                                });
-                            }
-
-                            @Override
-                            public void onRestoreSuccess() {
-                                BugleAnalytics.logEvent("Backup_RestorePage_Restore_Success",
-                                        true,
-                                        "restorefrom",
-                                        backupInfo.getLocationType() == BackupInfo.LOCAL ? "local" : "cloud");
-                                if (weakListener.get() != null) {
-                                    weakListener.get().onRestoreSuccess();
-                                }
-                            }
-
-                            @Override
-                            public void onRestoreFailed() {
-                                if (weakListener.get() != null) {
-                                    weakListener.get().onRestoreFailed();
-                                }
-                            }
-                        };
-                        Collections.sort(backupMessages,
-                                (o1, o2) -> {
-                                    long t = o2.getTimestampInMillis() - o1.getTimestampInMillis();
-                                    return t > 0 ? 1 : t == 0 ? 0 : -1;
-                                });
-                        RestoreManager.get().restore(backupMessages, listener1);
-                    });
-                }
-
-                @Override
-                public void onDownloadFailed() {
-                    BugleAnalytics.logEvent("Backup_RestorePage_Restore_Failed",
-                            "reason", "download_failed");
-                    if (weakListener.get() != null) {
-                        weakListener.get().onDownloadFailed();
-                    }
-                }
-            };
             //1.load backup file, local or cloud
             File backupFile;
             if (backupInfo.getLocationType() == BackupInfo.LOCAL) {
                 backupFile = new File(CommonUtils.getDirectory(BackupPersistManager.BASE_PATH),
                         backupInfo.getKey());
                 if (!backupFile.exists()) {
-                    listener.onDownloadFailed();
+                    if (weakListener.get() != null) {
+                        weakListener.get().onRestoreFailed();
+                    }
                     BugleAnalytics.logEvent("Backup_RestorePage_Restore_Failed",
                             "reason", "file_not_exist");
                 } else {
-                    //go to next step
-                    listener.onDownloadSuccess(backupFile);
+                    syncMessages(backupFile, weakListener);
                 }
             } else {
                 MessageRestoreListener listener1 = weakListener.get();
                 if (listener1 != null) {
                     listener1.onDownloadStart();
                 }
+                CloudFileDownloadListener listener = new CloudFileDownloadListener() {
+                    @Override
+                    public void onDownloadSuccess(File file) {
+                        if (weakListener.get() != null) {
+                            weakListener.get().onDownloadSuccess();
+                        }
+                        syncMessages(file, weakListener);
+                    }
+
+                    @Override
+                    public void onDownloadFailed() {
+                        if (weakListener.get() != null) {
+                            weakListener.get().onDownloadFailed();
+                        }
+                        BugleAnalytics.logEvent("Backup_RestorePage_Restore_Failed",
+                                "reason", "download_failed");
+                    }
+                };
+
                 downloadCloudBackup(backupInfo, listener);
             }
+        });
+    }
+
+    private void syncMessages(File backupFile, WeakReference<MessageRestoreListener> listener) {
+        //2.resolve file messages
+        List<BackupSmsMessage> backupMessages = BackupPersistManager.get().resolveMessages(backupFile);
+        if (backupMessages.size() <= 0) {
+            BugleAnalytics.logEvent("Backup_RestorePage_Restore_Failed",
+                    "reason", "no_message_in_file");
+            if (listener.get() != null) {
+                listener.get().onRestoreFailed();
+            }
+            return;
+        }
+        //3.sync messages
+        Threads.postOnThreadPoolExecutor(() -> {
+            MessageRestoreToDBListener listener1 = new MessageRestoreToDBListener() {
+                @Override
+                public void onRestoreStart() {
+                    if (listener.get() != null) {
+                        listener.get().onRestoreStart(backupMessages.size());
+                    }
+                }
+
+                @Override
+                public void onRestoreUpdate(int restoredCount) {
+                    if (listener.get() != null) {
+                        listener.get().onRestoreUpdate(restoredCount);
+                    }
+                }
+
+                @Override
+                public void onRestoreSuccess() {
+                    if (listener.get() != null) {
+                        listener.get().onRestoreSuccess();
+                    }
+                }
+
+                @Override
+                public void onRestoreFailed() {
+                    if (listener.get() != null) {
+                        listener.get().onRestoreFailed();
+                    }
+                }
+            };
+            Collections.sort(backupMessages,
+                    (o1, o2) -> {
+                        long t = o2.getTimestampInMillis() - o1.getTimestampInMillis();
+                        return t > 0 ? 1 : t == 0 ? 0 : -1;
+                    });
+            RestoreManager.get().restore(backupMessages, listener1);
         });
     }
 

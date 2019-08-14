@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatCheckBox;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -124,8 +123,8 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
                     RestoreProcessDialog restoreProcessDialog = new RestoreProcessDialog();
                     restoreProcessDialog.setCancelable(false);
                     BackupManager.getInstance().restoreMessages(mLocalBackups.get(0),
-                            new MessageRestoreListenerImpl(restoreProcessDialog, true));
-                    UiUtils.showDialogFragment((Activity) mContext, restoreProcessDialog);
+                            new MessageRestoreListenerImpl(true));
+                    //UiUtils.showDialogFragment((Activity) mContext, restoreProcessDialog);
                     BugleAnalytics.logEvent("Backup_RestorePage_Restore_Click", true,
                             "restorefrom", "local");
                     BackupAutopilotUtils.logRestorePageClick();
@@ -141,8 +140,8 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
                     RestoreProcessDialog restoreProcessDialog = new RestoreProcessDialog();
                     restoreProcessDialog.setCancelable(false);
                     BackupManager.getInstance().restoreMessages(mCloudBackups.get(0),
-                            new MessageRestoreListenerImpl(restoreProcessDialog, false));
-                    UiUtils.showDialogFragment((Activity) mContext, restoreProcessDialog);
+                            new MessageRestoreListenerImpl(false));
+                    //UiUtils.showDialogFragment((Activity) mContext, restoreProcessDialog);
                     BugleAnalytics.logEvent("Backup_RestorePage_Restore_Click", true,
                             "restorefrom", "cloud");
                 }
@@ -161,14 +160,16 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
         RestoreProcessDialog mRestoreProcessDialog;
         boolean mIsLocal;
 
-        private MessageRestoreListenerImpl(@NonNull RestoreProcessDialog restoreProcessDialog, boolean isLocal) {
-            this.mRestoreProcessDialog = restoreProcessDialog;
+        private MessageRestoreListenerImpl(boolean isLocal) {
+            mRestoreProcessDialog = new RestoreProcessDialog();
+            mRestoreProcessDialog.setCancelable(false);
             this.mIsLocal = isLocal;
         }
 
         @Override
         public void onDownloadStart() {
             Threads.postOnMainThread(() -> {
+                UiUtils.showDialogFragment((Activity) mContext, mRestoreProcessDialog);
                 mRestoreProcessDialog.setStateText(getContext().getString(R.string.restore_downloading));
                 mRestoreProcessDialog.hideProgressBar(true);
             });
@@ -190,6 +191,9 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
         @Override
         public void onRestoreStart(int messageCount) {
             Threads.postOnMainThread(() -> {
+                if (mIsLocal) {
+                    UiUtils.showDialogFragment((Activity) mContext, mRestoreProcessDialog);
+                }
                 mRestoreProcessDialog.hideProgressBar(false);
                 mRestoreProcessDialog.setStateText(getContext().getString(R.string.restore_process_hint));
                 mRestoreProcessDialog.setTotal(messageCount);
@@ -221,6 +225,8 @@ public class ChooseRestoreViewHolder extends BasePagerViewHolder implements Cust
         @Override
         public void onRestoreSuccess() {
             backupCondition[1] = true;
+            BugleAnalytics.logEvent("Backup_RestorePage_Restore_Success",
+                    true, "restorefrom", mIsLocal ? "local" : "cloud");
             MessagingContentProvider.notifyEverythingChanged();
             if (backupCondition[0]) {
                 Threads.postOnMainThread(() -> {

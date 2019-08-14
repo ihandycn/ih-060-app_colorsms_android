@@ -27,6 +27,45 @@ public class RestoreProcessDialog extends BaseDialogFragment {
     private int mTargetCount;
     private long mStartTime;
 
+    public RestoreProcessDialog () {
+        mChoreographer = Choreographer.getInstance();
+        mCallback = frameTimeNanos -> {
+            long interval = Math.min(MIN_PROGRESS_TIME, System.currentTimeMillis() - mStartTime);
+            int progress;
+            int count;
+            if (mTotalCount * interval > mTargetCount * MIN_PROGRESS_TIME) {
+                //use actual progress
+                progress = Math.min((int) (100.0f * mTargetCount / mTotalCount), 100);
+                count = mTargetCount;
+            } else {
+                progress = Math.min((int) (100.0f * interval / MIN_PROGRESS_TIME), 100);
+                count = Math.min(mTotalCount, (int) (mTotalCount * 1.0f * interval / MIN_PROGRESS_TIME));
+            }
+
+            if (mProgressBar != null
+                    && mProgressBar.getProgress() != progress) {
+                mProgressBar.setProgress(progress);
+            }
+
+            if (mRestoredTextView != null
+                    && !String.valueOf(count).equals(mRestoredTextView.getText().toString())) {
+                mRestoredTextView.setText(String.valueOf(count));
+            }
+
+            if ((interval < MIN_PROGRESS_TIME
+                    || mTargetCount < mTotalCount)
+                    && progress < 100 && isResumed()) {
+                mChoreographer.postFrameCallback(mCallback);
+            }
+        };
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        dismissAllowingStateLoss();
+    }
+
     @Override
     protected CharSequence getTitle() {
         return null;
@@ -70,33 +109,6 @@ public class RestoreProcessDialog extends BaseDialogFragment {
             mProgressBar.setProgressTintList(colorStateList);
         }
 
-        mChoreographer = Choreographer.getInstance();
-        mCallback = frameTimeNanos -> {
-            long interval = Math.min(MIN_PROGRESS_TIME, System.currentTimeMillis() - mStartTime);
-            int progress;
-            int count;
-            if (mTotalCount * interval > mTargetCount * MIN_PROGRESS_TIME) {
-                //use actual progress
-                progress = Math.min((int) (100.0f * mTargetCount / mTotalCount), 100);
-                count = mTargetCount;
-            } else {
-                progress = Math.min((int) (100.0f * interval / MIN_PROGRESS_TIME), 100);
-                count = Math.min(mTotalCount, (int) (mTotalCount * 1.0f * interval / MIN_PROGRESS_TIME));
-            }
-
-            if (mProgressBar.getProgress() != progress
-                    || !String.valueOf(count).equals(mRestoredTextView.getText().toString())) {
-                mProgressBar.setProgress(progress);
-                mRestoredTextView.setText(String.valueOf(count));
-            }
-
-            if ((interval < MIN_PROGRESS_TIME
-                    || mTargetCount < mTotalCount)
-                    && progress < 100 && isResumed()) {
-                mChoreographer.postFrameCallback(mCallback);
-            }
-        };
-
         return view;
     }
 
@@ -136,6 +148,9 @@ public class RestoreProcessDialog extends BaseDialogFragment {
     public void setStateText(String text) {
         if (mStateView != null) {
             mStateView.setText(text);
+        }
+        if (mTotalView != null) {
+            mTotalView.setText(String.valueOf(mTotalCount));
         }
     }
 
