@@ -146,7 +146,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         });
         mHomeKeyWatcher.startWatch();
 
-        BugleAnalytics.logEvent("SMS_PopUp_Show");
+        BugleAnalytics.logEvent("SMS_PopUp_Show", true);
         BugleFirebaseAnalytics.logEvent("SMS_PopUp_Show");
     }
 
@@ -381,7 +381,9 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         Threads.postOnMainThread(() -> {
             if (NOTIFICATION_FINISH_MESSAGE_BOX.equals(s)) {
                 finish(CLICK_CONTENT);
-                BugleAnalytics.logEvent("SMS_Popups_ClickContent");
+                if (!isFinishing()) {
+                    BugleAnalytics.logEvent("SMS_Popups_ClickContent", true);
+                }
             } else if (NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED.equals(s)) {
                 Toasts.showToast(R.string.message_box_send_failed_toast);
                 removeCurrentPage(REPLY);
