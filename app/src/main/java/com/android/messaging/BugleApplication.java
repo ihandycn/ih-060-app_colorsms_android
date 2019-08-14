@@ -393,8 +393,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
     private void initAutopilot(HSApplication application) {
         AutopilotConfig.initialize(application, "autopilot-topics.json");
-        AutopilotConfig.setAudienceProperty("device_english",
-                "english".equalsIgnoreCase(Locale.getDefault().getDisplayLanguage()) ? "True" : "False");
+        AutopilotConfig.setAudienceProperty("device_language",
+                "english".equalsIgnoreCase(Locale.getDefault().getDisplayLanguage()) ? "english" : "non-english");
     }
 
     public static boolean isFabricInited() {

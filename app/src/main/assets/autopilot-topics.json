@@ -3,6 +3,23 @@
     {
       "select_value": [
         {
+          "name": "english",
+          "key": "english"
+        },
+        {
+          "name": "non-english",
+          "key": "non-english"
+        }
+      ],
+      "display_name": "test",
+      "field": "device_language",
+      "content_type": "string",
+      "attributes": "select_field",
+      "type": "App"
+    },
+    {
+      "select_value": [
+        {
           "name": "True",
           "key": true
         },
@@ -198,6 +215,12 @@
         },
         {
           "name": "notification_replied"
+        },
+        {
+          "name": "exitad_chance"
+        },
+        {
+          "name": "exitad_show"
         }
       ],
       "topic_id": "topic-77gqqjobm"
@@ -590,17 +613,6 @@
         }
       ],
       "topic_id": "topic-77jtf18mt"
-    },
-    "topic-74azpj82p": {
-      "topic_type": "one_day",
-      "topic_name": "To Export Config",
-      "variations": {},
-      "events": [
-        {
-          "name": "test"
-        }
-      ],
-      "topic_id": "topic-74azpj82p"
     }
   },
   "occasion_mgt": {
@@ -642,7 +654,7 @@
   "autopilot_id": 10104,
   "service_url": "https://ap.appcloudbox.net",
   "other_app_events": [],
-  "json_id": "6f191079-e9d8-4c18-9fd6-afe4af07d03d",
+  "json_id": "c644ad7c-672f-46a1-b717-129b74b58bb6",
   "autopilot_name": "Bubble_A",
   "autopilot_type": "app"
 }
