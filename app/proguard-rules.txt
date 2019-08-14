@@ -145,3 +145,5 @@
 
 -keep class com.android.messaging.backup.ui.ChooseBackupViewHolder { *; }
 -keep class com.android.messaging.backup.ui.ChooseRestoreViewHolder { *; }
+
+-keep class com.android.i18n.phonenumbers.** { *; }
