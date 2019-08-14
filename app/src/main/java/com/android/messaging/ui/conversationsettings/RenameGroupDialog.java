@@ -13,9 +13,13 @@ public class RenameGroupDialog extends TextSettingDialog {
 
     @Override
     public void onSave(String text) {
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
         if (TextUtils.isEmpty(mConversationId)) {
             throw new RuntimeException();
         }
+        dismiss();
         BugleAnalytics.logEvent("SMS_Detailspage_Settings_Rename_Save", false);
         RenameGroupAction.renameGroup(mConversationId, text);
     }

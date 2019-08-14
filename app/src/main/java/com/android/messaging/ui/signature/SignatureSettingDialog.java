@@ -3,6 +3,7 @@ package com.android.messaging.ui.signature;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,13 +25,20 @@ public class SignatureSettingDialog extends TextSettingDialog {
 
     @Override
     public void onSave(String text) {
+
         Preferences.getDefault().putString(PREF_KEY_SIGNATURE_CONTENT, text);
+        if (mHost != null) {
+            mHost.onSave(text);
+        }
+        dismiss();
 
         boolean hasEmoji = false;
-        for (String s : super.mInputEmojiSet) {
-            if (text.contains(s)) {
-                hasEmoji = true;
-                break;
+        if (!TextUtils.isEmpty(text)) {
+            for (String s : super.mInputEmojiSet) {
+                if (text.contains(s)) {
+                    hasEmoji = true;
+                    break;
+                }
             }
         }
         BugleAnalytics.logEvent("SMS_Signature_Change", true, "with_emoji", String.valueOf(hasEmoji));

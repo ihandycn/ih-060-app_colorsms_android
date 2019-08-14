@@ -110,14 +110,7 @@ public abstract class TextSettingDialog extends DialogFragment {
         saveBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(3.3f), true));
         saveBtn.setOnClickListener(v -> {
             String text = mInputEditText.getText().toString();
-            if (TextUtils.isEmpty(text)) {
-                text = "";
-            }
             onSave(text);
-            if (mHost != null) {
-                mHost.onSave(text);
-            }
-            dismiss();
         });
 
         ImageView emojiBtn = root.findViewById(R.id.signature_emoji_btn);
