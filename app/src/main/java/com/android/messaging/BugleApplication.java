@@ -125,6 +125,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -392,8 +393,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
     private void initAutopilot(HSApplication application) {
         AutopilotConfig.initialize(application, "autopilot-topics.json");
-//        AutopilotConfig.setAudienceProperty("device_language",
-//                "english".equalsIgnoreCase(Locale.getDefault().getDisplayLanguage()) ? "english" : "non-english");
+        AutopilotConfig.setAudienceProperty("device_english",
+                "english".equalsIgnoreCase(Locale.getDefault().getDisplayLanguage()) ? "True" : "False");
     }
 
     public static boolean isFabricInited() {
