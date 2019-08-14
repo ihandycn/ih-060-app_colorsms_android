@@ -30,37 +30,47 @@ public abstract class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (!DefaultSMSUtils.isDefaultSmsApp()) {
-            if (getIntent() != null && getIntent().getBooleanExtra(UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION, false)) {
-                HSLog.d("NotificationListener", "UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION true");
-                NotificationAccessAutopilotUtils.logNotificationClicked();
-                BugleAnalytics.logEvent("Notification_Clicked_NA", true);
-                final Intent intent = new Intent(this, WelcomeSetAsDefaultActivity.class);
-                intent.putExtra(UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION, true);
-                startActivity(intent, TransitionUtils.getTransitionInBundle(this));
-                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.cancelAll();
-            } else if (getIntent() != null && getIntent().getBooleanExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, false)){
-                HSLog.d("NotificationListener", "EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION true");
-                NotificationAccessAutopilotUtils.logNotificationClicked();
-                BugleAnalytics.logEvent("Notification_Clicked_NA", true);
-                final Intent intent = new Intent(this, WelcomeSetAsDefaultActivity.class);
-                intent.putExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, true);
-                startActivity(intent, TransitionUtils.getTransitionInBundle(this));
-                NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.cancelAll();
-                finish();
-            } else {
-                HSLog.d("NotificationListener", "UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION false");
+            Intent launchIntent = getIntent();
+            if (launchIntent == null) {
                 UIIntents.get().launchWelcomeSetAsDefaultActivity(this);
                 finish();
+                mShouldFinishThisTime = true;
+                return;
             }
 
-            if (getIntent() != null && getIntent().getBooleanExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION_ACTION, false)) {
-                NotificationAccessAutopilotUtils.logNotificationReplied();
-                BugleAnalytics.logEvent("Notification_Replied_NA", true);
+            boolean launchConversationActivityAfterDefaultSmsSet = launchIntent.getBooleanExtra(UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION, false);
+            boolean launchConversationListActivityAfterDefaultSmsSet = launchIntent.getBooleanExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, false);
+            boolean isTriggerByNotificationReplyAction = launchIntent.getBooleanExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION_ACTION, false);
+
+            if (launchConversationActivityAfterDefaultSmsSet) {
+                // set as default. cancel all notifications, detect whether triggered by reply
+                cancelAllNotifications(true, isTriggerByNotificationReplyAction);
+            } else if (launchConversationListActivityAfterDefaultSmsSet) {
+                // set as default. cancel all notifications, detect whether triggered by reply
+                cancelAllNotifications(false, isTriggerByNotificationReplyAction);
+                finish();
+                mShouldFinishThisTime = true;
             }
-            mShouldFinishThisTime = true;
-            HSLog.d(TAG, "Show welcome set as default");
+        }
+    }
+
+    private void cancelAllNotifications(boolean isFromNotificationToConversation, boolean isTriggerByNotificationReplyAction) {
+        Intent intent = new Intent(this, WelcomeSetAsDefaultActivity.class);
+        if (isFromNotificationToConversation) {
+            intent.putExtra(UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION, true);
+        } else {
+            intent.putExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, true);
+        }
+        startActivity(intent, TransitionUtils.getTransitionInBundle(this));
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
+
+        if (isTriggerByNotificationReplyAction) {
+            NotificationAccessAutopilotUtils.logNotificationReplied();
+            BugleAnalytics.logEvent("Notification_Replied_NA", true);
+        } else {
+            NotificationAccessAutopilotUtils.logNotificationClicked();
+            BugleAnalytics.logEvent("Notification_Clicked_NA", true);
         }
     }
 
