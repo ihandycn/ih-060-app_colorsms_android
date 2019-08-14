@@ -34,6 +34,7 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.DefaultSMSUtils;
+import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.PhoneUtils;
 import com.android.messaging.util.RingtoneUtil;
@@ -106,7 +107,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
 
         if (!isGroupSummary(notificationInfo.notification)) {
             HSLog.d("NotificationListener", "is not group summary");
-            sendNotification(notificationInfo.title, notificationInfo.text);
+            sendNotification(notificationInfo.tag, notificationInfo.notificationId, notificationInfo.title, notificationInfo.text);
         } else {
             HSLog.d("NotificationListener", "is group summary");
         }
@@ -218,94 +219,66 @@ public class NotificationServiceV18 extends NotificationListenerService {
         return null;
     }
 
-    private void sendNotification(String messageTitle, String messageText) {
+    private void sendNotification(String tag, int id, String messageTitle, String messageText) {
         Runnable notifyRunnable = () -> {
             NotificationManager notifyMgr = (NotificationManager)
                     HSApplication.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
             if (notifyMgr != null) {
-                try {
-                    // create channel
-                    final Uri ringtoneUri = RingtoneUtil.getNotificationRingtoneUri(null);
-                    String channelId = null;
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                        int priority = NotificationManager.IMPORTANCE_HIGH;
-                        NotificationChannel notificationChannel = Notifications.getChannel(
-                                PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID + "_set_default_app",
-                                HSApplication.getContext().getResources().getString(R.string.sms_notification_channel),
-                                HSApplication.getContext().getResources().getString(R.string.sms_notification_channel_description), priority);
-                        notificationChannel.setSound(ringtoneUri, Notification.AUDIO_ATTRIBUTES_DEFAULT);
-                        notificationChannel.enableVibration(shouldVibrate());
-                        if (shouldVibrate()) {
-                            notificationChannel.setVibrationPattern(new long[]{100, 200, 300});
-                        }
-                        notificationChannel.setShowBadge(true);
-                        channelId = notificationChannel.getId();
-                        notificationChannel.setImportance(priority);
-                        notifyMgr.createNotificationChannel(notificationChannel);
+                // create channel
+                final Uri ringtoneUri = RingtoneUtil.getNotificationRingtoneUri(null);
+                String channelId = null;
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                    int priority = NotificationManager.IMPORTANCE_HIGH;
+                    NotificationChannel notificationChannel = Notifications.getChannel(
+                            PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID + "_set_default_app",
+                            HSApplication.getContext().getResources().getString(R.string.sms_notification_channel),
+                            HSApplication.getContext().getResources().getString(R.string.sms_notification_channel_description), priority);
+                    notificationChannel.setSound(ringtoneUri, Notification.AUDIO_ATTRIBUTES_DEFAULT);
+                    notificationChannel.enableVibration(shouldVibrate());
+                    if (shouldVibrate()) {
+                        notificationChannel.setVibrationPattern(new long[]{100, 200, 300});
                     }
-
-                    StatusBarNotification[] allNotifications = getActiveNotifications();
-                    List<String> summaryNotificationMessageTitle = new ArrayList<>();
-                    List<String> summaryNotificationMessageText = new ArrayList<>();
-                    BlockedNotificationInfo notificationInfo;
-                    boolean isNotificationIdExisted = false;
-                    int notificationExistId = 0;
-                    int notificationIdNumber = 0;
-                    CharSequence[] textLines = null;
-
-                    // find the existed notification
-                    for (StatusBarNotification statusBarNotification : allNotifications) {
-                        String notificationPackageName = statusBarNotification.getPackageName();
-                        HSLog.d("NotificationListener", "notificationPackageName = " + notificationPackageName);
-                        if (notificationPackageName.equals("com.color.sms.messages.emoji")) {
-                            notificationIdNumber++;
-                            notificationInfo = loadNotificationInfo(statusBarNotification);
-                            summaryNotificationMessageTitle.add(notificationInfo.title);
-                            summaryNotificationMessageText.add(notificationInfo.text);
-                            HSLog.d("NotificationListener", "notificationInfo.title = " + notificationInfo.title);
-                            HSLog.d("NotificationListener", "messageTitle = " + messageTitle);
-                            if (notificationInfo.title.equals(messageTitle)) {
-                                textLines = Objects.requireNonNull(getExtras(notificationInfo.notification)).getCharSequenceArray("android.textLines");
-                                notificationExistId = statusBarNotification.getId();
-                                isNotificationIdExisted = true;
-                            }
-                        }
-                    }
-
-                    Notification notification = createNotification(channelId, messageTitle, messageText, textLines);
-                    HSLog.d("NotificationListener", "notificationIdNumber = " + notificationIdNumber);
-                    HSLog.d("NotificationListener", "isNotificationIdExisted = " + isNotificationIdExisted);
-                    if (isNotificationIdExisted) {
-                        notifyMgr.notify(notificationExistId, notification);
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                            if (notificationIdNumber >= 3) {
-                                PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = notificationIdNumber - 1;
-                            } else {
-                                PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = notificationIdNumber;
-                            }
-                        } else {
-                            PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = notificationIdNumber;
-                        }
-                    } else {
-                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                            if (notificationIdNumber == 1) {
-                                notifyMgr.notify(-1, createSummaryNotification(channelId, summaryNotificationMessageTitle, summaryNotificationMessageText));
-                            }
-                            if (notificationIdNumber >= 3) {
-                                PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = notificationIdNumber;
-                                notifyMgr.notify(notificationIdNumber, notification);
-                            } else {
-                                PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = notificationIdNumber + 1;
-                                notifyMgr.notify(notificationIdNumber + 1, notification);
-                            }
-                        } else {
-                            PendingIntentConstants.SMS_NOTIFICATION_ID_NUMBER = notificationIdNumber + 1;
-                            notifyMgr.notify(notificationIdNumber + 1, notification);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
+                    notificationChannel.setShowBadge(true);
+                    channelId = notificationChannel.getId();
+                    notificationChannel.setImportance(priority);
+                    notifyMgr.createNotificationChannel(notificationChannel);
                 }
+
+                StatusBarNotification[] allNotifications = getActiveNotifications();
+                List<String> summaryNotificationMessageTitle = new ArrayList<>();
+                List<String> summaryNotificationMessageText = new ArrayList<>();
+                BlockedNotificationInfo notificationInfo;
+
+                CharSequence[] textLines = null;
+                // find the existed notification
+                int num = 0;
+                StatusBarNotification lastNotification = null;
+                for (StatusBarNotification statusBarNotification : allNotifications) {
+                    String notificationPackageName = statusBarNotification.getPackageName();
+                    HSLog.d("NotificationListener", "notificationPackageName = " + notificationPackageName);
+                    if (notificationPackageName.equals(getPackageName())) {
+                        notificationInfo = loadNotificationInfo(statusBarNotification);
+                        summaryNotificationMessageTitle.add(notificationInfo.title);
+                        summaryNotificationMessageText.add(notificationInfo.text);
+                        HSLog.d("NotificationListener", "notificationInfo.title = " + notificationInfo.title);
+                        HSLog.d("NotificationListener", "messageTitle = " + messageTitle);
+                        if (notificationInfo.title.equals(messageTitle)) {
+                            textLines = Objects.requireNonNull(getExtras(notificationInfo.notification)).getCharSequenceArray("android.textLines");
+                        }
+                        lastNotification = statusBarNotification;
+                        num++;
+                    }
+                }
+
+                HSLog.d("NotificationListener", "num =" + num);
+                if (OsUtil.isAtLeastN() &&
+                        lastNotification != null &&
+                        (lastNotification.getId() != id || !TextUtils.equals(tag, lastNotification.getTag()))) {
+                    notifyMgr.notify(id, createSummaryNotification(channelId, summaryNotificationMessageTitle, summaryNotificationMessageText));
+                }
+
+                Notification notification = createNotification(channelId, messageTitle, messageText, textLines);
+                notifyMgr.notify(tag, id, notification);
             }
         };
         Threads.postOnSingleThreadExecutor(notifyRunnable); // Keep notifications in original order
@@ -417,6 +390,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
                 .setColor(PrimaryColors.getPrimaryColor())
                 .setContentIntent(pendingIntent)
                 .setDefaults(defaults)
+                .setSound(RingtoneUtil.getNotificationRingtoneUri(null))
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setAutoCancel(true)
                 .setGroup(groupKey)

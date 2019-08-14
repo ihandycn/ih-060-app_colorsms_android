@@ -24,7 +24,6 @@ public class PendingIntentConstants {
     public static final int MSG_SEND_ERROR = 2;
     public static final int SMS_STORAGE_LOW_NOTIFICATION_ID = 3;
     public static final int SMS_BACKGROUND_SERVICE_ID = 4;
-    public static int SMS_NOTIFICATION_ID_NUMBER = 6;
 
     public static final String SMS_NOTIFICATION_CHANNEL_ID =  "sms_channel";
 
