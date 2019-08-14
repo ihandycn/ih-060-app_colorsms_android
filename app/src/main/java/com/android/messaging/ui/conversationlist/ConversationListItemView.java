@@ -443,18 +443,20 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         // multiple imageSpans must be set at a invariable spannable
         if (mData.isPinned()) {
             Drawable pinDrawable = getResources().getDrawable(R.drawable.ic_small_pin);
-            pinDrawable.setBounds(0, 0, pinDrawable.getIntrinsicWidth(), pinDrawable.getIntrinsicHeight());
             pinDrawable.setColorFilter(
                     ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
+            ChatListCustomizeManager.changeDrawableColorIfNeed(pinDrawable);
+            pinDrawable.setBounds(0, 0, pinDrawable.getIntrinsicWidth(), pinDrawable.getIntrinsicHeight());
             CenteredImageSpan span = new CenteredImageSpan(pinDrawable);
             sp.setSpan(span, bj * 2 - 2, bj * 2 - 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             bj--;
         }
         if (!mData.getNotificationEnabled()) {
             Drawable muteDrawable = getResources().getDrawable(R.drawable.ic_small_mute);
-            muteDrawable.setBounds(0, 0, muteDrawable.getIntrinsicWidth(), muteDrawable.getIntrinsicHeight());
             muteDrawable.setColorFilter(
                     ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
+            ChatListCustomizeManager.changeDrawableColorIfNeed(muteDrawable);
+            muteDrawable.setBounds(0, 0, muteDrawable.getIntrinsicWidth(), muteDrawable.getIntrinsicHeight());
             CenteredImageSpan span = new CenteredImageSpan(muteDrawable);
             sp.setSpan(span, bj * 2 - 2, bj * 2 - 1, Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
             bj--;

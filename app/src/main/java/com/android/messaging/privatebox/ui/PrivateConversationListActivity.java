@@ -179,7 +179,9 @@ public class PrivateConversationListActivity extends MultiSelectConversationList
         }
         getMenuInflater().inflate(R.menu.private_list_conversation_list_menu, menu);
         for (int i = 0; i < menu.size(); i++) {
-            ChatListCustomizeManager.changeDrawableColorIfNeed(menu.getItem(i).getIcon());
+            Drawable drawable = menu.getItem(i).getIcon().mutate();
+            ChatListCustomizeManager.changeDrawableColorIfNeed(drawable);
+            menu.getItem(i).setIcon(drawable);
         }
         if (!Preferences.getDefault().getBoolean(PREF_KEY_ADD_BUTTON_CLICKED, false)) {
             Drawable drawable = menu.findItem(R.id.private_action_add).getIcon();
