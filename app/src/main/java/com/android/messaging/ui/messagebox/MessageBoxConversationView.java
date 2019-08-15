@@ -11,8 +11,8 @@ import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
-import android.os.Handler;
 import android.support.annotation.ColorInt;
+import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.TelephonyManager;
@@ -285,7 +285,7 @@ public class MessageBoxConversationView extends FrameLayout {
         mPrivacyContainer = stub.inflate();
         mPrivacyContainer.setClickable(true);
 
-        ImageView appIcon = mPrivacyContainer.findViewById(R.id.app_icon);
+        AppCompatImageView appIcon = mPrivacyContainer.findViewById(R.id.app_icon);
         appIcon.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE, Dimensions.pxFromDp(25), false));
 
         mPrivacyTitle = mPrivacyContainer.findViewById(R.id.privacy_title);
