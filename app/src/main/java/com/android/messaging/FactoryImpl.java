@@ -155,6 +155,9 @@ class FactoryImpl extends Factory {
             public void onActivityStopped(Activity activity) {
                 HSLog.d("lifecycle callback", "onActivityStopped");
                 foregroundActivityCounter--;
+                if (foregroundActivityCounter == 0) {
+                    DefaultSMSUtils.invalidateCache();
+                }
             }
 
             @Override

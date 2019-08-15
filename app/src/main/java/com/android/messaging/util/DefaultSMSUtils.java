@@ -3,12 +3,14 @@ package com.android.messaging.util;
 import android.provider.Telephony;
 
 import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.utils.HSLog;
 
 import hugo.weaving.DebugLog;
 
 public class DefaultSMSUtils {
 
     private static volatile boolean sIsDefaultSms;
+    private static volatile boolean sInvalidateCache;
 
     static {
         final String configuredApplication = Telephony.Sms.getDefaultSmsPackage(HSApplication.getContext());
@@ -24,6 +26,10 @@ public class DefaultSMSUtils {
     public static boolean isDefaultSmsApp() {
         if (!OsUtil.isAtLeastKLP()) {
             return true;
+        }
+        if (sInvalidateCache) {
+            sInvalidateCache = false;
+            return isDefaultSmsApp(true);
         }
         return sIsDefaultSms;
     }
@@ -41,5 +47,10 @@ public class DefaultSMSUtils {
 
     public static void setIsDefaultSms(boolean isDefault) {
         sIsDefaultSms = isDefault;
+    }
+
+    public static void invalidateCache() {
+        sInvalidateCache = true;
+        HSLog.d("detect is default app : invalidate cache");
     }
 }
