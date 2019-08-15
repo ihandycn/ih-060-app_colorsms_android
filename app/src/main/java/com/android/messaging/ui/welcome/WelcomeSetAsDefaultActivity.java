@@ -23,7 +23,7 @@ import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
 
 import static com.android.messaging.datamodel.NotificationServiceV18.EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION;
-import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION;
+import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_LAUNCH_CONVERSATION_ACTIVITY_AFTER_DEFAULT_SET;
 
 public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
 
@@ -78,7 +78,7 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
 
         if (getIntent() != null) {
             mIsFromWelcomeStart = getIntent().getBooleanExtra(EXTRA_FROM_WELCOME_START, false);
-            if (getIntent().getBooleanExtra(UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION, false)){
+            if (getIntent().getBooleanExtra(UI_INTENT_EXTRA_LAUNCH_CONVERSATION_ACTIVITY_AFTER_DEFAULT_SET, false)){
                 mIsFromConversationNotification = true;
             }
             if (mIsFromConversationNotification || getIntent().getBooleanExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, false)){

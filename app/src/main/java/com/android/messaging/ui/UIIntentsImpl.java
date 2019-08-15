@@ -46,7 +46,6 @@ import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.ConversationImagePartsView;
 import com.android.messaging.datamodel.MediaScratchFileProvider;
 import com.android.messaging.datamodel.MessagingContentProvider;
-import com.android.messaging.datamodel.NotificationServiceV18;
 import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.datamodel.data.MessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
@@ -508,7 +507,7 @@ public class UIIntentsImpl extends UIIntents {
         if (isNotificationAction) {
             intent.putExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION_ACTION, true);
         }
-        intent.putExtra(UI_INTENT_EXTRA_NOTIFICATION_TO_CONVERSATION, true);
+        intent.putExtra(UI_INTENT_EXTRA_LAUNCH_CONVERSATION_ACTIVITY_AFTER_DEFAULT_SET, true);
         return getPendingIntentWithParentStack(context, intent, 0);
     }
 
