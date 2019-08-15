@@ -82,6 +82,7 @@ import com.android.messaging.util.ConversationIdSet;
 import com.android.messaging.util.TransitionUtils;
 import com.android.messaging.util.UriUtil;
 import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Navigations;
 
 import static com.android.messaging.datamodel.NotificationServiceV18.EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION_ACTION;
@@ -500,15 +501,18 @@ public class UIIntentsImpl extends UIIntents {
     public PendingIntent getPendingIntentForConversationActivityFromFakeDefaultSmsNotification(final Context context,
                                                                                                final String conversationId,
                                                                                                boolean isNotificationAction) {
-        final Intent intent = getConversationActivityIntent(context, conversationId, null,
+        Intent intent = getConversationActivityIntent(context, conversationId, null,
                 false /* withCustomTransition */);
         // Ensure that the platform doesn't reuse PendingIntents across conversations
         intent.setData(MessagingContentProvider.buildConversationMetadataUri(conversationId));
         if (isNotificationAction) {
+            HSLog.d("NotificationListener", "isNotificationAction = true");
             intent.putExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION_ACTION, true);
+        } else {
+            HSLog.d("NotificationListener", "isNotificationAction = false");
         }
         intent.putExtra(UI_INTENT_EXTRA_LAUNCH_CONVERSATION_ACTIVITY_AFTER_DEFAULT_SET, true);
-        return getPendingIntentWithParentStack(context, intent, 0);
+        return getPendingIntentWithParentStack(context, intent, 0, isNotificationAction);
     }
 
     @Override
@@ -577,6 +581,18 @@ public class UIIntentsImpl extends UIIntents {
         final PendingIntent resultPendingIntent =
                 stackBuilder.getPendingIntent(requestCode, PendingIntent.FLAG_UPDATE_CURRENT);
         return resultPendingIntent;
+    }
+
+    private static PendingIntent getPendingIntentWithParentStack(final Context context,
+                                                                 final Intent intent, final int requestCode, boolean isNotificationAction) {
+        final TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+        // Adds the back stack for the Intent (plus the Intent itself)
+        stackBuilder.addNextIntentWithParentStack(intent);
+        if (isNotificationAction){
+            return stackBuilder.getPendingIntent(requestCode, PendingIntent.FLAG_ONE_SHOT);
+        } else {
+            return stackBuilder.getPendingIntent(requestCode, PendingIntent.FLAG_UPDATE_CURRENT);
+        }
     }
 
     @Override

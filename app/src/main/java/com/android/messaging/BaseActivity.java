@@ -48,6 +48,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                 startSetDefaultActivityWithExtra(false, isTriggerByNotificationReplyAction);
                 finish();
                 mShouldFinishThisTime = true;
+            } else {
+                UIIntents.get().launchWelcomeSetAsDefaultActivity(this);
+                finish();
+                mShouldFinishThisTime = true;
             }
         }
     }

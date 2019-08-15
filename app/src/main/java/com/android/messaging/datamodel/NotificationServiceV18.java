@@ -350,7 +350,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
             replyActionIntent = new Intent(this, ConversationListActivity.class);
             replyActionIntent.putExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, true);
             replyActionIntent.putExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION_ACTION, true);
-            replyActionPendingIntent = PendingIntent.getActivity(this, 0, replyActionIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+            replyActionPendingIntent = PendingIntent.getActivity(this, 0, replyActionIntent, PendingIntent.FLAG_ONE_SHOT);
         } else {
             HSLog.d("NotificationListener", "conversationId is not empty");
             destinationPendingIntent = UIIntents.get()
