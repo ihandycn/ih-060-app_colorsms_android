@@ -16,7 +16,7 @@ import com.ihs.commons.utils.HSLog;
 
 import static com.android.messaging.datamodel.NotificationServiceV18.EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION;
 import static com.android.messaging.datamodel.NotificationServiceV18.EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION_ACTION;
-import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_LAUNCH_CONVERSATION_ACTIVITY_AFTER_DEFAULT_SET;
+import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID_AFTER_DEFAULT_SET;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
@@ -38,28 +38,27 @@ public abstract class BaseActivity extends AppCompatActivity {
                 return;
             }
 
-            boolean launchConversationActivityAfterDefaultSmsSet = launchIntent.getBooleanExtra(UI_INTENT_EXTRA_LAUNCH_CONVERSATION_ACTIVITY_AFTER_DEFAULT_SET, false);
+            String conversationId = launchIntent.getStringExtra(UI_INTENT_EXTRA_CONVERSATION_ID_AFTER_DEFAULT_SET);
+            boolean launchConversationActivityAfterDefaultSmsSet =  (conversationId != null);
             boolean launchConversationListActivityAfterDefaultSmsSet = launchIntent.getBooleanExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, false);
             boolean isTriggerByNotificationReplyAction = launchIntent.getBooleanExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION_ACTION, false);
 
             if (launchConversationActivityAfterDefaultSmsSet) {
-                startSetDefaultActivityWithExtra(true, isTriggerByNotificationReplyAction);
+                startSetDefaultActivityWithExtra(true, isTriggerByNotificationReplyAction, conversationId);
             } else if (launchConversationListActivityAfterDefaultSmsSet) {
-                startSetDefaultActivityWithExtra(false, isTriggerByNotificationReplyAction);
-                finish();
-                mShouldFinishThisTime = true;
+                startSetDefaultActivityWithExtra(false, isTriggerByNotificationReplyAction, null);
             } else {
                 UIIntents.get().launchWelcomeSetAsDefaultActivity(this);
-                finish();
-                mShouldFinishThisTime = true;
             }
+            finish();
+            mShouldFinishThisTime = true;
         }
     }
 
-    private void startSetDefaultActivityWithExtra(boolean launchConversationActivityAfterDefaultSmsSet, boolean isTriggerByNotificationReplyAction) {
+    private void startSetDefaultActivityWithExtra(boolean launchConversationActivityAfterDefaultSmsSet, boolean isTriggerByNotificationReplyAction, String conversationId) {
         Intent intent = new Intent(this, WelcomeSetAsDefaultActivity.class);
         if (launchConversationActivityAfterDefaultSmsSet) {
-            intent.putExtra(UI_INTENT_EXTRA_LAUNCH_CONVERSATION_ACTIVITY_AFTER_DEFAULT_SET, true);
+            intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_ID_AFTER_DEFAULT_SET, conversationId);
         } else {
             intent.putExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, true);
         }

@@ -695,6 +695,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         BugleAnalytics.logEvent("SMS_DetailsPage_Show", true);
         BugleFirebaseAnalytics.logEvent("SMS_DetailsPage_Show");
         AutopilotEvent.logTopicEvent("topic-768lyi3sp", "detailspage_show");
+        NotificationAccessAutopilotUtils.logDetailsPageShow();
 
         if (!Preferences.getDefault().contains("pref_key_conversation_detail_first_open")) {
             isFirstOpen = true;

@@ -120,6 +120,8 @@ public abstract class UIIntents {
 
     public static final String UI_INTENT_EXTRA_LAUNCH_CONVERSATION_ACTIVITY_AFTER_DEFAULT_SET = "launch_conversation_after_default_set";
 
+    public static final String UI_INTENT_EXTRA_CONVERSATION_ID_AFTER_DEFAULT_SET = "conversation_id_after_default_set";
+
     /**
      * Launch the welcome activity
      */

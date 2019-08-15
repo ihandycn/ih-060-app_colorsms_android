@@ -511,7 +511,7 @@ public class UIIntentsImpl extends UIIntents {
         } else {
             HSLog.d("NotificationListener", "isNotificationAction = false");
         }
-        intent.putExtra(UI_INTENT_EXTRA_LAUNCH_CONVERSATION_ACTIVITY_AFTER_DEFAULT_SET, true);
+        intent.putExtra(UI_INTENT_EXTRA_CONVERSATION_ID_AFTER_DEFAULT_SET, conversationId);
         return getPendingIntentWithParentStack(context, intent, 0, isNotificationAction);
     }
 

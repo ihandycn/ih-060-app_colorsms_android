@@ -121,7 +121,9 @@ public class ConversationActivity extends BugleActionBarActivity
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        if (mShouldFinishThisTime) {
+            return;
+        }
         // preload emoji pref file
         Preferences.get(EmojiManager.PREF_FILE_NAME);
 
@@ -212,8 +214,6 @@ public class ConversationActivity extends BugleActionBarActivity
         }
         bugleApplicationPrefs.putLong(PREF_KEY_CONVERSATION_ACTIVITY_SHOW_TIME, System.currentTimeMillis());
         mCreateTime = System.currentTimeMillis();
-
-        NotificationAccessAutopilotUtils.logDetailsPageShow();
 
         if (mNeedShowGuide) {
             Threads.postOnMainThreadDelayed(new Runnable() {

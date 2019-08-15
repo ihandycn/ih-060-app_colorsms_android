@@ -1,5 +1,7 @@
 package com.android.messaging.ui.welcome;
 
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,7 +25,7 @@ import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
 
 import static com.android.messaging.datamodel.NotificationServiceV18.EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION;
-import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_LAUNCH_CONVERSATION_ACTIVITY_AFTER_DEFAULT_SET;
+import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID_AFTER_DEFAULT_SET;
 
 public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
 
@@ -33,6 +35,7 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
     private boolean mIsFromWelcomeStart = false;
     private boolean mIsFromConversationNotification = false;
     private boolean mIsFromOverrideNotification = false;
+    private String mConversationIdFromNotification = null;
 
     private static final int EVENT_RETRY_NAVIGATION = 0;
     private Handler mHandler = new Handler() {
@@ -50,6 +53,8 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
                     if (!mIsFromConversationNotification) {
                         HSLog.d("NotificationListener", "mIsFromConversationNotification false");
                         UIIntents.get().launchConversationListActivity(WelcomeSetAsDefaultActivity.this);
+                    } else {
+                        UIIntents.get().launchConversationActivityWithParentStack(WelcomeSetAsDefaultActivity.this, mConversationIdFromNotification, null);
                     }
                 }
                 if (mIsFromWelcomeStart) {
@@ -78,8 +83,10 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
 
         if (getIntent() != null) {
             mIsFromWelcomeStart = getIntent().getBooleanExtra(EXTRA_FROM_WELCOME_START, false);
-            if (getIntent().getBooleanExtra(UI_INTENT_EXTRA_LAUNCH_CONVERSATION_ACTIVITY_AFTER_DEFAULT_SET, false)){
+            String conversationId = getIntent().getStringExtra(UI_INTENT_EXTRA_CONVERSATION_ID_AFTER_DEFAULT_SET);
+            if (conversationId != null){
                 mIsFromConversationNotification = true;
+                mConversationIdFromNotification = conversationId;
             }
             if (mIsFromConversationNotification || getIntent().getBooleanExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, false)){
                 mIsFromOverrideNotification = true;
@@ -122,6 +129,13 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
             }
             BugleFirebaseAnalytics.logEvent("SetAsDefault_GuidePage_Show");
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
     }
 
     @Override
