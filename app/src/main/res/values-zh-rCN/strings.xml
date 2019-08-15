@@ -800,7 +800,7 @@
 
     <string name="action_rename_group_chat">重命名群组</string>
     <string name="conversation_setting_guide_text">个性化这个联系人吧！</string>
-    <string name="permission_guide_description">现在授予并使用Color SMS吧！</string>
+    <string name="permission_guide_description">现在授予并使用%1$s吧！</string>
     <string name="notification_guide_content">为了让您更好的接收消息，请授予通知权限。</string>
     <string name="notification_guide_title">最后一步</string>
 

@@ -805,7 +805,7 @@
 
     <string name="action_rename_group_chat">重命名群組</string>
     <string name="conversation_setting_guide_text">個性化這個聯繫人吧！ </string>
-    <string name="permission_guide_description">現在授予並使用Color SMS吧！ </string>
+    <string name="permission_guide_description">現在授予並使用%1$s吧！ </string>
     <string name="notification_guide_content">為了讓您更好的接收消息，請授予通知權限。
     </string><string name="notification_guide_title">最後一步</string>
 
