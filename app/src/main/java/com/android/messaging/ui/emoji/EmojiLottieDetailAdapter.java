@@ -15,7 +15,6 @@ import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.emoji.utils.EmojiConfig;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.view.MessagesTextView;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Threads;
@@ -101,11 +100,10 @@ public class EmojiLottieDetailAdapter extends BaseStickerItemRecyclerAdapter {
 
     private void setupImageAndText(ImageView image, MessagesTextView text) {
         GlideApp.with(image)
-                .asBitmap()
-                .load(R.drawable.icon_emoji_banner)
+                .load(EmojiConfig.getInstance().getMagicBannerUrl())
                 .placeholder(BackgroundDrawables.createBackgroundDrawable(0xffeaeaea, 0, false))
                 .error(BackgroundDrawables.createBackgroundDrawable(0xffeaeaea, 0, false))
-                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                .centerCrop()
                 .into(image);
         text.setText("Magic Emoji");
     }
