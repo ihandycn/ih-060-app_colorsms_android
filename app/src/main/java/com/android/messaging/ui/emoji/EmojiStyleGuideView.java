@@ -16,6 +16,8 @@ import com.android.messaging.ui.appsettings.EmojiStyleSetActivity;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.UiUtils;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -50,6 +52,7 @@ public class EmojiStyleGuideView extends FrameLayout {
         int times = EmojiManager.getEmojiStyleGuideShowTimes();
         BugleAnalytics.logEvent("Detailspage_EmojiStyleGuide_Show", true, "showtime", times + "");
 
+        okBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(0xff148dea, 0xffffffff, Dimensions.pxFromDp(17f), false, true));
         okBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,6 +73,18 @@ public class EmojiStyleGuideView extends FrameLayout {
                 ((ViewGroup) EmojiStyleGuideView.this.getParent()).removeView(EmojiStyleGuideView.this);
             }
         });
+
+        if (UiUtils.getKeyboardHeight() > Dimensions.pxFromDp(280)) {
+            view.setScaleX(1.1f);
+            view.setScaleY(1.1f);
+            MarginLayoutParams mlp = (MarginLayoutParams) view.getLayoutParams();
+            mlp.topMargin += Dimensions.pxFromDp(3) + Dimensions.pxFromDp(34.7f) / 2;
+            view.requestLayout();
+        } else {
+            MarginLayoutParams mlp = (MarginLayoutParams) view.getLayoutParams();
+            mlp.topMargin += Dimensions.pxFromDp(2);
+            view.requestLayout();
+        }
     }
 
     @Override

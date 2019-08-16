@@ -55,7 +55,7 @@ public class SettingEmojiStyleItemView extends BaseItemView {
             for (Map<String, String> item : emojiStyles) {
                 String styleName = item.get("name");
                 if (styleName != null && styleName.equals(curStyleName)) {
-                    GlideApp.with(context).load(item.get("PreViewPicUrl")).into(imageView);
+                    imageView.setImageDrawable(EmojiManager.getEmojiStyleResource(styleName));
                     break;
                 }
             }

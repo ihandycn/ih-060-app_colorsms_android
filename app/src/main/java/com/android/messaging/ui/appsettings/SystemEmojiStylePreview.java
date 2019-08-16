@@ -5,6 +5,7 @@ import android.graphics.ColorFilter;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+import android.support.v4.graphics.PaintCompat;
 
 import com.superapps.util.Dimensions;
 
@@ -22,6 +23,12 @@ public class SystemEmojiStylePreview extends Drawable {
             new String(Character.toChars(0x1F984))
     };
     private Paint mPaint = new Paint();
+
+    public SystemEmojiStylePreview() {
+        if (!PaintCompat.hasGlyph(mPaint, mUnicodes[3])) {
+            mUnicodes[3] = new String(Character.toChars(0x1f600));
+        }
+    }
 
 
     @Override

@@ -155,7 +155,7 @@
                 android:layout_marginTop="19dp"
                 android:lines="1" />
 
-            <com.android.messaging.ui.view.MessagesTextView
+            <com.android.messaging.ui.emoji.EmojiTextView
                 android:id="@+id/conversation_snippet"
                 style="@style/ConversationListItemViewTextStyle"
                 android:layout_width="237dp"
