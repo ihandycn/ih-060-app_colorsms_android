@@ -71,7 +71,7 @@ public class EmojiTextView extends MessagesTextView implements INotificationObse
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         HSGlobalNotificationCenter.addObserver(EmojiManager.NOTIFICATION_EMOJI_STYLE_CHANGE, this);
-        HSGlobalNotificationCenter.addObserver(EmojiSpannableWorker.NOTIFICATION, this);
+        HSGlobalNotificationCenter.addObserver(EmojiSpannableWorker.INSTALLED_NOTIFICATION, this);
     }
 
     @Override

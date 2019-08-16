@@ -19,6 +19,7 @@ package com.android.messaging.ui.conversationsettings;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -33,6 +34,8 @@ import com.android.messaging.util.UiUtils;
  */
 public class PeopleAndOptionsActivity extends BaseActivity {
 
+    private TextView title;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +43,7 @@ public class PeopleAndOptionsActivity extends BaseActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        TextView title = toolbar.findViewById(R.id.toolbar_title);
+        title = toolbar.findViewById(R.id.toolbar_title);
         title.setText(getIntent().getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_NAME));
         UiUtils.setTitleBarBackground(toolbar, this);
         setSupportActionBar(toolbar);
@@ -73,6 +76,12 @@ public class PeopleAndOptionsActivity extends BaseActivity {
 
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    public void setTitleText(String text) {
+        if (!TextUtils.isEmpty(text)) {
+            title.setText(text);
         }
     }
 }

@@ -90,6 +90,8 @@ public class ConversationActivity extends BugleActionBarActivity
     private final static String TAG = ConversationActivity.class.getName();
     public static final int FINISH_RESULT_CODE = 1;
     public static final int DELETE_CONVERSATION_RESULT_CODE = 2;
+    public static final int RENAME_GROUP_NAME_RESULT_CODE = 3;
+    public static final String EXTRA_NEW_GROUP_NAME = "extra_new_group_name";
     private static final String SAVED_INSTANCE_STATE_UI_STATE_KEY = "uistate";
 
     public static final String PREF_KEY_FIRST_IN_CONVERSATION_PAGE = "pref_key_first_in_conversation_page";
@@ -115,6 +117,7 @@ public class ConversationActivity extends BugleActionBarActivity
     private boolean fromCreateConversation;
     private String mConversationId;
     private boolean mNeedShowGuide = false;
+    private String mNewGroupName = null;
 
     private BuglePrefs bugleApplicationPrefs = BugleApplicationPrefs.getApplicationPrefs();
 
@@ -524,7 +527,11 @@ public class ConversationActivity extends BugleActionBarActivity
     }
 
     public String getConversationName() {
-        return getIntent().getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_NAME);
+        if(mNewGroupName == null) {
+            return getIntent().getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_NAME);
+        }else{
+            return mNewGroupName;
+        }
     }
 
     private void initConversationFragment() {
@@ -618,6 +625,12 @@ public class ConversationActivity extends BugleActionBarActivity
             final ConversationFragment conversationFragment = getConversationFragment();
             conversationFragment.deleteConversation();
             finish();
+        } else if (resultCode == RENAME_GROUP_NAME_RESULT_CODE) {
+            final String groupName = data.getStringExtra(EXTRA_NEW_GROUP_NAME);
+            if (!TextUtils.isEmpty(groupName)) {
+                mTitleTextView.setText(groupName);
+                mNewGroupName = groupName;
+            }
         }
     }
 }

@@ -38,7 +38,7 @@ public abstract class TextSettingDialog extends DialogFragment {
     private InterceptBackKeyEditText mInputEditText;
     private MessagesTextView mTitleView;
     private boolean mIsEmojiShow, mIsKeyboardShow;
-    private boolean mEnableEmoji = false;
+    private boolean mEnableEmoji = true;
     protected Set<String> mInputEmojiSet = new HashSet<>();
     private View root;
     private EmojiPickerFragment mEmojiPickerFragment;
@@ -256,6 +256,6 @@ public abstract class TextSettingDialog extends DialogFragment {
     public abstract String getTitle();
 
     public interface TextSettingDialogCallback {
-        void onSave(String text);
+        void onTextSaved(String text);
     }
 }

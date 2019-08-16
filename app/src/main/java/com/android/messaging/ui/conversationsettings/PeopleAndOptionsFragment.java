@@ -59,6 +59,7 @@ import com.android.messaging.ui.appsettings.VibrateSettings;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.signature.TextSettingDialog;
 import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
 import com.android.messaging.ui.wallpaper.WallpaperPreviewActivity;
@@ -83,7 +84,9 @@ import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_PRIVACY_MODE;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_RENAME_GROUP;
 import static com.android.messaging.ui.conversation.ConversationActivity.DELETE_CONVERSATION_RESULT_CODE;
+import static com.android.messaging.ui.conversation.ConversationActivity.EXTRA_NEW_GROUP_NAME;
 import static com.android.messaging.ui.conversation.ConversationActivity.FINISH_RESULT_CODE;
+import static com.android.messaging.ui.conversation.ConversationActivity.RENAME_GROUP_NAME_RESULT_CODE;
 import static com.android.messaging.ui.conversation.ConversationFragment.EVENT_UPDATE_BUBBLE_DRAWABLE;
 
 /**
@@ -453,6 +456,15 @@ public class PeopleAndOptionsFragment extends Fragment
                 mRenameGroupDialog.setEnableEmojiShow(false);
                 mRenameGroupDialog.setDefaultText(mRenameGroupItemView.getData().getSubtitle());
                 mRenameGroupDialog.setConversationId(mConversationId);
+                mRenameGroupDialog.setHost(new TextSettingDialog.TextSettingDialogCallback() {
+                    @Override
+                    public void onTextSaved(String text) {
+                        ((PeopleAndOptionsActivity) getActivity()).setTitleText(text);
+                        Intent intent = new Intent();
+                        intent.putExtra(EXTRA_NEW_GROUP_NAME, text);
+                        getActivity().setResult(RENAME_GROUP_NAME_RESULT_CODE, intent);
+                    }
+                });
                 UiUtils.showDialogFragment(getActivity(), mRenameGroupDialog);
                 break;
         }
@@ -487,4 +499,5 @@ public class PeopleAndOptionsFragment extends Fragment
     private boolean isGroup() {
         return mOtherParticipantData == null;
     }
+
 }

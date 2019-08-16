@@ -22,6 +22,9 @@ public class RenameGroupDialog extends TextSettingDialog {
         dismiss();
         BugleAnalytics.logEvent("SMS_Detailspage_Settings_Rename_Save", false);
         RenameGroupAction.renameGroup(mConversationId, text);
+        if (mHost != null) {
+            mHost.onTextSaved(text);
+        }
     }
 
     @Override

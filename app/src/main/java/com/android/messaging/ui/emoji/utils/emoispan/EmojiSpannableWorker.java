@@ -37,7 +37,7 @@ public final class EmojiSpannableWorker {
     private Pattern emojiPattern;
     private volatile boolean mInstalled = false;
 
-    public static final String NOTIFICATION = "emoji_spannable_worker_install";
+    public static final String INSTALLED_NOTIFICATION = "emoji_spannable_worker_installed";
 
     private EmojiSpannableWorker() {
     }
@@ -122,7 +122,7 @@ public final class EmojiSpannableWorker {
                 sInstance.categories = LoadEmojiManager.getInstance().getEmojiDataSync()[0];
                 sInstance.install();
                 sInstance.mInstalled = true;
-                HSGlobalNotificationCenter.sendNotificationOnMainThread(NOTIFICATION);
+                HSGlobalNotificationCenter.sendNotificationOnMainThread(INSTALLED_NOTIFICATION);
             }
         });
     }

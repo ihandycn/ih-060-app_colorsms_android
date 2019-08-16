@@ -579,7 +579,7 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
     }
 
     @Override
-    public void onSave(String text) {
+    public void onTextSaved(String text) {
         refreshSignature();
     }
 }

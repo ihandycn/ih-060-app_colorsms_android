@@ -2011,6 +2011,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public void updateActionBar(final ActionBar actionBar, final TextView tvTitle) {
         // We update this regardless of whether or not the action bar is showing so that we
         // don't get a race when it reappears.
+
         actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         actionBar.setDisplayHomeAsUpEnabled(true);
         // Reset the back arrow to its default

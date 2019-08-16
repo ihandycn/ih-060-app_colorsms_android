@@ -28,7 +28,7 @@ public class SignatureSettingDialog extends TextSettingDialog {
 
         Preferences.getDefault().putString(PREF_KEY_SIGNATURE_CONTENT, text);
         if (mHost != null) {
-            mHost.onSave(text);
+            mHost.onTextSaved(text);
         }
         dismiss();
 

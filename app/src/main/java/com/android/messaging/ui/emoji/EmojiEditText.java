@@ -29,13 +29,13 @@ public class EmojiEditText extends PlainTextEditText implements INotificationObs
 
     @Override
     protected void onAttachedToWindow() {
-        HSGlobalNotificationCenter.addObserver(EmojiSpannableWorker.NOTIFICATION, this);
+        HSGlobalNotificationCenter.addObserver(EmojiSpannableWorker.INSTALLED_NOTIFICATION, this);
         super.onAttachedToWindow();
     }
 
     @Override
     protected void onDetachedFromWindow() {
-        HSGlobalNotificationCenter.removeObserver(EmojiSpannableWorker.NOTIFICATION, this);
+        HSGlobalNotificationCenter.removeObserver(EmojiSpannableWorker.INSTALLED_NOTIFICATION, this);
         super.onDetachedFromWindow();
     }
 
