@@ -14,10 +14,10 @@
     See the License for the specific language governing permissions and
     limitations under the License.
 -->
-<com.android.messaging.ui.PersonItemView
+<com.android.messaging.ui.AttachmentVCardItemView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:paddingTop="@dimen/message_text_top_padding"
-    android:paddingBottom="@dimen/message_text_bottom_padding"
+    android:paddingBottom="@dimen/message_text_top_padding"
     style="@style/MessageVcardAttachmentStyle" />

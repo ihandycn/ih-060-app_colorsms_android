@@ -42,7 +42,6 @@ import com.android.messaging.datamodel.media.ImageRequest;
 import com.android.messaging.datamodel.media.ImageRequestDescriptor;
 import com.android.messaging.datamodel.media.UriImageRequestDescriptor;
 import com.android.messaging.ui.MultiAttachmentLayout.OnAttachmentClickListener;
-import com.android.messaging.ui.PersonItemView.PersonItemViewListener;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.ContentType;
@@ -224,12 +223,12 @@ public class AttachmentPreviewFactory {
                 break;
         }
         final View view = layoutInflater.inflate(layoutId, parent, false /* attachToRoot */);
-        final PersonItemView vcardPreview = (PersonItemView) view.findViewById(
+        final AttachmentVCardItemView vcardPreview =  view.findViewById(
                 R.id.vcard_attachment_view);
         vcardPreview.setAvatarOnly(viewType != AttachmentPreviewFactory.TYPE_SINGLE);
         vcardPreview.bind(DataModel.get().createVCardContactItemData(layoutInflater.getContext(),
                 attachmentData));
-        vcardPreview.setListener(new PersonItemViewListener() {
+        vcardPreview.setListener(new AttachmentVCardItemView.PersonItemViewListener() {
             @Override
             public void onPersonClicked(final PersonItemData data) {
                 Assert.isTrue(data instanceof VCardContactItemData);

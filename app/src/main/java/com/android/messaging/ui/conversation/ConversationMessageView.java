@@ -56,6 +56,7 @@ import com.android.messaging.scheduledmessage.SendScheduledMessageAction;
 import com.android.messaging.sms.MmsUtils;
 import com.android.messaging.ui.AsyncImageView;
 import com.android.messaging.ui.AsyncImageView.AsyncImageViewDelayLoader;
+import com.android.messaging.ui.AttachmentVCardItemView;
 import com.android.messaging.ui.AudioAttachmentView;
 import com.android.messaging.ui.BaseAlertDialog;
 import com.android.messaging.ui.ContactIconView;
@@ -627,7 +628,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         bindAttachmentsOfSameType(sAudioFilter,
                 R.layout.message_audio_attachment, mAudioViewBinder, AudioAttachmentView.class);
         bindAttachmentsOfSameType(sVCardFilter,
-                R.layout.message_vcard_attachment, mVCardViewBinder, PersonItemView.class);
+                R.layout.message_vcard_attachment, mVCardViewBinder, AttachmentVCardItemView.class);
 
         // Bind image attachments. If there are multiple, they are shown in a collage view.
         final List<MessagePartData> imageParts = mData.getAttachments(sImageFilter);
@@ -1107,25 +1108,9 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     final AttachmentViewBinder mVCardViewBinder = new AttachmentViewBinder() {
         @Override
         public void bindView(final View view, final MessagePartData attachment) {
-            final PersonItemView personView = (PersonItemView) view;
+            final AttachmentVCardItemView personView = (AttachmentVCardItemView) view;
             personView.bind(DataModel.get().createVCardContactItemData(getContext(),
                     attachment));
-            personView.setBackground(ConversationDrawables.get().getBubbleDrawable(
-                    isSelected(), mData.getIsIncoming(), false /* needArrow */,
-                    mData.hasIncomingErrorStatus(), mData.getConversationId(), mHasCustomBackground));
-            final int nameTextColorRes;
-            final int detailsTextColorRes;
-            if (isSelected()) {
-                nameTextColorRes = R.color.message_text_color_incoming;
-                detailsTextColorRes = R.color.message_text_color_incoming;
-            } else {
-                nameTextColorRes = mData.getIsIncoming() ? R.color.message_text_color_incoming
-                        : R.color.message_text_color_outgoing;
-                detailsTextColorRes = mData.getIsIncoming() ? R.color.timestamp_text_incoming
-                        : R.color.timestamp_text_outgoing;
-            }
-            personView.setNameTextColor(getResources().getColor(nameTextColorRes));
-            personView.setDetailsTextColor(getResources().getColor(detailsTextColorRes));
         }
 
         @Override

@@ -19,10 +19,9 @@
     android:layout_height="wrap_content"
     android:background="@drawable/attachment_vcard_preview_background">
 
-    <com.android.messaging.ui.PersonItemView
+    <com.android.messaging.ui.AttachmentVCardItemView
         android:id="@+id/vcard_attachment_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center" />
-
 </FrameLayout>
