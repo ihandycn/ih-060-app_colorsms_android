@@ -79,6 +79,10 @@ public class EmojiConfig implements HSLibraryConfig.ILibraryListener {
         return getEmojiFromConfig(false);
     }
 
+    public String getMagicBannerUrl() {
+        return HSMapUtils.getString(sConfigMap, "MagicBannerUrl");
+    }
+
     @SuppressWarnings("unchecked")
     private @NonNull
     List<EmojiPackageInfo> getEmojiFromConfig(boolean isMustBeAdded) {
