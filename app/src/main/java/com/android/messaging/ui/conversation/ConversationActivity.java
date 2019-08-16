@@ -134,8 +134,9 @@ public class ConversationActivity extends BugleActionBarActivity
 
         final Intent intent = getIntent();
         fromCreateConversation = intent.getBooleanExtra(UIIntents.UI_INTENT_EXTRA_FROM_CREATE_CONVERSATION, false);
-
-        if (fromCreateConversation) {
+        boolean fromMessageBox = intent.getBooleanExtra(UIIntents.UI_INTENT_EXTRA_FROM_MESSAGE_BOX_TO_CONVERSATION, false) &&
+                HSConfig.optString("old", "Application", "SMSPopUps", "Type").equals("new");
+        if (fromCreateConversation || fromMessageBox) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
 
@@ -527,9 +528,9 @@ public class ConversationActivity extends BugleActionBarActivity
     }
 
     public String getConversationName() {
-        if(mNewGroupName == null) {
+        if (mNewGroupName == null) {
             return getIntent().getStringExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_NAME);
-        }else{
+        } else {
             return mNewGroupName;
         }
     }

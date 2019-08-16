@@ -107,13 +107,13 @@ public class UIIntentsImpl extends UIIntents {
     private Intent getConversationActivityIntent(final Context context,
                                                  final String conversationId, final MessageData draft,
                                                  final boolean withCustomTransition) {
-        return getConversationActivityIntent(context, conversationId, draft, withCustomTransition, "");
+        return getConversationActivityIntent(context, conversationId, draft, withCustomTransition, "", false);
     }
 
     private Intent getConversationActivityIntent(final Context context,
                                                  final String conversationId, final MessageData draft,
                                                  final boolean withCustomTransition,
-                                                 final String conversationName) {
+                                                 final String conversationName, final boolean autoOpenIme) {
         final Intent intent = new Intent(context, ConversationActivity.class);
 
         // Always try to reuse the same ConversationActivity in the current task so that we don't
@@ -157,6 +157,10 @@ public class UIIntentsImpl extends UIIntents {
             // If the caller supplies an application context, and not an activity context, we must
             // include this flag
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+
+        if (autoOpenIme) {
+            intent.putExtra(UI_INTENT_EXTRA_FROM_MESSAGE_BOX_TO_CONVERSATION, true);
         }
         return intent;
     }
@@ -213,7 +217,7 @@ public class UIIntentsImpl extends UIIntents {
                                            final String conversationId, final MessageData draft,
                                            final String conversationName, final boolean fromCreate) {
         final Intent intent = getConversationActivityIntent(context, conversationId, draft,
-                false, conversationName);
+                false, conversationName, false);
         intent.putExtra(UI_INTENT_EXTRA_FROM_CREATE_CONVERSATION, fromCreate);
         context.startActivity(intent, TransitionUtils.getTransitionInBundle(context));
     }
@@ -237,6 +241,19 @@ public class UIIntentsImpl extends UIIntents {
                 .addNextIntentWithParentStack(
                         getConversationActivityIntent(context, conversationId, messageData,
                                 false /* withCustomTransition */))
+                .startActivities();
+    }
+
+    @Override
+    public void launchConversationActivityWithParentStackFromMessageBox(final Context context,
+                                                                        final String conversationId, final String smsBody) {
+        final MessageData messageData = TextUtils.isEmpty(smsBody)
+                ? null
+                : MessageData.createDraftSmsMessage(conversationId, null, smsBody);
+        TaskStackBuilder.create(context)
+                .addNextIntentWithParentStack(
+                        getConversationActivityIntent(context, conversationId, messageData,
+                                false /* withCustomTransition */, "", true))
                 .startActivities();
     }
 

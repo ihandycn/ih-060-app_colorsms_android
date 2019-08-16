@@ -45,6 +45,7 @@ import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.Dates;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.UiUtils;
+import com.ihs.commons.config.HSConfig;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Compats;
 import com.superapps.util.Dimensions;
@@ -97,7 +98,22 @@ public class MessageBoxConversationView extends FrameLayout {
         mPrivacyConversationName = findViewById(R.id.privacy_conversation_name);
 
         mInputEditText = mInputActionView.getComposeEditText();
+
+        TextView replyMessageButton = findViewById(R.id.reply_message_button);
+        replyMessageButton.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE,
+                UiUtils.getColorDark(Color.WHITE), Dimensions.pxFromDp(0.7f), PrimaryColors.getPrimaryColor(),
+                Dimensions.pxFromDp(18.7f), false, true));
+        replyMessageButton.setText(getResources().getString(R.string.message_box_reply_message_button));
+        replyMessageButton.setTextColor(PrimaryColors.getPrimaryColor());
+        replyMessageButton.setOnClickListener(mActivity);
+
         initInputAction();
+
+        if (HSConfig.optString("old", "Application", "SMSPopUps", "Type").equals("new")) {
+            replyMessageButton.setVisibility(VISIBLE);
+        } else {
+            mInputActionView.setVisibility(VISIBLE);
+        }
     }
 
     void bind(MessageBoxItemData data) {
@@ -399,5 +415,4 @@ public class MessageBoxConversationView extends FrameLayout {
             }
         }
     }
-
 }
