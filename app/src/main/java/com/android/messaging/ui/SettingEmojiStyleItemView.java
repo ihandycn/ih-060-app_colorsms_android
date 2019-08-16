@@ -8,7 +8,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.android.messaging.R;
-import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.appsettings.BaseItemView;
 import com.android.messaging.ui.appsettings.SystemEmojiStylePreview;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
@@ -62,12 +61,12 @@ public class SettingEmojiStyleItemView extends BaseItemView {
         }
     }
 
-    public void update(String name, String imageUrl){
+    public void update(String name){
         this.mSummaryView.setText(name);
         if(name.equals(EmojiManager.EMOJI_STYLE_SYSTEM)){
             imageView.setImageDrawable(new SystemEmojiStylePreview());
         }else {
-            GlideApp.with(imageView).load(imageUrl).into(imageView);
+            imageView.setImageDrawable(EmojiManager.getEmojiStyleResource(name));
         }
     }
 }
