@@ -17,7 +17,6 @@ package com.android.messaging.ui.conversation;
 
 import android.animation.LayoutTransition;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -26,7 +25,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.text.util.Linkify;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -84,7 +82,6 @@ import com.google.common.base.Predicate;
 import com.ihs.app.framework.HSApplication;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
-import com.superapps.util.Threads;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -832,6 +829,14 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         // Update the message text/info views
         ImageUtils.setBackgroundDrawableOnView(mMessageTextAndInfoView, textBackground);
+        if (Dimensions.isRtl()) {
+            int leftPadding = mMessageTextAndInfoView.getPaddingLeft();
+            int rightPadding = mMessageTextAndInfoView.getPaddingRight();
+            int topPadding = mMessageTextAndInfoView.getPaddingTop();
+            int bottomPadding = mMessageTextAndInfoView.getPaddingBottom();
+            mMessageTextAndInfoView.setPadding(rightPadding, topPadding,
+                    leftPadding, bottomPadding);
+        }
         mMessageTextAndInfoView.setMinimumHeight(textMinHeight);
 
         // Update the message row and message bubble views
