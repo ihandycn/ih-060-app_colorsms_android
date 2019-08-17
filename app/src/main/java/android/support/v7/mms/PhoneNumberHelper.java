@@ -7,9 +7,6 @@ import com.android.i18n.phonenumbers.NumberParseException;
 import com.android.i18n.phonenumbers.PhoneNumberUtil;
 import com.android.i18n.phonenumbers.Phonenumber;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-
 /**
  * Helper methods for phone number formatting
  * This is isolated into a standalone class since it depends on libphonenumber
@@ -56,55 +53,26 @@ public class PhoneNumberHelper {
 
     public static Phonenumber.PhoneNumber parse(PhoneNumberUtil phoneNumberUtil,
                                                 String phoneText, String country) throws NumberParseException {
-        try {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             return phoneNumberUtil.parse((CharSequence) phoneText, country);
-        } catch (NoSuchMethodError e) {
-            try {
-                return phoneNumberUtil.parse(phoneText, country);
-            } catch (NoSuchMethodError e1) {
-                try {
-                    Method method = phoneNumberUtil.getClass().getMethod("parseHelper",
-                            CharSequence.class, String.class, boolean.class, boolean.class, Phonenumber.PhoneNumber.class);
-                    method.setAccessible(true);
-                    Phonenumber.PhoneNumber pn = null;
-                    method.invoke(phoneNumberUtil, (CharSequence)phoneText, country, false, true, pn);
-                    return pn;
-                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e2) {
-                    Log.d("---->>>>", "parse Error: " + e2.getMessage());
-                    e2.printStackTrace();
-                }
-            }
+        } else {
+            return phoneNumberUtil.parse(phoneText, country);
         }
-        return new Phonenumber.PhoneNumber();
     }
 
     public static Phonenumber.PhoneNumber parseAndKeepRawInput(PhoneNumberUtil phoneNumberUtil,
                                                                String phoneText, String country) throws NumberParseException {
-        try {
-            return phoneNumberUtil.parseAndKeepRawInput((CharSequence) phoneText, country);
-        } catch (NoSuchMethodError e) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            Phonenumber.PhoneNumber parsedNumber;
             try {
-                return phoneNumberUtil.parseAndKeepRawInput(phoneText, country);
-            } catch (NoSuchMethodError e1) {
-                try {
-                    Log.d("---->>>>", "Input: " + phoneText);
-                    Method method = phoneNumberUtil.getClass().getMethod("parseHelper",
-                            CharSequence.class, String.class, boolean.class, boolean.class, Phonenumber.PhoneNumber.class);
-                    method.setAccessible(true);
-                    //Class cl = Class.forName("com.android.i18n.phonenumbers.Phonenumber$PhoneNumber");
-
-                    //Phonenumber.PhoneNumber pn = (Phonenumber.PhoneNumber) cl.newInstance();
-                    Phonenumber.PhoneNumber pn = null;
-                    method.invoke(phoneNumberUtil, (CharSequence)phoneText, country, true, true, pn);
-                    //Log.d("---->>>>", "Output: " + pn.getCountryCode());
-                    return pn;
-                } catch (Exception e2) {
-                    e2.printStackTrace();
-                }
+                parsedNumber = phoneNumberUtil.parseAndKeepRawInput((CharSequence) phoneText, country);
+            } catch (NoSuchMethodError e) {
+                parsedNumber = phoneNumberUtil.parseAndKeepRawInput(phoneText, country);
             }
+            return parsedNumber;
+        } else {
+            return phoneNumberUtil.parseAndKeepRawInput(phoneText, country);
         }
-
-        return new Phonenumber.PhoneNumber();
     }
 
     public static String formatNumber(String phoneNumber, String countryIso) {

@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -35,10 +36,8 @@ import android.support.v7.mms.CarrierConfigValuesLoader;
 import android.support.v7.mms.MmsManager;
 import android.telephony.CarrierConfigManager;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.android.ex.photo.util.PhotoViewAnalytics;
-import com.android.i18n.phonenumbers.PackageUtil;
 import com.android.messaging.ad.AdConfig;
 import com.android.messaging.ad.BillingManager;
 import com.android.messaging.datamodel.DataModel;
@@ -122,11 +121,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -190,27 +184,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
     @Override
     public void onCreate() {
         Trace.beginSection("app.onCreate");
-//        try {
-//            PackageUtil.aa();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        try {
-//            Class cl = Class.forName("com.android.i18n.phonenumbers.PhoneNumberUtil");
-//            print(cl);
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//
-//        Log.d("---->>>>", "--------------");
-        try {
-            Class cl = Class.forName("com.android.i18n.phonenumbers.Phonenumber");
-            //print(cl);
-            //getConstructors(cl);
-            getInnerClasses(cl);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
         try {
             super.onCreate();
             AcbApplicationHelper.init(this);
@@ -254,133 +227,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
         });
 
         MessageScheduleManager.resetAllScheduledTaskIfNeed();
-    }
-
-    private void getInnerClasses(Class clzz) {
-        Constructor con = null;
-        try {
-            con = clzz.getDeclaredConstructor();
-            Object outObj = con.newInstance();
-            //获取外部类内的所有内部类
-            Class innerClazz[] = clzz.getDeclaredClasses();
-            //遍历
-            for (Class c : innerClazz) {
-                //获取修饰符的整数编码
-                int mod = c.getModifiers();
-                //返回整数编码对应的修饰符的字符串对象
-                String modifier = Modifier.toString(mod);
-                Log.d("---->>>>", "Inner Class: " + modifier + " " + c.getName());
-                //找到被private修饰的内部类
-                if (modifier.contains("private")) {
-                    //根据内部类的特性，需要由外部类来反射获取内部类的构造方法（这里获取的是内部类的默认构造方法）
-                    Constructor cc = c.getDeclaredConstructor(clzz);
-                    //由于内部类是私有的，需要强制获取构造方法的访问权限
-                    cc.setAccessible(true);
-                    print(c);
-                    //由外部类对象来反射获取内部类的对象
-                    Object obj = cc.newInstance(outObj);
-                    //获取内部类的私有成员属性inner
-                    Field f = c.getDeclaredField("inner");
-                    //获取访问权限
-                    f.setAccessible(true);
-                    //获取内部类对象obj中的私有成员属性inner的值
-                    System.out.println(f.get(obj));
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void getConstructors(Class class1) {
-        Constructor<?> cons[] = class1.getConstructors();
-        Log.d("---->>>>", "getConstructors: " + cons.length);
-        for (int i = 0; i < cons.length; i++) {
-            Class<?> clazzs[] = cons[i].getParameterTypes();
-            StringBuilder sb = new StringBuilder();
-            sb.append("cons[" + i + "] (");
-            for (int j = 0; j < clazzs.length; j++) {
-                if (j == clazzs.length - 1)
-                    sb.append(clazzs[j].getName());
-                else
-                    sb.append(clazzs[j].getName() + ",");
-            }
-            sb.append(")");
-            Log.d("---->>>>", sb.toString());
-        }
-    }
-
-    private void print(Class cl) {
-        Method[] methods = cl.getDeclaredMethods();
-        for (Method m : methods) {
-            Class retType = m.getReturnType();
-            String name = m.getName();
-
-            // print modifiers, return type and method name
-            String modifiers = Modifier.toString(m.getModifiers());
-            StringBuilder sb = new StringBuilder();
-            if (modifiers.length() > 0) {
-                sb.append(modifiers + " ");
-            }
-            sb.append(getTypeString(retType));
-            sb.append(" ").append(name).append("(");
-
-            // print parameter types
-            Class[] paramTypes = m.getParameterTypes();
-            for (int j = 0; j < paramTypes.length; j++) {
-                if (j > 0) {
-                    sb.append(", ");
-                }
-                sb.append(paramTypes[j]);
-            }
-
-            sb.append(")");
-
-            // print exceptions
-            Class[] exceptions = m.getExceptionTypes();
-            if (exceptions.length > 0) {
-                sb.append(" throws ");
-                for (int j = 0; j < exceptions.length; j++) {
-                    if (j > 0) {
-                        sb.append(", ");
-                    }
-                    sb.append(getTypeString(exceptions[j]));
-                }
-            }
-
-            sb.append(";");
-            Log.d("---->>>>", sb.toString());
-        }
-
-    }
-
-    private static String getTypeString(Class type) {
-        String name = type.getName();
-        if (name.startsWith("[")) {
-            if (name.startsWith("[C")) {
-                return ("char[]");
-            } else if (name.startsWith("[B")) {
-                return ("byte[]");
-            } else if (name.startsWith("[S")) {
-                return ("short[]");
-            } else if (name.startsWith("[I")) {
-                return ("int[]");
-            } else if (name.startsWith("[J")) {
-                return ("long[]");
-            } else if (name.startsWith("[F")) {
-                return ("float[]");
-            } else if (name.startsWith("[D")) {
-                return ("double[]");
-            } else if (name.startsWith("[Z")) {
-                return ("boolean[]");
-            } else if (name.startsWith("[L")) {
-                return (name.substring(name.lastIndexOf(".") + 1, name.length() - 1)
-                        + "[]");
-            }
-        } else {
-            return (name.substring(name.lastIndexOf(".") + 1));
-        }
-        return null;
     }
 
     @DebugLog
