@@ -236,7 +236,7 @@ public abstract class TextSettingDialog extends DialogFragment {
         if (keyboardHeight != 0) {
             mEmojiContainer.getLayoutParams().height = keyboardHeight;
         }
-
+        
         mEmojiPickerFragment = new EmojiPickerFragment();
         mEmojiPickerFragment.setOnlyEmojiPage(true);
         mEmojiPickerFragment.setOnEmojiPickerListener(listener);

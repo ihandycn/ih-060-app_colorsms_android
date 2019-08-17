@@ -43,7 +43,6 @@ import com.android.messaging.util.UiUtils;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.ihs.commons.config.HSConfig;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
@@ -75,8 +74,6 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
     private View mNotificationChildrenGroup;
 
     final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
-
-    private TextSettingDialog mSignatureSettingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,13 +205,14 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
             BugleAnalytics.logEvent("Settings_SendDelay_Click");
         });
 
-
         //signature
         mSignature = findViewById(R.id.setting_item_signature);
         refreshSignature();
-        mSignatureSettingDialog = new SignatureSettingDialog();
-        mSignatureSettingDialog.setHost(this);
-        mSignature.setOnItemClickListener(() -> UiUtils.showDialogFragment(this, mSignatureSettingDialog));
+        mSignature.setOnItemClickListener(() -> {
+            TextSettingDialog signatureSettingDialog = new SignatureSettingDialog();
+            signatureSettingDialog.setHost(this);
+            UiUtils.showDialogFragment(this, signatureSettingDialog);
+        });
 
         //sounds
         mSoundView = findViewById(R.id.setting_item_sound);
