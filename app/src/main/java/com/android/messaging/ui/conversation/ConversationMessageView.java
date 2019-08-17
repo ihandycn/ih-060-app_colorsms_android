@@ -122,10 +122,11 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
     private ViewGroup mMessageMetadataView;
     private ViewGroup mMessageTextAndInfoView;
     private ConversationMessageViewHost mHost;
-    private ImageView checkBox;
+    private ImageView mCheckBox;
     private View mScheduledEditView;
     private int mOffset;
     private boolean mHasCustomBackground;
+    private boolean mIsRtl = Dimensions.isRtl();
 
     public ConversationMessageView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
@@ -176,7 +177,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         mDeliveredBadge = findViewById(R.id.smsDeliveredBadge);
         mMessageMetadataView = findViewById(R.id.message_metadata);
         mMessageTextAndInfoView = findViewById(R.id.message_text_and_info);
-        checkBox = findViewById(R.id.check_box);
+        mCheckBox = findViewById(R.id.check_box);
         LayoutTransition layoutTransition = new LayoutTransition();
         layoutTransition.disableTransitionType(LayoutTransition.DISAPPEARING);
         this.setLayoutTransition(layoutTransition);
@@ -274,9 +275,9 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
 
         int bubbleBgHeight = (mMessageTextAndInfoView.getVisibility() == View.VISIBLE ? mMessageTextAndInfoView.getMeasuredHeight() : 0)
                 + (mMessageAttachmentsView != null && mMessageAttachmentsView.getVisibility() == View.VISIBLE ? mMessageAttachmentsView.getMeasuredHeight() : 0);
-        checkBox.layout(right - Dimensions.pxFromDp(37),
+        mCheckBox.layout(!mIsRtl ? right - Dimensions.pxFromDp(37) : left + Dimensions.pxFromDp(17),
                 contentTop + bubbleBgHeight / 2 - Dimensions.pxFromDp(20) / 2,
-                right - Dimensions.pxFromDp(17),
+                !mIsRtl ? right - Dimensions.pxFromDp(17) : left + Dimensions.pxFromDp(37),
                 contentTop + bubbleBgHeight / 2 + Dimensions.pxFromDp(20) / 2);
     }
 
@@ -842,7 +843,7 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         // Update the message row and message bubble views
         setPadding(getPaddingLeft(), messageTopPadding, getPaddingRight(), 0);
         mMessageBubble.setGravity(gravity);
-        ((LinearLayout)findViewById(R.id.message_text_and_scheduled_edit_container)).setGravity(gravity);
+        ((LinearLayout) findViewById(R.id.message_text_and_scheduled_edit_container)).setGravity(gravity);
         updateMessageAttachmentsAppearance(gravity);
 
         mMessageMetadataView.setPadding(0, metadataTopPadding, 0, 0);
@@ -1181,7 +1182,11 @@ public class ConversationMessageView extends RelativeLayout implements View.OnCl
         if (mData.getIsIncoming()) {
             mMessageBubble.scrollTo(0, 0);
         } else {
-            mMessageBubble.scrollTo(mOffset, 0);
+            if (Dimensions.isRtl()) {
+                mMessageBubble.scrollTo(-mOffset, 0);
+            } else {
+                mMessageBubble.scrollTo(mOffset, 0);
+            }
         }
     }
 

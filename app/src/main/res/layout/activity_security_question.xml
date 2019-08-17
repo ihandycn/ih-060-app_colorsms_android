@@ -33,7 +33,6 @@
             android:layout_marginRight="15dp">
 
             <!-- Only one of the following two is visible at a time -->
-
             <!-- Choose question to set -->
             <Spinner
                 android:id="@+id/question_spinner"
@@ -55,7 +54,6 @@
                 android:singleLine="true"
                 android:textColor="@android:color/black"
                 android:textSize="@dimen/text_edit_size" />
-
         </FrameLayout>
 
         <LinearLayout
