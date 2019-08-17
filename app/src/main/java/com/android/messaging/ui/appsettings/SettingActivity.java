@@ -43,6 +43,7 @@ import com.android.messaging.util.UiUtils;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.ihs.commons.config.HSConfig;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
@@ -320,7 +321,7 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
         }
     }
 
-    private void updateEmojiSkinItemView(boolean isSystemStyle){
+    private void updateEmojiSkinItemView(boolean isSystemStyle) {
         if (Build.VERSION.SDK_INT < 24 && isSystemStyle) {
             mSettingEmojiSkinItemView.setVisibility(GONE);
         } else {
@@ -532,18 +533,19 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
             if (resultCode != RESULT_OK) {
                 return;
             }
-            if (data != null
-                    && data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI) != null) {
-                Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-                String prefKey = getString(R.string.notification_sound_pref_key);
-                String currentRingtone = prefs.getString(prefKey, Settings.System.DEFAULT_NOTIFICATION_URI.toString());
-                if (currentRingtone != null && !currentRingtone.equals(uri == null ? "" : uri.toString())) {
-                    BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, "from", "settings");
-                    BugleFirebaseAnalytics.logEvent("Customize_Notification_Sound_Change", "from", "settings");
-                }
-                prefs.putString(prefKey, uri == null ? "" : uri.toString());
-                updateSoundSummary();
+            if (data == null) {
+                return;
             }
+            Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+            String prefKey = getString(R.string.notification_sound_pref_key);
+            String currentRingtone = prefs.getString(prefKey, Settings.System.DEFAULT_NOTIFICATION_URI.toString());
+            if (currentRingtone != null && !currentRingtone.equals(uri == null ? "" : uri.toString())) {
+                BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, "from", "settings");
+                BugleFirebaseAnalytics.logEvent("Customize_Notification_Sound_Change", "from", "settings");
+            }
+            prefs.putString(prefKey, uri == null ? "" : uri.toString());
+            updateSoundSummary();
+
         } else if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {
                 GeneralSettingSyncManager.overrideLocalData(() -> {
