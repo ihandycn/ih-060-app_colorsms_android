@@ -16,11 +16,13 @@
 package com.android.messaging.datamodel.media;
 
 import android.os.AsyncTask;
+import android.os.Looper;
 
 import com.android.messaging.Factory;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.Assert.RunsOnAnyThread;
 import com.android.messaging.util.LogUtil;
+import com.android.messaging.util.ThreadUtil;
 import com.google.common.annotations.VisibleForTesting;
 import com.superapps.util.Threads;
 
@@ -247,7 +249,12 @@ public class MediaResourceManager {
             final List<MediaRequest<T>> chainedRequests = new ArrayList<>();
             MediaLoadingResult<T> result = new MediaLoadingResult<>(cachedResource, true /* fromCache */, chainedRequests);
             final Exception exceptionFinal = loadException;
-            Threads.postOnMainThread(() -> executeLoadedResult(result, exceptionFinal, bindableRequest, mediaRequest));
+
+            if (Looper.myLooper() == Looper.getMainLooper()) {
+                executeLoadedResult(result, exceptionFinal, bindableRequest, mediaRequest);
+            } else {
+                Threads.postOnMainThread(() -> executeLoadedResult(result, exceptionFinal, bindableRequest, mediaRequest));
+            }
             return;
         }
 
