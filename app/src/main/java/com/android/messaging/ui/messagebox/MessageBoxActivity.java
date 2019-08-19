@@ -306,7 +306,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                 BugleAnalytics.logEvent("SMS_Popups_Close", true);
                 break;
             case R.id.action_open:
-                launchConversationActivityFromButtonClick();
+                launchConversationActivityFromButtonClick(false);
                 finish(OPEN);
                 BugleAnalytics.logEvent("SMS_Popups_OpenApp", true);
                 BugleAnalytics.logEvent("SMS_PopUp_Open_Click", "type", getConversationType(),
@@ -316,7 +316,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                 PopupsReplyAutopilotUtils.logPopupOpenClick();
                 break;
             case R.id.reply_message_button:
-                launchConversationActivityFromButtonClick();
+                launchConversationActivityFromButtonClick(true);
                 finish();
                 BugleAnalytics.logEvent("SMS_Popups_Reply", true);
                 PopupsReplyAutopilotUtils.logPopupReply();
@@ -352,9 +352,13 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     }
 
 
-    private void launchConversationActivityFromButtonClick() {
+    private void launchConversationActivityFromButtonClick(boolean autoOpenIme) {
         if (!TextUtils.isEmpty(mCurrentConversationView.getConversationId())) {
-            UIIntents.get().launchConversationActivityWithParentStackFromMessageBox(this, mCurrentConversationView.getConversationId(), null);
+            if (autoOpenIme) {
+                UIIntents.get().launchConversationActivityWithParentStackFromMessageBox(this, mCurrentConversationView.getConversationId(), null);
+            } else {
+                UIIntents.get().launchConversationActivityWithParentStack(this, mCurrentConversationView.getConversationId(), null);
+            }
         } else {
             if (FabricUtils.isFabricInited()) {
                 CrashlyticsCore.getInstance().logException(
