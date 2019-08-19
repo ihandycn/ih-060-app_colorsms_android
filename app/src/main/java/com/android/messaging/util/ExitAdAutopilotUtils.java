@@ -21,14 +21,6 @@ public class ExitAdAutopilotUtils {
         AutopilotEvent.logTopicEvent(EXIT_AD_TOPIC_ID, "sms_exitapp");
     }
 
-    public static void logExitAdChance() {
-        AutopilotEvent.logTopicEvent(EXIT_AD_TOPIC_ID, "exitad_chance");
-    }
-
-    public static void logExitAdShow() {
-        AutopilotEvent.logTopicEvent(EXIT_AD_TOPIC_ID, "exitad_show");
-    }
-
     public static void logExitAdClick() {
         AutopilotEvent.logTopicEvent(EXIT_AD_TOPIC_ID, "exitad_click");
     }

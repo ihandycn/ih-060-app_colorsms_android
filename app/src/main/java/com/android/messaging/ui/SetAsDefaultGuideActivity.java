@@ -16,6 +16,7 @@ import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.DefaultSMSUtils;
+import com.android.messaging.util.PopupsReplyAutopilotUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
@@ -55,6 +56,7 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
         } else {
             BugleAnalytics.logEvent("SMS_DefaultAlert_Show", true, "type", "Cleared");
         }
+        PopupsReplyAutopilotUtils.logDefaultAlertShow();
 
         CommonUtils.immersiveStatusAndNavigationBar(getWindow());
 
@@ -91,6 +93,7 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
             } else {
                 BugleAnalytics.logEvent("SMS_DefaultAlert_BtnClick", true, "type", "Cleared");
             }
+            PopupsReplyAutopilotUtils.logDefaultAlertClick();
             final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(SetAsDefaultGuideActivity.this);
             startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
         });
@@ -106,6 +109,7 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
         } else {
             BugleAnalytics.logEvent("SMS_DefaultAlert_Show", true, "type", "Cleared");
         }
+        PopupsReplyAutopilotUtils.logDefaultAlertShow();
 
         CommonUtils.immersiveStatusAndNavigationBar(getWindow());
 
@@ -121,6 +125,7 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
                 } else {
                     BugleAnalytics.logEvent("SMS_DefaultAlert_SetDefault_Success", true, "type", "Cleared");
                 }
+                PopupsReplyAutopilotUtils.logDefaultAlertSuccess();
                 finish();
                 if (mType == DEFAULT_CHANGED) {
                     Intent intent = new Intent(Intent.ACTION_MAIN)

@@ -94,6 +94,7 @@ import com.android.messaging.util.NotificationAccessAutopilotUtils;
 import com.android.messaging.util.NotificationPlayer;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
+import com.android.messaging.util.PopupsReplyAutopilotUtils;
 import com.android.messaging.util.RingtoneUtil;
 import com.android.messaging.util.ThreadUtil;
 import com.android.messaging.util.UiUtils;
@@ -717,6 +718,7 @@ public class BugleNotifications {
             BugleFirebaseAnalytics.logEvent("SMS_Notifications_Pushed", "PrivacyMode", String.valueOf(isPrivacyMode));
             AutopilotEvent.logTopicEvent("topic-768lyi3sp", "notification_pushed");
             NotificationAccessAutopilotUtils.logNotificationPushed();
+            PopupsReplyAutopilotUtils.logNotificationPushed();
             if (isPrivacyMode) {
                 BugleAnalytics.logEvent("SMS_PrivacyNotifications_Pushed");
                 BugleFirebaseAnalytics.logEvent("SMS_PrivacyNotifications_Pushed");

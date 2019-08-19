@@ -44,6 +44,7 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.Dates;
 import com.android.messaging.util.ImeUtil;
+import com.android.messaging.util.PopupsReplyAutopilotUtils;
 import com.android.messaging.util.UiUtils;
 import com.ihs.commons.config.HSConfig;
 import com.superapps.util.BackgroundDrawables;
@@ -109,7 +110,8 @@ public class MessageBoxConversationView extends FrameLayout {
 
         initInputAction();
 
-        if (HSConfig.optString("old", "Application", "SMSPopUps", "Type").equals("new")) {
+        if (HSConfig.optString("old", "Application", "SMSPopUps", "Type").equals("new")
+                && PopupsReplyAutopilotUtils.getIsNewPopups()) {
             replyMessageButton.setVisibility(VISIBLE);
         } else {
             mInputActionView.setVisibility(VISIBLE);
@@ -195,7 +197,6 @@ public class MessageBoxConversationView extends FrameLayout {
             return;
         }
         BugleAnalytics.logEvent("Popups_BtnSend_Click", "SendDelay", "" + SendDelaySettings.getSendDelayInSecs());
-
         sendMessage();
         mInputActionView.performReply();
     }

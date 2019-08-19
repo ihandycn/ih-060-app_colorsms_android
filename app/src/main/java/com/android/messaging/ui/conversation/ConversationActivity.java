@@ -64,6 +64,7 @@ import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.NotificationAccessAutopilotUtils;
 import com.android.messaging.util.OsUtil;
+import com.android.messaging.util.PopupsReplyAutopilotUtils;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.ViewUtils;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -134,8 +135,9 @@ public class ConversationActivity extends BugleActionBarActivity
 
         final Intent intent = getIntent();
         fromCreateConversation = intent.getBooleanExtra(UIIntents.UI_INTENT_EXTRA_FROM_CREATE_CONVERSATION, false);
-        boolean fromMessageBox = intent.getBooleanExtra(UIIntents.UI_INTENT_EXTRA_FROM_MESSAGE_BOX_TO_CONVERSATION, false) &&
-                HSConfig.optString("old", "Application", "SMSPopUps", "Type").equals("new");
+        boolean fromMessageBox = intent.getBooleanExtra(UIIntents.UI_INTENT_EXTRA_FROM_MESSAGE_BOX_TO_CONVERSATION, false)
+                && HSConfig.optString("old", "Application", "SMSPopUps", "Type").equals("new")
+                && PopupsReplyAutopilotUtils.getIsNewPopups();
         if (fromCreateConversation || fromMessageBox) {
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
         }
@@ -145,6 +147,7 @@ public class ConversationActivity extends BugleActionBarActivity
             BugleFirebaseAnalytics.logEvent("SMS_Notifications_Clicked");
             AutopilotEvent.logTopicEvent("topic-768lyi3sp", "notification_clicked");
             NotificationAccessAutopilotUtils.logNotificationClicked();
+            PopupsReplyAutopilotUtils.logNotificationClicked();
         }
 
         if (intent.getBooleanExtra(UIIntents.UI_INTENT_EXTRA_GOTO_CONVERSATION_LIST, false)) {
@@ -483,15 +486,13 @@ public class ConversationActivity extends BugleActionBarActivity
                 mInterstitialAd.show(null);
                 BugleAnalytics.logEvent("Detailspage_FullAd_Show", true);
                 BugleFirebaseAnalytics.logEvent("Detailspage_FullAd_Show");
-                AutopilotEvent.logTopicEvent("topic-768lyi3sp", "fullad_show");
-                NotificationAccessAutopilotUtils.logFullAdShow();
+                AutopilotEvent.logAppEvent("fullad_show");
                 bugleApplicationPrefs.putLong(PREF_KEY_WIRE_AD_SHOW_TIME, System.currentTimeMillis());
                 bugleApplicationPrefs.putLong(PREF_KEY_WIRE_AD_SHOW_TIME_FOR_EXIT_WIRE_AD, System.currentTimeMillis());
             }
             BugleAnalytics.logEvent("Detailspage_FullAd_Should_Show", true);
             BugleFirebaseAnalytics.logEvent("Detailspage_FullAd_Should_Show");
-            AutopilotEvent.logTopicEvent("topic-768lyi3sp", "fullad_chance");
-            NotificationAccessAutopilotUtils.logFullAdShouldShow();
+            AutopilotEvent.logAppEvent("fullad_chance");
         }
     }
 

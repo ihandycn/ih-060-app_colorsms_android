@@ -410,8 +410,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         BugleAnalytics.logEvent("SMS_Messages_Show_Corrected", true);
         BugleFirebaseAnalytics.logEvent("SMS_Messages_Show_Corrected");
-        AutopilotEvent.logTopicEvent("topic-768lyi3sp", "homepage_show");
-        NotificationAccessAutopilotUtils.logHomePageShow();
+        AutopilotEvent.logAppEvent("homepage_show");
         showThemeUpgradeDialog();
 
         if (drawerLayout != null) {
@@ -891,8 +890,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         BugleAnalytics.logEvent("SMS_Messages_Back", true, "type", "exitadchance");
         BugleAnalytics.logEvent("SMS_ExitAd_Chance", true);
         BugleFirebaseAnalytics.logEvent("SMS_Ad", "type", "exitad_chance");
-        ExitAdAutopilotUtils.logExitAdChance();
-        NotificationAccessAutopilotUtils.logExitAdShouldShow();
+        AutopilotEvent.logAppEvent("exitad_chance");
         List<AcbInterstitialAd> ads = AcbInterstitialAdManager.fetch(AdPlacement.AD_EXIT_WIRE, 1);
         if (ads.size() > 0) {
             ExitAdAutopilotUtils.logSmsExitApp();
@@ -969,9 +967,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
             BugleAnalytics.logEvent("SMS_ExitAd_Show", true);
             BugleAnalytics.logEvent("SMS_Ad", "type", "exitad_show");
             BugleFirebaseAnalytics.logEvent("SMS_Ad", "type", "exitad_show");
-
-            ExitAdAutopilotUtils.logExitAdShow();
-            NotificationAccessAutopilotUtils.logExitAdShow();
+            AutopilotEvent.logAppEvent("exitad_show");
             mPrefs.putInt(PREF_KEY_EXIT_WIRE_AD_SHOW_COUNT_IN_ONE_DAY, exitAdShownCountInOneDay + 1);
             mPrefs.putLong(PREF_KEY_EXIT_WIRE_AD_SHOW_TIME, System.currentTimeMillis());
             return true;

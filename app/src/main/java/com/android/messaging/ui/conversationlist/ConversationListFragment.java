@@ -427,8 +427,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
 
         BugleAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show", true);
         BugleFirebaseAnalytics.logEvent("SMS_Messages_BannerAd_Should_Show");
-        AutopilotEvent.logTopicEvent("topic-768lyi3sp", "bannerad_chance");
-        NotificationAccessAutopilotUtils.logBannerAdShouldShow();
+        AutopilotEvent.logAppEvent("bannerad_chance");
 
         List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_BANNER, 1);
         if (nativeAds.size() > 0) {
@@ -529,8 +528,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
                 "theme", String.valueOf(ThemeUtils.isDefaultTheme()));
         BugleFirebaseAnalytics.logEvent("SMS_Messages_BannerAd_Show",
                 "theme", String.valueOf(ThemeUtils.isDefaultTheme()));
-        AutopilotEvent.logTopicEvent("topic-768lyi3sp", "bannerad_show");
-        NotificationAccessAutopilotUtils.logBannerAdShow();
+        AutopilotEvent.logAppEvent("bannerad_show");
     }
 
     public void disableTopNativeAd() {

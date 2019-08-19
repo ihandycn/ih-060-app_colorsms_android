@@ -28,6 +28,7 @@ import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.FabricUtils;
+import com.android.messaging.util.PopupsReplyAutopilotUtils;
 import com.android.messaging.util.UiUtils;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.ihs.app.framework.HSApplication;
@@ -150,6 +151,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
         BugleAnalytics.logEvent("SMS_PopUp_Show", true);
         BugleFirebaseAnalytics.logEvent("SMS_PopUp_Show");
+        PopupsReplyAutopilotUtils.logPopupShow();
     }
 
 
@@ -311,11 +313,13 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
                         "privacyMode", String.valueOf(mHasPrivacyModeConversation));
                 BugleFirebaseAnalytics.logEvent("SMS_PopUp_Open_Click", "type", getConversationType(),
                         "privacyMode", String.valueOf(mHasPrivacyModeConversation));
+                PopupsReplyAutopilotUtils.logPopupOpenClick();
                 break;
             case R.id.reply_message_button:
                 launchConversationActivityFromButtonClick();
                 finish();
                 BugleAnalytics.logEvent("SMS_Popups_Reply", true);
+                PopupsReplyAutopilotUtils.logPopupReply();
                 break;
             case R.id.self_send_icon:
                 mCurrentConversationView.replyMessage();
@@ -393,19 +397,18 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         Threads.postOnMainThread(() -> {
             if (NOTIFICATION_FINISH_MESSAGE_BOX.equals(s)) {
                 finish(CLICK_CONTENT);
-                if (!isFinishing()) {
-                    BugleAnalytics.logEvent("SMS_Popups_ClickContent", true);
-                }
             } else if (NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED.equals(s)) {
                 Toasts.showToast(R.string.message_box_send_failed_toast);
                 removeCurrentPage(REPLY);
                 BugleAnalytics.logEvent("SMS_Popups_Reply", true);
+                PopupsReplyAutopilotUtils.logPopupReply();
             } else if (NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEED.equals(s)) {
                 Toast toast = Toast.makeText(HSApplication.getContext(), R.string.message_box_send_successfully_toast, Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.BOTTOM, 0, Dimensions.pxFromDp(44));
                 toast.show();
                 removeCurrentPage(REPLY);
                 BugleAnalytics.logEvent("SMS_Popups_Reply", true);
+                PopupsReplyAutopilotUtils.logPopupReply();
             }
         });
 
@@ -449,7 +452,9 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     @Override
     protected void onStop() {
         super.onStop();
-        if (!mMarkAsSeen && HSConfig.optString("old", "Application", "SMSPopUps", "Type").equals("new")) {
+        if (!mMarkAsSeen
+                && HSConfig.optString("old", "Application", "SMSPopUps", "Type").equals("new")
+                && PopupsReplyAutopilotUtils.getIsNewPopups()) {
             return;
         }
         ArrayList<String> markAsSeenList = new ArrayList<>();
@@ -502,7 +507,9 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mHomeKeyWatcher.stopWatch();
         mHomeKeyWatcher = null;
 
-        if (!mMarkAsSeen && HSConfig.optString("old", "Application", "SMSPopUps", "Type").equals("new")) {
+        if (!mMarkAsSeen
+                && HSConfig.optString("old", "Application", "SMSPopUps", "Type").equals("new")
+                && PopupsReplyAutopilotUtils.getIsNewPopups()) {
             return;
         }
 
