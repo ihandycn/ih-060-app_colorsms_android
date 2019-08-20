@@ -1053,7 +1053,14 @@ public class ComposeMessageView extends LinearLayout
                         .getMaxTextLimit())});
         if (shouldShowSimSelector(mConversationDataModel.getData())) {
             mSimButton.setVisibility(View.VISIBLE);
-            final SubscriptionListEntry subscriptionListEntry = getSelfSubscriptionListEntry();
+            SubscriptionListEntry subscriptionListEntry = getSelfSubscriptionListEntry();
+            if (subscriptionListEntry == null) {
+                List<SubscriptionListEntry> subscriptionListEntries
+                        = mConversationDataModel.getData().getSubscriptionListData().getActiveSubscriptionEntriesExcludingDefault();
+                if (subscriptionListEntries != null && subscriptionListEntries.size() > 0) {
+                    subscriptionListEntry = subscriptionListEntries.get(0);
+                }
+            }
             if (subscriptionListEntry != null) {
                 mSimButton.setImageResource(
                         subscriptionListEntry.slotId == 1 ?
