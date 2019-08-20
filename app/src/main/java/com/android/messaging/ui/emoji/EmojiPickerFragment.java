@@ -273,7 +273,9 @@ public class EmojiPickerFragment extends Fragment implements INotificationObserv
             return;
         }
         mEmojiFragment.loadData(mEmojiData);
-        mStickFragment.loadData(mStickerData);
+        if(!mIsOnlyEmoji) {
+            mStickFragment.loadData(mStickerData);
+        }
 
         mIsDataLoaded = true;
     }

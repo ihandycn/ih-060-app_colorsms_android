@@ -149,6 +149,8 @@ public abstract class TextSettingDialog extends DialogFragment {
         }
 
         mEmojiContainer.setVisibility(View.INVISIBLE);
+
+        initEmoji();
         return root;
     }
 
@@ -183,7 +185,7 @@ public abstract class TextSettingDialog extends DialogFragment {
     private void showEmoji() {
         mEmojiContainer.setVisibility(View.VISIBLE);
         if (!mIsEmojiFragmentCreated) {
-            initEmoji();
+            mEmojiPickerFragment.onAnimationFinished();
             mIsEmojiFragmentCreated = true;
         }
         mIsEmojiShow = true;
@@ -244,7 +246,6 @@ public abstract class TextSettingDialog extends DialogFragment {
                 R.id.signature_emoji_container,
                 mEmojiPickerFragment,
                 EmojiPickerFragment.FRAGMENT_TAG).commitAllowingStateLoss();
-        mEmojiPickerFragment.onAnimationFinished();
     }
 
     public abstract void onSave(String text);
