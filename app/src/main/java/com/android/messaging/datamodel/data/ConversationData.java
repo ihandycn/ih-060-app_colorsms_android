@@ -33,7 +33,6 @@ import com.android.messaging.R;
 import com.android.messaging.datamodel.BoundCursorLoader;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.DataModel;
-import com.android.messaging.datamodel.DatabaseHelper;
 import com.android.messaging.datamodel.DatabaseHelper.ParticipantColumns;
 import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.action.DeleteConversationAction;
@@ -690,7 +689,6 @@ public class ConversationData extends BindableData {
     }
 
 
-
     public void deleteConversation(final Binding<ConversationData> binding) {
         Assert.isTrue(binding.getData() == this);
         // If possible use timestamp of last message shown to delete only messages user is aware of
@@ -778,6 +776,10 @@ public class ConversationData extends BindableData {
             final String selfParticipantId, final boolean excludeDefault) {
         return getSubscriptionEntryForSelfParticipant(selfParticipantId, excludeDefault,
                 mSubscriptionListData, mSelfParticipantsData);
+    }
+
+    public ParticipantData getActiveSelfParticipant() {
+        return mSelfParticipantsData.getActiveSelfParticipant();
     }
 
     /**

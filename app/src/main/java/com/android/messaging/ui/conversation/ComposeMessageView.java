@@ -1051,13 +1051,21 @@ public class ComposeMessageView extends LinearLayout
         mComposeEditText.setFilters(new InputFilter[]{
                 new LengthFilter(MmsConfig.get(mBinding.getData().getSelfSubId())
                         .getMaxTextLimit())});
-        mSimButton.setVisibility(shouldShowSimSelector(mConversationDataModel.getData()) ? View.VISIBLE : View.GONE);
-        final SubscriptionListEntry subscriptionListEntry = getSelfSubscriptionListEntry();
-        if (subscriptionListEntry != null) {
-            mSimButton.setImageResource(
-                    subscriptionListEntry.slotId == 1 ?
-                            R.drawable.ic_dual_sim_small_1 : R.drawable.ic_dual_sim_small_2);
-            mSimButton.getDrawable().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+        if (shouldShowSimSelector(mConversationDataModel.getData())) {
+            mSimButton.setVisibility(View.VISIBLE);
+            final SubscriptionListEntry subscriptionListEntry = getSelfSubscriptionListEntry();
+            if (subscriptionListEntry != null) {
+                mSimButton.setImageResource(
+                        subscriptionListEntry.slotId == 1 ?
+                                R.drawable.ic_dual_sim_small_1 : R.drawable.ic_dual_sim_small_2);
+                mSimButton.getDrawable().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+                updateConversationSelfId(subscriptionListEntry.selfParticipantId, false);
+            }
+        } else {
+            mSimButton.setVisibility(View.GONE);
+            if (mConversationDataModel.getData().getActiveSelfParticipant() != null) {
+                updateConversationSelfId(mConversationDataModel.getData().getActiveSelfParticipant().getId(), false);
+            }
         }
         findViewById(R.id.sim_message_space)
                 .setVisibility(shouldShowSimSelector(mConversationDataModel.getData()) ? View.GONE : View.VISIBLE);
