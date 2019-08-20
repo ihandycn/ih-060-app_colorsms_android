@@ -147,17 +147,17 @@ public class ConversationListItemView extends FrameLayout implements OnClickList
         mSwipeableContainer = findViewById(R.id.conversation_item_swipeable_container);
 
         mConversationNameView = findViewById(R.id.conversation_name);
-        FrameLayout.LayoutParams params = (LayoutParams) mConversationNameView.getLayoutParams();
+        FrameLayout.LayoutParams params = (LayoutParams) findViewById(R.id.title_and_snippet_container).getLayoutParams();
         params.width = Dimensions.getPhoneWidth(HSApplication.getContext())
                 - getResources().getDimensionPixelSize(R.dimen.conversation_list_item_content_margin_start)
                 - Dimensions.pxFromDp(65);
-        mConversationNameView.setLayoutParams(params);
+       // mConversationNameView.setLayoutParams(params);
         mSnippetTextView = findViewById(R.id.conversation_snippet);
-        FrameLayout.LayoutParams paramSnippet = (LayoutParams) mSnippetTextView.getLayoutParams();
-        paramSnippet.width = Dimensions.getPhoneWidth(HSApplication.getContext())
-                - getResources().getDimensionPixelSize(R.dimen.conversation_list_item_content_margin_start)
-                - Dimensions.pxFromDp(65);
-        mSnippetTextView.setLayoutParams(paramSnippet);
+//        LinearLayout.LayoutParams paramSnippet = (LayoutParams) mSnippetTextView.getLayoutParams();
+//        paramSnippet.width = Dimensions.getPhoneWidth(HSApplication.getContext())
+//                - getResources().getDimensionPixelSize(R.dimen.conversation_list_item_content_margin_start)
+//                - Dimensions.pxFromDp(65);
+//        mSnippetTextView.setLayoutParams(paramSnippet);
         mTimestampTextView = findViewById(R.id.conversation_timestamp);
         mContactIconView = findViewById(R.id.conversation_icon);
 
