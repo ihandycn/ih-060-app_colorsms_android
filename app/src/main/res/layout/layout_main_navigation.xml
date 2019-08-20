@@ -290,6 +290,28 @@
                 app:typeface="@string/custom_font_bold"/>
         </RelativeLayout>
 
+        <!-- Notification Cleaner -->
+        <RelativeLayout
+            android:id="@+id/navigation_item_notification_cleaner"
+            style="@style/DrawerMenuItem">
+
+            <android.support.v7.widget.AppCompatImageView
+                style="@style/DrawerMenuIcon"
+                app:srcCompat="@drawable/menu_icon_notification_cleaner"/>
+
+            <com.android.messaging.ui.view.MessagesTextView
+                style="@style/DrawerMenuTitle"
+                android:includeFontPadding="false"
+                android:text="@string/notification_cleaner_title"
+                app:typeface="@string/custom_font_medium"/>
+
+            <com.android.messaging.ui.view.MessagesTextView
+                android:id="@+id/navigation_item_notification_cleaner_new_text"
+                style="@style/DrawerMenuNewMark"
+                app:textAllCaps="true"
+                app:typeface="@string/custom_font_bold"/>
+        </RelativeLayout>
+
         <!-- Item Setting -->
         <RelativeLayout
             android:id="@+id/navigation_item_setting"
