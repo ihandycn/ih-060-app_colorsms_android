@@ -912,5 +912,13 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/BaseSettingsActivity"/>
+
+        <!-- Notification Cleaner -->
+        <activity
+            android:name=".notificationcleaner.activity.NotificationGuideActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:theme="@style/BugleTheme.ConversationListActivity" />
     </application>
 </manifest>

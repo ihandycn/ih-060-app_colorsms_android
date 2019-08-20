@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.android.messaging.notificationcleaner.views.AnimatedNotificationView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/guide_container_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layoutDirection="ltr">
+
+    <FrameLayout
+        android:id="@+id/animated_notification_phone_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:scaleX="1.0"
+        android:scaleY="1.0">
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/animated_notification_phone_background"
+            android:layout_width="230dp"
+            android:layout_height="452dp"
+            android:layout_marginTop="6dp"
+            app:srcCompat="@drawable/notification_cleaner_phone" />
+
+        <LinearLayout
+            android:id="@+id/animated_notification_container"
+            android:layout_width="230dp"
+            android:layout_height="500dp"
+            android:orientation="vertical">
+
+            <com.android.messaging.notificationcleaner.views.AnimatedHorizontalIcons
+                android:id="@+id/horizontal_icons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <com.android.messaging.notificationcleaner.views.AnimatedNotificationGroup
+                    android:id="@+id/expand_notification_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical" />
+
+                <com.android.messaging.notificationcleaner.views.AnimatedNotificationHeader
+                    android:id="@+id/shrink_drawer_notification_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/notification_cleaner_animated_item_height"
+                    android:layout_marginLeft="@dimen/notification_cleaner_animated_item_left_and_right"
+                    android:layout_marginRight="@dimen/notification_cleaner_animated_item_left_and_right"
+                    android:layout_marginTop="@dimen/notification_cleaner_animated_icons_margin_right"
+                    android:visibility="invisible" />
+
+                <com.android.messaging.notificationcleaner.views.AnimatedShield
+                    android:id="@+id/animated_shield"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="88dp" />
+
+            </RelativeLayout>
+        </LinearLayout>
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/active_now_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@android:color/white"
+        android:orientation="vertical"
+        android:paddingBottom="18.3dp">
+
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/block_notification_guide_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:layout_marginTop="18dp"
+            android:alpha="0.87"
+            android:gravity="center"
+            android:text="@string/notification_cleaner_clean_now_tip"
+            android:textColor="#DA000000"
+            android:textSize="16sp"
+            app:font_family_changeable="false"
+            app:typeface="@string/custom_font_medium" />
+
+        <com.android.messaging.notificationcleaner.views.FlashButton
+            android:id="@+id/notification_activate_button"
+            android:layout_width="match_parent"
+            android:layout_height="46.7dp"
+            android:layout_below="@+id/block_notification_guide_text"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="19dp"
+            android:layout_marginRight="19dp"
+            android:layout_marginTop="20dp"
+            android:includeFontPadding="false"
+            android:text="@string/notification_cleaner_clean_now"
+            android:textColor="#ffffff"
+            android:textSize="14sp" />
+    </RelativeLayout>
+</com.android.messaging.notificationcleaner.views.AnimatedNotificationView>

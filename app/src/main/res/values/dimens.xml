@@ -239,4 +239,10 @@
     <dimen name="permission_guide_phone_frame_margin">44dp</dimen>
     <dimen name="permission_guide_phone_content_margin">56dp</dimen>
     <dimen name="permission_guide_phone_content_top_margin">4dp</dimen>
+    <dimen name="notification_cleaner_animated_horizontal_icons_width">12dp</dimen>
+    <dimen name="notification_cleaner_animated_icons_margin_right">4dp</dimen>
+    <dimen name="notification_cleaner_animated_icons_trans_x_value">10dp</dimen>
+    <dimen name="notification_cleaner_animated_item_height">28dp</dimen>
+    <dimen name="notification_cleaner_animated_item_left_and_right">12dp</dimen>
+    <dimen name="notification_cleaner_animated_init_item_radius">3dp</dimen>
 </resources>
