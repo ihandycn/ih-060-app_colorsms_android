@@ -554,6 +554,12 @@ public class ConversationActivity extends BugleActionBarActivity
                 conversationFragment.blockAd();
             }
 
+            final MessageData draftData = intent.getParcelableExtra(
+                    UIIntents.UI_INTENT_EXTRA_DRAFT_DATA);
+            intent.removeExtra(UIIntents.UI_INTENT_EXTRA_DRAFT_DATA);
+            conversationFragment.setHost(this);
+            conversationFragment.setConversationInfo(this, conversationId, draftData);
+
             fragmentTransaction.add(R.id.conversation_fragment_container,
                     conversationFragment, ConversationFragment.FRAGMENT_TAG);
             if (HSConfig.optBoolean(false, "Application", "SMSAd", "SMSDetailspageFullAd", "Enabled")
@@ -572,15 +578,6 @@ public class ConversationActivity extends BugleActionBarActivity
             }
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
-        final MessageData draftData = intent.getParcelableExtra(
-                UIIntents.UI_INTENT_EXTRA_DRAFT_DATA);
-//      if (!needContactPickerFragment) {
-        // Once the user has committed the audience,remove the draft data from the
-        // intent to prevent reuse
-        intent.removeExtra(UIIntents.UI_INTENT_EXTRA_DRAFT_DATA);
-//      }
-        conversationFragment.setHost(this);
-        conversationFragment.setConversationInfo(this, conversationId, draftData);
 
         fragmentTransaction.commit();
     }
