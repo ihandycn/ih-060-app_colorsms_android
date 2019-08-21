@@ -134,6 +134,7 @@ import com.android.messaging.util.UriUtil;
 import com.android.messaging.util.ViewUtils;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.google.common.annotations.VisibleForTesting;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -642,6 +643,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     };
     private boolean isFirstOpen = false;
 
+    //event for crash
+    private boolean mHasSetConversationInfo;
+
     /**
      * {@inheritDoc} from Fragment
      */
@@ -961,11 +965,16 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                 UiUtils.isRtlMode() ? ConversationFastScroller.POSITION_LEFT_SIDE :
                         ConversationFastScroller.POSITION_RIGHT_SIDE);
 
-        mComposeMessageView = (ComposeMessageView)
-                view.findViewById(R.id.message_compose_view_container);
+        mComposeMessageView = view.findViewById(R.id.message_compose_view_container);
         // Bind the compose message view to the DraftMessageData
-        mComposeMessageView.bind(DataModel.get().createDraftMessageData(
-                mBinding.getData().getConversationId()), this);
+        try {
+            mComposeMessageView.bind(DataModel.get().createDraftMessageData(
+                    mBinding.getData().getConversationId()), this);
+        } catch (Exception e) {
+            if (FabricUtils.isFabricInited()) {
+                CrashlyticsCore.getInstance().logException(new CrashlyticsLog("data set ? " + mHasSetConversationInfo));
+            }
+        }
         if (!(Compats.IS_SAMSUNG_DEVICE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)) {
             mComposeMessageView.requestFocus();
         }
@@ -1354,6 +1363,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                                     final MessageData draftData) {
         // TODO: Eventually I would like the Factory to implement
         // Factory.get().bindConversationData(mBinding, getActivity(), this, conversationId));
+        mHasSetConversationInfo = true;
         if (!mBinding.isBound()) {
             mConversationId = conversationId;
             mIncomingDraft = draftData;
