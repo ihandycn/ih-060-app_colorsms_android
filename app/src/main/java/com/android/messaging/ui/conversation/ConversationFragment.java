@@ -971,6 +971,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             mComposeMessageView.bind(DataModel.get().createDraftMessageData(
                     mBinding.getData().getConversationId()), this);
         } catch (Exception e) {
+            getActivity().finish();
             if (FabricUtils.isFabricInited()) {
                 CrashlyticsCore.getInstance().logException(new CrashlyticsLog("data set ? " + mHasSetConversationInfo));
             }
