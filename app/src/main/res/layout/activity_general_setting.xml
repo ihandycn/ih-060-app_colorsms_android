@@ -46,7 +46,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:hideDivideLine="true"
-                    app:title="@string/notification_sound_pref_title"
+                    app:title="@string/ringtone"
                     app:type="withTriangle" />
 
                 <!--Vibrate-->

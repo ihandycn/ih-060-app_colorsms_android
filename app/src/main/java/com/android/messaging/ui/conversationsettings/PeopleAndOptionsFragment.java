@@ -49,6 +49,7 @@ import com.android.messaging.ui.appsettings.BaseItemView;
 import com.android.messaging.ui.appsettings.GeneralSettingItemView;
 import com.android.messaging.ui.appsettings.LedSettings;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
+import com.android.messaging.ui.appsettings.RingtoneEntranceAutopilotUtils;
 import com.android.messaging.ui.appsettings.SelectLedColorDialog;
 import com.android.messaging.ui.appsettings.SelectPrivacyModeDialog;
 import com.android.messaging.ui.appsettings.SelectVibrateModeDialog;
@@ -381,6 +382,7 @@ public class PeopleAndOptionsFragment extends Fragment
                 } catch (ActivityNotFoundException | SecurityException e) {
                     Toasts.showToast(com.superapps.R.string.setting_device_not_support_message);
                 }
+                RingtoneEntranceAutopilotUtils.logDetailsRingtoneClick();
                 break;
 
             case SETTING_NOTIFICATION_VIBRATION:

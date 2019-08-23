@@ -164,6 +164,27 @@
                 app:typeface="@string/custom_font_bold"/>
         </RelativeLayout>
 
+        <RelativeLayout
+            android:id="@+id/navigation_item_ringtone"
+            style="@style/DrawerMenuItem">
+
+            <android.support.v7.widget.AppCompatImageView
+                style="@style/DrawerMenuIcon"
+                app:srcCompat="@drawable/ic_menu_ringtone"/>
+
+            <com.android.messaging.ui.view.MessagesTextView
+                style="@style/DrawerMenuTitle"
+                android:includeFontPadding="false"
+                android:text="@string/ringtone"
+                app:typeface="@string/custom_font_medium"/>
+
+            <com.android.messaging.ui.view.MessagesTextView
+                android:id="@+id/navigation_item_ringtone_new_text"
+                style="@style/DrawerMenuNewMark"
+                app:textAllCaps="true"
+                app:typeface="@string/custom_font_bold"/>
+        </RelativeLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="24dp"/>

@@ -488,6 +488,8 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
         Navigations.startActivityForResultSafely(SettingActivity.this,
                 ringtonePickerIntent, REQUEST_CODE_RINGTONE_PICKER);
         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
+
+        RingtoneEntranceAutopilotUtils.logSettingsRingtoneClick();
     }
 
     @Override
