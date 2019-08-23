@@ -88,6 +88,7 @@ public class ThemeUtils {
         }
         ChatListCustomizeManager.resetAllCustomData();
         FontStyleManager.getInstance().setFontFamily(themeInfo.fontName);
+        FontUtils.onFontTypefaceChanged();
 //
 //        ThemeDownloadManager.getInstance().copyFileFromAssetsSync(themeInfo,
 //                new ThemeDownloadManager.IThemeMoveListener() {

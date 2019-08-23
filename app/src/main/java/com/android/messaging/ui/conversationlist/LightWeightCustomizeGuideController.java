@@ -40,6 +40,9 @@ public class LightWeightCustomizeGuideController {
                 ViewGroup.LayoutParams.MATCH_PARENT);
 
         FrameLayout guideContainer = customizeGuideView.findViewById(R.id.customize_guide_container);
+        if (Dimensions.isRtl()) {
+            guideContainer.getBackground().setAutoMirrored(true);
+        }
         FrameLayout.LayoutParams param = (FrameLayout.LayoutParams) guideContainer.getLayoutParams();
         param.setMarginStart(Dimensions.pxFromDp(31 - 12.7f));
         int actionBarHeight = 0;

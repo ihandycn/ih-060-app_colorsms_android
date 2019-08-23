@@ -1,8 +1,5 @@
 package android.support.v7.mms;
 
-import android.os.Build;
-import android.util.Log;
-
 import com.android.i18n.phonenumbers.NumberParseException;
 import com.android.i18n.phonenumbers.PhoneNumberUtil;
 import com.android.i18n.phonenumbers.Phonenumber;
@@ -38,41 +35,45 @@ public class PhoneNumberHelper {
                                                            String phoneText, String country) {
         try {
             final Phonenumber.PhoneNumber phoneNumber = parse(phoneNumberUtil, phoneText, country);
+            if (phoneNumber == null) {
+                return null;
+            }
             if (phoneNumberUtil.isValidNumber(phoneNumber)) {
                 return phoneNumber;
             } else {
-                Log.e("PhoneNumbnerHelper", "getParsedNumber: not a valid phone number"
-                        + " for country " + country);
                 return null;
             }
         } catch (final NumberParseException e) {
-            Log.e("PhoneNumbnerHelper", "getParsedNumber: Not able to parse phone number");
             return null;
         }
     }
 
     public static Phonenumber.PhoneNumber parse(PhoneNumberUtil phoneNumberUtil,
                                                 String phoneText, String country) throws NumberParseException {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        try {
             return phoneNumberUtil.parse((CharSequence) phoneText, country);
-        } else {
-            return phoneNumberUtil.parse(phoneText, country);
+        } catch (NoSuchMethodError e) {
+            try {
+                return phoneNumberUtil.parse(phoneText, country);
+            } catch (NoSuchMethodError ignored) {
+            }
         }
+        return null;
     }
 
-    public static Phonenumber.PhoneNumber parseAndKeepRawInput(PhoneNumberUtil phoneNumberUtil,
-                                                               String phoneText, String country) throws NumberParseException {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            Phonenumber.PhoneNumber parsedNumber;
-            try {
-                parsedNumber = phoneNumberUtil.parseAndKeepRawInput((CharSequence) phoneText, country);
-            } catch (NoSuchMethodError e) {
-                parsedNumber = phoneNumberUtil.parseAndKeepRawInput(phoneText, country);
-            }
+    private static Phonenumber.PhoneNumber parseAndKeepRawInput(PhoneNumberUtil phoneNumberUtil,
+                                                                String phoneText, String country) throws NumberParseException {
+        Phonenumber.PhoneNumber parsedNumber;
+        try {
+            parsedNumber = phoneNumberUtil.parseAndKeepRawInput((CharSequence) phoneText, country);
             return parsedNumber;
-        } else {
-            return phoneNumberUtil.parseAndKeepRawInput(phoneText, country);
+        } catch (NoSuchMethodError e) {
+            try {
+                return phoneNumberUtil.parseAndKeepRawInput(phoneText, country);
+            } catch (NoSuchMethodError ignored) {
+            }
         }
+        return null;
     }
 
     public static String formatNumber(String phoneNumber, String countryIso) {
@@ -86,11 +87,14 @@ public class PhoneNumberHelper {
         Phonenumber.PhoneNumber pn;
         try {
             pn = PhoneNumberHelper.parseAndKeepRawInput(util, phoneNumber, countryIso);
+            if (pn == null) {
+                return phoneNumber;
+            }
             if (KOREA_ISO_COUNTRY_CODE.equalsIgnoreCase(countryIso) &&
                     (pn.getCountryCode() == util.getCountryCodeForRegion(KOREA_ISO_COUNTRY_CODE)) &&
                     (pn.getCountryCodeSource() ==
                             Phonenumber.PhoneNumber.CountryCodeSource.FROM_NUMBER_WITH_PLUS_SIGN)) {
-                /**
+                /*
                  * Need to reformat any local Korean phone numbers (when the user is in Korea) with
                  * country code to corresponding national format which would replace the leading
                  * +82 with 0.
@@ -100,7 +104,7 @@ public class PhoneNumberHelper {
                     pn.getCountryCode() == util.getCountryCodeForRegion(JAPAN_ISO_COUNTRY_CODE) &&
                     (pn.getCountryCodeSource() ==
                             Phonenumber.PhoneNumber.CountryCodeSource.FROM_NUMBER_WITH_PLUS_SIGN)) {
-                /**
+                /*
                  * Need to reformat Japanese phone numbers (when user is in Japan) with the national
                  * dialing format.
                  */

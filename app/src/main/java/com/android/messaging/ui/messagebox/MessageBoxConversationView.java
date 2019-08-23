@@ -132,6 +132,7 @@ public class MessageBoxConversationView extends FrameLayout {
     void requestEditTextFocus() {
         if (!(Compats.IS_SAMSUNG_DEVICE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)) {
             mInputEditText.requestFocus();
+            mInputEditText.setSelection(0);
         }
     }
 
@@ -355,6 +356,7 @@ public class MessageBoxConversationView extends FrameLayout {
                 mPrivacyContainer.setVisibility(GONE);
                 if (!(Compats.IS_SAMSUNG_DEVICE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P)) {
                     mInputEditText.requestFocus();
+                    mInputEditText.setSelection(0);
                 }
             }
         });

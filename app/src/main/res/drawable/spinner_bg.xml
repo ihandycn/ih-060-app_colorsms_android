@@ -15,10 +15,10 @@
             <!-- Downward arrow displayed when spinner is not expanded -->
             <item
                 android:bottom="3dp"
-                android:left="3dp"
+                android:left="15dp"
                 android:right="15dp"
                 android:top="3dp">
-                <bitmap android:gravity="center_vertical|right" android:src="@drawable/spinner_triangle_downward" />
+                <bitmap android:gravity="center_vertical|end" android:src="@drawable/spinner_triangle_downward" />
             </item>
 
         </layer-list>
@@ -39,10 +39,10 @@
             <!-- Upward arrow displayed when spinner is expanded -->
             <item
                 android:bottom="3dp"
-                android:left="3dp"
+                android:left="15dp"
                 android:right="15dp"
                 android:top="3dp">
-                <bitmap android:gravity="center_vertical|right" android:src="@drawable/spinner_triangle_upward" />
+                <bitmap android:gravity="center_vertical|end" android:src="@drawable/spinner_triangle_upward" />
             </item>
 
         </layer-list>

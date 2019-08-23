@@ -116,7 +116,7 @@
                 android:id="@+id/conversation_icon_bg"
                 android:layout_width="@dimen/conversation_list_contact_bg_size"
                 android:layout_height="@dimen/conversation_list_contact_bg_size"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center_vertical|start"
                 android:layout_marginStart="2dp"
                 android:contentDescription="@null"
                 android:scaleType="centerCrop" />
@@ -125,7 +125,7 @@
                 android:id="@+id/conversation_icon"
                 android:layout_width="@dimen/conversation_list_contact_icon_size"
                 android:layout_height="@dimen/conversation_list_contact_icon_size"
-                android:layout_gravity="center_vertical"
+                android:layout_gravity="center_vertical|start"
                 android:layout_marginStart="@dimen/conversation_list_contact_margin_start"
                 android:background="@null"
                 android:contentDescription="@null"
@@ -134,16 +134,35 @@
                 app:iconSize="large"
                 app:reveal="false" />
 
-            <com.android.messaging.ui.view.MessagesTextView
-                android:id="@+id/conversation_name"
-                style="@style/ConversationListItemViewConversationNameStyle"
-                android:layout_width="match_parent"
+            <LinearLayout
+                android:id="@+id/title_and_snippet_container"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
                 android:layout_marginStart="@dimen/conversation_list_item_content_margin_start"
-                android:layout_marginTop="15dp"
-                android:ellipsize="end"
-                android:includeFontPadding="false"
-                android:lines="1" />
+                android:orientation="vertical"
+                app:layout_goneMarginEnd="30dp">
+
+                <com.android.messaging.ui.view.MessagesTextView
+                    android:id="@+id/conversation_name"
+                    style="@style/ConversationListItemViewConversationNameStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:lines="1" />
+
+                <com.android.messaging.ui.emoji.EmojiTextView
+                    android:id="@+id/conversation_snippet"
+                    style="@style/ConversationListItemViewTextStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:textColor="#878a95"
+                    android:textSize="@dimen/conversation_list_item_snippet_text_size"
+                    app:typeface="@string/custom_font_regular" />
+            </LinearLayout>
 
             <com.android.messaging.ui.view.MessagesTextView
                 android:id="@+id/conversation_timestamp"
@@ -154,21 +173,6 @@
                 android:layout_marginEnd="15.7dp"
                 android:layout_marginTop="19dp"
                 android:lines="1" />
-
-            <com.android.messaging.ui.emoji.EmojiTextView
-                android:id="@+id/conversation_snippet"
-                style="@style/ConversationListItemViewTextStyle"
-                android:layout_width="237dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:layout_marginBottom="@dimen/conversation_list_item_content_margin_bottom"
-                android:layout_marginStart="@dimen/conversation_list_item_content_margin_start"
-                android:ellipsize="end"
-                android:includeFontPadding="false"
-                android:textColor="#878a95"
-                android:textSize="@dimen/conversation_list_item_snippet_text_size"
-                app:layout_goneMarginEnd="30dp"
-                app:typeface="@string/custom_font_regular" />
 
             <com.android.messaging.ui.view.MessagesTextView
                 android:id="@+id/conversation_unread_messages_count"

@@ -19,7 +19,7 @@ android {
         applicationId "com.color.sms.messages.emoji"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 73
+        versionCode 75
         versionName "1.1.8"
         multiDexEnabled true
 
@@ -60,7 +60,7 @@ android {
             multiDexEnabled true
             ext.enableCrashlytics = true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.txt'
-            buildConfigField 'String', 'EMOJI_CONFIG', '"http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/emojiconfig/config-bubble-emoji-1.1.4-62.sa"'
+            buildConfigField 'String', 'EMOJI_CONFIG', '"http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/emojiconfig/config-bubble-emoji-1.1.8-74.sa"'
         }
     }
 }

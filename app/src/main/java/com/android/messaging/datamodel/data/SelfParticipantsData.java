@@ -52,10 +52,11 @@ public class SelfParticipantsData {
 
     /**
      * Gets the list of self participants for all subscriptions.
+     *
      * @param activeOnly if set, returns active self entries only (i.e. those with SIMs plugged in).
      */
     public List<ParticipantData> getSelfParticipants(final boolean activeOnly) {
-         List<ParticipantData> list = new ArrayList<ParticipantData>();
+        List<ParticipantData> list = new ArrayList<ParticipantData>();
         for (final ParticipantData self : mSelfParticipantMap.values()) {
             if (!activeOnly || self.isActiveSubscription()) {
                 list.add(self);
@@ -90,6 +91,15 @@ public class SelfParticipantsData {
             }
         }
         return count;
+    }
+
+    public ParticipantData getActiveSelfParticipant() {
+        for (final ParticipantData self : mSelfParticipantMap.values()) {
+            if (!self.isDefaultSelf() && self.isActiveSubscription()) {
+                return self;
+            }
+        }
+        return null;
     }
 
     public ParticipantData getDefaultSelfParticipant() {

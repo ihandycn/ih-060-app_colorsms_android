@@ -17,8 +17,6 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-
-
     <string name="share_intent_activity_label" msgid="2939454246983196756">"会話の選択"</string>
     <string name="sendButtonContentDescription" msgid="8422114979691093956">"メッセージを送信"</string>
     <string name="settings" msgid="1045695083932447399">"設定"</string>
@@ -587,17 +585,14 @@
     <string name="message_box_negative_button">オフにする</string>
     <string name="message_box_positive_action">今はしない</string>
 
-
 	<string name="customize_guide_title">カスタマイズ機能が新登場！</string>
 	<string name="signature">シグネチャ</string>
 	<string name="messages">メッセージ</string>
 	<string name="message_box_alert_title">SMSポップアップをオフにしますか？</string>
 	<string name="message_box_disable_successfully">SMSポップアップ機能は無効になりました</string>
 
-
 	<string name="menu_new">新規</string>
 	<string name="message_box_alert_message">SMSポップアップ機能をオフにすると、メッセージを受信した際にポップアップは出なくなります。</string>
-
 
 	<string name="set_as_default_dialog_title_user_present">Color SMSをデフォルトとして設定</string>
     
@@ -608,14 +603,12 @@
     <string name="message_box_mark_as_unread">未読としてマーキングする</string>
     <string name="message_box_open">開いた</string>
 
-
 	<string name="message_welcome_viewpager_item_body_0">SNSグループの間で目立ちましょう！</string>
 	<string name="message_welcome_viewpager_item_title_1">完全にカスタム化が可能</string>
 	<string name="message_welcome_viewpager_item_body_1">チャットを好きなようにデコレーション</string>
 	<string name="message_welcome_viewpager_item_title_2">他の機能</string>
 	<string name="message_welcome_viewpager_item_body_2">たくさんあるすごい機能を試してください。</string>
 	<string name="message_welcome_set_as_default_title">SMSを送信/受信するには、SMSアプリのデフォルトとしてColor SMSを設定してください。</string>
-
 
 	<string name="menu_theme">テーマ</string>
 	<string name="welcome_choose_theme_title">お好きなテーマを選択</string>
@@ -625,14 +618,12 @@
 	<string name="setting_reset_customization_summary">このチャットのカスタマイズを消去する。</string>
 	<string name="action_pin">ピン付けしてトップに移動する</string>
 
-
 	<string name="privacy_mode_settings">プライバシーモード</string>
 	<string name="privacy_mode_disable">なし</string>
 	<string name="privacy_mode_hide_message_only">メッセージのみ非表示にする</string>
 	<string name="privacy_mode_hide_contact_and_message">連絡先とメッセージを非表示にする</string>
 	<string name="privacy_mode_show_messages">メッセージを表示する</string>
 	<string name="notification_sender_in_privacy_mode">連絡先</string>
-
 
 	<string name="private_box_setting">プライベート受信箱設定</string>
 	<string name="private_box_setting_security_summary">パスワードの変更</string>
@@ -725,7 +716,6 @@
     <string name="backup_free_success">スペースを解放する</string>
     <string name="restore_downloading">ダウンロード中...</string>
 
-
     <string name="invite_friends_add_friends">追加</string>
     <string name="invite_friends_default_back_to_main_page_title">友人を招待する</string>
     <string name="privacy_mode_open_button_text">開いた</string>
@@ -736,7 +726,6 @@
 
     <string name="action_unarchive">"アーカイブ解除"</string>
     <string name="action_archive">"アーカイブ"</string>
-
 
     <string name="ok">OK</string>
     <string name="cancel">キャンセル</string>
@@ -760,14 +749,11 @@
     </string-array>
     <string name="private_setting_security_question_summary">パスワードを忘れた場合</string>
 
-
 	<string name="incorrect_question_answer_hint">回答が間違っています</string>
 	<string name="private_box_empty_contact_hint">プライベートな連絡先はありません</string>
 	<string name="private_contacts">プライベートな連絡先</string>
 
-
 	<string name="backup_guide_dialog_title">SMSバックアップ</string>
-
 
 	<string name="invite_friends_success_toast">招待に成功</string>
 	<string name="notification_summary">メッセージを受信した際に通知する</string>
@@ -793,7 +779,6 @@
     <string name="purchase_failed">失敗</string>
     <string name="chat_list_confirm_dialog_title">変更を保存</string>
 
-
 	<string name="menu_chat_list">チャットリスト</string>
 	<string name="chat_list_background_opacity">背景の透明度</string>
 	<string name="chat_list_change_background">背景を変更</string>
@@ -803,11 +788,9 @@
     <string name="emoji_style_downloading">ダウンロード中</string>
     <string name="emoji_style_default">デフォルト</string>
 
-
 	<string name="customize_new_guide_title">おすすめの機能</string>
 	<string name="customize_new_guide_content">カスタマイズでチャットを目立たせよう！</string>
 	<string name="select_image">画像を選択</string>
-
 
 	<string name="emoji_style_current_set">現在のセット</string>
 	<string name="emoji_style_setting">絵文字スタイル</string>
@@ -817,7 +800,6 @@
 	<string name="schedule_select_time_error">今後の時間を選択する。</string>
 	<string name="scheduled_edit_send_now">今すぐ送信</string>
 	<string name="scheduled_edit_title">計画されたメッセージ</string>
-
 
 	<string name="action_rename_group_chat">グループチャット名を変更</string>
 	<string name="conversation_setting_guide_text">このチャットをカスタマイズ！</string>

@@ -572,13 +572,10 @@ public class ConversationActivity extends BugleActionBarActivity
             }
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
+
         final MessageData draftData = intent.getParcelableExtra(
                 UIIntents.UI_INTENT_EXTRA_DRAFT_DATA);
-//      if (!needContactPickerFragment) {
-        // Once the user has committed the audience,remove the draft data from the
-        // intent to prevent reuse
         intent.removeExtra(UIIntents.UI_INTENT_EXTRA_DRAFT_DATA);
-//      }
         conversationFragment.setHost(this);
         conversationFragment.setConversationInfo(this, conversationId, draftData);
 

@@ -414,6 +414,9 @@ public class BugleDatabaseOperations {
                                                   boolean noNotification, boolean noVibrate, String soundUri) {
         // We want conversation and participant creation to be atomic
         Assert.isTrue(dbWrapper.getDatabase().inTransaction());
+        HSLog.d(TAG, "create conversation with threadId: " + threadId
+                + ", conversation name : " + conversationName
+                + ", self id : " + selfId);
         boolean hasEmailAddress = false;
         for (final ParticipantData participant : participants) {
             Assert.isTrue(!participant.isSelf());
@@ -686,7 +689,7 @@ public class BugleDatabaseOperations {
         updateConversationRowIfExists(dbWrapper, conversationId, values);
     }
 
-    public static void updateGroupName(final DatabaseWrapper dbWrapper, final String conversationId, final String name){
+    public static void updateGroupName(final DatabaseWrapper dbWrapper, final String conversationId, final String name) {
         Assert.isNotMainThread();
         Assert.isTrue(dbWrapper.getDatabase().inTransaction());
         final ContentValues values = new ContentValues();
