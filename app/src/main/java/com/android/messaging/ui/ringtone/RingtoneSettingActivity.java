@@ -48,7 +48,7 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_singstone_setting);
+        setContentView(R.layout.activity_ringtone_setting);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
