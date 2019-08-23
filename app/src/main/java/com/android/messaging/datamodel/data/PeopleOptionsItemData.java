@@ -17,8 +17,6 @@ package com.android.messaging.datamodel.data;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
 import android.net.Uri;
 
 import com.android.messaging.R;
@@ -27,8 +25,9 @@ import com.android.messaging.ui.appsettings.GeneralSettingItemView;
 import com.android.messaging.ui.appsettings.LedSettings;
 import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.appsettings.VibrateSettings;
+import com.android.messaging.ui.ringtone.RingtoneInfo;
+import com.android.messaging.ui.ringtone.RingtoneInfoManager;
 import com.android.messaging.util.Assert;
-import com.android.messaging.util.RingtoneUtil;
 
 public class PeopleOptionsItemData {
     public static final String[] PROJECTION = {
@@ -112,21 +111,15 @@ public class PeopleOptionsItemData {
             case SETTING_NOTIFICATION_SOUND_URI:
                 mTitle = mContext.getString(R.string.notification_sound_pref_title);
                 final String ringtoneString = cursor.getString(INDEX_NOTIFICATION_SOUND_URI);
-                Uri ringtoneUri = RingtoneUtil.getNotificationRingtoneUri(ringtoneString);
-                mSubtitle = mContext.getString(R.string.silent_ringtone);
-                try {
-                    if (ringtoneUri != null) {
-                        final Ringtone ringtone = RingtoneManager.getRingtone(mContext, ringtoneUri);
-                        if (ringtone != null) {
-                            mSubtitle = ringtone.getTitle(mContext);
-                        }
-                    }
-                } catch (SecurityException e) {
-                    e.printStackTrace();
+                RingtoneInfo info;
+                if (ringtoneString == null) {
+                    info = RingtoneInfoManager.getCurSound();
+                } else {
+                    info = RingtoneInfoManager.getConversationRingtoneInfo(ringtoneString);
                 }
-
+                mSubtitle = info.name;
                 mCheckable = false;
-                mRingtoneUri = ringtoneUri;
+                mRingtoneUri = Uri.parse(info.uri);
                 mEnabled = notificationEnabled;
                 mType = GeneralSettingItemView.NORMAL;
                 break;
@@ -210,7 +203,7 @@ public class PeopleOptionsItemData {
         return mItemId;
     }
 
-    public int getType(){
+    public int getType() {
         return mType;
     }
 

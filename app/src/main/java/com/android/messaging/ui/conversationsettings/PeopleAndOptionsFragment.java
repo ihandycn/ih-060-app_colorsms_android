@@ -24,10 +24,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.media.RingtoneManager;
 import android.os.Bundle;
-import android.os.Parcelable;
-import android.provider.Settings;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,6 +56,9 @@ import com.android.messaging.ui.appsettings.VibrateSettings;
 import com.android.messaging.ui.customize.BubbleDrawables;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.ringtone.RingtoneInfo;
+import com.android.messaging.ui.ringtone.RingtoneInfoManager;
+import com.android.messaging.ui.ringtone.RingtoneSettingActivity;
 import com.android.messaging.ui.signature.TextSettingDialog;
 import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
@@ -95,11 +95,12 @@ import static com.android.messaging.ui.conversation.ConversationFragment.EVENT_U
 public class PeopleAndOptionsFragment extends Fragment
         implements PeopleAndOptionsDataListener, PeopleOptionsItemView.HostInterface, WallpaperManager.WallpaperChangeListener {
 
+    private final int REQUEST_CODE_RINGTONE_PICKER = 1;
+
     private final Binding<PeopleAndOptionsData> mBinding = BindingBase.createBinding(this);
     private String mConversationId;
     private String mRingtone;
 
-    private static final int REQUEST_CODE_RINGTONE_PICKER = 1000;
     private ParticipantData mOtherParticipantData;  // TODO: 2019-07-26
 
     private GeneralSettingItemView mBubbleItemView;
@@ -203,9 +204,11 @@ public class PeopleAndOptionsFragment extends Fragment
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_RINGTONE_PICKER) {
-            final Parcelable pick = data.getParcelableExtra(
-                    RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-            final String pickedUri = pick == null ? "" : pick.toString();
+            final RingtoneInfo info = data.getParcelableExtra(RingtoneSettingActivity.EXTRA_CUR_RINGTONE_INFO);
+            String pickedUri = info.uri;
+            if (info.type == RingtoneInfo.TYPE_FILE) {
+                pickedUri = info.name + "|" + info.uri; // put info.name into database with uri;
+            }
             mBinding.getData().setConversationNotificationSound(mBinding, pickedUri);
             if (pickedUri != null && !pickedUri.equals(mRingtone)) {
                 BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, "from", "chat");
@@ -370,13 +373,11 @@ public class PeopleAndOptionsFragment extends Fragment
 
             case SETTING_NOTIFICATION_SOUND_URI:
                 mRingtone = item.getRingtoneUri() == null ? "" : item.getRingtoneUri().toString();
-                final Intent ringtonePickerIntent = UIIntents.get().getRingtonePickerIntent(
-                        getString(R.string.notification_sound_pref_title),
-                        item.getRingtoneUri(), Settings.System.DEFAULT_NOTIFICATION_URI,
-                        RingtoneManager.TYPE_NOTIFICATION);
-
+                Intent intent = new Intent(getActivity(), RingtoneSettingActivity.class);
+                RingtoneInfo info = RingtoneInfoManager.getConversationRingtoneInfo(mRingtone);
+                intent.putExtra(RingtoneSettingActivity.EXTRA_CUR_RINGTONE_INFO, info);
                 try {
-                    startActivityForResult(ringtonePickerIntent, REQUEST_CODE_RINGTONE_PICKER);
+                    startActivityForResult(intent, REQUEST_CODE_RINGTONE_PICKER);
                 } catch (ActivityNotFoundException | SecurityException e) {
                     Toasts.showToast(com.superapps.R.string.setting_device_not_support_message);
                 }

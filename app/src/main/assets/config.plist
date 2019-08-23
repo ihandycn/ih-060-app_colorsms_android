@@ -6,6 +6,18 @@
 	<dict>
 		<key>Application</key>
 		<dict>
+			<key>Ringtone</key>
+			<dict>
+				<key>RingtoneList</key>
+				<array>
+					<string>spanish_army_trumpet_bugle_call</string>
+					<string>marimba</string>
+					<string>jingle_bells</string>
+					<string>horse_neigh</string>
+					<string>glitch_hit</string>
+					<string>funny_circus</string>
+				</array>
+			</dict>
 			<key>DeliveryReportDefaultSwitch</key>
 			<true/>
 			<key>ScheduleMessage</key>

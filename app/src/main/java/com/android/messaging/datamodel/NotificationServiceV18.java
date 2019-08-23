@@ -31,6 +31,7 @@ import com.android.messaging.datamodel.media.MediaResourceManager;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.ui.ringtone.RingtoneInfoManager;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BuglePrefs;
@@ -39,7 +40,6 @@ import com.android.messaging.util.NotificationAccessAutopilotUtils;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.PhoneUtils;
-import com.android.messaging.util.RingtoneUtil;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Notifications;
@@ -227,7 +227,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
                     HSApplication.getContext().getSystemService(Context.NOTIFICATION_SERVICE);
             if (notifyMgr != null) {
                 // create channel
-                final Uri ringtoneUri = RingtoneUtil.getNotificationRingtoneUri(null);
+                final Uri ringtoneUri = RingtoneInfoManager.getNotificationRingtoneUri(null);
                 String channelId = null;
                 if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
                     int priority = NotificationManager.IMPORTANCE_HIGH;
@@ -404,7 +404,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
                 .setColor(PrimaryColors.getPrimaryColor())
                 .setContentIntent(destinationPendingIntent)
                 .setDefaults(defaults)
-                .setSound(RingtoneUtil.getNotificationRingtoneUri(null))
+                .setSound(RingtoneInfoManager.getNotificationRingtoneUri(null))
                 .setPriority(Notification.PRIORITY_HIGH)
                 .setAutoCancel(true)
                 .setGroup(groupKey)

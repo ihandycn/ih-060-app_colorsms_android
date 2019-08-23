@@ -68,7 +68,7 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
             item.isInit = true;
         }
         if (OsUtil.isAtLeastL()) {
-            holder.radioButton.setButtonTintList(colorStateList); // Applying tint to drawable at left. '0' to get drawable at bottom
+            holder.radioButton.setButtonTintList(colorStateList);
         }
 
         if (item.isSystem) {

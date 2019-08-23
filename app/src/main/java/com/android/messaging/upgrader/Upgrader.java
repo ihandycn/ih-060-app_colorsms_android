@@ -18,6 +18,7 @@ import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.ui.customize.theme.WallpaperSizeManager;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
+import com.android.messaging.ui.ringtone.RingtoneInfoManager;
 import com.android.messaging.ui.welcome.WelcomeChooseThemeActivity;
 import com.android.messaging.ui.welcome.WelcomeStartActivity;
 import com.android.messaging.util.BuglePrefs;
@@ -85,6 +86,10 @@ public class Upgrader extends BaseUpgrader {
 
         if (oldVersion < newVersion) {
             ThemeDownloadManager.getInstance().copyAndResizeThemeWhenAppInstallOrUpgrade();
+        }
+
+        if (oldVersion < 75 && newVersion >= 75) {
+            RingtoneInfoManager.upgrade();
         }
 
         FontDownloadManager.copyFontsFromAssetsAsync();
