@@ -15,6 +15,7 @@ import android.widget.ImageView;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
+import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -95,7 +96,7 @@ public class WallpaperChooserItemView extends FrameLayout {
             setBackground(null);
         } else {
             mWallpaperIv.setVisibility(VISIBLE);
-            mWallpaperIv.setImageResource(item.getThumbnailResId());
+            GlideApp.with(mWallpaperIv).load(item.getThumbnailUrl()).into(mWallpaperIv);
             mAddPhotosContainer.setVisibility(View.GONE);
             setBackground(null);
         }

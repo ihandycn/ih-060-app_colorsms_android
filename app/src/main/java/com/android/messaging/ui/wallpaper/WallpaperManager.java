@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import com.android.messaging.Factory;
 import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.BuglePrefs;
-import com.android.messaging.util.TextUtil;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -177,7 +176,7 @@ public class WallpaperManager {
         emptyItem.setItemType(WallpaperChooserItem.TYPE_EMPTY);
         list.add(emptyItem);
 
-        for (int i = 0; i < WallpaperInfos.sThumbnailRes.length; i++) {
+        for (int i = 0; i < WallpaperInfos.sThumbnailUrl.length; i++) {
             WallpaperChooserItem item = new WallpaperChooserItem();
             item.setItemType(WallpaperChooserItem.TYPE_NORMAL_WALLPAPER);
             item.setIndex(i);

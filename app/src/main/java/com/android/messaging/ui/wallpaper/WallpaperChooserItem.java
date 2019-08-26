@@ -103,8 +103,8 @@ public class WallpaperChooserItem {
         this.mItemType = mItemType;
     }
 
-    int getThumbnailResId() {
-        return WallpaperInfos.sThumbnailRes[mIndex];
+    String getThumbnailUrl() {
+        return WallpaperInfos.sThumbnailUrl[mIndex];
     }
 
     public String getSourceLocalPath() {
