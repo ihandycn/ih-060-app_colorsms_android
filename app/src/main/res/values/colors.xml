@@ -162,7 +162,8 @@
 
     <color name="group_mms_setting_text_color">#333333</color>
 
-    <color name="widget_text_color">#424242</color>
+    <color name="widget_title_text_color">#19191c</color>
+    <color name="widget_text_color">#878a95</color>
     <color name="widget_incoming_text_color">@android:color/white</color>
     <color name="widget_outgoing_text_color">#424242</color>
     <color name="widget_background_color">#ffffff</color>
