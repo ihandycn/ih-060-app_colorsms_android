@@ -111,7 +111,6 @@ public class RingtoneSettingAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     public void onAnimationUpdate(ValueAnimator animation) {
                         float value = (float) animation.getAnimatedValue();
                         holder.animationView.getLayoutParams().width = value == maxWidth ? 0 : (int) value;
-                        HSLog.i("test_test", holder.animationView.getLayoutParams().width + "");
                         holder.animationView.requestLayout();
                     }
                 });
@@ -193,5 +192,11 @@ public class RingtoneSettingAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     public interface OnAppRingtoneSelected {
         void onAppRingtoneSelected(RingtoneInfo info);
+    }
+
+    public void clearChoose(){
+        int last = mCurPos;
+        mCurPos = -1;
+        notifyItemChanged(last);
     }
 }

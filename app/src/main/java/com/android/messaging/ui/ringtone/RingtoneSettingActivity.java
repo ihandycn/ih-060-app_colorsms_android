@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
@@ -23,6 +24,8 @@ import com.android.messaging.ui.appsettings.RingtoneEntranceAutopilotUtils;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
+import com.ihs.commons.utils.HSLog;
+import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Navigations;
 
 import java.io.File;
@@ -73,6 +76,7 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mSystemItemView = findViewById(R.id.system_item);
+        mSystemItemView.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff, 0, true));
         mSystemItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,6 +85,7 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
             }
         });
         mFileItemView = findViewById(R.id.file_item);
+        mFileItemView.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff, 0, true));
         mFileItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -130,6 +135,7 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
     }
 
     private void putRingtoneIntoIntent(RingtoneInfo info) {
+        HSLog.i("test_test put into Intent", info.uri + "");
         Intent intent = new Intent();
         intent.putExtra(EXTRA_CUR_RINGTONE_INFO, info);
         setResult(RESULT_OK, intent);
@@ -138,6 +144,8 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
         }
         RingtoneEntranceAutopilotUtils.logRingtonePageSet();
         BugleAnalytics.logEvent("Ringtone_Page_Set", true);
+
+        mAdapter.clearChoose();
     }
 
     @Override
@@ -148,12 +156,13 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
                 return;
             }
             if (data == null) {
+                putRingtoneIntoIntent(RingtoneInfoManager.getSystemRingtoneInfo(RingtoneInfoManager.SILENT_URI));
                 return;
             }
             Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             String uriStr = uri == null ? RingtoneInfoManager.SILENT_URI : uri.toString();
+            HSLog.i("test_test system", uriStr);
             putRingtoneIntoIntent(RingtoneInfoManager.getSystemRingtoneInfo(uriStr));
-            finish();
         } else if (requestCode == REQUEST_CODE_START_FILE_RINGTONE_PICKER) {
             if (resultCode != RESULT_OK) {
                 return;
@@ -187,14 +196,17 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
                 return;
             }
             String fileName = getFileFromContentUri(uri, this);
-            uri = FileProvider.getUriForFile(this, getResources().getString(R.string.file_provider), file);
+            if(Build.VERSION.SDK_INT < 24){
+                uri = Uri.fromFile(file);
+            }else {
+                uri = FileProvider.getUriForFile(this, getResources().getString(R.string.file_provider), file);
+            }
+            HSLog.i("test_test file", uri.toString());
             RingtoneInfo info = new RingtoneInfo();
             info.uri = uri.toString();
             info.name = fileName;
             info.type = RingtoneInfo.TYPE_FILE;
             putRingtoneIntoIntent(info);
-
-            finish();
         }
     }
 
@@ -212,6 +224,7 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
             cursor.moveToFirst();
             try {
                 fileName = cursor.getString(cursor.getColumnIndex(filePathColumn[0]));
+                cursor.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }

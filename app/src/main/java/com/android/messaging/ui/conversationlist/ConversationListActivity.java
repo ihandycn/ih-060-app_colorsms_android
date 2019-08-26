@@ -557,11 +557,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         navigationContent.findViewById(R.id.navigation_item_theme_color_new_text).setVisibility(View.GONE);
                         break;
                     case DRAWER_INDEX_RINGTONE:
-                        BugleAnalytics.logEvent("Menu_ThemeColor_Click", true);
-                        // TODO: 2019-08-23
-//                        if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
-//                            BugleAnalytics.logEvent("Menu_ThemeColor_Click_NewUser", true);
-//                        }
+                        BugleAnalytics.logEvent("Menu_Ringtone_Click", true);
                         Navigations.startActivity(ConversationListActivity.this, RingtoneSettingActivity.class);
                         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_ringtone_new_text).setVisibility(View.GONE);

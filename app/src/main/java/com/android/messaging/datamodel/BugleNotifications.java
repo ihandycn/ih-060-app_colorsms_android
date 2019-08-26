@@ -444,6 +444,7 @@ public class BugleNotifications {
                                        final boolean softSound, String conversationId) {
         final Context context = Factory.get().getApplicationContext();
         final Uri ringtoneUri = RingtoneInfoManager.getNotificationRingtoneUri(state.getRingtoneUri());
+        HSLog.i("test_test processAndSend: " + ringtoneUri.toString());
 
         NotificationChannel notificationChannel = null;
         String channelId = PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID;
