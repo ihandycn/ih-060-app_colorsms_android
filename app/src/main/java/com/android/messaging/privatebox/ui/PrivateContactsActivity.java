@@ -79,7 +79,7 @@ public class PrivateContactsActivity extends BaseActivity implements PrivateCont
     private void startQueryData() {
         Threads.postOnThreadPoolExecutor(() -> {
             List<String> privateRecipients = PrivateContactsManager.getInstance().getPrivateRecipientList();
-            List<PrivateContactItemData> PrivateContactListItemDataList = new ArrayList<>(privateRecipients.size());
+            List<PrivateContactItemData> privateContactListItemDataList = new ArrayList<>(privateRecipients.size());
 
             for (String privateRecipient : privateRecipients) {
                 Cursor matchingContactCursor = ContactUtil.lookupPhone(this, privateRecipient).performSynchronousQuery();
@@ -91,15 +91,15 @@ public class PrivateContactsActivity extends BaseActivity implements PrivateCont
                     data.setName(privateRecipient);
                     data.setDestination(privateRecipient);
                 }
-                PrivateContactListItemDataList.add(data);
+                privateContactListItemDataList.add(data);
 
                 if (matchingContactCursor != null) {
                     matchingContactCursor.close();
                 }
             }
             Threads.postOnMainThread(() -> {
-                mEmptyListMessageView.setVisibility(PrivateContactListItemDataList.isEmpty() ? View.VISIBLE : View.GONE);
-                mAdapter.updateData(PrivateContactListItemDataList);
+                mEmptyListMessageView.setVisibility(privateContactListItemDataList.isEmpty() ? View.VISIBLE : View.GONE);
+                mAdapter.updateData(privateContactListItemDataList);
             });
         });
     }
