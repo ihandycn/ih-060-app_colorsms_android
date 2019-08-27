@@ -1368,5 +1368,7 @@
     
     <string name="notification_cleaner_clean_now_tip">Hide junk notifications, Never miss any important messages</string>
     <string name="notification_cleaner_clean_now">CLEAN NOW</string>
+    <string name="notification_cleaner_block_closed">%1$s notifications will not be blocked</string>
+    <string name="notification_cleaner_block_opened">%1$s notifications will be blocked</string>
 </resources>
 
