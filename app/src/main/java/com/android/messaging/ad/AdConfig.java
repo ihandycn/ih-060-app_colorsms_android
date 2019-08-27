@@ -11,7 +11,6 @@ import com.superapps.util.Calendars;
 
 import net.appcloudbox.ads.interstitialad.AcbInterstitialAdManager;
 import net.appcloudbox.ads.nativead.AcbNativeAdManager;
-import net.appcloudbox.autopilot.AutopilotEvent;
 
 import static com.android.messaging.ui.conversationlist.ConversationListActivity.PREF_KEY_EXIT_WIRE_AD_SHOW_COUNT_IN_ONE_DAY;
 import static com.android.messaging.ui.conversationlist.ConversationListActivity.PREF_KEY_EXIT_WIRE_AD_SHOW_TIME;
@@ -54,6 +53,9 @@ public class AdConfig {
         AcbInterstitialAdManager.getInstance().deactivePlacementInProcess(AdPlacement.AD_WIRE);
         AcbInterstitialAdManager.getInstance().deactivePlacementInProcess(AdPlacement.AD_EXIT_WIRE);
         AcbNativeAdManager.getInstance().deactivePlacementInProcess(AdPlacement.AD_DETAIL_NATIVE);
+        AcbNativeAdManager.getInstance().deactivePlacementInProcess(AdPlacement.NOTIFICATION_CLEANER_AD_PLACEMENT_APP_MANAGER);
+        AcbNativeAdManager.getInstance().deactivePlacementInProcess(AdPlacement.NOTIFICATION_CLEANER_AD_PLACEMENT_RESULT_PAGE_NATIVE);
+        AcbInterstitialAdManager.getInstance().deactivePlacementInProcess(AdPlacement.NOTIFICATION_CLEANER_AD_PLACEMENT_RESULT_PAGE_INTERSTITIAL);
         sIsAllAdActivated = false;
     }
 
@@ -64,6 +66,9 @@ public class AdConfig {
             AcbInterstitialAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_WIRE);
             AcbInterstitialAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_EXIT_WIRE);
             AcbNativeAdManager.getInstance().activePlacementInProcess(AdPlacement.AD_DETAIL_NATIVE);
+            AcbNativeAdManager.getInstance().activePlacementInProcess(AdPlacement.NOTIFICATION_CLEANER_AD_PLACEMENT_APP_MANAGER);
+            AcbNativeAdManager.getInstance().activePlacementInProcess(AdPlacement.NOTIFICATION_CLEANER_AD_PLACEMENT_RESULT_PAGE_NATIVE);
+            AcbInterstitialAdManager.getInstance().activePlacementInProcess(AdPlacement.NOTIFICATION_CLEANER_AD_PLACEMENT_RESULT_PAGE_INTERSTITIAL);
         }
     }
 }
