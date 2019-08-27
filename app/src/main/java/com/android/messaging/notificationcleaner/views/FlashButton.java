@@ -21,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.animation.LinearInterpolator;
 
 import com.android.messaging.R;
+import com.android.messaging.util.Typefaces;
 import com.superapps.util.Dimensions;
 
 public class FlashButton extends android.support.v7.widget.AppCompatButton {
@@ -49,6 +50,7 @@ public class FlashButton extends android.support.v7.widget.AppCompatButton {
 
         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         mPaint.setColor(Color.WHITE);
+        setTypeface(Typefaces.getCustomSemiBold());
     }
 
     public void startFlash() {

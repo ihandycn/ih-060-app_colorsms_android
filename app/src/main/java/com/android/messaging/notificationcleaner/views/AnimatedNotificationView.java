@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -16,12 +17,17 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.android.messaging.R;
+import com.android.messaging.datamodel.NotificationServiceV18;
 import com.android.messaging.notificationcleaner.Constants;
 import com.android.messaging.notificationcleaner.NotificationBarUtil;
-import com.android.messaging.notificationcleaner.NotificationServiceV18;
 import com.android.messaging.notificationcleaner.SecurityFiles;
+import com.android.messaging.notificationcleaner.activity.NCPermissionGuideActivity;
 import com.android.messaging.notificationcleaner.activity.NotificationBlockedActivity;
 import com.android.messaging.notificationcleaner.data.NotificationCleanerProvider;
+import com.android.messaging.ui.dialog.NotificationAccessDialogActivity;
+import com.android.messaging.ui.welcome.NotificationAccessGuideActivity;
+import com.android.messaging.util.BugleAnalytics;
+import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
@@ -29,17 +35,19 @@ import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Permissions;
 import com.superapps.util.Preferences;
+import com.superapps.util.Threads;
+
+import static com.android.messaging.ui.welcome.NotificationAccessGuideActivity.DELAY_START_TO_PERMISSION_CHECK;
+import static com.android.messaging.ui.welcome.NotificationAccessGuideActivity.DURATION_PERMISSION_CHECK_CONTINUED;
+import static com.android.messaging.ui.welcome.NotificationAccessGuideActivity.INTERVAL_PERMISSION_CHECK;
+import static com.android.messaging.ui.welcome.NotificationAccessGuideActivity.MSG_WHAT_NOTIFICATION_LISTENING_CANCEL;
+import static com.android.messaging.ui.welcome.NotificationAccessGuideActivity.MSG_WHAT_NOTIFICATION_LISTENING_CHECK;
 
 public class AnimatedNotificationView extends RelativeLayout {
-
-    private static final String TAG = AnimatedNotificationView.class.getSimpleName();
-
-    private static final int DURATION_SHOW_TIP_AND_TRANSLATE_FRAME = 300;
     private static final int DELAY_ANIMATION_START = 200;
     private static final int DELAY_HORIZONTAL_ICONS_COLLAPSE = 200;
     private static final int DELAY_SHIELD_APPEAR = 300;
 
-    private static final float SCALE_FACTOR_WHEN_SHOW_ACTIVATE_TIP = 0.95f;
     private static final float RATIO_ANIMATION_CONTAINER_LEFT_START = 0.025f;
     private static final float RATIO_ANIMATION_CONTAINER_TOP_START = 0.1f;
     private static final float RATIO_ANIMATION_CONTAINER_WIDTH = 0.94f;
@@ -61,6 +69,30 @@ public class AnimatedNotificationView extends RelativeLayout {
 
     @SuppressLint("HandlerLeak") // This handler holds activity reference for no longer than 120s
     private Handler handler = new Handler();
+
+    @SuppressLint("HandlerLeak") // This mCheckPermissionHandler holds activity reference for no longer than 120s
+    private Handler mCheckPermissionHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case MSG_WHAT_NOTIFICATION_LISTENING_CHECK:
+                    if (!Permissions.isNotificationAccessGranted()) {
+                        sendEmptyMessageDelayed(MSG_WHAT_NOTIFICATION_LISTENING_CHECK, INTERVAL_PERMISSION_CHECK);
+                        break;
+                    }
+                    BugleAnalytics.logEvent("NotificationCleaner_AccessGuide_Success", true);
+                    Intent intentSelf = new Intent(HSApplication.getContext(), NotificationAccessGuideActivity.class);
+                    intentSelf.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    HSApplication.getContext().startActivity(intentSelf);
+                    break;
+                case MSG_WHAT_NOTIFICATION_LISTENING_CANCEL:
+                    removeMessages(MSG_WHAT_NOTIFICATION_LISTENING_CHECK);
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
 
     public AnimatedNotificationView(Context context) {
         this(context, null);
@@ -103,9 +135,8 @@ public class AnimatedNotificationView extends RelativeLayout {
         mStartButton.setOnClickListener(v -> {
             NotificationCleanerProvider.switchNotificationOrganizer(true);
             boolean isNotificationAccessGranted = Permissions.isNotificationAccessGranted();
+            BugleAnalytics.logEvent("NotificationCleaner_Guide_BtnClick", true);
             if (isNotificationAccessGranted) {
-//                BugleAnalytics.logEvent("NotificationCleaner_Guide_BtnClick");
-//                BugleAnalytics.logEvent("NotificationCleaner_OpenSuccess");
                 NotificationBarUtil.checkToUpdateBlockedNotification();
                 sendGetActiveNotificationBroadcast();
                 Intent intentBlocked = new Intent(getContext(), NotificationBlockedActivity.class);
@@ -127,26 +158,18 @@ public class AnimatedNotificationView extends RelativeLayout {
 //                                | Intent.FLAG_ACTIVITY_CLEAR_TOP
 //                                | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
 //                        Navigations.startActivitySafely(getContext(), intentSelf);
-//                    } else {
-//                        Intent intentBlocked = new Intent(getContext(), NotificationBlockedActivity.class);
-//                        intentBlocked.putExtra(NotificationCleanerConstants.EXTRA_START_FROM, NotificationCleanerConstants.FROM_RESULT_PAGE_FULL);
-//                        intentBlocked.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-//                                | Intent.FLAG_ACTIVITY_SINGLE_TOP
-//                                | Intent.FLAG_ACTIVITY_CLEAR_TOP
-//                                | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
-//                        Navigations.startActivitySafely(getContext(), intentBlocked);
-//                        if (getContext() instanceof ResultPageActivity) {
-//                            ((ResultPageActivity) getContext()).finishSelfAndParentActivity();
-//                        }
 //                    }
 //                    NCFloatWindowController.getInstance().removePermissionGuideTipWithAnimation();
 //                    NCFloatWindowController.getInstance().removePermissionGuideFloatButton();
 //                }, NotificationCleanerUtil.NotificationCleanerSourceType.GUIDE_START, "");
-//
-//                if (isFromResultPage) {
-//                } else {
-//                    BugleAnalytics.logEvent("NotificationCleaner_Guide_BtnClick");
-//                }
+                Intent intent = new Intent(NotificationAccessGuideActivity.ACTION_NOTIFICATION_LISTENER_SETTINGS);
+                getContext().startActivity(intent);
+                Threads.postOnMainThreadDelayed(()-> {
+                    Navigations.startActivity(getContext(), NCPermissionGuideActivity.class);
+                }, 800);
+                mCheckPermissionHandler.removeMessages(MSG_WHAT_NOTIFICATION_LISTENING_CHECK);
+                mCheckPermissionHandler.sendEmptyMessageDelayed(MSG_WHAT_NOTIFICATION_LISTENING_CHECK, DELAY_START_TO_PERMISSION_CHECK);
+                mCheckPermissionHandler.sendEmptyMessageDelayed(MSG_WHAT_NOTIFICATION_LISTENING_CANCEL, DURATION_PERMISSION_CHECK_CONTINUED);
             }
         });
 
@@ -234,5 +257,12 @@ public class AnimatedNotificationView extends RelativeLayout {
             mStartButton.stopFlash();
             shouldButtonFlash = false;
         }
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mCheckPermissionHandler.removeMessages(MSG_WHAT_NOTIFICATION_LISTENING_CANCEL);
+        mCheckPermissionHandler.removeMessages(MSG_WHAT_NOTIFICATION_LISTENING_CHECK);
     }
 }
