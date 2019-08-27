@@ -17,6 +17,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.android.messaging.R;
 import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.customize.WallpaperDrawables;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
@@ -96,7 +97,11 @@ public class WallpaperChooserItemView extends FrameLayout {
             setBackground(null);
         } else {
             mWallpaperIv.setVisibility(VISIBLE);
-            GlideApp.with(mWallpaperIv).load(item.getThumbnailUrl()).into(mWallpaperIv);
+            GlideApp.with(mWallpaperIv)
+                    .load(item.getThumbnailUrl())
+                    .placeholder(R.drawable.wallpaper_placeholder)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(mWallpaperIv);
             mAddPhotosContainer.setVisibility(View.GONE);
             setBackground(null);
         }
@@ -114,7 +119,7 @@ public class WallpaperChooserItemView extends FrameLayout {
             mLoadingBg.setVisibility(VISIBLE);
             mLoadingBg.setAlpha(1);
             mLoadingIv.setVisibility(VISIBLE);
-            ((View)mLoadingIv).setAlpha(1);
+            ((View) mLoadingIv).setAlpha(1);
             mDownloadingAnimator.start();
         } else if (item.isItemChecked()) {
             mCheckedLottie.setProgress(1);
