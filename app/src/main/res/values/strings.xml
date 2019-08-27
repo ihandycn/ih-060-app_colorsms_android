@@ -1365,9 +1365,15 @@
     <string name="schedule_select_time_error">Select time in future</string>
     <string name="scheduled_edit_title">Scheduled message</string>
     <string name="scheduled_edit_send_now">Send now</string>
-    
+
+    <!--Notification Cleaner-->
+    <string name="optimal">OPTIMAL</string>
+    <string name="notification_cleaner_title">Notification Cleaner</string>
+    <string name="notification_cleaner_intercepted" formatted="false">%1$s Junk Notifications</string>
     <string name="notification_cleaner_clean_now_tip">Hide junk notifications, Never miss any important messages</string>
     <string name="notification_cleaner_clean_now">CLEAN NOW</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
     <string name="notification_cleaner_block_closed">%1$s notifications will not be blocked</string>
     <string name="notification_cleaner_block_opened">%1$s notifications will be blocked</string>
     <string name="off">Off</string>
