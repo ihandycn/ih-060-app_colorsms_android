@@ -54,6 +54,7 @@ import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.font.ChangeFontActivity;
 import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.mmslib.SqliteWrapper;
+import com.android.messaging.notificationcleaner.activity.NotificationBlockedActivity;
 import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.privatebox.MoveConversationToPrivateBoxAction;
 import com.android.messaging.privatebox.PrivateBoxSettings;
@@ -184,6 +185,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final int DRAWER_INDEX_EMOJI_STORE = 10;
     private static final int DRAWER_INDEX_REMOVE_ADS = 11;
     private static final int DRAWER_INDEX_CHAT_LIST = 12;
+    private static final int DRAWER_INDEX_NOTIFICATION_CLEANER = 13;
 
     private static final int MIN_AD_CLICK_DELAY_TIME = 300;
     private int drawerClickIndex = DRAWER_INDEX_NONE;
@@ -637,6 +639,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         BugleAnalytics.logEvent("Subscription_Analysis", "Menu_Subscription_Click", "true");
                         BugleFirebaseAnalytics.logEvent("Subscription_Analysis", "Menu_Subscription_Click", "true");
                         break;
+                    case DRAWER_INDEX_NOTIFICATION_CLEANER:
+                        Intent notificationCleanerIntent = new Intent(ConversationListActivity.this, NotificationBlockedActivity.class);
+                        notificationCleanerIntent.putExtra(NotificationBlockedActivity.START_FROM, "main_page");
+                        Navigations.startActivitySafely(ConversationListActivity.this, notificationCleanerIntent);
+                        BugleAnalytics.logEvent("Menu_NotificationCleaner_Click", true);
+                        break;
                     case DRAWER_INDEX_NONE:
                     default:
                         break;
@@ -690,6 +698,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_setting).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_emoji_store).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_chat_list).setOnClickListener(this);
+        navigationContent.findViewById(R.id.navigation_item_notification_cleaner).setOnClickListener(this);
 
         View backupEntrance = navigationContent.findViewById(R.id.navigation_item_backup_restore);
         backupEntrance.setOnClickListener(this);
@@ -1195,6 +1204,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 drawerClickIndex = DRAWER_INDEX_CHAT_LIST;
                 drawerLayout.closeDrawer(navigationView);
                 break;
+            case R.id.navigation_item_notification_cleaner:
+                drawerClickIndex = DRAWER_INDEX_NOTIFICATION_CLEANER;
+                drawerLayout.closeDrawer(navigationView);
         }
     }
 
