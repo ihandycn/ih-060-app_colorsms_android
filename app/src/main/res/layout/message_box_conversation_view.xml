@@ -169,7 +169,6 @@
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
                     android:includeFontPadding="false"
-                    android:textSize="12.7sp"
                     android:visibility="gone"/>
 
             </LinearLayout>
