@@ -730,6 +730,14 @@ public class UIIntentsImpl extends UIIntents {
     }
 
     @Override
+    public PendingIntent getWidgetPendingIntentForContactPickerActivity(final Context context,
+                                                                       final int requestCode) {
+        final Intent intent = new Intent(context, ContactPickerActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return getPendingIntentWithParentStack(context, intent, requestCode);
+    }
+
+    @Override
     public PendingIntent getWidgetPendingIntentForConversationListActivity(
             final Context context) {
         final Intent intent = getConversationListActivityIntent(context);

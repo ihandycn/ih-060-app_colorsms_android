@@ -123,7 +123,12 @@
 
         <activity
             android:name=".ui.contact.ContactPickerActivity"
-            android:theme="@style/ContactPickerTheme"/>
+            android:theme="@style/ContactPickerTheme"
+            android:parentActivityName=".ui.conversationlist.ConversationListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.android.messaging.ui.conversationlist.ConversationListActivity"/>
+        </activity>
 
         <!-- Displays a list of archived conversations -->
         <activity
