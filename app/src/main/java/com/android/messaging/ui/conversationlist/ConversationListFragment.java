@@ -64,6 +64,7 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.ui.customize.mainpage.ChatListCustomizeManager;
 import com.android.messaging.ui.customize.theme.CreateIconDrawable;
+import com.android.messaging.ui.customize.theme.ThemeInfo;
 import com.android.messaging.ui.customize.theme.ThemeUtils;
 import com.android.messaging.util.AccessibilityUtil;
 import com.android.messaging.util.Assert;
@@ -71,10 +72,10 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.LogUtil;
-import com.android.messaging.util.NotificationAccessAutopilotUtils;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.ViewUtils;
 import com.google.common.annotations.VisibleForTesting;
+import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
@@ -514,6 +515,10 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         ImageView ivAdPreview = adView.findViewById(R.id.icon_ad_preview);
         ivAdPreview.getDrawable().setColorFilter(ConversationColors.get().getListTimeColor(), PorterDuff.Mode.SRC_ATOP);
         ChatListCustomizeManager.changeDrawableColorIfNeed(ivAdPreview.getDrawable(), false);
+
+        if (HSConfig.optBoolean(true, "Application", "SMSAd", "SMSHomepageBannerAd", "SMSHomepageBannerAdFacebookEnabled")) {
+            adView.setBackgroundColor(Color.parseColor(ThemeInfo.getThemeInfo(ThemeUtils.getCurrentThemeName()).bannerAdBgColor));
+        }
 
         mAdContentView.hideAdCorner();
         mAdContentView.fillNativeAd(mNativeAd, null);

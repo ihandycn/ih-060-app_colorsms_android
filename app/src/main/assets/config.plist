@@ -730,7 +730,7 @@
 					<key>Enabled</key>
 					<true/>
 					<key>FacebookEnabled</key>
-					<false/>
+					<true/>
 					<key>HideWhenKeyboardShow</key>
 					<false/>
 					<key>RefreshInterval</key>
@@ -756,7 +756,7 @@
 					<key>Enabled</key>
 					<true/>
 					<key>SMSHomepageBannerAdFacebookEnabled</key>
-					<false/>
+					<true/>
 					<key>ShowAfterInstall</key>
 					<integer>10</integer>
 				</dict>
