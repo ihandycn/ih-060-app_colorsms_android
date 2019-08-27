@@ -169,9 +169,32 @@ public class WidgetConversationProvider extends BaseWidgetProvider {
         if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
             LogUtil.v(TAG, "notifyMessagesChanged");
         }
-        final Intent intent = new Intent(ACTION_NOTIFY_MESSAGES_CHANGED);
-        intent.putExtra(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID, conversationId);
-        context.sendBroadcast(intent);
+
+        final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        final int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context,
+                WidgetConversationProvider.class));
+
+        if (appWidgetIds.length == 0) {
+            if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
+                LogUtil.v(TAG, "WidgetConversationProvider onReceive no widget ids");
+            }
+            return;
+        }
+        // Normally the conversation id points to a specific conversation and we only update
+        // widgets looking at that conversation. When the conversation id is null, that means
+        // there's been a massive change (such as the initial import) and we need to update
+        // every conversation widget.
+
+        // Only update the widgets that match the conversation id that changed.
+        for (final int widgetId : appWidgetIds) {
+            // Retrieve the persisted information for this widget from preferences.
+            final String widgetConvId =
+                    WidgetPickConversationActivity.getConversationIdPref(widgetId);
+            if (conversationId == null || TextUtils.equals(conversationId, widgetConvId)) {
+                // Update the list portion (i.e. the message list) of the widget
+                appWidgetManager.notifyAppWidgetViewDataChanged(widgetId, R.id.message_list);
+            }
+        }
     }
 
     /*
@@ -236,33 +259,7 @@ public class WidgetConversationProvider extends BaseWidgetProvider {
         // been sent or received (or a conversation has been read) and is telling the widget it
         // needs to update.
         if (getAction().equals(action)) {
-            final AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
-            final int[] appWidgetIds = appWidgetManager.getAppWidgetIds(new ComponentName(context,
-                    this.getClass()));
 
-            if (appWidgetIds.length == 0) {
-                if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
-                    LogUtil.v(TAG, "WidgetConversationProvider onReceive no widget ids");
-                }
-                return;
-            }
-            // Normally the conversation id points to a specific conversation and we only update
-            // widgets looking at that conversation. When the conversation id is null, that means
-            // there's been a massive change (such as the initial import) and we need to update
-            // every conversation widget.
-            final String conversationId = intent.getExtras()
-                    .getString(UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID);
-
-            // Only update the widgets that match the conversation id that changed.
-            for (final int widgetId : appWidgetIds) {
-                // Retrieve the persisted information for this widget from preferences.
-                final String widgetConvId =
-                        WidgetPickConversationActivity.getConversationIdPref(widgetId);
-                if (conversationId == null || TextUtils.equals(conversationId, widgetConvId)) {
-                    // Update the list portion (i.e. the message list) of the widget
-                    appWidgetManager.notifyAppWidgetViewDataChanged(widgetId, getListId());
-                }
-            }
         } else {
             super.onReceive(context, intent);
         }
