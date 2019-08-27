@@ -829,4 +829,5 @@
 	<string name="notification_guide_content">Para atendê-lo melhor para receber mensagens, conceda o acesso de notificações.</string>
 	<string name="notification_guide_title">Último Passo</string>
 
+    <string name="message_box_reply_message_button">RESPONDER À MENSAGEM</string>
 </resources>

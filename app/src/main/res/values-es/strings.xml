@@ -823,4 +823,5 @@
 	<string name="notification_guide_content">Para ofrecerte un mejor servicio de recepción de mensajes, concede acceso de notificaciones.</string>
 	<string name="notification_guide_title">Último paso</string>
 
+    <string name="message_box_reply_message_button">MENSAJE DE RESPUESTA</string>
 </resources>
