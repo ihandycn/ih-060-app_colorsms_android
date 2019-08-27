@@ -698,8 +698,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         BugleAnalytics.logEvent("SMS_DetailsPage_Show", true);
         BugleFirebaseAnalytics.logEvent("SMS_DetailsPage_Show");
-        AutopilotEvent.logTopicEvent("topic-768lyi3sp", "detailspage_show");
-        NotificationAccessAutopilotUtils.logDetailsPageShow();
+        AutopilotEvent.logAppEvent("detailspage_show");
 
         if (!Preferences.getDefault().contains("pref_key_conversation_detail_first_open")) {
             isFirstOpen = true;
@@ -718,8 +717,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         BugleAnalytics.logEvent("Detailspage_TopAd_Should_Show", true);
         BugleFirebaseAnalytics.logEvent("Detailspage_TopAd_Should_Show");
-        AutopilotEvent.logTopicEvent("topic-768lyi3sp", "topad_chance");
-        NotificationAccessAutopilotUtils.logTopAdShouldShow();
+        AutopilotEvent.logAppEvent("topad_chance");
 
         List<AcbNativeAd> nativeAds = AcbNativeAdManager.fetch(AdPlacement.AD_DETAIL_NATIVE, 1);
         if (nativeAds.size() > 0) {
@@ -835,8 +833,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
 
         BugleAnalytics.logEvent("Detailspage_TopAd_Show", true);
         BugleFirebaseAnalytics.logEvent("Detailspage_TopAd_Show");
-        AutopilotEvent.logTopicEvent("topic-768lyi3sp", "topad_show");
-        NotificationAccessAutopilotUtils.logTopAdShow();
+        AutopilotEvent.logAppEvent("topad_show");
 
         enqueueNextAd();
     }

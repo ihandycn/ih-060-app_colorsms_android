@@ -118,9 +118,9 @@ public abstract class UIIntents {
 
     public static final String UI_INTENT_EXTRA_FROM_CREATE_CONVERSATION = "from_create_conversation";
 
-    public static final String UI_INTENT_EXTRA_LAUNCH_CONVERSATION_ACTIVITY_AFTER_DEFAULT_SET = "launch_conversation_after_default_set";
-
     public static final String UI_INTENT_EXTRA_CONVERSATION_ID_AFTER_DEFAULT_SET = "conversation_id_after_default_set";
+
+    public static final String UI_INTENT_EXTRA_FROM_MESSAGE_BOX_TO_CONVERSATION = "from_message_box_to_conversation";
 
     /**
      * Launch the welcome activity
@@ -153,6 +153,13 @@ public abstract class UIIntents {
      * Launch an activity to show conversation with conversation list in back stack.
      */
     public abstract void launchConversationActivityWithParentStack(Context context,
+                                                                   String conversationId, String smsBody);
+
+
+    /**
+     * Launch an activity to show conversation from mesaage box with conversation list in back stack.
+     */
+    public abstract void launchConversationActivityWithParentStackFromMessageBox(Context context,
                                                                    String conversationId, String smsBody);
 
     /**

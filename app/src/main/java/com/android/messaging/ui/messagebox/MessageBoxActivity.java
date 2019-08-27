@@ -28,9 +28,11 @@ import com.android.messaging.ui.emoji.EmojiPickerFragment;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.FabricUtils;
+import com.android.messaging.util.PopupsReplyAutopilotUtils;
 import com.android.messaging.util.UiUtils;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.ihs.app.framework.HSApplication;
+import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
@@ -77,6 +79,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     private boolean mHasMms;
     private boolean mHasPrivacyModeConversation;
     private boolean mIsEmojiFragmentCreated = false;
+    private boolean mMarkAsSeen = true;
 
     private HashMap<String, Boolean> mMarkAsReadMap = new HashMap<>(4);
     private HashMap<String, Boolean> mMarkAsSeenMap = new HashMap<>(4);
@@ -148,6 +151,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
         BugleAnalytics.logEvent("SMS_PopUp_Show", true);
         BugleFirebaseAnalytics.logEvent("SMS_PopUp_Show");
+        PopupsReplyAutopilotUtils.logPopupShow();
     }
 
 
@@ -292,30 +296,30 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         mEmojiPickerFragment.onAnimationFinished();
     }
 
-
     @Override
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
             case R.id.action_close:
+                mMarkAsSeen = false;
                 finish(CLOSE);
                 BugleAnalytics.logEvent("SMS_Popups_Close", true);
                 break;
             case R.id.action_open:
-                if (!TextUtils.isEmpty(mCurrentConversationView.getConversationId())) {
-                    UIIntents.get().launchConversationActivityWithParentStack(this, mCurrentConversationView.getConversationId(), null);
-                } else {
-                    if (FabricUtils.isFabricInited()) {
-                        CrashlyticsCore.getInstance().logException(
-                                new CrashlyticsLog("start conversation activity error : message box conversation id is null"));
-                    }
-                }
+                launchConversationActivityFromButtonClick(false);
                 finish(OPEN);
                 BugleAnalytics.logEvent("SMS_Popups_OpenApp", true);
                 BugleAnalytics.logEvent("SMS_PopUp_Open_Click", "type", getConversationType(),
                         "privacyMode", String.valueOf(mHasPrivacyModeConversation));
                 BugleFirebaseAnalytics.logEvent("SMS_PopUp_Open_Click", "type", getConversationType(),
                         "privacyMode", String.valueOf(mHasPrivacyModeConversation));
+                PopupsReplyAutopilotUtils.logPopupOpenClick();
+                break;
+            case R.id.reply_message_button:
+                launchConversationActivityFromButtonClick(true);
+                finish();
+                BugleAnalytics.logEvent("SMS_Popups_Reply", true);
+                PopupsReplyAutopilotUtils.logPopupReply();
                 break;
             case R.id.self_send_icon:
                 mCurrentConversationView.replyMessage();
@@ -345,6 +349,22 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         }
         mEmojiContainer.setVisibility(View.VISIBLE);
         mEmojiContainer.post(this::reLayoutIndicatorView);
+    }
+
+
+    private void launchConversationActivityFromButtonClick(boolean autoOpenIme) {
+        if (!TextUtils.isEmpty(mCurrentConversationView.getConversationId())) {
+            if (autoOpenIme) {
+                UIIntents.get().launchConversationActivityWithParentStackFromMessageBox(this, mCurrentConversationView.getConversationId(), null);
+            } else {
+                UIIntents.get().launchConversationActivityWithParentStack(this, mCurrentConversationView.getConversationId(), null);
+            }
+        } else {
+            if (FabricUtils.isFabricInited()) {
+                CrashlyticsCore.getInstance().logException(
+                        new CrashlyticsLog("start conversation activity error : message box conversation id is null"));
+            }
+        }
     }
 
     void markAsRead(String mConversationId) {
@@ -381,19 +401,18 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         Threads.postOnMainThread(() -> {
             if (NOTIFICATION_FINISH_MESSAGE_BOX.equals(s)) {
                 finish(CLICK_CONTENT);
-                if (!isFinishing()) {
-                    BugleAnalytics.logEvent("SMS_Popups_ClickContent", true);
-                }
             } else if (NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED.equals(s)) {
                 Toasts.showToast(R.string.message_box_send_failed_toast);
                 removeCurrentPage(REPLY);
                 BugleAnalytics.logEvent("SMS_Popups_Reply", true);
+                PopupsReplyAutopilotUtils.logPopupReply();
             } else if (NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEED.equals(s)) {
                 Toast toast = Toast.makeText(HSApplication.getContext(), R.string.message_box_send_successfully_toast, Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.BOTTOM, 0, Dimensions.pxFromDp(44));
                 toast.show();
                 removeCurrentPage(REPLY);
                 BugleAnalytics.logEvent("SMS_Popups_Reply", true);
+                PopupsReplyAutopilotUtils.logPopupReply();
             }
         });
 
@@ -405,6 +424,7 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
             hideEmoji();
             return;
         }
+        mMarkAsSeen = false;
         finish(BACK);
         BugleAnalytics.logEvent("SMS_Popups_Back", true);
     }
@@ -436,6 +456,11 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     @Override
     protected void onStop() {
         super.onStop();
+        if (!mMarkAsSeen
+                && HSConfig.optString("old", "Application", "SMSPopUps", "Type").equals("new")
+                && PopupsReplyAutopilotUtils.getIsNewPopups()) {
+            return;
+        }
         ArrayList<String> markAsSeenList = new ArrayList<>();
         for (String conversationId : mConversationIdList) {
             Boolean seen = mMarkAsSeenMap.get(conversationId);
@@ -454,16 +479,6 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
     protected void onDestroy() {
         super.onDestroy();
         HSGlobalNotificationCenter.removeObserver(this);
-
-        for (String conversationId : mConversationIdList) {
-            Boolean markAsRead = mMarkAsReadMap.get(conversationId);
-            if (markAsRead != null) {
-                if (markAsRead) {
-                    MessageBoxItemData data = mDataMap.get(conversationId);
-                    MarkAsReadAction.markAsRead(conversationId, data.getParticipantId(), data.getReceivedTimestamp());
-                }
-            }
-        }
 
         String messageType = "";
         if (mHasMms) {
@@ -495,5 +510,21 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
         }
         mHomeKeyWatcher.stopWatch();
         mHomeKeyWatcher = null;
+
+        if (!mMarkAsSeen
+                && HSConfig.optString("old", "Application", "SMSPopUps", "Type").equals("new")
+                && PopupsReplyAutopilotUtils.getIsNewPopups()) {
+            return;
+        }
+
+        for (String conversationId : mConversationIdList) {
+            Boolean markAsRead = mMarkAsReadMap.get(conversationId);
+            if (markAsRead != null) {
+                if (markAsRead) {
+                    MessageBoxItemData data = mDataMap.get(conversationId);
+                    MarkAsReadAction.markAsRead(conversationId, data.getParticipantId(), data.getReceivedTimestamp());
+                }
+            }
+        }
     }
 }

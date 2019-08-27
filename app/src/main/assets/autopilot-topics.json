@@ -3,6 +3,23 @@
     {
       "select_value": [
         {
+          "name": "english",
+          "key": "english"
+        },
+        {
+          "name": "non-english",
+          "key": "non-english"
+        }
+      ],
+      "display_name": "test",
+      "field": "device_language",
+      "content_type": "string",
+      "attributes": "select_field",
+      "type": "App"
+    },
+    {
+      "select_value": [
+        {
           "name": "True",
           "key": true
         },
@@ -20,7 +37,12 @@
   ],
   "console_url": "https://ap-console.appcloudbox.net",
   "app_meta": {
-    "is_support_languages": false
+    "remote_config_get_interval_secs": {
+      "one_time": 3600,
+      "rtot_popup": 3600
+    },
+    "is_support_languages": false,
+    "session_end_delay": 10
   },
   "app_events": [
     {
@@ -58,6 +80,36 @@
     },
     {
       "name": "get_remote_config"
+    },
+    {
+      "name": "homepage_show"
+    },
+    {
+      "name": "detailspage_show"
+    },
+    {
+      "name": "bannerad_chance"
+    },
+    {
+      "name": "bannerad_show"
+    },
+    {
+      "name": "topad_chance"
+    },
+    {
+      "name": "topad_show"
+    },
+    {
+      "name": "fullad_chance"
+    },
+    {
+      "name": "fullad_show"
+    },
+    {
+      "name": "exitad_chance"
+    },
+    {
+      "name": "exitad_show"
     },
     {
       "name": "daily_active"
@@ -147,11 +199,11 @@
       ],
       "topic_id": "topic-771b35ehc"
     },
-    "topic-77gqqjobm": {
+    "topic-77jtf18mt": {
       "topic_type": "life_time",
-      "topic_name": "Test Notification Access",
+      "topic_name": "Push After Default Alert Test",
       "variations": {
-        "na_switch": {
+        "push_afteralert": {
           "values": [
             {
               "value": false
@@ -167,46 +219,68 @@
           "name": "test"
         },
         {
-          "name": "homepage_show"
+          "name": "push_setdefault_show"
         },
         {
-          "name": "detailspage_show"
+          "name": "push_setdefault_click"
         },
         {
-          "name": "bannerad_chance"
+          "name": "push_setdefault_success"
         },
         {
-          "name": "bannerad_show"
+          "name": "alert_setdefault_show"
         },
         {
-          "name": "topad_chance"
+          "name": "alert_setdefault_click"
         },
         {
-          "name": "topad_show"
-        },
-        {
-          "name": "fullad_chance"
-        },
-        {
-          "name": "fullad_show"
-        },
-        {
-          "name": "notification_pushed"
-        },
-        {
-          "name": "notification_clicked"
-        },
-        {
-          "name": "notification_replied"
-        },
-        {
-          "name": "exitad_chance"
-        },
-        {
-          "name": "exitad_show"
+          "name": "alert_setdefault_success"
         }
       ],
-      "topic_id": "topic-77gqqjobm"
+      "topic_id": "topic-77jtf18mt"
+    },
+    "topic-786jg94fx": {
+      "topic_type": "life_time",
+      "topic_name": "Ringtone Entrance Test",
+      "variations": {
+        "menu_entrance": {
+          "values": [
+            {
+              "value": true
+            }
+          ],
+          "type": "boolean",
+          "value": true,
+          "strategy": "sole"
+        }
+      },
+      "events": [
+        {
+          "name": "test"
+        },
+        {
+          "name": "menu_ringtone_click"
+        },
+        {
+          "name": "menu_show"
+        },
+        {
+          "name": "ringtone_page_show"
+        },
+        {
+          "name": "ringtone_page_set"
+        },
+        {
+          "name": "settings_ringtone_click"
+        },
+        {
+          "name": "details_ringtone_click"
+        },
+        {
+          "name": "appringtone_set"
+        }
+      ],
+      "topic_id": "topic-786jg94fx"
     },
     "topic-rp-73fiu9zuo": {
       "topic_type": "one_time",
@@ -285,6 +359,16 @@
             }
           ],
           "type": "string",
+          "value": "",
+          "strategy": "sole"
+        },
+        "image": {
+          "values": [
+            {
+              "value": ""
+            }
+          ],
+          "type": "url",
           "value": "",
           "strategy": "sole"
         }
@@ -513,11 +597,11 @@
       ],
       "topic_id": "topic-74rv6bpwy"
     },
-    "topic-76k40hett": {
+    "topic-77gqqjobm": {
       "topic_type": "life_time",
-      "topic_name": "Test Exitad",
+      "topic_name": "Test Notification Access",
       "variations": {
-        "switch": {
+        "na_switch": {
           "values": [
             {
               "value": false
@@ -526,15 +610,76 @@
           "type": "boolean",
           "value": false,
           "strategy": "sole"
+        }
+      },
+      "events": [
+        {
+          "name": "test"
+        },
+        {
+          "name": "homepage_show"
+        },
+        {
+          "name": "detailspage_show"
+        },
+        {
+          "name": "bannerad_chance"
+        },
+        {
+          "name": "bannerad_show"
+        },
+        {
+          "name": "topad_chance"
+        },
+        {
+          "name": "topad_show"
+        },
+        {
+          "name": "fullad_chance"
+        },
+        {
+          "name": "fullad_show"
+        },
+        {
+          "name": "notification_pushed"
+        },
+        {
+          "name": "notification_clicked"
+        },
+        {
+          "name": "notification_replied"
+        },
+        {
+          "name": "exitad_chance"
+        },
+        {
+          "name": "exitad_show"
+        }
+      ],
+      "topic_id": "topic-77gqqjobm"
+    },
+    "topic-76k40hett": {
+      "topic_type": "life_time",
+      "topic_name": "Test Exitad",
+      "variations": {
+        "switch": {
+          "values": [
+            {
+              "value": true
+            }
+          ],
+          "type": "boolean",
+          "value": true,
+          "strategy": "sole"
         },
         "maxtimes": {
           "values": [
             {
-              "value": 2
+              "value": 4
             }
           ],
           "type": "double",
-          "value": 2,
+          "value": 4,
           "strategy": "sole"
         }
       },
@@ -557,11 +702,85 @@
       ],
       "topic_id": "topic-76k40hett"
     },
-    "topic-77jtf18mt": {
+    "topic-783o6bdil": {
       "topic_type": "life_time",
-      "topic_name": "Push After Default Alert Test",
+      "topic_name": "Notification Cleaner Test",
       "variations": {
-        "push_afteralert": {
+        "switch": {
+          "values": [
+            {
+              "value": false
+            }
+          ],
+          "type": "boolean",
+          "value": false,
+          "strategy": "sole"
+        },
+        "empty": {
+          "values": [
+            {
+              "value": "1"
+            }
+          ],
+          "type": "string",
+          "value": "1",
+          "strategy": "sole"
+        }
+      },
+      "events": [
+        {
+          "name": "test"
+        },
+        {
+          "name": "notification_access_grant"
+        },
+        {
+          "name": "nc_homepage_show"
+        },
+        {
+          "name": "nc_homepage_btn_click"
+        },
+        {
+          "name": "nc_homepage_ad_show"
+        },
+        {
+          "name": "resultpage_show"
+        },
+        {
+          "name": "resultpage_fullad_show"
+        },
+        {
+          "name": "resultpage_donead_show"
+        }
+      ],
+      "topic_id": "topic-783o6bdil"
+    },
+    "topic-74azpj82p": {
+      "topic_type": "one_day",
+      "topic_name": "To Export Config",
+      "variations": {},
+      "events": [
+        {
+          "name": "test"
+        }
+      ],
+      "topic_id": "topic-74azpj82p"
+    },
+    "topic-783nstv2k": {
+      "topic_type": "life_time",
+      "topic_name": "Test Popups Reply",
+      "variations": {
+        "test": {
+          "values": [
+            {
+              "value": "X1"
+            }
+          ],
+          "type": "string",
+          "value": "X1",
+          "strategy": "sole"
+        },
+        "type": {
           "values": [
             {
               "value": false
@@ -577,36 +796,37 @@
           "name": "test"
         },
         {
-          "name": "push_setdefault_show"
+          "name": "notification_pushed"
         },
         {
-          "name": "push_setdefault_click"
+          "name": "notification_clicked"
         },
         {
-          "name": "push_setdefault_success"
+          "name": "notification_replied"
         },
         {
-          "name": "alert_setdefault_show"
+          "name": "defaultalert_show"
         },
         {
-          "name": "alert_setdefault_click"
+          "name": "defaultalert_click"
         },
         {
-          "name": "alert_setdefault_success"
+          "name": "defaultalert_success"
+        },
+        {
+          "name": "popup_show"
+        },
+        {
+          "name": "popup_reply"
+        },
+        {
+          "name": "popup_btnopen"
+        },
+        {
+          "name": "popup_clickcontent"
         }
       ],
-      "topic_id": "topic-77jtf18mt"
-    },
-    "topic-74azpj82p": {
-      "topic_type": "one_day",
-      "topic_name": "To Export Config",
-      "variations": {},
-      "events": [
-        {
-          "name": "test"
-        }
-      ],
-      "topic_id": "topic-74azpj82p"
+      "topic_id": "topic-783nstv2k"
     }
   },
   "occasion_mgt": {
@@ -648,7 +868,7 @@
   "autopilot_id": 10104,
   "service_url": "https://ap.appcloudbox.net",
   "other_app_events": [],
-  "json_id": "79ebd4a9-6298-455f-bfcc-efd52503c69c",
+  "json_id": "6ca797c6-a3f7-4333-b551-2f71c989991c",
   "autopilot_name": "Bubble_A",
   "autopilot_type": "app"
 }

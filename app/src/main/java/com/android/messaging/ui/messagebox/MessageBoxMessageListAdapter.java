@@ -20,8 +20,10 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.customize.ConversationColors;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.customize.WallpaperDrawables;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Dates;
 import com.android.messaging.util.FabricUtils;
+import com.android.messaging.util.PopupsReplyAutopilotUtils;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.debug.CrashlyticsLog;
@@ -87,6 +89,8 @@ public class MessageBoxMessageListAdapter extends RecyclerView.Adapter<RecyclerV
                         }
                     }
                     HSGlobalNotificationCenter.sendNotification(NOTIFICATION_FINISH_MESSAGE_BOX);
+                    BugleAnalytics.logEvent("SMS_Popups_ClickContent", true);
+                    PopupsReplyAutopilotUtils.logPopupClickContent();
                 });
                 holder.mContentText.setTextColor(mIncomingTextColor);
                 holder.mContentText.setBackground(ConversationDrawables.get().getBubbleDrawable(false, true,
@@ -113,6 +117,8 @@ public class MessageBoxMessageListAdapter extends RecyclerView.Adapter<RecyclerV
                         }
                     }
                     HSGlobalNotificationCenter.sendNotification(NOTIFICATION_FINISH_MESSAGE_BOX);
+                    BugleAnalytics.logEvent("SMS_Popups_ClickContent", true);
+                    PopupsReplyAutopilotUtils.logPopupClickContent();
                     MessageBoxAnalytics.logEvent("SMS_PopUp_MMS_Click");
                 });
 
