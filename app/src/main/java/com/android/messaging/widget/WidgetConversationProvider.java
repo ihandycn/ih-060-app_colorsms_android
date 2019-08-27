@@ -258,11 +258,7 @@ public class WidgetConversationProvider extends BaseWidgetProvider {
         // we're looking for an intent sent by our app when it knows a message has
         // been sent or received (or a conversation has been read) and is telling the widget it
         // needs to update.
-        if (getAction().equals(action)) {
-
-        } else {
-            super.onReceive(context, intent);
-        }
+        super.onReceive(context, intent);
     }
 
     private static ConversationListItemData getConversationData(final Context context,
