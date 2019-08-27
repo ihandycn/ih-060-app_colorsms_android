@@ -766,7 +766,7 @@
 				<key>DefaultSwitch</key>
 				<true/>
 				<key>Type</key>
-                <string>old</string>
+				<string>new</string>
 			</dict>
 			<key>SMSReceivedAnalysis</key>
 			<false/>
