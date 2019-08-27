@@ -1,7 +1,7 @@
 package com.android.messaging.ui.wallpaper;
 
 public class WallpaperInfos {
-    private static final String sThumbnailBaseUrl = "http://s3.amazonaws.com/superapps-dev/ColorSMS/wallpaperthumb/";
+    private static final String sThumbnailBaseUrl = "http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/backgroundthumb/";
 
     public static final String[] sThumbnailUrl = {
             sThumbnailBaseUrl + "wallpaper_thumbnail_abstract.jpg",
