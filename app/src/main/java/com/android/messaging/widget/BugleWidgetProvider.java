@@ -18,9 +18,11 @@ package com.android.messaging.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.widget.RemoteViews;
 
 import com.android.messaging.R;
@@ -29,6 +31,7 @@ import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.SafeAsyncTask;
 import com.android.messaging.util.UiUtils;
+import com.ihs.commons.utils.HSLog;
 
 public class BugleWidgetProvider extends BaseWidgetProvider {
     public static final String ACTION_NOTIFY_CONVERSATIONS_CHANGED =
@@ -107,7 +110,10 @@ public class BugleWidgetProvider extends BaseWidgetProvider {
         if (LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
             LogUtil.v(TAG, "notifyConversationListChanged");
         }
-        final Intent intent = new Intent(ACTION_NOTIFY_CONVERSATIONS_CHANGED);
-        context.sendBroadcast(intent);
+
+        AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
+        int[] ids = widgetManager.getAppWidgetIds(new ComponentName(context, BugleWidgetProvider.class));
+        widgetManager.notifyAppWidgetViewDataChanged(ids, R.id.conversation_list);
+
     }
 }
