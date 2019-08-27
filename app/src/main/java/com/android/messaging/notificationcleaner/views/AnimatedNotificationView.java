@@ -81,8 +81,11 @@ public class AnimatedNotificationView extends RelativeLayout {
                         break;
                     }
                     BugleAnalytics.logEvent("NotificationCleaner_AccessGuide_Success", true);
-                    Intent intentSelf = new Intent(HSApplication.getContext(), NotificationAccessGuideActivity.class);
-                    intentSelf.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    Intent intentSelf = new Intent(HSApplication.getContext(), NotificationBlockedActivity.class);
+                    intentSelf.putExtra(NotificationBlockedActivity.START_FROM, NotificationBlockedActivity.START_FROM_GUIDE_BAR);
+                    intentSelf.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP
+                            | Intent.FLAG_ACTIVITY_CLEAR_TOP
+                            | Intent.FLAG_ACTIVITY_NEW_TASK);
                     HSApplication.getContext().startActivity(intentSelf);
                     break;
                 case MSG_WHAT_NOTIFICATION_LISTENING_CANCEL:
