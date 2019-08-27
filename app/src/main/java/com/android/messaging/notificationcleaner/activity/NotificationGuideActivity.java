@@ -2,7 +2,10 @@ package com.android.messaging.notificationcleaner.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import com.android.messaging.R;
 import com.android.messaging.notificationcleaner.NotificationBarUtil;
@@ -12,6 +15,7 @@ import com.android.messaging.notificationcleaner.data.NotificationCleanerProvide
 import com.android.messaging.notificationcleaner.views.AnimatedNotificationView;
 import com.android.messaging.util.BugleAnalytics;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
+import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Permissions;
 
@@ -34,6 +38,19 @@ public class NotificationGuideActivity extends HSAppCompatActivity {
             isMainPageGuideJustCreated = true;
         }
 
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("");
+        ((FrameLayout.LayoutParams) toolbar.getLayoutParams()).topMargin
+                = Dimensions.getStatusBarHeight(this);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(!mIsMainPageGuide);
+        }
+        getSupportActionBar().setDisplayShowHomeEnabled(!mIsMainPageGuide);
+
+        findViewById(R.id.exit).setVisibility(mIsMainPageGuide ? View.VISIBLE : View.GONE);
+        findViewById(R.id.exit).setOnClickListener(v -> finish());
+
         from = getIntent() != null ? getIntent().getStringExtra(NotificationCleanerConstants.EXTRA_START_FROM) : "";
         mAnimatedNotificationView = findViewById(R.id.guide_container_view);
         mAnimatedNotificationView.setIsMainPageGuide(mIsMainPageGuide);
@@ -47,6 +64,7 @@ public class NotificationGuideActivity extends HSAppCompatActivity {
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
+
     }
 
     @Override
@@ -78,7 +96,8 @@ public class NotificationGuideActivity extends HSAppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override protected void onDestroy() {
+    @Override
+    protected void onDestroy() {
         super.onDestroy();
         if (mAnimatedNotificationView != null) {
             mAnimatedNotificationView.stopButtonFlash();

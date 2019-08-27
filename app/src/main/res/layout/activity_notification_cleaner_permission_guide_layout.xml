@@ -4,6 +4,10 @@
     android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
-
-
+    <com.android.messaging.notificationcleaner.floatwindow.NotificationCleanerAccessGuideAnimationDialog
+        android:id="@+id/notification_access_guide_animation_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center">
+    </com.android.messaging.notificationcleaner.floatwindow.NotificationCleanerAccessGuideAnimationDialog>
 </FrameLayout>

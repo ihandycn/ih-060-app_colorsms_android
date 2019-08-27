@@ -54,7 +54,9 @@ import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.font.ChangeFontActivity;
 import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.mmslib.SqliteWrapper;
+import com.android.messaging.notificationcleaner.NotificationCleanerUtil;
 import com.android.messaging.notificationcleaner.activity.NotificationBlockedActivity;
+import com.android.messaging.notificationcleaner.activity.NotificationGuideActivity;
 import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.privatebox.MoveConversationToPrivateBoxAction;
 import com.android.messaging.privatebox.PrivateBoxSettings;
@@ -244,12 +246,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
         if (sIsRecreate) {
             sIsRecreate = false;
         } else {
-            Preferences.get(DESKTOP_PREFS).incrementAndGetInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME);
+            int openTimes = Preferences.get(DESKTOP_PREFS).incrementAndGetInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME);
             if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                 BugleAnalytics.logEvent("SMS_Messages_Show_NewUser", true);
             }
             if (HSApplication.getFirstLaunchInfo().appVersionCode >= 48) {
                 BugleAnalytics.logEvent("SMS_Messages_Show_NewUser", true, "SendDelay", "" + SendDelaySettings.getSendDelayInSecs());
+            }
+
+            if (openTimes >= 1) {
+                showNotificationCleanerGuideIfNeed();
             }
         }
 
@@ -374,6 +380,17 @@ public class ConversationListActivity extends AbstractConversationListActivity
         mHasInflatedDrawer = true;
 
         setupDrawer();
+    }
+
+    private void showNotificationCleanerGuideIfNeed() {
+        if (NotificationCleanerUtil.hasNotificationCleanerEverOpened()) {
+            return;
+        }
+        Preferences.getDefault().doOnce(() -> {
+            Intent notificationGuideIntent = new Intent(this, NotificationGuideActivity.class);
+            notificationGuideIntent.putExtra(NotificationGuideActivity.EXTRA_IS_MAIN_PAGE_GUIDE, true);
+            Navigations.startActivitySafely(this, notificationGuideIntent);
+        }, "show_notification_cleaner_full_guide");
     }
 
     @DebugLog
@@ -641,7 +658,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         break;
                     case DRAWER_INDEX_NOTIFICATION_CLEANER:
                         Intent notificationCleanerIntent = new Intent(ConversationListActivity.this, NotificationBlockedActivity.class);
-                        notificationCleanerIntent.putExtra(NotificationBlockedActivity.START_FROM, "main_page");
+                        notificationCleanerIntent.putExtra(NotificationBlockedActivity.START_FROM, NotificationBlockedActivity.START_FROM_MAIN_PAGE);
                         Navigations.startActivitySafely(ConversationListActivity.this, notificationCleanerIntent);
                         BugleAnalytics.logEvent("Menu_NotificationCleaner_Click", true);
                         break;
