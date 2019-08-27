@@ -10,6 +10,7 @@ import com.android.messaging.notificationcleaner.NotificationCleanerConstants;
 import com.android.messaging.notificationcleaner.NotificationCleanerUtil;
 import com.android.messaging.notificationcleaner.data.NotificationCleanerProvider;
 import com.android.messaging.notificationcleaner.views.AnimatedNotificationView;
+import com.android.messaging.util.BugleAnalytics;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.superapps.util.Navigations;
 import com.superapps.util.Permissions;
@@ -38,7 +39,7 @@ public class NotificationGuideActivity extends HSAppCompatActivity {
         mAnimatedNotificationView.setIsMainPageGuide(mIsMainPageGuide);
         mAnimatedNotificationView.startAnimations();
 
-       // BugleAnalytics.logEvent("NotificationCleaner_Guide_Show");
+        BugleAnalytics.logEvent("NotificationCleaner_Guide_Show", true);
 
         NotificationCleanerUtil.insertFakeNotificationsIfNeeded();
     }

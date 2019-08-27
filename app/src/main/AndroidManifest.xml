@@ -925,5 +925,12 @@
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/SettingsActivity" />
+        <activity
+            android:name=".notificationcleaner.activity.NCPermissionGuideActivity"
+            android:allowTaskReparenting="false"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity=".permission.guide"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 </manifest>
