@@ -7,9 +7,7 @@ import com.android.messaging.notificationcleaner.resultpage.AdUtils;
 import com.android.messaging.notificationcleaner.resultpage.ResultPageActivity;
 import com.android.messaging.notificationcleaner.resultpage.data.ResultConstants;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.CommonUtils;
 import com.ihs.app.framework.HSApplication;
-import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.superapps.util.Threads;
 
@@ -46,8 +44,7 @@ public abstract class BaseTransition {
 
             @Override
             public void onAdClicked() {
-                BugleAnalytics.logEvent("ResultPage_Cards_Click", "type", ResultConstants.AD_FULL);
-                BugleAnalytics.logEvent("ResultPageInterstitial_Ad_Click");
+                BugleAnalytics.logEvent("ResultPage_FullAd_Click", true);
             }
 
             @Override public void onAdClosed() {
@@ -66,7 +63,6 @@ public abstract class BaseTransition {
             // google ads may cause DeadObjectException or TransactionTooLargeException
             onInterstitialAdClosed();
         }
-        BugleAnalytics.logEvent("ResultPage_Cards_Show", "type", ResultConstants.AD_FULL);
     }
 
     protected abstract void onInterstitialAdClosed();

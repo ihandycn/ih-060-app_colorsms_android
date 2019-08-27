@@ -20,11 +20,14 @@ import com.superapps.util.Navigations;
 import com.superapps.util.Permissions;
 
 public class NotificationGuideActivity extends HSAppCompatActivity {
-    public static final String EXTRA_IS_MAIN_PAGE_GUIDE = "EXTRA_IS_VIEW_STYLE";
+    public static final String START_FROM = "start_from";
+    public static final String START_FROM_FULL_GUIDE = "full_guide";
+    public static final String START_FROM_BAR_GUIDE = "bar_guide";
+    public static final String START_FROM_NO_PERMISSION = "no_permission";
 
-    private String from;
-    private boolean mIsMainPageGuide = false;
-    private boolean isMainPageGuideJustCreated = false;
+    private String mFrom;
+    private boolean mIsFromGuide = false;
+    private boolean mIsMainPageGuideJustCreated = false;
 
     private AnimatedNotificationView mAnimatedNotificationView;
 
@@ -33,9 +36,10 @@ public class NotificationGuideActivity extends HSAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification_cleaner_guide);
 
-        mIsMainPageGuide = getIntent() != null && getIntent().getBooleanExtra(EXTRA_IS_MAIN_PAGE_GUIDE, false);
-        if (mIsMainPageGuide) {
-            isMainPageGuideJustCreated = true;
+        mFrom =  getIntent().getStringExtra(START_FROM);
+        mIsFromGuide = START_FROM_FULL_GUIDE.equals(mFrom) || START_FROM_BAR_GUIDE.equals(mFrom);
+        if (mIsFromGuide) {
+            mIsMainPageGuideJustCreated = true;
         }
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -44,16 +48,15 @@ public class NotificationGuideActivity extends HSAppCompatActivity {
                 = Dimensions.getStatusBarHeight(this);
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(!mIsMainPageGuide);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(!mIsFromGuide);
         }
-        getSupportActionBar().setDisplayShowHomeEnabled(!mIsMainPageGuide);
+        getSupportActionBar().setDisplayShowHomeEnabled(!mIsFromGuide);
 
-        findViewById(R.id.exit).setVisibility(mIsMainPageGuide ? View.VISIBLE : View.GONE);
+        findViewById(R.id.exit).setVisibility(mIsFromGuide ? View.VISIBLE : View.GONE);
         findViewById(R.id.exit).setOnClickListener(v -> finish());
 
-        from = getIntent() != null ? getIntent().getStringExtra(NotificationCleanerConstants.EXTRA_START_FROM) : "";
         mAnimatedNotificationView = findViewById(R.id.guide_container_view);
-        mAnimatedNotificationView.setIsMainPageGuide(mIsMainPageGuide);
+        mAnimatedNotificationView.setIsMainPageGuide(mIsFromGuide);
         mAnimatedNotificationView.startAnimations();
 
         BugleAnalytics.logEvent("NotificationCleaner_Guide_Show", true);
@@ -73,8 +76,8 @@ public class NotificationGuideActivity extends HSAppCompatActivity {
 
         if (!Permissions.isNotificationAccessGranted()
                 || !NotificationCleanerProvider.isNotificationOrganizerSwitchOn()
-                || (mIsMainPageGuide && isMainPageGuideJustCreated)) {
-            isMainPageGuideJustCreated = false;
+                || (mIsFromGuide && mIsMainPageGuideJustCreated)) {
+            mIsMainPageGuideJustCreated = false;
             return;
         }
 
@@ -82,7 +85,7 @@ public class NotificationGuideActivity extends HSAppCompatActivity {
         Intent intentBlocked = new Intent(NotificationGuideActivity.this, NotificationBlockedActivity.class);
         intentBlocked.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intentBlocked.putExtra(NotificationCleanerConstants.EXTRA_START_FROM, from);
+        intentBlocked.putExtra(NotificationBlockedActivity.START_FROM, mFrom);
         Navigations.startActivitySafely(this, intentBlocked);
         finish();
     }

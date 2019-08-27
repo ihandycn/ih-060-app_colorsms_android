@@ -29,7 +29,7 @@ import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
 import com.android.messaging.debug.CrashGuard;
 import com.android.messaging.notificationcleaner.Constants;
-import com.android.messaging.notificationcleaner.SCPackageManager;
+import com.android.messaging.notificationcleaner.BuglePackageManager;
 import com.android.messaging.notificationcleaner.SecurityFiles;
 import com.android.messaging.notificationcleaner.data.NotificationCleanerProvider;
 import com.android.messaging.notificationcleaner.views.AnimatedNotificationView;
@@ -86,18 +86,18 @@ public class NotificationCleanerSettingActivity extends BaseActivity {
 
         List<BlockNotificationItemData> blockNotificationItemDataList = new ArrayList<>();
 
-        for (ApplicationInfo applicationInfo : SCPackageManager.getInstance().getInstalledApplications()) {
+        for (ApplicationInfo applicationInfo : BuglePackageManager.getInstance().getInstalledApplications()) {
             if (TextUtils.equals(applicationInfo.packageName, getPackageName())) {
                 continue;
             }
 
-            String appTitle = SCPackageManager.getInstance().getApplicationLabel(applicationInfo);
+            String appTitle = BuglePackageManager.getInstance().getApplicationLabel(applicationInfo);
             if (TextUtils.isEmpty(appTitle)) {
                 continue;
             }
 
             BlockNotificationRegularItemData blockSettingRegularItemData = new BlockNotificationRegularItemData();
-            blockSettingRegularItemData.mIcon = SCPackageManager.getInstance().getApplicationIcon(applicationInfo);
+            blockSettingRegularItemData.mIcon = BuglePackageManager.getInstance().getApplicationIcon(applicationInfo);
             blockSettingRegularItemData.mTitle = appTitle;
             blockSettingRegularItemData.mPackageName = applicationInfo.packageName;
             blockSettingRegularItemData.mIsBlocked = !unblockedAppList.contains(applicationInfo.packageName);
@@ -160,18 +160,14 @@ public class NotificationCleanerSettingActivity extends BaseActivity {
 
                 SpannableString contentSpannableString;
                 int count = Preferences.get(SecurityFiles.NOTIFICATION_PREFS)
-                        .getInt(Constants.NOTIFICATION_CLEANER_COUNT, 0);
+                        .getInt(Constants.NOTIFICATION_CLEANER_NOTIFICATION_BLOCKED_COUNT, 0);
                 long lastNCUsedTime = Preferences.get(SecurityFiles.NOTIFICATION_PREFS)
                         .getLong(Constants.NOTIFICATION_CLEANER_USAGE_TIME, -1);
-                long upgradeTime = Preferences.get(SecurityFiles.NOTIFICATION_PREFS)
-                        .getLong(Constants.NOTIFICATION_CLEANER_UPGRADE_TIME, -1);
                 long installTime = CommonUtils.getAppInstallTimeMillis();
                 long timeSinceLastUse;
                 if (lastNCUsedTime > 0) {
                     timeSinceLastUse = System.currentTimeMillis() - lastNCUsedTime;
-                } else if (upgradeTime > 0) {
-                    timeSinceLastUse = System.currentTimeMillis() - upgradeTime;
-                } else {
+                }  else {
                     timeSinceLastUse = System.currentTimeMillis() - installTime;
                 }
                 String countText = String.valueOf(count);

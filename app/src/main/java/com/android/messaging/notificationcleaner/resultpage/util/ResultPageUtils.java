@@ -9,10 +9,6 @@ import java.util.Map;
 
 public class ResultPageUtils {
 
-    public static final String TAG = ResultPageUtils.class.getSimpleName();
-
-    public static final String PREF_KEY_RESULT_PAGE_SHOW_COUNT = "pref_key_result_page_show_count";
-
     public static void logResultPageShown(ResultContentType type) {
         Map<String, String> params = new HashMap<>();
         switch (type) {

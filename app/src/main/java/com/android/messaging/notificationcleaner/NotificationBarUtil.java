@@ -66,7 +66,8 @@ public class NotificationBarUtil {
         Context context = HSApplication.getContext();
         int requestCode = (int) System.currentTimeMillis();
         Intent intent = new Intent(HSApplication.getContext(), NotificationBlockedActivity.class);
-        intent.putExtra(NotificationCleanerConstants.EXTRA_START_FROM, "from_bar");
+        intent.putExtra(NotificationBlockedActivity.START_FROM,
+                NotificationBlockedActivity.START_FROM_NOTIFICATION_BAR);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP
                 | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NO_ANIMATION);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, requestCode, intent, PendingIntent.FLAG_UPDATE_CURRENT);
