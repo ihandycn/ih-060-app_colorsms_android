@@ -239,10 +239,46 @@
     <dimen name="permission_guide_phone_frame_margin">44dp</dimen>
     <dimen name="permission_guide_phone_content_margin">56dp</dimen>
     <dimen name="permission_guide_phone_content_top_margin">4dp</dimen>
+
+    <!-- Notification Cleaner -->
+    <dimen name="notification_cleaner_block_icon_distance">10dp</dimen>
+    <dimen name="notification_cleaner_block_date_padding_left">16dp</dimen>
+    <dimen name="notification_cleaner_apps_list_icon_size">36dp</dimen>
     <dimen name="notification_cleaner_animated_horizontal_icons_width">12dp</dimen>
     <dimen name="notification_cleaner_animated_icons_margin_right">4dp</dimen>
     <dimen name="notification_cleaner_animated_icons_trans_x_value">10dp</dimen>
     <dimen name="notification_cleaner_animated_item_height">28dp</dimen>
+    <dimen name="notification_cleaner_animated_icon_init">24dp</dimen>
+    <dimen name="notification_cleaner_animated_item_height_small">50dp</dimen>
+    <dimen name="notification_cleaner_animated_grout_stay_margin_top">4dp</dimen>
+    <dimen name="notification_cleaner_animated_item_margin_top">4dp</dimen>
     <dimen name="notification_cleaner_animated_item_left_and_right">12dp</dimen>
+    <dimen name="notification_cleaner_animated_item_move_upwards">6dp</dimen>
+    <dimen name="notification_cleaner_animated_item_icon_margin_right">3dp</dimen>
+    <dimen name="notification_cleaner_animated_item_head_icon_move_to_right">24dp</dimen>
+    <dimen name="notification_cleaner_animated_item_head_icon_move_down">3dp</dimen>
+    <dimen name="notification_cleaner_animated_item_head_icon_move_left">6dp</dimen>
+    <dimen name="notification_cleaner_animated_item_icon_deviation">7dp</dimen>
+    <dimen name="notification_cleaner_animated_align_top">4dp</dimen>
+    <dimen name="notification_cleaner_animated_move_down">6dp</dimen>
+    <dimen name="notification_cleaner_animated_text_move_down">8dp</dimen>
+    <dimen name="notification_cleaner_animated_group_head_top">8dp</dimen>
+    <dimen name="notification_cleaner_animated_big_icon_left">6dp</dimen>
+    <dimen name="notification_cleaner_animated_cross_line_width">55dp</dimen>
+    <dimen name="notification_cleaner_animated_cross_line_marginTop">38dp</dimen>
+    <dimen name="notification_cleaner_animated_cross_line_adjust_x">7dp</dimen>
     <dimen name="notification_cleaner_animated_init_item_radius">3dp</dimen>
+    <dimen name="notification_cleaner_notification_bar_margin">10dp</dimen>
+    <dimen name="action_btn_anim_translation">72dp</dimen>
+
+    <dimen name="result_page_header_height">90dp</dimen>
+    <dimen name="result_page_card_margin">8dp</dimen>
+    <dimen name="result_page_header_tag_margin">-14dp</dimen>
+
+    <dimen name="clean_elevation_app_bar">4dp</dimen>
+    <dimen name="battery_content_margin_top">5dp</dimen>
+    <dimen name="battery_content_margin_bottom">5dp</dimen>
+    <dimen name="clean_done_desc_margin_top_title">190dp</dimen>
+    <dimen name="clean_done_circle_width">264dp</dimen>
+    <dimen name="clean_done_circle_margin_top">102dp</dimen>
 </resources>

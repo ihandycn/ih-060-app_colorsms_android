@@ -31,6 +31,7 @@
 
     <color name="white">#FFFFFFFF</color>
     <color name="white_20_transparent">#32FFFFFF</color>
+    <color name="white_32_transparent">#ADFFFFFF</color>
     <color name="white_40_transparent">#66FFFFFF</color>
     <color name="white_50_transparent">#8fFFFFFF</color>
     <color name="white_60_transparent">#99FFFFFF</color>
@@ -279,4 +280,16 @@
     <color name="notification_guide_confirm_button_color">#ed4864</color>
     <color name="permission_guide_phone_frame">#373a3b</color>
     <color name="divider_gray">#D8D8D8</color>
+
+    <!-- Notification Cleaner -->
+    <color name="func_off_content">#3B72D0</color>
+    <color name="notification_red">#ff0000</color>
+
+    <!-- Function Off Dialog -->
+    <color name="function_off_dialog_title">#373737</color>
+    <color name="function_off_dialog_content">#8D919A</color>
+
+    <!-- Result Page -->
+    <color name="app_bar_activities_content_bg">#eaeaea</color>
+    <color name="material_text_white_secondary">#8affffff</color>
 </resources>
