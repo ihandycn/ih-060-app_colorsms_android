@@ -33,6 +33,7 @@ import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.notificationcleaner.BuglePackageManager;
 import com.android.messaging.notificationcleaner.DateUtil;
 import com.android.messaging.notificationcleaner.NotificationCleanerConstants;
+import com.android.messaging.notificationcleaner.NotificationCleanerTest;
 import com.android.messaging.notificationcleaner.NotificationCleanerUtil;
 import com.android.messaging.notificationcleaner.animation.NotificationCleanerAnimatorUtils;
 import com.android.messaging.notificationcleaner.animation.SpringInterpolator;
@@ -97,22 +98,22 @@ public class NotificationBlockedActivity extends BaseActivity
 
     private static final long DURATION_ITEM_REMOVE_ANIMATION = 400;
 
-    private FlexibleAdapter<AbstractFlexibleItem> notificationAdapter;
+    private FlexibleAdapter<AbstractFlexibleItem> mNotificationAdapter;
     private Button mClearAllBtn;
     private View mEmptyView;
-    private View illustrationView;
-    private FrameLayout adViewContainer;
+    private View mIllustrationView;
+    private FrameLayout mAdViewContainer;
     private AcbNativeAdLoader mAdLoader;
     private AcbNativeAd mNativeAd;
-    private ProgressBar progressBar;
-    private List<BlockedNotificationInfo> notificationDataList;
+    private ProgressBar mProgressBar;
+    private List<BlockedNotificationInfo> mNotificationDataList;
 
     private Handler handler = new Handler();
 
     private boolean mIsFromNotification;
-    private boolean isBlockNotificationCountRecorded;
-    private boolean isClearAll;
-    private boolean isShownLogged = false;
+    private boolean mIsBlockNotificationCountRecorded;
+    private boolean mIsClearAll;
+    private boolean mIsShownLogged = false;
     private String mStartFrom;
 
     private ContentObserver mBlockListContentObserver = new ContentObserver(new Handler()) {
@@ -166,20 +167,20 @@ public class NotificationBlockedActivity extends BaseActivity
                 true, true));
         mClearAllBtn.setTypeface(Typefaces.getCustomSemiBold());
         mEmptyView = findViewById(R.id.notification_block_empty);
-        illustrationView = findViewById(R.id.notification_block_illustration_page);
-        adViewContainer = findViewById(R.id.ad_container);
-        progressBar = findViewById(R.id.notification_block_progress_bar);
+        mIllustrationView = findViewById(R.id.notification_block_illustration_page);
+        mAdViewContainer = findViewById(R.id.ad_container);
+        mProgressBar = findViewById(R.id.notification_block_progress_bar);
 
-        notificationAdapter = new FlexibleAdapter<>(null, this);
-        notificationAdapter.setRemoveOrphanHeaders(true);
+        mNotificationAdapter = new FlexibleAdapter<>(null, this);
+        mNotificationAdapter.setRemoveOrphanHeaders(true);
 
         final RecyclerView notificationRecyclerView = findViewById(R.id.notification_block_recyclerview);
         notificationRecyclerView.setLayoutManager(new SmoothScrollLinearLayoutManager(this));
-        notificationRecyclerView.setAdapter(notificationAdapter);
+        notificationRecyclerView.setAdapter(mNotificationAdapter);
         notificationRecyclerView.setHasFixedSize(true);
         notificationRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        notificationAdapter.setHandleDragEnabled(true)
+        mNotificationAdapter.setHandleDragEnabled(true)
                 .setSwipeEnabled(true)
                 .setDisplayHeadersAtStartUp(true)
                 .showAllHeaders();
@@ -187,11 +188,12 @@ public class NotificationBlockedActivity extends BaseActivity
         ResultManager.getInstance().preLoadAds();
 
         mClearAllBtn.setOnClickListener(v -> {
-            BugleAnalytics.logEvent("NotificationCleaner_Homepage_BtnClick", true);
-            if (notificationAdapter.isEmpty()) {
+            if (mNotificationAdapter.isEmpty()) {
                 return;
             }
 
+            BugleAnalytics.logEvent("NotificationCleaner_Homepage_BtnClick", true);
+            NotificationCleanerTest.logNcHomepageBtnClick();
             mClearAllBtn.setClickable(false);
 
             final int itemCount = notificationRecyclerView.getChildCount();
@@ -211,13 +213,13 @@ public class NotificationBlockedActivity extends BaseActivity
             }
 
             handler.postDelayed(() -> {
-                isClearAll = true;
+                mIsClearAll = true;
                 int clearSize = 0;
-                if (null != notificationDataList) {
-                    clearSize = notificationDataList.size();
-                    notificationDataList.clear();
+                if (null != mNotificationDataList) {
+                    clearSize = mNotificationDataList.size();
+                    mNotificationDataList.clear();
                 }
-                notificationAdapter.updateDataSet(null);
+                mNotificationAdapter.updateDataSet(null);
                 ResultTransitionUtils.startForNotificationCleaner(NotificationBlockedActivity.this, clearSize);
                 finish();
             }, DURATION_ITEM_REMOVE_ANIMATION);
@@ -275,19 +277,20 @@ public class NotificationBlockedActivity extends BaseActivity
     }
 
     private void updateBlockNotificationDataSet(List<BlockedNotificationInfo> blockedNotificationInfo) {
-        if (!isShownLogged) {
-            isShownLogged = true;
+        if (!mIsShownLogged) {
+            mIsShownLogged = true;
             Map<String, String> params = new HashMap<>();
-            params.put("type", mIsFromNotification ? "bar" : "menu");
+            params.put("type", mStartFrom);
             params.put("number", getStringByNotificationCount(blockedNotificationInfo.size()));
             BugleAnalytics.logEvent("NotificationCleaner_Homepage_Show", params);
+            NotificationCleanerTest.logNcHomepageShow();
         }
-        progressBar.setVisibility(View.GONE);
+        mProgressBar.setVisibility(View.GONE);
         if (null == blockedNotificationInfo) {
             return;
         }
 
-        notificationDataList = blockedNotificationInfo;
+        mNotificationDataList = blockedNotificationInfo;
         List<AbstractFlexibleItem> flexibleItems = new ArrayList<>();
 
         int lastHeaderDay = -1;
@@ -297,7 +300,7 @@ public class NotificationBlockedActivity extends BaseActivity
 
         HSLog.d(NotificationCleanerConstants.TAG, "onPostExecute *** installed size = " + String.valueOf(null == applicationInfoList ? 0 : applicationInfoList.size()));
 
-        for (BlockedNotificationInfo notificationData : notificationDataList) {
+        for (BlockedNotificationInfo notificationData : mNotificationDataList) {
             boolean isContain = false;
             if (null == applicationInfoList || applicationInfoList.size() == 0) {
                 isContain = true;
@@ -340,26 +343,29 @@ public class NotificationBlockedActivity extends BaseActivity
             flexibleItems.add(new NotificationAppItem(notificationData, headerItem));
         }
 
-        notificationAdapter.updateDataSet(flexibleItems);
-        notificationAdapter.setStickyHeaders(true);
+        mNotificationAdapter.updateDataSet(flexibleItems);
+        mNotificationAdapter.setStickyHeaders(true);
 
         if (NotificationCleanerUtil.getNotificationBlockedActivityIllustratePageShowingState()
                 == NotificationCleanerUtil.NOTIFICATION_STATE_SHOWING
                 && flexibleItems.isEmpty()) {
             mEmptyView.setVisibility(View.GONE);
-            illustrationView.setVisibility(View.VISIBLE);
+            mIllustrationView.setVisibility(View.VISIBLE);
             NotificationCleanerUtil.setNotificationBlockedActivityIllustratePageShowingState(NotificationCleanerUtil.NOTIFICATION_STATE_SHOWED);
         } else {
-            illustrationView.setVisibility(View.GONE);
+            mIllustrationView.setVisibility(View.GONE);
             mEmptyView.setVisibility(flexibleItems.isEmpty() ? View.VISIBLE : View.GONE);
 
-            //initAdView();
+            if (!flexibleItems.isEmpty()) {
+                initAdView();
+                BugleAnalytics.logEvent("NotificationCleaner_HomepageAd_Chance", true);
+            }
         }
 
         if (flexibleItems.isEmpty()) {
             mClearAllBtn.setVisibility(View.GONE);
         } else {
-            setActionButtonTranslation(notificationDataList.size());
+            setActionButtonTranslation(mNotificationDataList.size());
         }
     }
 
@@ -377,8 +383,8 @@ public class NotificationBlockedActivity extends BaseActivity
             protected void onPostExecute(List<BlockedNotificationInfo> result) {
                 updateBlockNotificationDataSet(result);
 
-                if (!isBlockNotificationCountRecorded) {
-                    isBlockNotificationCountRecorded = true;
+                if (!mIsBlockNotificationCountRecorded) {
+                    mIsBlockNotificationCountRecorded = true;
                 }
             }
 
@@ -429,8 +435,8 @@ public class NotificationBlockedActivity extends BaseActivity
             fetchAndUpdateBlockNotificationList();
         }
 
-        if (null != notificationDataList && isClearAll) {
-            updateBlockNotificationDataSet(notificationDataList);
+        if (null != mNotificationDataList && mIsClearAll) {
+            updateBlockNotificationDataSet(mNotificationDataList);
         }
 
         HSLog.d(NotificationCleanerConstants.TAG, "onResume(), end");
@@ -480,12 +486,12 @@ public class NotificationBlockedActivity extends BaseActivity
 
     @Override
     public void onItemSwipe(int position, int direction) {
-        final AbstractFlexibleItem item = notificationAdapter.getItem(position);
+        final AbstractFlexibleItem item = mNotificationAdapter.getItem(position);
         if (!(item instanceof NotificationAppItem)) {
             return;
         }
 
-        notificationAdapter.removeItem(position);
+        mNotificationAdapter.removeItem(position);
 
         Threads.postOnThreadPoolExecutor(() -> {
             NotificationAppItem notificationAppItem = (NotificationAppItem) item;
@@ -495,17 +501,17 @@ public class NotificationBlockedActivity extends BaseActivity
                     new String[]{String.valueOf(notificationAppItem.notificationData.idInDB)});
         });
 
-        if (notificationAdapter.isEmpty()) {
+        if (mNotificationAdapter.isEmpty()) {
             mClearAllBtn.setVisibility(View.GONE);
             //  BugleAnalytics.logEvent("NotificationCleaner_Act_Slide_LastOne");
 
             ResultTransitionUtils.startForNotificationCleaner(this, 1);
             finish();
         } else {
-            mEmptyView.setVisibility(notificationAdapter.isEmpty() ? View.VISIBLE : View.GONE);
+            mEmptyView.setVisibility(mNotificationAdapter.isEmpty() ? View.VISIBLE : View.GONE);
             int count = 0;
-            for (int i = 0; i < notificationAdapter.getItemCount(); i++) {
-                if (notificationAdapter.getItem(i) instanceof NotificationAppItem) {
+            for (int i = 0; i < mNotificationAdapter.getItemCount(); i++) {
+                if (mNotificationAdapter.getItem(i) instanceof NotificationAppItem) {
                     count++;
                 }
             }
@@ -523,13 +529,9 @@ public class NotificationBlockedActivity extends BaseActivity
 
         HSLog.d(NotificationCleanerConstants.TAG, "onItemClick(), position = " + position);
 
-        final AbstractFlexibleItem item = notificationAdapter.getItem(position);
+        final AbstractFlexibleItem item = mNotificationAdapter.getItem(position);
         if (!(item instanceof NotificationAppItem)) {
             return false;
-        }
-
-        if (notificationAdapter.getItemCount() == 2) {
-            BugleAnalytics.logEvent("NotificationCleaner_Act_Click_LastOne");
         }
 
         BlockedNotificationInfo blockedNotificationInfo = ((NotificationAppItem) item).getNotificationData();
@@ -606,13 +608,13 @@ public class NotificationBlockedActivity extends BaseActivity
                 mNativeAd = list.get(0);
 
                 View adView;
-                if (notificationAdapter.isEmpty()) {
-                    adView = getLayoutInflater().inflate(R.layout.notification_cleaner_block_info_ad_layout_shadow_bg, adViewContainer, false);
-                    adViewContainer.setBackgroundDrawable(getResources().getDrawable(R.drawable.notification_cleaner_block_ad_layout_shadow_bg));
-                    adViewContainer.setPadding(Dimensions.pxFromDp(6), Dimensions.pxFromDp(1.2f), Dimensions.pxFromDp(6), 0);
+                if (mNotificationAdapter.isEmpty()) {
+                    adView = getLayoutInflater().inflate(R.layout.notification_cleaner_block_info_ad_layout_shadow_bg, mAdViewContainer, false);
+                    mAdViewContainer.setBackgroundDrawable(getResources().getDrawable(R.drawable.notification_cleaner_block_ad_layout_shadow_bg));
+                    mAdViewContainer.setPadding(Dimensions.pxFromDp(6), Dimensions.pxFromDp(1.2f), Dimensions.pxFromDp(6), 0);
                     findViewById(R.id.content_container).setBackgroundColor(getResources().getColor(R.color.white));
                 } else {
-                    adView = getLayoutInflater().inflate(R.layout.notification_cleaner_block_info_ad_layout, adViewContainer, false);
+                    adView = getLayoutInflater().inflate(R.layout.notification_cleaner_block_info_ad_layout, mAdViewContainer, false);
                 }
 
                 AcbNativeAdContainerView adContainer = new AcbNativeAdContainerView(HSApplication.getContext());
@@ -629,9 +631,12 @@ public class NotificationBlockedActivity extends BaseActivity
 
                 adContainer.fillNativeAd(mNativeAd, null);
 
-                adViewContainer.removeAllViews();
-                adViewContainer.setVisibility(View.VISIBLE);
-                adViewContainer.addView(adContainer);
+                mAdViewContainer.removeAllViews();
+                mAdViewContainer.setVisibility(View.VISIBLE);
+                mAdViewContainer.addView(adContainer);
+
+                NotificationCleanerTest.logNcHomepageAdShow();
+                BugleAnalytics.logEvent("NotificationCleaner_HomepageAd_Show", true);
 
                 mNativeAd.setNativeClickListener(acbAd ->
                         BugleAnalytics.logEvent("NotificationCleaner_HomepageAd_Click", true));

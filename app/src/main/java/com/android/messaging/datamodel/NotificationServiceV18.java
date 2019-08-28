@@ -38,6 +38,7 @@ import com.android.messaging.datamodel.media.MediaResourceManager;
 import com.android.messaging.notificationcleaner.DateUtil;
 import com.android.messaging.notificationcleaner.NotificationBarUtil;
 import com.android.messaging.notificationcleaner.NotificationCleanerConstants;
+import com.android.messaging.notificationcleaner.NotificationCleanerTest;
 import com.android.messaging.notificationcleaner.NotificationCleanerUtil;
 import com.android.messaging.notificationcleaner.data.BlockedNotificationDBHelper;
 import com.android.messaging.notificationcleaner.data.NotificationCleanerProvider;
@@ -191,7 +192,12 @@ public class NotificationServiceV18 extends NotificationListenerService {
         HSLog.d("NotificationListener", "onNotificationPosted(), statusBarNotification.getPackageName = "
                 + statusBarNotification.getPackageName());
 
-        NotificationCleanerUtil.autoOpenNotificationCleanerIfNeeded();
+        boolean hasNotificationCleanerFunction = NotificationCleanerTest.getSwitch();
+
+        if (hasNotificationCleanerFunction) {
+            NotificationCleanerUtil.autoOpenNotificationCleanerIfNeeded();
+        }
+
         if (getApplicationContext().getPackageName().equals(statusBarNotification.getPackageName())) {
             return;
         }
@@ -212,9 +218,13 @@ public class NotificationServiceV18 extends NotificationListenerService {
             }
         }
 
-        if (NotificationCleanerProvider.isAppBlocked(statusBarNotification.getPackageName())
-                && NotificationCleanerProvider.isNotificationOrganizerSwitchOn()) {
-            isBlockedAppNotification = true;
+        if (hasNotificationCleanerFunction) {
+            if (NotificationCleanerProvider.isAppBlocked(statusBarNotification.getPackageName())
+                    && NotificationCleanerProvider.isNotificationOrganizerSwitchOn()) {
+                isBlockedAppNotification = true;
+            }
+        } else {
+            isBlockedAppNotification = false;
         }
 
         if (!isOtherSmsAppNotification && !isBlockedAppNotification) {

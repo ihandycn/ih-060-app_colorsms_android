@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.notificationcleaner.NotificationCleanerTest;
 import com.android.messaging.notificationcleaner.resultpage.ResultPageActivity;
 import com.android.messaging.notificationcleaner.resultpage.data.ResultConstants;
 import com.android.messaging.util.BugleAnalytics;
@@ -77,16 +78,11 @@ public class AdContent implements IContent {
         mAdContainer = adContainer;
         if (mAdContainer != null) {
             mAdContainer.fillNativeAd(ad,null);
+            BugleAnalytics.logEvent("ResultPage_DoneAd_Show", true);
+            NotificationCleanerTest.logResultpageDoneadShow();
         }
 
-        ad.setNativeClickListener(acbAd -> {
-            BugleAnalytics.logEvent("ResultPage_Click", "Type", ResultConstants.AD);
-            if (CommonUtils.isNewUser()) {
-                BugleAnalytics.logEvent("New_User_BoostDone_Ad_Clicked", "version_name", HSApplication.getCurrentLaunchInfo().appVersionName);
-            } else {
-                BugleAnalytics.logEvent("Old_User_BoostDone_Ad_Clicked", "version_name", HSApplication.getCurrentLaunchInfo().appVersionName);
-            }
-        });
+        ad.setNativeClickListener(acbAd -> BugleAnalytics.logEvent("ResultPage_DoneAd_Click", true));
     }
 
     @Override public void startAnimation() {

@@ -54,6 +54,7 @@ import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.font.ChangeFontActivity;
 import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.mmslib.SqliteWrapper;
+import com.android.messaging.notificationcleaner.NotificationCleanerTest;
 import com.android.messaging.notificationcleaner.NotificationCleanerUtil;
 import com.android.messaging.notificationcleaner.activity.NotificationBlockedActivity;
 import com.android.messaging.notificationcleaner.activity.NotificationGuideActivity;
@@ -706,6 +707,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 bubbleNewMark.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffea6126,
                         Dimensions.pxFromDp(8.7f), false));
             }
+        }
+
+        if(!NotificationCleanerTest.getSwitch()) {
+            navigationContent.findViewById(R.id.navigation_item_notification_cleaner).setVisibility(View.GONE);
         }
 
         navigationContent.findViewById(R.id.navigation_item_theme).setOnClickListener(this);

@@ -14,6 +14,7 @@ import com.android.messaging.R;
 import com.android.messaging.ad.AdPlacement;
 import com.android.messaging.notificationcleaner.LocalInterstitialAdPool;
 import com.android.messaging.notificationcleaner.LocalNativeAdPool;
+import com.android.messaging.notificationcleaner.NotificationCleanerTest;
 import com.android.messaging.notificationcleaner.NotificationCleanerUtil;
 import com.android.messaging.notificationcleaner.activity.NotificationBlockedActivity;
 import com.android.messaging.notificationcleaner.resultpage.content.AdContent;
@@ -22,7 +23,6 @@ import com.android.messaging.notificationcleaner.resultpage.content.OptimizedCon
 import com.android.messaging.notificationcleaner.resultpage.pagestate.IPageState;
 import com.android.messaging.notificationcleaner.resultpage.pagestate.NotificationCleanerState;
 import com.android.messaging.notificationcleaner.resultpage.transition.ITransition;
-import com.android.messaging.notificationcleaner.resultpage.util.ResultPageUtils;
 import com.android.messaging.notificationcleaner.resultpage.views.AdLoadingView;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Typefaces;
@@ -86,6 +86,10 @@ public class ResultPageActivity extends HSAppCompatActivity implements INotifica
 
         findViewById(R.id.bg_view).setBackgroundColor(mPageState.getBackgroundColor());
         NotificationCleanerUtil.insertFakeNotificationsIfNeeded();
+        BugleAnalytics.logEvent("ResultPage_Show", true);
+        BugleAnalytics.logEvent("ResultPage_FullAd_Chance", true);
+        BugleAnalytics.logEvent("ResultPage_DoneAd_Chance", true);
+        NotificationCleanerTest.logResultpageShow();
 
         HSGlobalNotificationCenter.addObserver(EVENT_PREPARE_TO_SHOW_INTERSTITIAL_AD, this);
     }
@@ -103,8 +107,8 @@ public class ResultPageActivity extends HSAppCompatActivity implements INotifica
 
         mInterstitialAd = LocalInterstitialAdPool.getInstance().fetch(AdPlacement.NOTIFICATION_CLEANER_AD_PLACEMENT_RESULT_PAGE_INTERSTITIAL);
         if (mInterstitialAd != null) {
-            // AutoPilotUtils.logResultPageInterstitialAdShow();
-            BugleAnalytics.logEvent("Resultpage_FullAd_Show", true);
+            BugleAnalytics.logEvent("ResultPage_FullAd_Show", true);
+            NotificationCleanerTest.logResultpageFulladShow();
         }
 
         mAd = LocalNativeAdPool.getInstance().fetch(AdPlacement.NOTIFICATION_CLEANER_AD_PLACEMENT_RESULT_PAGE_NATIVE);
@@ -117,10 +121,6 @@ public class ResultPageActivity extends HSAppCompatActivity implements INotifica
         if (mInterstitialAd == null && mAd == null) {
             mContentType = ResultContentType.OPTIMAL;
         }
-
-        ResultPageUtils.logViewEvent(mContentType);
-        ResultPageUtils.logResultPageShown(mContentType);
-        //     ActivityUtils.configSimpleAppBar(this, mPageState.getTitle(), Color.TRANSPARENT);
 
         ResultManager.getInstance().preLoadAds();
 
