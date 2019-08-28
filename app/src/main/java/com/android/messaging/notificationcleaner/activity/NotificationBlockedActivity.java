@@ -30,6 +30,7 @@ import com.android.messaging.BaseActivity;
 import com.android.messaging.BugleFiles;
 import com.android.messaging.R;
 import com.android.messaging.ad.AdPlacement;
+import com.android.messaging.ad.BillingManager;
 import com.android.messaging.notificationcleaner.BuglePackageManager;
 import com.android.messaging.notificationcleaner.DateUtil;
 import com.android.messaging.notificationcleaner.NotificationCleanerConstants;
@@ -189,7 +190,9 @@ public class NotificationBlockedActivity extends BaseActivity
                 .setDisplayHeadersAtStartUp(true)
                 .showAllHeaders();
 
-        ResultManager.getInstance().preLoadAds();
+        if (!BillingManager.isPremiumUser()) {
+            ResultManager.getInstance().preLoadAds();
+        }
 
         mClearAllBtn.setOnClickListener(v -> {
             if (mNotificationAdapter.isEmpty()) {
@@ -369,7 +372,7 @@ public class NotificationBlockedActivity extends BaseActivity
 
         if (!flexibleItems.isEmpty() &&
                 NotificationCleanerUtil.getNotificationBlockedActivityIllustratePageShowingState()
-                == NotificationCleanerUtil.NOTIFICATION_STATE_SHOWING) {
+                        == NotificationCleanerUtil.NOTIFICATION_STATE_SHOWING) {
             NotificationCleanerUtil.setNotificationBlockedActivityIllustratePageShowingState(NotificationCleanerUtil.NOTIFICATION_STATE_SHOWED);
         }
 
@@ -382,7 +385,7 @@ public class NotificationBlockedActivity extends BaseActivity
             mIllustrationView.setVisibility(View.GONE);
             mEmptyView.setVisibility(flexibleItems.isEmpty() ? View.VISIBLE : View.GONE);
 
-            if (!flexibleItems.isEmpty()) {
+            if (!flexibleItems.isEmpty() && !BillingManager.isPremiumUser()) {
                 initAdView();
                 BugleAnalytics.logEvent("NotificationCleaner_HomepageAd_Chance", true);
             }
@@ -498,7 +501,7 @@ public class NotificationBlockedActivity extends BaseActivity
         HSGlobalNotificationCenter.removeObserver(this);
 
         if (NotificationCleanerUtil.getNotificationBlockedActivityIllustratePageShowingState()
-                        == NotificationCleanerUtil.NOTIFICATION_STATE_SHOWING) {
+                == NotificationCleanerUtil.NOTIFICATION_STATE_SHOWING) {
             NotificationCleanerUtil.setNotificationBlockedActivityIllustratePageShowingState(NotificationCleanerUtil.NOTIFICATION_STATE_SHOWED);
         }
 

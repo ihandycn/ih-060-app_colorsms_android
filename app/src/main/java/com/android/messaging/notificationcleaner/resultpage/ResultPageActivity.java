@@ -122,7 +122,7 @@ public class ResultPageActivity extends HSAppCompatActivity implements INotifica
             mContentType = ResultContentType.OPTIMAL;
         }
 
-        ResultManager.getInstance().preLoadAds();
+      //  ResultManager.getInstance().preLoadAds();
 
         mContent = getContent(mContentType);
         ITransition transitionState = mPageState.getTransition(getIntent(), mInterstitialAd);
