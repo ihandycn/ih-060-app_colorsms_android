@@ -16,18 +16,16 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.android.messaging.BugleFiles;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.NotificationServiceV18;
-import com.android.messaging.notificationcleaner.Constants;
 import com.android.messaging.notificationcleaner.NotificationBarUtil;
-import com.android.messaging.notificationcleaner.SecurityFiles;
+import com.android.messaging.notificationcleaner.NotificationCleanerConstants;
 import com.android.messaging.notificationcleaner.activity.NCPermissionGuideActivity;
 import com.android.messaging.notificationcleaner.activity.NotificationBlockedActivity;
 import com.android.messaging.notificationcleaner.data.NotificationCleanerProvider;
-import com.android.messaging.ui.dialog.NotificationAccessDialogActivity;
 import com.android.messaging.ui.welcome.NotificationAccessGuideActivity;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
@@ -145,8 +143,8 @@ public class AnimatedNotificationView extends RelativeLayout {
                 Intent intentBlocked = new Intent(getContext(), NotificationBlockedActivity.class);
                 intentBlocked.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                         | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                Preferences.get(SecurityFiles.NOTIFICATION_PREFS)
-                        .putLong(Constants.NOTIFICATION_CLEANER_USAGE_TIME, System.currentTimeMillis());
+                Preferences.get(BugleFiles.NOTIFICATION_PREFS)
+                        .putLong(NotificationCleanerConstants.NOTIFICATION_CLEANER_USAGE_TIME, System.currentTimeMillis());
                 Navigations.startActivitySafely(getContext(), intentBlocked);
                 ((Activity) getContext()).finish();
             } else {

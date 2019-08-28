@@ -117,11 +117,13 @@ dependencies {
     // billing
     implementation 'net.appcloudbox.service:libAcbService.beta:1.4.0.beta01'
 
-    implementation "net.appcloudbox.goldeneye:bubble_a:2019.07.23.001"
+    implementation "net.appcloudbox.goldeneye:bubble_a:2019.08.22.002"
     implementation "me.leolin:ShortcutBadger:1.1.22@aar"
     implementation 'net.appcloudbox.autopilot:libAutoPilot.gm:5.5.1.gm'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
+    // For Junk Cleaner main activity UI
+    compile 'eu.davidea:flexible-adapter:5.0.0-rc1'
 
 //     "D/DebugDB: Open http://xxxxxxxx:8080 in your browser" will appear in your logcat,
 //     open it in your browser to see out project tables. Please only  use it to see the table,

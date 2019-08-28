@@ -1,7 +1,5 @@
 package com.android.messaging.notificationcleaner.resultpage;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,7 +16,6 @@ import com.android.messaging.notificationcleaner.LocalInterstitialAdPool;
 import com.android.messaging.notificationcleaner.LocalNativeAdPool;
 import com.android.messaging.notificationcleaner.NotificationCleanerUtil;
 import com.android.messaging.notificationcleaner.activity.NotificationBlockedActivity;
-import com.android.messaging.notificationcleaner.base.BaseCenterActivity;
 import com.android.messaging.notificationcleaner.resultpage.content.AdContent;
 import com.android.messaging.notificationcleaner.resultpage.content.IContent;
 import com.android.messaging.notificationcleaner.resultpage.content.OptimizedContent;
@@ -31,10 +28,10 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.ViewUtils;
+import com.ihs.app.framework.activity.HSAppCompatActivity;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
-import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Threads;
 
@@ -43,9 +40,7 @@ import net.appcloudbox.ads.base.AcbNativeAd;
 
 import hugo.weaving.DebugLog;
 
-import static com.android.messaging.notificationcleaner.resultpage.ResultContentType.OPTIMAL;
-
-public class ResultPageActivity extends BaseCenterActivity implements INotificationObserver {
+public class ResultPageActivity extends HSAppCompatActivity implements INotificationObserver {
 
     public static final String TAG = "ResultPageActivity";
     public static final String EVENT_PREPARE_TO_SHOW_INTERSTITIAL_AD = "event_prepare_to_show_interstitial_ad";
@@ -89,7 +84,6 @@ public class ResultPageActivity extends BaseCenterActivity implements INotificat
             finish();
         }
 
-        findViewById(R.id.view_container).setPadding(0, Dimensions.getStatusBarInset(this), 0, 0);
         findViewById(R.id.bg_view).setBackgroundColor(mPageState.getBackgroundColor());
         NotificationCleanerUtil.insertFakeNotificationsIfNeeded();
 
@@ -168,35 +162,41 @@ public class ResultPageActivity extends BaseCenterActivity implements INotificat
     }
 
     private void onBackFromAdContent() {
-        mContentType = OPTIMAL;
-        mContent = getContent(mContentType);
-        mContent.initView(this);
 
-        Threads.postOnMainThreadDelayed(() -> {
-            ViewGroup container = ViewUtils.findViewById(this, R.id.ad_view_container);
-            container.animate()
-                    .alpha(0f)
-                    .scaleX(0.7f)
-                    .scaleY(0.7f)
-                    .setDuration(200)
-                    .setListener(new AnimatorListenerAdapter() {
-                        @Override
-                        public void onAnimationEnd(Animator animation) {
-                            if (mExitBtn != null) {
-                                mExitBtn.setVisible(false);
-                            }
-                            mContent.startAnimation();
-                        }
-                    })
-                    .start();
-        }, 500);
+        Intent intent = new Intent(this, NotificationBlockedActivity.class);
+        intent.putExtra(NotificationBlockedActivity.START_FROM,
+                NotificationBlockedActivity.START_FROM_RESULT_AD_PAGE);
+        Navigations.startActivitySafely(this, intent);
+        finish();
+//        mContentType = OPTIMAL;
+//        mContent = getContent(mContentType);
+//        mContent.initView(this);
+//
+//        Threads.postOnMainThreadDelayed(() -> {
+//            ViewGroup container = ViewUtils.findViewById(this, R.id.ad_view_container);
+//            container.animate()
+//                    .alpha(0f)
+//                    .scaleX(0.7f)
+//                    .scaleY(0.7f)
+//                    .setDuration(200)
+//                    .setListener(new AnimatorListenerAdapter() {
+//                        @Override
+//                        public void onAnimationEnd(Animator animation) {
+//                            if (mExitBtn != null) {
+//                                mExitBtn.setVisible(false);
+//                            }
+//                            mContent.startAnimation();
+//                        }
+//                    })
+//                    .start();
+//        }, 500);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finishAndNotify();
+                finish();
                 backToNCPageIfNeeded();
                 return true;
         }
@@ -210,7 +210,7 @@ public class ResultPageActivity extends BaseCenterActivity implements INotificat
             return;
         }
 
-        finishAndNotify();
+        finish();
     }
 
     private void backToNCPageIfNeeded() {
@@ -218,10 +218,6 @@ public class ResultPageActivity extends BaseCenterActivity implements INotificat
             NotificationCleanerUtil.setNotificationBlockedActivityIllustratePageShowingState(NotificationCleanerUtil.NOTIFICATION_STATE_SHOWING);
             Navigations.startActivitySafely(this, new Intent(this, NotificationBlockedActivity.class));
         }
-    }
-
-    public void finishAndNotify() {
-        finish();
     }
 
     @Override
@@ -244,14 +240,6 @@ public class ResultPageActivity extends BaseCenterActivity implements INotificat
         }
 
         HSGlobalNotificationCenter.removeObserver(this);
-    }
-
-    public void finishSelfAndParentActivity() {
-        try {
-            sendBroadcast(new Intent(BaseCenterActivity.INTENT_NOTIFICATION_ACTIVITY_FINISH_ACTION));
-        } catch (Exception ignored) {
-        }
-        finishAndNotify();
     }
 
     private IContent getContent(ResultContentType type) {

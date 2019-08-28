@@ -64,7 +64,7 @@ public class OptimizedContent implements IContent {
         mBtnOk.setBackgroundDrawable(BackgroundDrawables.createBackgroundDrawable(Color.WHITE,
                 context.getResources().getColor(R.color.ripples_ripple_color),
                 Dimensions.pxFromDp(3.3f), true, true));
-        mBtnOk.setOnClickListener(v -> ((ResultPageActivity) context).finishSelfAndParentActivity());
+        mBtnOk.setOnClickListener(v -> ((ResultPageActivity) context).finish());
 
         phone.setTranslationY(Dimensions.pxFromDp(77));
         phone.setAlpha(0);

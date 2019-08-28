@@ -921,10 +921,32 @@
             android:screenOrientation="portrait"
             android:theme="@style/BugleTheme.ConversationListActivity" />
         <activity
+            android:name=".notificationcleaner.activity.NotificationBlockedActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/SettingsActivity" />
+        <activity
             android:name=".notificationcleaner.activity.NotificationCleanerSettingActivity"
             android:excludeFromRecents="true"
             android:screenOrientation="portrait"
             android:theme="@style/SettingsActivity" />
+
+        <provider
+            android:name=".notificationcleaner.data.NotificationCleanerProvider"
+            android:authorities="${applicationId}.notification_organizer"
+            android:enabled="true"
+            android:exported="false" />
+
+        <receiver
+            android:name=".notificationcleaner.NotificationCleanerReceiver"
+            android:exported="true">
+            <intent-filter>
+                <data android:scheme="package" />
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+            </intent-filter>
+        </receiver>
+
         <activity
             android:name=".notificationcleaner.resultpage.ResultPageActivity"
             android:excludeFromRecents="true"

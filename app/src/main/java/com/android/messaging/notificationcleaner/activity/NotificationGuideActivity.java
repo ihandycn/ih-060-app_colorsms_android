@@ -15,6 +15,7 @@ import com.android.messaging.notificationcleaner.data.NotificationCleanerProvide
 import com.android.messaging.notificationcleaner.views.AnimatedNotificationView;
 import com.android.messaging.util.BugleAnalytics;
 import com.ihs.app.framework.activity.HSAppCompatActivity;
+import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
 import com.superapps.util.Permissions;
@@ -52,8 +53,13 @@ public class NotificationGuideActivity extends HSAppCompatActivity {
         }
         getSupportActionBar().setDisplayShowHomeEnabled(!mIsFromGuide);
 
-        findViewById(R.id.exit).setVisibility(mIsFromGuide ? View.VISIBLE : View.GONE);
-        findViewById(R.id.exit).setOnClickListener(v -> finish());
+        View exitContainer = findViewById(R.id.exit);
+        exitContainer.setVisibility(mIsFromGuide ? View.VISIBLE : View.GONE);
+        if (mIsFromGuide) {
+            exitContainer.setBackground(BackgroundDrawables.createTransparentBackgroundDrawable(
+                    getResources().getColor(R.color.ripples_ripple_color), Dimensions.pxFromDp(24)));
+            exitContainer.setOnClickListener(v -> finish());
+        }
 
         mAnimatedNotificationView = findViewById(R.id.guide_container_view);
         mAnimatedNotificationView.setIsMainPageGuide(mIsFromGuide);
