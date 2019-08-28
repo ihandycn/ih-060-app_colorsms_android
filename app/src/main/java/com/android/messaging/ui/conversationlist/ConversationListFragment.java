@@ -588,6 +588,14 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     @Override
     public void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
+        if (mNativeAd != null) {
+            mNativeAd.release();
+        }
+
+        if (mNativeAdLoader != null) {
+            mNativeAdLoader.cancel();
+        }
+
         if (mListState != null) {
             outState.putParcelable(SAVED_INSTANCE_STATE_LIST_VIEW_STATE_KEY, mListState);
         }
