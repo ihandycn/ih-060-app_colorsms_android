@@ -45,6 +45,7 @@ import com.android.messaging.debug.BlockCanaryConfig;
 import com.android.messaging.debug.CrashGuard;
 import com.android.messaging.debug.UploadLeakService;
 import com.android.messaging.notificationcleaner.BuglePackageManager;
+import com.android.messaging.notificationcleaner.NotificationPushGuideUtils;
 import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.receiver.SmsReceiver;
 import com.android.messaging.scheduledmessage.MessageScheduleManager;
@@ -476,6 +477,9 @@ public class BugleApplication extends HSApplication implements UncaughtException
         final String KEY_FOR_LAST_USER_PRESENT_TIME = "last_user_present_time";
         final String KEY_FOR_TODAY_USER_PRESENT_COUNT = "today_user_present_count";
         BroadcastCenter.register(getApplicationContext(), (context, intent) -> {
+
+            NotificationPushGuideUtils.pushNotificationCleanerGuideIfNeed();
+
             if (!HSConfig.optBoolean(false, "Application", "SetDefaultAlert", "Switch")) {
                 return;
             }
