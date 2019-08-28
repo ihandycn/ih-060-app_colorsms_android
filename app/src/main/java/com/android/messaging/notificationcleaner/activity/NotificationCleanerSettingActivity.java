@@ -26,11 +26,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.messaging.BaseActivity;
+import com.android.messaging.BugleFiles;
 import com.android.messaging.R;
-import com.android.messaging.debug.CrashGuard;
-import com.android.messaging.notificationcleaner.Constants;
 import com.android.messaging.notificationcleaner.BuglePackageManager;
-import com.android.messaging.notificationcleaner.SecurityFiles;
+import com.android.messaging.notificationcleaner.NotificationCleanerConstants;
 import com.android.messaging.notificationcleaner.data.NotificationCleanerProvider;
 import com.android.messaging.notificationcleaner.views.AnimatedNotificationView;
 import com.android.messaging.util.CommonUtils;
@@ -151,18 +150,18 @@ public class NotificationCleanerSettingActivity extends BaseActivity {
                     if (null != mWhiteMaskView) {
                         mWhiteMaskView.setVisibility(View.GONE);
                     }
-                    Preferences.get(SecurityFiles.NOTIFICATION_PREFS)
-                            .putLong(Constants.NOTIFICATION_CLEANER_USAGE_TIME, System.currentTimeMillis());
+                    Preferences.get(BugleFiles.NOTIFICATION_PREFS)
+                            .putLong(NotificationCleanerConstants.NOTIFICATION_CLEANER_USAGE_TIME, System.currentTimeMillis());
                     NotificationCleanerProvider.switchNotificationOrganizer(true);
                     switchButton.setChecked(true);
                     return;
                 }
 
                 SpannableString contentSpannableString;
-                int count = Preferences.get(SecurityFiles.NOTIFICATION_PREFS)
-                        .getInt(Constants.NOTIFICATION_CLEANER_NOTIFICATION_BLOCKED_COUNT, 0);
-                long lastNCUsedTime = Preferences.get(SecurityFiles.NOTIFICATION_PREFS)
-                        .getLong(Constants.NOTIFICATION_CLEANER_USAGE_TIME, -1);
+                int count = Preferences.get(BugleFiles.NOTIFICATION_PREFS)
+                        .getInt(NotificationCleanerConstants.NOTIFICATION_CLEANER_NOTIFICATION_BLOCKED_COUNT, 0);
+                long lastNCUsedTime = Preferences.get(BugleFiles.NOTIFICATION_PREFS)
+                        .getLong(NotificationCleanerConstants.NOTIFICATION_CLEANER_USAGE_TIME, -1);
                 long installTime = CommonUtils.getAppInstallTimeMillis();
                 long timeSinceLastUse;
                 if (lastNCUsedTime > 0) {
@@ -234,7 +233,6 @@ public class NotificationCleanerSettingActivity extends BaseActivity {
                     return false;
                 });
                 if (!NotificationCleanerSettingActivity.this.isFinishing()) {
-                    CrashGuard.DIALOG_FROM = "NC_FUNCTION_OFF";
                     functionOffDialog.show();
                 }
             });

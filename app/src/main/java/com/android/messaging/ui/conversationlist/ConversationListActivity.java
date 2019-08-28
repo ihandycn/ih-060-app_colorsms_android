@@ -254,7 +254,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 BugleAnalytics.logEvent("SMS_Messages_Show_NewUser", true, "SendDelay", "" + SendDelaySettings.getSendDelayInSecs());
             }
 
-            if (openTimes >= 1) {
+            if (openTimes >= 2) {
                 showNotificationCleanerGuideIfNeed();
             }
         }
@@ -388,7 +388,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
         Preferences.getDefault().doOnce(() -> {
             Intent notificationGuideIntent = new Intent(this, NotificationGuideActivity.class);
-            notificationGuideIntent.putExtra(NotificationGuideActivity.EXTRA_IS_MAIN_PAGE_GUIDE, true);
+            notificationGuideIntent.putExtra(NotificationGuideActivity.START_FROM,
+                    NotificationGuideActivity.START_FROM_FULL_GUIDE);
             Navigations.startActivitySafely(this, notificationGuideIntent);
         }, "show_notification_cleaner_full_guide");
     }

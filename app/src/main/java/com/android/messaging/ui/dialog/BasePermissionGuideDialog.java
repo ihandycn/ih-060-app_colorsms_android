@@ -67,7 +67,7 @@ public abstract class BasePermissionGuideDialog extends FrameLayout {
         }, mIsShowImmediately ? 0 : ESTIMATED_ACTIVITY_SWITCH_TIME);
     }
 
-    protected void setShowContentImmediately(boolean isImmediately) {
+    public void setShowContentImmediately(boolean isImmediately) {
         mIsShowImmediately = isImmediately;
     }
 
