@@ -27,6 +27,7 @@ import android.widget.RemoteViews;
 
 import com.android.messaging.R;
 import com.android.messaging.ui.UIIntents;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.SafeAsyncTask;
@@ -113,7 +114,13 @@ public class BugleWidgetProvider extends BaseWidgetProvider {
 
         AppWidgetManager widgetManager = AppWidgetManager.getInstance(context);
         int[] ids = widgetManager.getAppWidgetIds(new ComponentName(context, BugleWidgetProvider.class));
-        widgetManager.notifyAppWidgetViewDataChanged(ids, R.id.conversation_list);
+        if (ids.length == 0) {
+            return;
+        }
 
+        widgetManager.notifyAppWidgetViewDataChanged(ids, R.id.conversation_list);
+        BugleAnalytics.logEvent("Widget_Update", true);
     }
+
 }
+

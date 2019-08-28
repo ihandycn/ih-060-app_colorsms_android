@@ -33,6 +33,7 @@ import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.data.ConversationListItemData;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.WidgetPickConversationActivity;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.SafeAsyncTask;
@@ -193,8 +194,10 @@ public class WidgetConversationProvider extends BaseWidgetProvider {
             if (conversationId == null || TextUtils.equals(conversationId, widgetConvId)) {
                 // Update the list portion (i.e. the message list) of the widget
                 appWidgetManager.notifyAppWidgetViewDataChanged(widgetId, R.id.message_list);
+                BugleAnalytics.logEvent("Widget_Update", true);
             }
         }
+
     }
 
     /*
