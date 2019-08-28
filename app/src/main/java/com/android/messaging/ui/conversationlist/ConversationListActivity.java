@@ -31,9 +31,7 @@ import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.airbnb.lottie.Cancellable;
 import com.airbnb.lottie.LottieAnimationView;
-import com.airbnb.lottie.LottieComposition;
 import com.android.messaging.BuildConfig;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
@@ -110,6 +108,7 @@ import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Calendars;
 import com.superapps.util.Compats;
 import com.superapps.util.Dimensions;
+import com.superapps.util.HomeKeyWatcher;
 import com.superapps.util.Navigations;
 import com.superapps.util.Permissions;
 import com.superapps.util.Preferences;
@@ -128,7 +127,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.RejectedExecutionException;
 
 import hugo.weaving.DebugLog;
 
@@ -209,6 +207,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private LottieAnimationView mLottieAnimationView;
     private LightWeightCustomizeGuideController mCustomizeGuideController;
     private final BuglePrefs mPrefs = Factory.get().getApplicationPrefs();
+    private HomeKeyWatcher mHomeKeyWatcher;
+    private boolean mIsHomeKeyPressed;
+
 
     @Override
     @DebugLog
@@ -362,6 +363,21 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 navigationView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
+
+
+
+        mHomeKeyWatcher = new HomeKeyWatcher(this);
+        mHomeKeyWatcher.setOnHomePressedListener(new HomeKeyWatcher.OnHomePressedListener() {
+            @Override
+            public void onHomePressed() {
+                mIsHomeKeyPressed = true;
+            }
+
+            @Override
+            public void onRecentsPressed() {
+            }
+        });
+
     }
 
     private void onPostPageVisible() {
@@ -385,6 +401,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @DebugLog
     protected void onResume() {
         super.onResume();
+        mIsHomeKeyPressed = false;
         if (mIsExitAdShown) {
             showExitAppAnimation();
             return;
@@ -777,6 +794,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
         FiveStarRateDialog.dismissDialogs();
         HSGlobalNotificationCenter.removeObserver(this);
+        mHomeKeyWatcher.stopWatch();
+        mHomeKeyWatcher = null;
+
     }
 
     @Override
@@ -898,18 +918,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
             mInterstitialAd.setInterstitialAdListener(new AcbInterstitialAd.IAcbInterstitialAdListener() {
 
                 private ViewStub mExitAppAnimationViewStub;
-                private Cancellable mAnimationLoadTask;
 
                 @Override
                 public void onAdDisplayed() {
-
+                    mHomeKeyWatcher.startWatch();
                     Threads.postOnMainThreadDelayed(() -> {
                         if (mExitAppAnimationViewContainer == null) {
                             mExitAppAnimationViewStub = findViewById(R.id.exit_app_stub);
                             mExitAppAnimationViewContainer = (ConstraintLayout) mExitAppAnimationViewStub.inflate();
                             mLottieAnimationView = findViewById(R.id.exit_app_lottie);
                             mLottieAnimationView.useHardwareAcceleration();
-                            loadAnimation();
                         } else {
                             mExitAppAnimationViewContainer.setVisibility(View.VISIBLE);
                         }
@@ -938,28 +956,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 public void onAdDisplayFailed(AcbError acbError) {
 
                 }
-
-                private void loadAnimation() {
-                    cancelAnimationLoadTask();
-                    try {
-                        mAnimationLoadTask = LottieComposition.Factory.fromAssetFileName(getContext(),
-                                "lottie/exit_app.json", lottieComposition -> {
-                                    if (lottieComposition != null) {
-                                        mLottieAnimationView.setComposition(lottieComposition);
-                                        mLottieAnimationView.setProgress(0f);
-                                    }
-                                });
-                    } catch (RejectedExecutionException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                private void cancelAnimationLoadTask() {
-                    if (mAnimationLoadTask != null) {
-                        mAnimationLoadTask.cancel();
-                        mAnimationLoadTask = null;
-                    }
-                }
             });
 
             mInterstitialAd.setMuted(true);
@@ -983,6 +979,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @Override
     protected void onRestart() {
         super.onRestart();
+        if (!mIsHomeKeyPressed){
+            return;
+        }
         if (mIsExitAdShown) {
             Intent intent = new Intent(this, ConversationListActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
