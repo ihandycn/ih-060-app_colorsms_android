@@ -926,6 +926,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/SettingsActivity" />
         <activity
+            android:name=".notificationcleaner.resultpage.ResultPageActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:taskAffinity=".resultpage"
+            android:theme="@style/SettingsActivity" />
+
+        <activity
             android:name=".notificationcleaner.activity.NCPermissionGuideActivity"
             android:allowTaskReparenting="false"
             android:excludeFromRecents="true"

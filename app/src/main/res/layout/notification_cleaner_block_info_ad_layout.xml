@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="127dp"
+    android:background="@android:color/white">
+
+    <RelativeLayout
+        android:id="@+id/first_line_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <FrameLayout
+            android:id="@+id/ad_entry_adchoice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            tools:background="@android:color/holo_orange_dark"
+            tools:layout_height="10dp"
+            tools:layout_width="30dp" />
+
+        <net.appcloudbox.ads.base.ContainerView.AcbNativeAdIconView
+            android:id="@+id/ad_entry_icon"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginLeft="22dp"
+            android:layout_marginStart="22dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/shape_promote_circle_bg" />
+
+        <ImageView
+            android:layout_width="54dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/ad_entry_icon"
+            android:layout_marginLeft="19dp"
+            android:layout_marginStart="19dp"
+            android:layout_marginTop="6dp"
+            android:src="@drawable/junk_clean_ad_icon_star" />
+
+        <LinearLayout
+            android:id="@+id/title_container_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/ad_entry_icon"
+            android:layout_marginLeft="14dp"
+            android:layout_marginStart="14dp"
+            android:layout_toEndOf="@id/ad_entry_icon"
+            android:layout_toLeftOf="@id/ad_entry_adchoice"
+            android:layout_toRightOf="@id/ad_entry_icon"
+            android:layout_toStartOf="@id/ad_entry_adchoice"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/ad_entry_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-medium"
+                android:singleLine="true"
+                android:textColor="#313131"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/ad_entry_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:maxLines="2"
+                android:textColor="#8E8E8E"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/ad_entry_button"
+        android:layout_width="108dp"
+        android:layout_height="32dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginBottom="9dp"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/block_notification_more"
+        android:textColor="#fff"
+        android:textSize="14sp" />
+</RelativeLayout>

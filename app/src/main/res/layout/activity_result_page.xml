@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_bar_activities_content_bg"
+    android:clipChildren="false"
+    tools:ignore="ContentDescription">
+
+    <View
+        android:id="@+id/bg_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+    <include layout="@layout/top_tool_bar_view" />
+
+    <FrameLayout
+        android:id="@+id/view_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:fitsSystemWindows="false">
+
+        <!-- Do not change container_view id -->
+        <RelativeLayout
+            android:id="@+id/guide_container_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipChildren="false"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/transition_view_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipChildren="false"
+                android:clipToPadding="false"/>
+
+            <RelativeLayout
+                android:id="@+id/result_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="invisible">
+
+                <View
+                    android:id="@+id/result_header_tag_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/result_page_header_height"/>
+
+                <FrameLayout
+                    android:id="@+id/ad_view_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginTop="90dp"/>
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/result_card_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/result_header_tag_view"
+                    android:layout_marginLeft="@dimen/result_page_card_margin"
+                    android:layout_marginRight="@dimen/result_page_card_margin"
+                    android:overScrollMode="never"/>
+
+                <FrameLayout
+                    android:id="@+id/full_screen_view_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+                <ImageView
+                    android:id="@+id/result_page_fullscreen_ad_dismiss_btn"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="5dp"
+                    android:layout_marginTop="58dp"
+                    android:background="?selectableItemBackgroundBorderless"
+                    android:clickable="true"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_close"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+        </RelativeLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/ad_loading_view_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
+</FrameLayout>
