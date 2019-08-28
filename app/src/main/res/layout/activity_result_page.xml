@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,9 +11,7 @@
     <View
         android:id="@+id/bg_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-    <include layout="@layout/top_tool_bar_view" />
+        android:layout_height="match_parent" />
 
     <FrameLayout
         android:id="@+id/view_container"
@@ -30,23 +28,46 @@
             android:clipChildren="false"
             android:orientation="vertical">
 
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/action_bar_height"
+                android:elevation="0dp"
+                app:navigationIcon="@drawable/ic_back">
+
+                <com.android.messaging.ui.view.MessagesTextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="0dp"
+                    android:ellipsize="end"
+                    android:includeFontPadding="false"
+                    android:lines="1"
+                    android:paddingEnd="20dp"
+                    android:textColor="#ffffff"
+                    android:textSize="16.7sp"
+                    android:textStyle="bold"
+                    app:typeface="@string/custom_font_semibold" />
+            </android.support.v7.widget.Toolbar>
+
             <FrameLayout
                 android:id="@+id/transition_view_container"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:clipChildren="false"
-                android:clipToPadding="false"/>
+                android:clipToPadding="false" />
 
             <RelativeLayout
                 android:id="@+id/result_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_below="@+id/toolbar"
                 android:visibility="invisible">
 
                 <View
                     android:id="@+id/result_header_tag_view"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/result_page_header_height"/>
+                    android:layout_height="@dimen/result_page_header_height" />
 
                 <FrameLayout
                     android:id="@+id/ad_view_container"
@@ -54,7 +75,7 @@
                     android:layout_height="match_parent"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:layout_marginTop="90dp"/>
+                    android:layout_marginTop="90dp" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/result_card_recycler_view"
@@ -63,12 +84,12 @@
                     android:layout_below="@+id/result_header_tag_view"
                     android:layout_marginLeft="@dimen/result_page_card_margin"
                     android:layout_marginRight="@dimen/result_page_card_margin"
-                    android:overScrollMode="never"/>
+                    android:overScrollMode="never" />
 
                 <FrameLayout
                     android:id="@+id/full_screen_view_container"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent" />
 
                 <ImageView
                     android:id="@+id/result_page_fullscreen_ad_dismiss_btn"
@@ -81,7 +102,7 @@
                     android:clickable="true"
                     android:scaleType="center"
                     android:src="@drawable/ic_close"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </RelativeLayout>
         </RelativeLayout>
     </FrameLayout>
@@ -89,6 +110,5 @@
     <FrameLayout
         android:id="@+id/ad_loading_view_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </FrameLayout>
+        android:layout_height="match_parent"></FrameLayout>
 </FrameLayout>

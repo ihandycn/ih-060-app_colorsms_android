@@ -5,15 +5,21 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.Telephony;
 import android.service.notification.NotificationListenerService;
 import android.service.notification.StatusBarNotification;
@@ -22,12 +28,19 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
 
+import com.android.messaging.BugleFiles;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.media.AvatarRequestDescriptor;
 import com.android.messaging.datamodel.media.ImageResource;
 import com.android.messaging.datamodel.media.MediaRequest;
 import com.android.messaging.datamodel.media.MediaResourceManager;
+import com.android.messaging.notificationcleaner.DateUtil;
+import com.android.messaging.notificationcleaner.NotificationBarUtil;
+import com.android.messaging.notificationcleaner.NotificationCleanerConstants;
+import com.android.messaging.notificationcleaner.NotificationCleanerUtil;
+import com.android.messaging.notificationcleaner.data.BlockedNotificationDBHelper;
+import com.android.messaging.notificationcleaner.data.NotificationCleanerProvider;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.customize.PrimaryColors;
@@ -43,6 +56,9 @@ import com.android.messaging.util.RingtoneUtil;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Notifications;
+import com.superapps.util.Packages;
+import com.superapps.util.PostOnNextFrameReceiver;
+import com.superapps.util.Preferences;
 import com.superapps.util.ReflectionHelper;
 import com.superapps.util.Threads;
 
@@ -52,13 +68,72 @@ import java.util.List;
 
 import static android.support.v4.app.NotificationCompat.isGroupSummary;
 
-@TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class NotificationServiceV18 extends NotificationListenerService {
 
+    public static final String TAG = NotificationServiceV18.class.getSimpleName();
     public static final String EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION = "override_system_sms_notification";
     public static final String EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION_ACTION = "override_system_sms_notification_action";
 
+    public static final String ACTION_NOTIFICATION_GET_CURRENT_ACTIVE = "get_current_active_notifications";
+    public static final String ACTION_NOTIFICATION_CLEANER_AUTO_OPEN = "ACTION_NOTIFICATION_CLEANER_AUTO_OPEN";
+
     private static String sDefaultSmsApp;
+
+    private ContentObserver mContentObserver;
+    private BroadcastReceiver cancelCurrentNotificationsReceiver = new PostOnNextFrameReceiver() {
+        @Override
+        public void onPostReceive(Context context, Intent intent) {
+            if (intent == null) {
+                return;
+            }
+
+            String action = intent.getAction();
+
+            switch (action) {
+                case ACTION_NOTIFICATION_GET_CURRENT_ACTIVE: {
+                    StatusBarNotification[] statusBarNotifications = null;
+                    try {
+                        statusBarNotifications = getActiveNotifications();
+                    } catch (Exception e) {
+                        // notification service may not bound complete
+                    }
+                    if (statusBarNotifications == null) {
+                        return;
+                    }
+
+                    for (StatusBarNotification statusBarNotification : statusBarNotifications) {
+                        onNotificationPosted(statusBarNotification);
+                    }
+                    break;
+                }
+                case ACTION_NOTIFICATION_CLEANER_AUTO_OPEN: {
+                    Threads.postOnThreadPoolExecutor(() -> {
+                        StatusBarNotification[] statusBarNotifications = null;
+                        try {
+                            statusBarNotifications = getActiveNotifications();
+                        } catch (Exception e) {
+                            // notification service may not bound complete
+                        }
+                        if (statusBarNotifications == null) {
+                            return;
+                        }
+
+                        int blockableList = 0;
+                        for (int i = 0; i < statusBarNotifications.length; i++) {
+                            if (isBlockable(statusBarNotifications[i])) {
+                                blockableList++;
+                            }
+                        }
+                        if (blockableList >= 6
+                                && !NotificationCleanerUtil.hasNotificationCleanerEverOpened()) {
+                            NotificationCleanerProvider.switchNotificationOrganizer(true);
+                        }
+                    });
+                    break;
+                }
+            }
+        }
+    };
 
     public static void updateDefaultSmsPackage(String defaultSmsApp) {
         sDefaultSmsApp = defaultSmsApp;
@@ -69,18 +144,80 @@ public class NotificationServiceV18 extends NotificationListenerService {
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+
+        mContentObserver = new ContentObserver(new Handler()) {
+            @Override
+            public void onChange(boolean selfChange, Uri uri) {
+                super.onChange(selfChange, uri);
+                NotificationBarUtil.checkToUpdateBlockedNotification();
+            }
+        };
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(ACTION_NOTIFICATION_GET_CURRENT_ACTIVE);
+        intentFilter.addAction(ACTION_NOTIFICATION_CLEANER_AUTO_OPEN);
+        registerReceiver(cancelCurrentNotificationsReceiver, intentFilter);
+
+        getContentResolver().registerContentObserver(
+                NotificationCleanerProvider.createBlockNotificationContentUri(HSApplication.getContext()),
+                true, mContentObserver);
+        getContentResolver().registerContentObserver(
+                NotificationCleanerProvider.createBlockAppContentUri(HSApplication.getContext()),
+                true, mContentObserver);
+
+        getContentResolver().registerContentObserver(
+                NotificationCleanerProvider.createSwitcherContentUri(HSApplication.getContext()),
+                true, mContentObserver);
+
+        deleteExpiredBlockedNotificationsAsync();
+
+        NotificationBarUtil.checkToUpdateBlockedNotification();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(cancelCurrentNotificationsReceiver);
+
+        getContentResolver().unregisterContentObserver(mContentObserver);
+
+        NotificationBarUtil.checkToUpdateBlockedNotification();
+    }
+
+    @Override
     public void onNotificationPosted(StatusBarNotification statusBarNotification) {
         HSLog.d("NotificationListener", "onNotificationPosted(), statusBarNotification.getPackageName = "
                 + statusBarNotification.getPackageName());
-        if (DefaultSMSUtils.isDefaultSmsApp()) {
+
+        NotificationCleanerUtil.autoOpenNotificationCleanerIfNeeded();
+        if (getApplicationContext().getPackageName().equals(statusBarNotification.getPackageName())) {
             return;
         }
 
-        if (sDefaultSmsApp == null) {
-            sDefaultSmsApp = Telephony.Sms.getDefaultSmsPackage(HSApplication.getContext());
+        if (!statusBarNotification.isClearable()) {
+            return;
         }
 
-        if (!statusBarNotification.getPackageName().equals(sDefaultSmsApp)) {
+        boolean isOtherSmsAppNotification = false;
+        boolean isBlockedAppNotification = false;
+        if (!DefaultSMSUtils.isDefaultSmsApp()) {
+            if (sDefaultSmsApp == null) {
+                sDefaultSmsApp = Telephony.Sms.getDefaultSmsPackage(HSApplication.getContext());
+            }
+
+            if (statusBarNotification.getPackageName().equals(sDefaultSmsApp)) {
+                isOtherSmsAppNotification = true;
+            }
+        }
+
+        if (NotificationCleanerProvider.isAppBlocked(statusBarNotification.getPackageName())
+                && NotificationCleanerProvider.isNotificationOrganizerSwitchOn()) {
+            isBlockedAppNotification = true;
+        }
+
+        if (!isOtherSmsAppNotification && !isBlockedAppNotification) {
             return;
         }
 
@@ -89,14 +226,9 @@ public class NotificationServiceV18 extends NotificationListenerService {
             HSLog.d("NotificationListener", "onNotificationPosted(), not block, title or text is empty");
             return;
         }
-        HSLog.d("NotificationListener", "onNotificationPosted(), block, title = " + notificationInfo.title + ", text = " + notificationInfo.text +
+        HSLog.d("NotificationListener", "onNotificationPosted(), block, title = "
+                + notificationInfo.title + ", text = " + notificationInfo.text +
                 ", notificationId = " + notificationInfo.notificationId);
-
-        if ((notificationInfo.notification.flags & Notification.FLAG_NO_CLEAR) != 0
-                || (notificationInfo.notification.flags & Notification.FLAG_ONGOING_EVENT) != 0) {
-            HSLog.d("NotificationListener", "Resident Notification");
-            return;
-        }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP && !TextUtils.isEmpty(notificationInfo.key)) {
             try {
@@ -107,11 +239,34 @@ public class NotificationServiceV18 extends NotificationListenerService {
             cancelNotification(notificationInfo.packageId, notificationInfo.tag, notificationInfo.notificationId);
         }
 
-        if (!isGroupSummary(notificationInfo.notification)) {
-            HSLog.d("NotificationListener", "is not group summary");
-            sendNotification(notificationInfo.tag, notificationInfo.notificationId, notificationInfo.title, notificationInfo.text);
-        } else {
-            HSLog.d("NotificationListener", "is group summary");
+        if (isOtherSmsAppNotification) {
+            if (!isGroupSummary(notificationInfo.notification)) {
+                HSLog.d("NotificationListener", "is not group summary");
+                sendNotification(notificationInfo.tag, notificationInfo.notificationId, notificationInfo.title, notificationInfo.text);
+            } else {
+                HSLog.d("NotificationListener", "is group summary");
+            }
+        }
+
+        if (isBlockedAppNotification) {
+            Threads.postOnThreadPoolExecutor(() -> {
+                HSLog.d("NotificationListener", "*** Security *** onNotificationPosted(), insert mPackageName = "
+                        + statusBarNotification.getPackageName());
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(BlockedNotificationDBHelper.COLUMN_NOTIFICATION_PACKAGE_NAME, statusBarNotification.getPackageName());
+                contentValues.put(BlockedNotificationDBHelper.COLUMN_NOTIFICATION_TITLE, notificationInfo.title);
+                contentValues.put(BlockedNotificationDBHelper.COLUMN_NOTIFICATION_TEXT, notificationInfo.text);
+                contentValues.put(BlockedNotificationDBHelper.COLUMN_NOTIFICATION_POST_TIME, notificationInfo.postTime);
+
+                Uri newUri = getApplicationContext().getContentResolver().insert(
+                        NotificationCleanerProvider.createBlockNotificationContentUri(getApplicationContext()), contentValues);
+                final long id = ContentUris.parseId(newUri);
+                if (id != -1) {
+                    notificationInfo.idInDB = id;
+                }
+
+                Preferences.get(BugleFiles.NOTIFICATION_PREFS).incrementAndGetInt(NotificationCleanerConstants.NOTIFICATION_CLEANER_NOTIFICATION_BLOCKED_COUNT);
+            });
         }
     }
 
@@ -150,7 +305,6 @@ public class NotificationServiceV18 extends NotificationListenerService {
         return notifications;
     }
 
-    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
     public static BlockedNotificationInfo loadNotificationInfo(StatusBarNotification statusBarNotification) {
 
         BlockedNotificationInfo notificationInfo = new BlockedNotificationInfo(statusBarNotification.getPackageName(),
@@ -419,5 +573,35 @@ public class NotificationServiceV18 extends NotificationListenerService {
         final boolean defaultValue = context.getResources().getBoolean(
                 R.bool.notification_vibration_pref_default);
         return prefs.getBoolean(prefKey, defaultValue);
+    }
+
+    private void deleteExpiredBlockedNotificationsAsync() {
+        Thread thread = new Thread(() -> {
+            try {
+                getApplicationContext().getContentResolver().delete(
+                        NotificationCleanerProvider.createBlockNotificationContentUri(HSApplication.getContext()),
+                        BlockedNotificationDBHelper.COLUMN_NOTIFICATION_POST_TIME + "<?",
+                        new String[]{String.valueOf(DateUtil.getStartTimeStampOfDaysAgo(NotificationCleanerConstants.DAYS_NOTIFICATIONS_KEEP))});
+            } catch (IllegalArgumentException ignored) {
+
+            }
+        });
+
+        thread.setPriority(Thread.MIN_PRIORITY);
+        thread.start();
+    }
+
+    private boolean isBlockable(StatusBarNotification statusBarNotification) {
+        if (!Packages.isLaunchableApp(statusBarNotification.getPackageName())) {
+            return false;
+        }
+        if (!statusBarNotification.isClearable()) {
+            return false;
+        }
+        BlockedNotificationInfo notificationInfo = loadNotificationInfo(statusBarNotification);
+        if (TextUtils.isEmpty(notificationInfo.title) && TextUtils.isEmpty(notificationInfo.text)) {
+            return false;
+        }
+        return true;
     }
 }

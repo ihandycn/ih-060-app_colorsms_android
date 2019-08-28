@@ -4,8 +4,8 @@
 
     <item
         android:id="@+id/notification_setting_switch_button"
+        android:actionViewClass="android.support.v7.widget.SwitchCompat"
         android:title="@string/settings"
         app:showAsAction="always"
-        app:actionLayout="@layout/notification_cleaner_settings_menu"
-        app:actionViewClass="android.support.v7.widget.SwitchCompat" />
+        app:actionLayout="@layout/notification_cleaner_settings_menu" />
 </menu>
