@@ -591,7 +591,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         if (mNativeAd != null) {
             mNativeAd.release();
         }
-
         if (mNativeAdLoader != null) {
             mNativeAdLoader.cancel();
         }
