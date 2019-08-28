@@ -86,6 +86,7 @@ import com.android.messaging.ui.emoji.EmojiStoreActivity;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
+import com.android.messaging.ui.ringtone.RingtoneInfo;
 import com.android.messaging.ui.ringtone.RingtoneInfoManager;
 import com.android.messaging.ui.ringtone.RingtoneSettingActivity;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
@@ -1176,7 +1177,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 drawerLayout.closeDrawer(navigationView);
                 Preferences.getDefault().putBoolean(PREF_KEY_RINGTONE_CLICKED, true);
                 RingtoneEntranceAutopilotUtils.logMenuRingtoneClick();
-                BugleAnalytics.logEvent("Menu_Ringtone_Click", true);
                 break;
             case R.id.navigation_item_bubble:
                 drawerClickIndex = DRAWER_INDEX_BUBBLE;
@@ -1312,8 +1312,20 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                         .getString(ChatListCustomizeActivity.PREF_KEY_EVENT_CHANGE_COLOR_TYPE, "theme"),
                                 "chat_list_opacity", opacityStr,
                                 "vibrate", VibrateSettings.getVibrateDescription(""),
-                                "led", LedSettings.getLedDescription(""),
-                                "ringtone", RingtoneInfoManager.getRingtoneDefault().name);
+                                "led", LedSettings.getLedDescription(""));
+                        RingtoneInfo info = RingtoneInfoManager.getCurSound();
+                        switch (info.type) {
+                            case RingtoneInfo.TYPE_SYSTEM:
+                                BugleAnalytics.logEvent("SMS_Messages_Show_2", true, "ringtone", "system");
+                                break;
+                            case RingtoneInfo.TYPE_FILE:
+                                BugleAnalytics.logEvent("SMS_Messages_Show_2", true, "ringtone", "file");
+                                break;
+                            case RingtoneInfo.TYPE_APP:
+                                BugleAnalytics.logEvent("SMS_Messages_Show_2", true, "ringtone", info.name);
+                                break;
+                        }
+
 
                         BugleFirebaseAnalytics.logEvent("SMS_Messages_Show_2",
                                 "subscription", String.valueOf(BillingManager.isPremiumUser()),

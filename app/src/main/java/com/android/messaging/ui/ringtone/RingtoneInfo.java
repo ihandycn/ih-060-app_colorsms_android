@@ -4,9 +4,9 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class RingtoneInfo implements Parcelable {
-    public static int TYPE_SYSTEM = 1;
-    public static int TYPE_FILE = 2;
-    public static int TYPE_APP = 3;
+    public static final int TYPE_SYSTEM = 1;
+    public static final int TYPE_FILE = 2;
+    public static final int TYPE_APP = 3;
 
     public int type;
     public String name;

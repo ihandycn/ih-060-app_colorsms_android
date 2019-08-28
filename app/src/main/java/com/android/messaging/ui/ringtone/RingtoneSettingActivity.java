@@ -39,6 +39,9 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
     public static final int REQUEST_CODE_START_FILE_RINGTONE_PICKER = 2;
 
     public static final String EXTRA_CUR_RINGTONE_INFO = "extra_cur_ringtone_info";
+    public static final String EXTRA_FROM_PAGE = "extra_from_page";
+    public static final String FROM_SETTING = "settings";
+    public static final String FROM_DETAILS_PAGE = "detailspage";
 
     private ViewGroup mSystemItemView;
     private ViewGroup mFileItemView;
@@ -46,7 +49,8 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
 
     private RingtoneSettingAdapter mAdapter;
     private RingtoneInfo mCurRingtoneInfo;
-    private boolean mIsFromNavigation;
+    private RingtoneInfo mSetInfo = null;
+    private boolean mIsFromNavigation = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +99,6 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
         });
 
         RingtoneEntranceAutopilotUtils.logRingtonePageShow();
-        BugleAnalytics.logEvent("Ringtone_Page_Show");
     }
 
     private void onSystemItemClick() {
@@ -126,11 +129,15 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
     private RingtoneInfo getCurRingtoneUri() {
         Intent intent = getIntent();
         RingtoneInfo info = intent.getParcelableExtra(EXTRA_CUR_RINGTONE_INFO);
-        if (info == null) {
-            // if intent's data is null, maybe the page is start from navigation view
+        String from = intent.getStringExtra(RingtoneSettingActivity.EXTRA_FROM_PAGE);
+        if (from == null) {
+            // if intent's data "from" is null, maybe the page is start from navigation view
             mIsFromNavigation = true;
             info = RingtoneInfoManager.getCurSound();
+            return info;
         }
+        BugleAnalytics.logEvent("Ringtone_Page_Show", true, "from", from);
+
         return info;
     }
 
@@ -139,13 +146,22 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
         Intent intent = new Intent();
         intent.putExtra(EXTRA_CUR_RINGTONE_INFO, info);
         setResult(RESULT_OK, intent);
-        if (mIsFromNavigation) {
-            RingtoneInfoManager.setCurSound(info);
-        }
-        RingtoneEntranceAutopilotUtils.logRingtonePageSet();
-        BugleAnalytics.logEvent("Ringtone_Page_Set", true);
+        mSetInfo = info;
 
-        mAdapter.clearChoose();
+        if (info.type != RingtoneInfo.TYPE_APP) {
+            mAdapter.clearChoose();
+        }
+
+        switch (info.type) {
+            case RingtoneInfo.TYPE_APP:
+                BugleAnalytics.logEvent("Ringtone_Page_Set", true, "type", info.name);
+                break;
+            case RingtoneInfo.TYPE_SYSTEM:
+                BugleAnalytics.logEvent("Ringtone_Page_Set", true, "type", "system");
+                break;
+            case RingtoneInfo.TYPE_FILE:
+                BugleAnalytics.logEvent("Ringtone_Page_Set", true, "type", "music");
+        }
     }
 
     @Override
@@ -196,9 +212,9 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
                 return;
             }
             String fileName = getFileFromContentUri(uri, this);
-            if(Build.VERSION.SDK_INT < 24){
+            if (Build.VERSION.SDK_INT < 24) {
                 uri = Uri.fromFile(file);
-            }else {
+            } else {
                 uri = FileProvider.getUriForFile(this, getResources().getString(R.string.file_provider), file);
             }
             HSLog.i("test_test file", uri.toString());
@@ -234,7 +250,6 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
 
     @Override
     public void onAppRingtoneSelected(RingtoneInfo info) {
-        RingtoneEntranceAutopilotUtils.logAppRingtoneSet();
         putRingtoneIntoIntent(info);
     }
 
@@ -250,6 +265,12 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
 
     @Override
     protected void onDestroy() {
+        if (mSetInfo != null) {
+            if (mIsFromNavigation) {
+                RingtoneInfoManager.setCurSound(mSetInfo);
+            }
+            RingtoneEntranceAutopilotUtils.logRingtonePageSet();
+        }
         super.onDestroy();
     }
 

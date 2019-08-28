@@ -40,6 +40,7 @@ import com.android.messaging.util.UiUtils;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.ihs.commons.config.HSConfig;
+import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
@@ -485,6 +486,8 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
     private void onSoundItemClick() {
         Intent ringtonePickerIntent = new Intent(this, RingtoneSettingActivity.class);
         ringtonePickerIntent.putExtra(RingtoneSettingActivity.EXTRA_CUR_RINGTONE_INFO, RingtoneInfoManager.getCurSound());
+        ringtonePickerIntent.putExtra(RingtoneSettingActivity.EXTRA_FROM_PAGE, RingtoneSettingActivity.FROM_SETTING);
+
         Navigations.startActivityForResultSafely(SettingActivity.this,
                 ringtonePickerIntent, REQUEST_CODE_RINGTONE_PICKER);
         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
@@ -510,6 +513,7 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
             RingtoneInfo info = data.getParcelableExtra(RingtoneSettingActivity.EXTRA_CUR_RINGTONE_INFO);
             RingtoneInfoManager.setCurSound(info);
             updateSoundSummary();
+            HSLog.i("test_test", "onActivityResult: ");
 
         } else if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {

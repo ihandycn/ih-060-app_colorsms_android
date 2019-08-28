@@ -109,7 +109,7 @@ public class PeopleOptionsItemData {
                 break;
 
             case SETTING_NOTIFICATION_SOUND_URI:
-                mTitle = mContext.getString(R.string.notification_sound_pref_title);
+                mTitle = mContext.getString(R.string.ringtone);
                 final String ringtoneString = cursor.getString(INDEX_NOTIFICATION_SOUND_URI);
                 RingtoneInfo info;
                 if (ringtoneString == null) {

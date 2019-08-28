@@ -102,7 +102,7 @@ public class PeopleAndOptionsFragment extends Fragment
     private String mConversationId;
     private String mRingtone;
 
-    private ParticipantData mOtherParticipantData;  // TODO: 2019-07-26
+    private ParticipantData mOtherParticipantData;
 
     private GeneralSettingItemView mBubbleItemView;
     private GeneralSettingItemView mChatBgItemView;
@@ -377,6 +377,7 @@ public class PeopleAndOptionsFragment extends Fragment
                 Intent intent = new Intent(getActivity(), RingtoneSettingActivity.class);
                 RingtoneInfo info = RingtoneInfoManager.getConversationRingtoneInfo(mRingtone);
                 intent.putExtra(RingtoneSettingActivity.EXTRA_CUR_RINGTONE_INFO, info);
+                intent.putExtra(RingtoneSettingActivity.EXTRA_FROM_PAGE, RingtoneSettingActivity.FROM_DETAILS_PAGE);
                 try {
                     startActivityForResult(intent, REQUEST_CODE_RINGTONE_PICKER);
                 } catch (ActivityNotFoundException | SecurityException e) {
