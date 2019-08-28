@@ -16,8 +16,7 @@ import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Notifications;
 
-public class NotificationPushUtils {
-    public static final String EXTRA_AUTO_COLLAPSE = "auto_collapse";
+public class NotificationPushGuideUtils {
 
     private static final int[] ICON_CONTAINER_RES_ID = {
             R.id.recentest_notification_icon_0,
@@ -50,8 +49,7 @@ public class NotificationPushUtils {
         }
         notification.setViewVisibility(ICON_CONTAINER_RES_ID[ICON_CONTAINER_RES_ID.length - 1], View.VISIBLE);
 
-        PendingIntent pendingIntent = getPendingIntent(
-        );
+        PendingIntent pendingIntent = getPendingIntent();
 
         android.support.v4.app.NotificationCompat.Builder builder =
                 new NotificationCompat.Builder(context, Notifications.NC_CHANNEL_ID)

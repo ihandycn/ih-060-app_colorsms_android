@@ -21,10 +21,6 @@ import com.superapps.util.Navigations;
 import com.superapps.util.Permissions;
 
 public class NotificationGuideActivity extends HSAppCompatActivity {
-    public static final String START_FROM = "start_from";
-    public static final String START_FROM_FULL_GUIDE = "full_guide";
-    public static final String START_FROM_BAR_GUIDE = "bar_guide";
-    public static final String START_FROM_NO_PERMISSION = "no_permission";
 
     private String mFrom;
     private boolean mIsFromGuide = false;
@@ -37,8 +33,9 @@ public class NotificationGuideActivity extends HSAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification_cleaner_guide);
 
-        mFrom =  getIntent().getStringExtra(START_FROM);
-        mIsFromGuide = START_FROM_FULL_GUIDE.equals(mFrom) || START_FROM_BAR_GUIDE.equals(mFrom);
+        mFrom =  getIntent().getStringExtra(NotificationBlockedActivity.START_FROM);
+        mIsFromGuide = NotificationBlockedActivity.START_FROM_GUIDE_BAR.equals(mFrom)
+                || NotificationBlockedActivity.START_FROM_GUIDE_FULL.equals(mFrom);
         if (mIsFromGuide) {
             mIsMainPageGuideJustCreated = true;
         }
@@ -62,7 +59,7 @@ public class NotificationGuideActivity extends HSAppCompatActivity {
         }
 
         mAnimatedNotificationView = findViewById(R.id.guide_container_view);
-        mAnimatedNotificationView.setIsMainPageGuide(mIsFromGuide);
+        mAnimatedNotificationView.setStartFrom(mFrom);
         mAnimatedNotificationView.startAnimations();
 
         BugleAnalytics.logEvent("NotificationCleaner_Guide_Show", true);

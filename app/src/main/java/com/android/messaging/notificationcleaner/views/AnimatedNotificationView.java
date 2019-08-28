@@ -21,6 +21,7 @@ import com.android.messaging.R;
 import com.android.messaging.datamodel.NotificationServiceV18;
 import com.android.messaging.notificationcleaner.NotificationBarUtil;
 import com.android.messaging.notificationcleaner.NotificationCleanerConstants;
+import com.android.messaging.notificationcleaner.NotificationCleanerTest;
 import com.android.messaging.notificationcleaner.activity.NCPermissionGuideActivity;
 import com.android.messaging.notificationcleaner.activity.NotificationBlockedActivity;
 import com.android.messaging.notificationcleaner.data.NotificationCleanerProvider;
@@ -62,13 +63,14 @@ public class AnimatedNotificationView extends RelativeLayout {
     private ImageView phoneBackgroundImageView;
     private LinearLayout animationContainerLayout;
     private FlashButton mStartButton;
-    private boolean mIsMainPageGuide;
+    private String mStartFrom;
     private boolean shouldButtonFlash = true;
 
     @SuppressLint("HandlerLeak") // This handler holds activity reference for no longer than 120s
     private Handler handler = new Handler();
 
-    @SuppressLint("HandlerLeak") // This mCheckPermissionHandler holds activity reference for no longer than 120s
+    @SuppressLint("HandlerLeak")
+    // This mCheckPermissionHandler holds activity reference for no longer than 120s
     private Handler mCheckPermissionHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
@@ -78,9 +80,15 @@ public class AnimatedNotificationView extends RelativeLayout {
                         sendEmptyMessageDelayed(MSG_WHAT_NOTIFICATION_LISTENING_CHECK, INTERVAL_PERMISSION_CHECK);
                         break;
                     }
-                    BugleAnalytics.logEvent("NotificationCleaner_AccessGuide_Success", true);
+
+                    String from = getEventFromString();
+                    if (from != null) {
+                        BugleAnalytics.logEvent("NotificationCleaner_AccessGuide_Success",
+                                true, "from", from);
+                    }
+                    NotificationCleanerTest.logNotificationAccessGrant();
                     Intent intentSelf = new Intent(HSApplication.getContext(), NotificationBlockedActivity.class);
-                    intentSelf.putExtra(NotificationBlockedActivity.START_FROM, NotificationBlockedActivity.START_FROM_GUIDE_BAR);
+                    intentSelf.putExtra(NotificationBlockedActivity.START_FROM, mStartFrom);
                     intentSelf.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP
                             | Intent.FLAG_ACTIVITY_CLEAR_TOP
                             | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -107,8 +115,8 @@ public class AnimatedNotificationView extends RelativeLayout {
         super(context, attrs, defStyle);
     }
 
-    public void setIsMainPageGuide(boolean isMainPageGuide) {
-        this.mIsMainPageGuide = isMainPageGuide;
+    public void setStartFrom(String startFrom) {
+        this.mStartFrom = startFrom;
     }
 
     @Override
@@ -151,7 +159,6 @@ public class AnimatedNotificationView extends RelativeLayout {
 //                Utils.requestNotificationListeningPermission(HSApplication.getContext(), () -> {
 //                    BugleAnalytics.logEvent("NotificationCleaner_OpenSuccess");
 //                    sendGetActiveNotificationBroadcast();
-//                    SettingLauncherPadActivity.closeSettingsActivity(getContext());
 //                    if (AnimatedNotificationView.this.getContext() instanceof NotificationGuideActivity) {
 //                        Intent intentSelf = new Intent(HSApplication.getContext(), NotificationGuideActivity.class);
 //                        intentSelf.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
@@ -165,8 +172,13 @@ public class AnimatedNotificationView extends RelativeLayout {
 //                }, NotificationCleanerUtil.NotificationCleanerSourceType.GUIDE_START, "");
                 Intent intent = new Intent(NotificationAccessGuideActivity.ACTION_NOTIFICATION_LISTENER_SETTINGS);
                 getContext().startActivity(intent);
-                Threads.postOnMainThreadDelayed(()-> {
+                Threads.postOnMainThreadDelayed(() -> {
                     Navigations.startActivity(getContext(), NCPermissionGuideActivity.class);
+                    String from = getEventFromString();
+                    if (from != null) {
+                        BugleAnalytics.logEvent("NotificationCleaner_AccessGuide_Show",
+                                true, "from", from);
+                    }
                 }, 800);
                 mCheckPermissionHandler.removeMessages(MSG_WHAT_NOTIFICATION_LISTENING_CHECK);
                 mCheckPermissionHandler.sendEmptyMessageDelayed(MSG_WHAT_NOTIFICATION_LISTENING_CHECK, DELAY_START_TO_PERMISSION_CHECK);
@@ -265,5 +277,21 @@ public class AnimatedNotificationView extends RelativeLayout {
         super.onDetachedFromWindow();
         mCheckPermissionHandler.removeMessages(MSG_WHAT_NOTIFICATION_LISTENING_CANCEL);
         mCheckPermissionHandler.removeMessages(MSG_WHAT_NOTIFICATION_LISTENING_CHECK);
+    }
+
+    private String getEventFromString() {
+        String from = null;
+        switch (mStartFrom) {
+            case NotificationBlockedActivity.START_FROM_GUIDE_BAR:
+                from = "push";
+                break;
+            case NotificationBlockedActivity.START_FROM_GUIDE_FULL:
+                from = "full";
+                break;
+            case NotificationBlockedActivity.START_FROM_MAIN_PAGE:
+                from = "menu";
+                break;
+        }
+        return from;
     }
 }

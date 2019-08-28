@@ -131,13 +131,18 @@ public class NotificationBlockedActivity extends BaseActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mStartFrom = getIntent().getStringExtra(START_FROM);
+        if (START_FROM_GUIDE_BAR.equals(mStartFrom)) {
+            BugleAnalytics.logEvent("NotificationCleaner_GuidePush_Click", true);
+        }
+
         if (!Permissions.isNotificationAccessGranted()
                 || !NotificationCleanerProvider.isNotificationOrganizerSwitchOn()) {
             Intent intentGuide = new Intent(this, NotificationGuideActivity.class);
             intentGuide.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_SINGLE_TOP
                     | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            intentGuide.putExtra(NotificationGuideActivity.START_FROM, NotificationGuideActivity.START_FROM_NO_PERMISSION);
+            intentGuide.putExtra(START_FROM, mStartFrom);
             Navigations.startActivitySafely(this, intentGuide);
             finish();
             return;
@@ -158,7 +163,6 @@ public class NotificationBlockedActivity extends BaseActivity
         }
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        mStartFrom = getIntent().getStringExtra(START_FROM);
         mIsFromNotification = START_FROM_NOTIFICATION_BAR.equals(mStartFrom);
 
         mClearAllBtn = findViewById(R.id.notification_btn_delete);
@@ -280,10 +284,27 @@ public class NotificationBlockedActivity extends BaseActivity
         if (!mIsShownLogged) {
             mIsShownLogged = true;
             Map<String, String> params = new HashMap<>();
-            params.put("type", mStartFrom);
-            params.put("number", getStringByNotificationCount(blockedNotificationInfo.size()));
-            BugleAnalytics.logEvent("NotificationCleaner_Homepage_Show", params);
-            NotificationCleanerTest.logNcHomepageShow();
+            String from = null;
+            switch (mStartFrom) {
+                case START_FROM_GUIDE_BAR:
+                    from = "guide_bar";
+                    break;
+                case START_FROM_MAIN_PAGE:
+                    from = "menu";
+                    break;
+                case START_FROM_NOTIFICATION_BAR:
+                    from = "bar";
+                    break;
+                case START_FROM_GUIDE_FULL:
+                    from = "guide_full";
+                    break;
+            }
+            if (from != null) {
+                params.put("type", from);
+                params.put("number", getStringByNotificationCount(blockedNotificationInfo.size()));
+                BugleAnalytics.logEvent("NotificationCleaner_Homepage_Show", params);
+                NotificationCleanerTest.logNcHomepageShow();
+            }
         }
         mProgressBar.setVisibility(View.GONE);
         if (null == blockedNotificationInfo) {

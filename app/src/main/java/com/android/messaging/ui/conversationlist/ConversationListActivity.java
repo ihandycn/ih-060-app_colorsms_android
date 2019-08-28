@@ -12,7 +12,6 @@ import android.provider.Telephony;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.pm.ShortcutManagerCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -56,6 +55,7 @@ import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.mmslib.SqliteWrapper;
 import com.android.messaging.notificationcleaner.NotificationCleanerTest;
 import com.android.messaging.notificationcleaner.NotificationCleanerUtil;
+import com.android.messaging.notificationcleaner.NotificationPushGuideUtils;
 import com.android.messaging.notificationcleaner.activity.NotificationBlockedActivity;
 import com.android.messaging.notificationcleaner.activity.NotificationGuideActivity;
 import com.android.messaging.privatebox.AppPrivateLockManager;
@@ -90,7 +90,6 @@ import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
-import com.android.messaging.ui.smspro.BillingActivity;
 import com.android.messaging.ui.wallpaper.WallpaperDownloader;
 import com.android.messaging.ui.wallpaper.WallpaperInfos;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
@@ -389,8 +388,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
         Preferences.getDefault().doOnce(() -> {
             Intent notificationGuideIntent = new Intent(this, NotificationGuideActivity.class);
-            notificationGuideIntent.putExtra(NotificationGuideActivity.START_FROM,
-                    NotificationGuideActivity.START_FROM_FULL_GUIDE);
+            notificationGuideIntent.putExtra(NotificationBlockedActivity.START_FROM,
+                    NotificationBlockedActivity.START_FROM_GUIDE_FULL);
             Navigations.startActivitySafely(this, notificationGuideIntent);
         }, "show_notification_cleaner_full_guide");
     }
