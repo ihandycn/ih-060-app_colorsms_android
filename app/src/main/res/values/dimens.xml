@@ -268,6 +268,8 @@
     <dimen name="notification_cleaner_animated_cross_line_marginTop">38dp</dimen>
     <dimen name="notification_cleaner_animated_cross_line_adjust_x">7dp</dimen>
     <dimen name="notification_cleaner_animated_init_item_radius">3dp</dimen>
+    <dimen name="notification_cleaner_notification_icon_width">40dp</dimen>
+    <dimen name="notification_cleaner_notification_icon_height">40dp</dimen>
     <dimen name="notification_cleaner_notification_bar_margin">10dp</dimen>
     <dimen name="action_btn_anim_translation">72dp</dimen>
 

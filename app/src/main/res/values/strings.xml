@@ -1404,5 +1404,7 @@
 
     <string name="result_page_optimized_healthy">Your phone is optimal now!</string>
     <string name="notification_cleaner_permission_guide_title">Find %1$s and turn it on. No private info will be collected.</string>
+
+    <string name="notification_cleaner_push_title">Block Junk Notifications </string>
 </resources>
 
