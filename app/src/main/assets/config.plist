@@ -1244,11 +1244,11 @@
 						<key>OutgoingBubbleTextColor</key>
 						<string>#000000</string>
 						<key>BannerAdBgColor</key>
-						<string>#b3ffffff</string>
+						<string>#33000000</string>
 						<key>BannerAdActionColor</key>
-						<string>#80000000</string>
+						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#000000</string>
+						<string>#fefefe</string>
 						<key>ThemeColor</key>
 						<string>#18b9b7</string>
 						<key>PreviewUrl</key>
@@ -1308,11 +1308,11 @@
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
-						<string>#40000000</string>
+						<string>#80000000</string>
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#fefefe</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -1372,11 +1372,11 @@
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
-						<string>#40ffffff</string>
+						<string>#59000000</string>
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#fefefe</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -1436,11 +1436,11 @@
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
-						<string>#40ffffff</string>
+						<string>#26ffffff</string>
 						<key>BannerAdActionColor</key>
-						<string>#80ffffff</string>
+						<string>#80e0f4ff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#e0f4ff</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -1500,11 +1500,11 @@
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
-						<string>#40ffffff</string>
+						<string>#40000000</string>
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#fefefe</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -1564,11 +1564,11 @@
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
-						<string>#40000000</string>
+						<string>#99ffffff</string>
 						<key>BannerAdActionColor</key>
-						<string>#80ffffff</string>
+						<string>#801d2023</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#1d2023</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -1694,11 +1694,11 @@
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
-						<string>#40000000</string>
+						<string>#40ffffff</string>
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#fefefe</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -1824,11 +1824,11 @@
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
-						<string>#33ffffff</string>
+						<string>#59ffffff</string>
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#fefefe</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -1888,11 +1888,11 @@
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
-						<string>#33ffffff</string>
+						<string>#33c6d3fb</string>
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#fefefe</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -2016,11 +2016,11 @@
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
-						<string>#40000000</string>
+						<string>#33ffffff</string>
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#fefefe</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -2080,11 +2080,11 @@
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
-						<string>#40000000</string>
+						<string>#66000000</string>
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#fefefe</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -2148,7 +2148,7 @@
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#fefefe</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -2208,11 +2208,11 @@
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
-						<string>#40000000</string>
+						<string>#33ffffff</string>
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#fefefe</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -2272,11 +2272,11 @@
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
-						<string>#40000000</string>
+						<string>#4c000000</string>
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#fefefe</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -2336,11 +2336,11 @@
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
-						<string>#40000000</string>
+						<string>#40fd9344</string>
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#fefefe</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -2468,7 +2468,7 @@
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#fefefe</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -2596,7 +2596,7 @@
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#fefefe</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -2660,7 +2660,7 @@
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#fefefe</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -2720,11 +2720,11 @@
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
-						<string>#40000000</string>
+						<string>#19000000</string>
 						<key>BannerAdActionColor</key>
-						<string>#2caef8</string>
+						<string>#801d2023</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#2caef8</string>
+						<string>#1d2023</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -2788,7 +2788,7 @@
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#fefefe</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -2852,7 +2852,7 @@
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#fefefe</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -3426,11 +3426,11 @@
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
-						<string>#40000000</string>
+						<string>#33000000</string>
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#fefefe</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
@@ -3490,11 +3490,11 @@
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
-						<string>#40000000</string>
+						<string>#4c000000</string>
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
+						<string>#fefefe</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
