@@ -151,9 +151,10 @@ public class AnimatedNotificationView extends RelativeLayout {
                 Intent intentBlocked = new Intent(getContext(), NotificationBlockedActivity.class);
                 intentBlocked.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                         | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                intentBlocked.putExtra(NotificationBlockedActivity.START_FROM, mStartFrom);
+                Navigations.startActivitySafely(getContext(), intentBlocked);
                 Preferences.get(BugleFiles.NOTIFICATION_PREFS)
                         .putLong(NotificationCleanerConstants.NOTIFICATION_CLEANER_USAGE_TIME, System.currentTimeMillis());
-                Navigations.startActivitySafely(getContext(), intentBlocked);
                 ((Activity) getContext()).finish();
             } else {
 //                Utils.requestNotificationListeningPermission(HSApplication.getContext(), () -> {

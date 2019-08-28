@@ -148,7 +148,8 @@ public class ResultPageActivity extends HSAppCompatActivity implements INotifica
         if (mExitBtn != null) {
             mExitBtn.setVisible(false);
             mExitBtn.setOnMenuItemClickListener(menuItem -> {
-                onBackFromAdContent();
+                //onBackFromAdContent();
+                backToNCPageIfNeeded();
                 return false;
             });
         }
@@ -162,7 +163,6 @@ public class ResultPageActivity extends HSAppCompatActivity implements INotifica
     }
 
     private void onBackFromAdContent() {
-
         Intent intent = new Intent(this, NotificationBlockedActivity.class);
         intent.putExtra(NotificationBlockedActivity.START_FROM,
                 NotificationBlockedActivity.START_FROM_RESULT_AD_PAGE);
@@ -196,7 +196,6 @@ public class ResultPageActivity extends HSAppCompatActivity implements INotifica
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                finish();
                 backToNCPageIfNeeded();
                 return true;
         }
@@ -205,19 +204,23 @@ public class ResultPageActivity extends HSAppCompatActivity implements INotifica
 
     @Override
     public void onBackPressed() {
-        if (mContentType == ResultContentType.AD) {
-            onBackFromAdContent();
-            return;
-        }
-
-        finish();
+//        if (mContentType == ResultContentType.AD) {
+//            onBackFromAdContent();
+//            return;
+//        }
+//
+//        finish();
+        backToNCPageIfNeeded();
     }
 
     private void backToNCPageIfNeeded() {
         if (NotificationCleanerUtil.getNotificationBlockedActivityIllustratePageShowingState() < NotificationCleanerUtil.NOTIFICATION_STATE_SHOWED) {
             NotificationCleanerUtil.setNotificationBlockedActivityIllustratePageShowingState(NotificationCleanerUtil.NOTIFICATION_STATE_SHOWING);
-            Navigations.startActivitySafely(this, new Intent(this, NotificationBlockedActivity.class));
         }
+        Intent intent = new Intent(this, NotificationBlockedActivity.class);
+        intent.putExtra(NotificationBlockedActivity.START_FROM, NotificationBlockedActivity.START_FROM_RESULT_AD_PAGE);
+        Navigations.startActivitySafely(this, intent);
+        finish();
     }
 
     @Override

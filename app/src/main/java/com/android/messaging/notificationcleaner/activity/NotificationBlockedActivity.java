@@ -367,12 +367,17 @@ public class NotificationBlockedActivity extends BaseActivity
         mNotificationAdapter.updateDataSet(flexibleItems);
         mNotificationAdapter.setStickyHeaders(true);
 
-        if (NotificationCleanerUtil.getNotificationBlockedActivityIllustratePageShowingState()
-                == NotificationCleanerUtil.NOTIFICATION_STATE_SHOWING
-                && flexibleItems.isEmpty()) {
+        if (!flexibleItems.isEmpty() &&
+                NotificationCleanerUtil.getNotificationBlockedActivityIllustratePageShowingState()
+                == NotificationCleanerUtil.NOTIFICATION_STATE_SHOWING) {
+            NotificationCleanerUtil.setNotificationBlockedActivityIllustratePageShowingState(NotificationCleanerUtil.NOTIFICATION_STATE_SHOWED);
+        }
+
+        if (flexibleItems.isEmpty()
+                && NotificationCleanerUtil.getNotificationBlockedActivityIllustratePageShowingState()
+                == NotificationCleanerUtil.NOTIFICATION_STATE_SHOWING) {
             mEmptyView.setVisibility(View.GONE);
             mIllustrationView.setVisibility(View.VISIBLE);
-            NotificationCleanerUtil.setNotificationBlockedActivityIllustratePageShowingState(NotificationCleanerUtil.NOTIFICATION_STATE_SHOWED);
         } else {
             mIllustrationView.setVisibility(View.GONE);
             mEmptyView.setVisibility(flexibleItems.isEmpty() ? View.VISIBLE : View.GONE);
@@ -454,9 +459,7 @@ public class NotificationBlockedActivity extends BaseActivity
         HSLog.d(NotificationCleanerConstants.TAG, "onResume(), start");
         if (mClearAllBtn.isClickable()) {
             fetchAndUpdateBlockNotificationList();
-        }
-
-        if (null != mNotificationDataList && mIsClearAll) {
+        } else if (null != mNotificationDataList && mIsClearAll) {
             updateBlockNotificationDataSet(mNotificationDataList);
         }
 
@@ -493,6 +496,11 @@ public class NotificationBlockedActivity extends BaseActivity
         HSLog.d(NotificationCleanerConstants.TAG, "onDestroy()");
         getContentResolver().unregisterContentObserver(mBlockListContentObserver);
         HSGlobalNotificationCenter.removeObserver(this);
+
+        if (NotificationCleanerUtil.getNotificationBlockedActivityIllustratePageShowingState()
+                        == NotificationCleanerUtil.NOTIFICATION_STATE_SHOWING) {
+            NotificationCleanerUtil.setNotificationBlockedActivityIllustratePageShowingState(NotificationCleanerUtil.NOTIFICATION_STATE_SHOWED);
+        }
 
         if (mAdLoader != null) {
             mAdLoader.cancel();
