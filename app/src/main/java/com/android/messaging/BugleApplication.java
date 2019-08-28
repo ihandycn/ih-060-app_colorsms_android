@@ -23,7 +23,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -45,6 +44,7 @@ import com.android.messaging.datamodel.NotificationServiceV18;
 import com.android.messaging.debug.BlockCanaryConfig;
 import com.android.messaging.debug.CrashGuard;
 import com.android.messaging.debug.UploadLeakService;
+import com.android.messaging.notificationcleaner.BuglePackageManager;
 import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.receiver.SmsReceiver;
 import com.android.messaging.scheduledmessage.MessageScheduleManager;
@@ -102,6 +102,7 @@ import com.squareup.leakcanary.LeakCanary;
 import com.superapps.broadcast.BroadcastCenter;
 import com.superapps.debug.SharedPreferencesOptimizer;
 import com.superapps.taskrunner.ParallelBackgroundTask;
+import com.superapps.taskrunner.SerialBackgroundTask;
 import com.superapps.taskrunner.SyncMainThreadTask;
 import com.superapps.taskrunner.Task;
 import com.superapps.taskrunner.TaskRunner;
@@ -371,9 +372,13 @@ public class BugleApplication extends HSApplication implements UncaughtException
             initWorks.add(new ParallelBackgroundTask("ToggleNotificationListenerService", () -> {
                 try {
                     NotificationServiceV18.toggleNotificationListenerService();
-                } catch (Throwable e) {
+                } catch (Throwable ignored) {
 
                 }
+            }));
+
+            initWorks.add(new SerialBackgroundTask("init application infos", () -> {
+                BuglePackageManager.getInstance().updateInstalledApplicationsOnWorkerThread();
             }));
             TaskRunner.run(initWorks);
         } finally {
