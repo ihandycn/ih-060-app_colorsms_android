@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:fitsSystemWindows="false">
+
+    <LinearLayout
+        android:id="@+id/guide_container_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include layout="@layout/top_tool_bar_view" />
+
+        <RelativeLayout
+            android:id="@+id/content_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F3F3F3">
+
+            <FrameLayout
+                android:id="@+id/ad_container"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:visibility="gone" />
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/ad_container"
+                android:clipChildren="true">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/notification_block_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:theme="@style/Theme.CustomOverScroll" />
+            </FrameLayout>
+
+            <include layout="@layout/sticky_header_layout" />
+
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:paddingBottom="50dp">
+
+                <RelativeLayout
+                    android:id="@+id/notification_block_illustration_page"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone">
+
+                    <com.superapps.view.FixedRatioLayout
+                        android:id="@+id/guide_iv"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginStart="20dp"
+                        app:aspectRatio="1.2">
+
+                        <android.support.v7.widget.AppCompatImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/notification_cleaner_illustration_page_bg" />
+                    </com.superapps.view.FixedRatioLayout>
+
+                    <com.android.messaging.ui.view.MessagesTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/guide_iv"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="25dp"
+                        android:gravity="center"
+                        android:text="@string/notification_cleaner_illustration_page"
+                        android:textColor="#DF000000"
+                        android:textSize="20sp"
+                        app:font_family_changeable="false"
+                        app:typeface="@string/custom_font_regular" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/notification_block_empty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:paddingBottom="50dp"
+                    android:visibility="invisible">
+
+                    <android.support.v7.widget.AppCompatImageView
+                        android:id="@+id/empty_iv"
+                        android:layout_width="200dp"
+                        android:layout_height="200dp"
+                        android:layout_centerHorizontal="true"
+                        android:scaleType="fitXY"
+                        app:srcCompat="@drawable/notification_cleaner_block_empty" />
+
+                    <com.android.messaging.ui.view.MessagesTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/empty_iv"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="11dp"
+                        android:text="@string/notification_cleaner_hidden_description"
+                        android:textColor="#bdc0c9"
+                        android:textSize="15.3sp"
+                        app:font_family_changeable="false"
+                        app:typeface="@string/custom_font_regular" />
+                </RelativeLayout>
+            </FrameLayout>
+
+            <ProgressBar
+                android:id="@+id/notification_block_progress_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true" />
+        </RelativeLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/notification_btn_delete"
+        android:layout_width="match_parent"
+        android:layout_height="46.7dp"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="18dp"
+        android:layout_marginLeft="19dp"
+        android:layout_marginRight="19dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:shadowColor="#33000000"
+        android:shadowDy="6"
+        android:shadowRadius="9"
+        android:textAllCaps="true"
+        android:textColor="@color/clean_btn_text_color"
+        android:textSize="14sp"
+        android:translationY="@dimen/action_btn_anim_translation"
+        android:visibility="gone" />
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/settings_for_whitelist"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginEnd="2dp"
+        android:layout_marginTop="46dp"
+        android:background="@drawable/notification_cleaner_settings_guide_bg"
+        android:gravity="center_vertical"
+        android:text="@string/notification_cleaner_guide_white_list"
+        android:textColor="#333333"
+        android:textSize="13sp"
+        android:visibility="gone"
+        app:font_family_changeable="false"
+        app:typeface="@string/custom_font_regular" />
+</FrameLayout>

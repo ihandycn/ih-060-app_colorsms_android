@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingTop="70dp"
+    tools:background="@color/primary_color">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:contentDescription="@null"
+            android:src="@drawable/result_page_card_optimized_phone" />
+
+        <ImageView
+            android:id="@+id/screen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:contentDescription="@null"
+            android:src="@drawable/result_page_card_optimized_screen" />
+
+        <com.android.messaging.notificationcleaner.resultpage.content.CardOptimizedFlashView
+            android:id="@+id/flash_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignBottom="@id/screen"
+            android:layout_alignEnd="@id/screen"
+            android:layout_alignLeft="@id/screen"
+            android:layout_alignRight="@id/screen"
+            android:layout_alignStart="@id/screen"
+            android:layout_alignTop="@id/screen" />
+
+        <ImageView
+            android:id="@+id/shield"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/phone"
+            android:layout_marginBottom="-12dp"
+            android:layout_marginLeft="-25dp"
+            android:layout_marginStart="-25dp"
+            android:layout_toEndOf="@id/phone"
+            android:layout_toRightOf="@id/phone"
+            android:alpha="0"
+            android:contentDescription="@null"
+            android:src="@drawable/result_page_card_optimized_shield_default"
+            tools:alpha="1" />
+
+        <ImageView
+            android:id="@+id/star_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/phone"
+            android:layout_marginEnd="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="-8dp"
+            android:layout_toLeftOf="@id/phone"
+            android:layout_toStartOf="@id/phone"
+            android:contentDescription="@null"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
+            android:src="@drawable/result_page_card_optimized_star" />
+
+        <ImageView
+            android:id="@+id/star_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/phone"
+            android:layout_alignRight="@id/phone"
+            android:layout_alignTop="@id/phone"
+            android:layout_marginEnd="-20dp"
+            android:layout_marginRight="-20dp"
+            android:layout_marginTop="-43dp"
+            android:contentDescription="@null"
+            android:src="@drawable/result_page_card_optimized_star" />
+
+        <ImageView
+            android:id="@+id/star_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@id/phone"
+            android:layout_alignRight="@id/phone"
+            android:layout_alignTop="@id/phone"
+            android:layout_marginEnd="-40dp"
+            android:layout_marginRight="-40dp"
+            android:layout_marginTop="64dp"
+            android:contentDescription="@null"
+            android:scaleX="0.6"
+            android:scaleY="0.6"
+            android:src="@drawable/result_page_card_optimized_star" />
+
+        <ImageView
+            android:id="@+id/tick"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/result_page_card_optimized_tick_clip" />
+
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/phone"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="32dp"
+            android:includeFontPadding="false"
+            android:text="@string/result_page_optimized_healthy"
+            android:textColor="#66ffffff"
+            android:textSize="14sp"
+            app:font_family_changeable="false"
+            app:typeface="@string/custom_font_regular" />
+    </RelativeLayout>
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/btn_ok"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="30dp"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:text="@string/ok"
+        android:textColor="#4285f4"
+        android:textSize="14sp"
+        app:font_family_changeable="false"
+        app:typeface="@string/custom_font_medium" />
+</LinearLayout>
