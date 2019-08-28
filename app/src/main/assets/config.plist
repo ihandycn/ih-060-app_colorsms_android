@@ -1564,7 +1564,7 @@
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
-						<string>#99ffffff</string>
+						<string>#66ffffff</string>
 						<key>BannerAdActionColor</key>
 						<string>#801d2023</string>
 						<key>BannerAdActionTextColor</key>
@@ -1824,7 +1824,7 @@
 						<key>BubbleAdColor</key>
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
-						<string>#59ffffff</string>
+						<string>#40ffffff</string>
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
