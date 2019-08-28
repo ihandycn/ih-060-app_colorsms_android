@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="66dp">
+
+    <RelativeLayout
+        android:id="@+id/rear_left_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#dcdcdc"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rear_right_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#dcdcdc"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            tools:ignore="ContentDescription" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/front_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/material_compat_bg_white"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
+
+        <ImageView
+            android:id="@+id/app_icon_image"
+            android:layout_width="@dimen/notification_cleaner_apps_list_icon_size"
+            android:layout_height="@dimen/notification_cleaner_apps_list_icon_size"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:layout_marginStart="12dp"
+            tools:ignore="ContentDescription" />
+
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/notification_posted_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="10dp"
+            android:alpha="0.6"
+            android:includeFontPadding="false"
+            android:textColor="#afb1be"
+            android:textSize="10sp"
+            app:font_family_changeable="false"
+            app:typeface="@string/custom_font_regular"
+            tools:ignore="SmallSp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="15dp"
+            android:layout_toEndOf="@id/app_icon_image"
+            android:layout_toStartOf="@id/notification_posted_time"
+            android:orientation="vertical">
+
+            <com.android.messaging.ui.view.MessagesTextView
+                android:id="@+id/app_name_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:includeFontPadding="false"
+                android:singleLine="true"
+                android:textColor="#19191c"
+                android:textSize="16.7sp"
+                app:font_family_changeable="false"
+                app:typeface="@string/custom_font_regular" />
+
+            <com.android.messaging.ui.view.MessagesTextView
+                android:id="@+id/app_description_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:textColor="#878a95"
+                android:textSize="12sp"
+                android:visibility="gone"
+                app:font_family_changeable="false"
+                app:typeface="@string/custom_font_regular" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.67dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginLeft="70dp"
+        android:layout_marginRight="16dp"
+        android:layout_marginStart="70dp"
+        android:background="#eaeaea" />
+</RelativeLayout>
