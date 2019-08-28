@@ -24,6 +24,7 @@ import com.android.messaging.ui.appsettings.RingtoneEntranceAutopilotUtils;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
+import com.android.messaging.util.UriUtil;
 import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Navigations;
@@ -119,6 +120,7 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("audio/*");
         intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         Navigations.startActivityForResultSafely(this, intent, REQUEST_CODE_START_FILE_RINGTONE_PICKER);
     }
 
@@ -142,12 +144,10 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
     }
 
     private void putRingtoneIntoIntent(RingtoneInfo info) {
-        HSLog.i("test_test put into Intent", info.uri + "");
         Intent intent = new Intent();
         intent.putExtra(EXTRA_CUR_RINGTONE_INFO, info);
         setResult(RESULT_OK, intent);
         mSetInfo = info;
-
         if (info.type != RingtoneInfo.TYPE_APP) {
             mAdapter.clearChoose();
         }
@@ -176,8 +176,13 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
                 return;
             }
             Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
+            HSLog.i("test_test", "onActivityResult: system ringtone: " + uri.toString());
+            if (UriUtil.isFileUri(uri)) {
+                HSLog.i("test_test", uri.toString() + " is File ");
+                handleUriFromFile(uri);
+                return ;
+            }
             String uriStr = uri == null ? RingtoneInfoManager.SILENT_URI : uri.toString();
-            HSLog.i("test_test system", uriStr);
             putRingtoneIntoIntent(RingtoneInfoManager.getSystemRingtoneInfo(uriStr));
         } else if (requestCode == REQUEST_CODE_START_FILE_RINGTONE_PICKER) {
             if (resultCode != RESULT_OK) {
@@ -190,40 +195,48 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
             if (uri == null) {
                 return;
             }
-            File file = new File(getFilesDir(), "file_ringtone");
-            try {
-                if (file.exists()) {
-                    file.delete();
-                }
-                file.createNewFile();
-                InputStream fis = getContentResolver().openInputStream(uri);
-                if (fis == null) {
-                    throw new Exception();
-                }
-                FileOutputStream fos = new FileOutputStream(file);
-                byte[] buffer = new byte[2 * 1024];
-                while (fis.read(buffer) != -1) {
-                    fos.write(buffer);
-                }
-                fos.close();
-                fis.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-                return;
-            }
-            String fileName = getFileFromContentUri(uri, this);
-            if (Build.VERSION.SDK_INT < 24) {
-                uri = Uri.fromFile(file);
-            } else {
-                uri = FileProvider.getUriForFile(this, getResources().getString(R.string.file_provider), file);
-            }
-            HSLog.i("test_test file", uri.toString());
-            RingtoneInfo info = new RingtoneInfo();
-            info.uri = uri.toString();
-            info.name = fileName;
-            info.type = RingtoneInfo.TYPE_FILE;
-            putRingtoneIntoIntent(info);
+            HSLog.i("test_test", "onActivityResult: file: " + uri.toString());
+            handleUriFromFile(uri);
         }
+    }
+
+    private void handleUriFromFile(Uri uri) {
+        File file = new File(getFilesDir(), "file_ringtone");
+        try {
+            if (file.exists()) {
+                file.delete();
+            }
+            file.createNewFile();
+            InputStream fis = getContentResolver().openInputStream(uri);
+            if (fis == null) {
+                throw new Exception();
+            }
+            FileOutputStream fos = new FileOutputStream(file);
+            byte[] buffer = new byte[2 * 1024];
+            while (fis.read(buffer) != -1) {
+                fos.write(buffer);
+            }
+            fos.close();
+            fis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return;
+        }
+        String fileName = getFileFromContentUri(uri, this);
+        if (Build.VERSION.SDK_INT < 24) {
+            uri = Uri.fromFile(file);
+        } else {
+            uri = FileProvider.getUriForFile(this, getResources().getString(R.string.file_provider), file);
+        }
+        RingtoneInfo info = new RingtoneInfo();
+        info.uri = uri.toString();
+        info.name = fileName;
+        info.type = RingtoneInfo.TYPE_FILE;
+        // add grant to system process to read our file provider
+        getApplicationContext().grantUriPermission("com.android.systemui",
+                Uri.parse(info.uri), Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        putRingtoneIntoIntent(info);
     }
 
     public static String getFileFromContentUri(Uri contentUri, Context context) {
