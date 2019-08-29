@@ -362,26 +362,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 navigationView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
         });
-
-        mHomeKeyWatcher = new HomeKeyWatcher(this);
-        mHomeKeyWatcher.setOnHomePressedListener(new HomeKeyWatcher.OnHomePressedListener() {
-            @Override
-            public void onHomePressed() {
-                ExitAdMonitor.getInstance().finishExitAdActivity();
-                if (mInterstitialAd != null) {
-                    mInterstitialAd.release();
-                }
-                mIsExitAdShown = false;
-                if (mExitAppAnimationViewContainer != null) {
-                    mExitAppAnimationViewContainer.setVisibility(View.GONE);
-                }
-            }
-
-            @Override
-            public void onRecentsPressed() {
-            }
-        });
-
     }
 
     private void onPostPageVisible() {
@@ -797,8 +777,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
         FiveStarRateDialog.dismissDialogs();
         HSGlobalNotificationCenter.removeObserver(this);
-        mHomeKeyWatcher.stopWatch();
-        mHomeKeyWatcher = null;
+        if (mHomeKeyWatcher != null) {
+            mHomeKeyWatcher.stopWatch();
+            mHomeKeyWatcher = null;
+        }
 
     }
 
@@ -925,6 +907,24 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
                 @Override
                 public void onAdDisplayed() {
+                    mHomeKeyWatcher = new HomeKeyWatcher(HSApplication.getContext());
+                    mHomeKeyWatcher.setOnHomePressedListener(new HomeKeyWatcher.OnHomePressedListener() {
+                        @Override
+                        public void onHomePressed() {
+                            ExitAdMonitor.getInstance().finishExitAdActivity();
+                            if (mInterstitialAd != null) {
+                                mInterstitialAd.release();
+                            }
+                            mIsExitAdShown = false;
+                            if (mExitAppAnimationViewContainer != null) {
+                                mExitAppAnimationViewContainer.setVisibility(View.GONE);
+                            }
+                        }
+
+                        @Override
+                        public void onRecentsPressed() {
+                        }
+                    });
                     mHomeKeyWatcher.startWatch();
                     Threads.postOnMainThreadDelayed(() -> {
                         if (mExitAppAnimationViewContainer == null) {
