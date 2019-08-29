@@ -57,8 +57,8 @@ public class NotificationCleanerSettingActivity extends BaseActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        UiUtils.setStatusBarColor(this, getColor(R.color.primary_color));
-        toolbar.setBackgroundColor(getColor(R.color.primary_color));
+        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.primary_color));
+        toolbar.setBackgroundColor(getResources().getColor(R.color.primary_color));
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setTypeface(Typefaces.getCustomSemiBold());
         title.setText(getString(R.string.notification_cleaner_title));
@@ -193,8 +193,9 @@ public class NotificationCleanerSettingActivity extends BaseActivity {
                 contentTv.setText(contentSpannableString);
 
                 functionOffView.findViewById(R.id.func_off_dialog_btn_yes).setBackground(
-                        BackgroundDrawables.createBackgroundDrawable(getColor(R.color.primary_color),
-                                getColor(R.color.ripples_ripple_color),
+                        BackgroundDrawables.createBackgroundDrawable(
+                                getResources().getColor(R.color.primary_color),
+                                getResources().getColor(R.color.ripples_ripple_color),
                                 0, 0, Dimensions.pxFromDp(3.3f), 0,
                                 true, true
                         ));
@@ -208,7 +209,7 @@ public class NotificationCleanerSettingActivity extends BaseActivity {
                 });
                 functionOffView.findViewById(R.id.func_off_dialog_btn_no).setBackground(
                         BackgroundDrawables.createBackgroundDrawable(0xffF7F8F9,
-                                getColor(R.color.ripples_ripple_color),
+                                getResources().getColor(R.color.ripples_ripple_color),
                                 0, 0, 0, Dimensions.pxFromDp(3.3f),
                                 true, true
                         ));
