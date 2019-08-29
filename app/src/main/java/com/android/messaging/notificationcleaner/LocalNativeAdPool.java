@@ -1,6 +1,5 @@
 package com.android.messaging.notificationcleaner;
 
-import com.android.messaging.util.BugleAnalytics;
 import com.ihs.commons.utils.HSLog;
 
 import net.appcloudbox.ads.base.AcbNativeAd;
@@ -28,14 +27,10 @@ public class LocalNativeAdPool {
 
     public AcbNativeAd fetch(String placementName) {
         AcbNativeAd nativeAd = mAdMap.remove(placementName);
-//        if (nativeAd != null
-//                && nativeAd.isExpired()
-//                && (!HSConfig.optBoolean(true, "Application", "AdsManager", "Placements", placementName, "ExpireEnabled"))) {
-//            nativeAd.release();
-//            nativeAd = null;
-//        }
-        if (nativeAd != null) {
-            BugleAnalytics.logEvent("Security_Ad_Expire_Rate", placementName, String.valueOf(nativeAd.isExpired()));
+        if (nativeAd != null
+                && nativeAd.isExpired()) {
+            nativeAd.release();
+            nativeAd = null;
         }
         return nativeAd;
     }

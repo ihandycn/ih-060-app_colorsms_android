@@ -2,7 +2,6 @@ package com.android.messaging.notificationcleaner;
 
 import android.support.annotation.Nullable;
 
-import com.android.messaging.util.BugleAnalytics;
 import com.ihs.commons.utils.HSLog;
 
 import net.appcloudbox.ads.base.AcbInterstitialAd;
@@ -32,14 +31,10 @@ public class LocalInterstitialAdPool {
     public @Nullable
     AcbInterstitialAd fetch(String placementName) {
         AcbInterstitialAd interstitialAd = adMap.remove(placementName);
-//        if (interstitialAd != null
-//                && interstitialAd.isExpired()
-//                && (!HSConfig.optBoolean(true, "Application", "AdsManager", "Placements", placementName, "ExpireEnabled"))) {
-//            interstitialAd.release();
-//            interstitialAd = null;
-//        }
-        if (interstitialAd != null) {
-            BugleAnalytics.logEvent("Security_Ad_Expire_Rate", placementName, String.valueOf(interstitialAd.isExpired()));
+        if (interstitialAd != null
+                && interstitialAd.isExpired()) {
+            interstitialAd.release();
+            interstitialAd = null;
         }
         return interstitialAd;
     }
