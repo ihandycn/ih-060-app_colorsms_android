@@ -626,7 +626,6 @@ public class BugleDatabaseOperations {
                                                                final boolean shouldAutoSwitchSelfId) {
         Assert.isNotMainThread();
         Assert.isTrue(dbWrapper.getDatabase().inTransaction());
-
         final ContentValues values = new ContentValues();
         values.put(ConversationColumns.LATEST_MESSAGE_ID, messageId);
         values.put(ConversationColumns.SORT_TIMESTAMP, latestTimestamp);
@@ -1492,7 +1491,8 @@ public class BugleDatabaseOperations {
             cursor = dbWrapper.query(DatabaseHelper.MESSAGES_TABLE,
                     REFRESH_CONVERSATION_MESSAGE_PROJECTION,
                     MessageColumns.CONVERSATION_ID + "=? AND " +
-                            MessageColumns.STATUS + "!=" + MessageData.BUGLE_STATUS_OUTGOING_DRAFT,
+                            MessageColumns.STATUS + "!=" + MessageData.BUGLE_STATUS_OUTGOING_DRAFT + " AND " +
+                    MessageColumns.IS_DELETED + "!=" + "1",
                     new String[]{conversationId}, null, null,
                     MessageColumns.RECEIVED_TIMESTAMP + " DESC", "1" /* limit */);
 

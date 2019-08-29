@@ -566,13 +566,15 @@ public class ConversationListFragment extends Fragment implements ConversationLi
         HSGlobalNotificationCenter.addObserver(ConversationListActivity.CONVERSATION_LIST_DISPLAYED, this);
     }
 
-    @Override public void onDetach() {
+    @Override
+    public void onDetach() {
         super.onDetach();
         HSGlobalNotificationCenter.removeObserver(this);
         mDeferredRunnables.clear();
     }
 
-    @Override public void onReceive(String s, HSBundle hsBundle) {
+    @Override
+    public void onReceive(String s, HSBundle hsBundle) {
         switch (s) {
             case ConversationListActivity.CONVERSATION_LIST_DISPLAYED:
                 mRecyclerViewDisplayed = true;
@@ -669,7 +671,6 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             dataList.add(0, new AdItemData());
         }
         mAdapter.setDataList(dataList);
-        HSLog.d("conversation list has : " + dataList.size());
         if (adFirstPrepared && !dataList.isEmpty()) {
             if (Preferences.getDefault().getBoolean(PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE, true)) {
                 Threads.postOnMainThreadDelayed(this::tryShowTopNativeAd, 2000);
