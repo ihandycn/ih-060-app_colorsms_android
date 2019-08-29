@@ -66,8 +66,8 @@ public class ResultPageActivity extends HSAppCompatActivity implements INotifica
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        UiUtils.setStatusBarColor(this, getColor(R.color.primary_color));
-        toolbar.setBackgroundColor(getColor(R.color.primary_color));
+        UiUtils.setStatusBarColor(this, getResources().getColor(R.color.primary_color));
+        toolbar.setBackgroundColor(getResources().getColor(R.color.primary_color));
         TextView title = toolbar.findViewById(R.id.toolbar_title);
         title.setTypeface(Typefaces.getCustomSemiBold());
         title.setText(getString(R.string.notification_cleaner_title));
