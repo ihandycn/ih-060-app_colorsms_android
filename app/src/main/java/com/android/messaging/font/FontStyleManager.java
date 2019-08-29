@@ -21,7 +21,8 @@ public class FontStyleManager {
     }
 
     private FontStyleManager() {
-        mFontName = Preferences.getDefault().getString(PREF_KEY_MESSAGE_FONT_TYPE, FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE);
+        mFontName = Preferences.getDefault().getString(PREF_KEY_MESSAGE_FONT_TYPE,
+                FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE).toLowerCase();
         mFontLevel = Preferences.getDefault().getInt(PREF_KEY_MESSAGE_FONT_SCALE_LEVEL, 2);
     }
 
@@ -50,13 +51,7 @@ public class FontStyleManager {
     }
 
     public String getFontFamily() {
-        char[] chs = mFontName.toCharArray();
-        for (int i = 0; i < chs.length; i++) {
-            if (chs[i] <= 'Z' && chs[i] >= 'A') {
-                chs[i] = (char) (chs[i] + 'a' - 'A');
-            }
-        }
-        return String.valueOf(chs);
+        return mFontName == null ? FontUtils.MESSAGE_FONT_FAMILY_DEFAULT_VALUE : mFontName;
     }
 
     public static float getScaleByLevel(int level) {

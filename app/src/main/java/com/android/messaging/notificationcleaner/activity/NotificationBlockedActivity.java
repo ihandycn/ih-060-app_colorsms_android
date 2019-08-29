@@ -116,6 +116,7 @@ public class NotificationBlockedActivity extends BaseActivity
     private boolean mIsBlockNotificationCountRecorded;
     private boolean mIsClearAll;
     private boolean mIsShownLogged = false;
+    private boolean mIsAdChanceEventLogged = false;
     private String mStartFrom;
 
     private ContentObserver mBlockListContentObserver = new ContentObserver(new Handler()) {
@@ -316,6 +317,11 @@ public class NotificationBlockedActivity extends BaseActivity
                 NotificationCleanerTest.logNcHomepageShow();
             }
         }
+
+        if (!mIsAdChanceEventLogged) {
+            mIsAdChanceEventLogged = true;
+            BugleAnalytics.logEvent("NotificationCleaner_HomepageAd_Chance", true);
+        }
         mProgressBar.setVisibility(View.GONE);
         if (null == blockedNotificationInfo) {
             return;
@@ -394,7 +400,6 @@ public class NotificationBlockedActivity extends BaseActivity
 
             if (!flexibleItems.isEmpty() && !BillingManager.isPremiumUser()) {
                 initAdView();
-                BugleAnalytics.logEvent("NotificationCleaner_HomepageAd_Chance", true);
             }
         }
 
@@ -637,7 +642,11 @@ public class NotificationBlockedActivity extends BaseActivity
     }
 
     private void initAdView() {
-        if (mNativeAd != null || mNotificationAdapter.isEmpty()) {
+        if (mNativeAd != null) {
+            return;
+        }
+
+        if (mNotificationAdapter.isEmpty()) {
             return;
         }
         mAdLoader = AcbNativeAdManager.createLoaderWithPlacement(AdPlacement.NOTIFICATION_CLEANER_AD_PLACEMENT_APP_MANAGER);
