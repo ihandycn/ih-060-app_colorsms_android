@@ -712,16 +712,18 @@ public class BugleNotifications {
         }
         if (!isPrivateConversation || PrivateSettingManager.isNotificationEnable()) {
             processAndSend(state, silent, softSound, conversationId);
-            boolean isPrivacyMode = PrivacyModeSettings.getPrivacyMode(conversationId) != PrivacyModeSettings.NONE;
-            BugleAnalytics.logEvent("SMS_Notifications_Pushed", true,
-                    "PrivacyMode", String.valueOf(isPrivacyMode));
-            BugleFirebaseAnalytics.logEvent("SMS_Notifications_Pushed", "PrivacyMode", String.valueOf(isPrivacyMode));
-            AutopilotEvent.logTopicEvent("topic-768lyi3sp", "notification_pushed");
-            NotificationAccessAutopilotUtils.logNotificationPushed();
-            PopupsReplyAutopilotUtils.logNotificationPushed();
-            if (isPrivacyMode) {
-                BugleAnalytics.logEvent("SMS_PrivacyNotifications_Pushed");
-                BugleFirebaseAnalytics.logEvent("SMS_PrivacyNotifications_Pushed");
+            if (!TextUtils.isEmpty(conversationId)) {
+                boolean isPrivacyMode = PrivacyModeSettings.getPrivacyMode(conversationId) != PrivacyModeSettings.NONE;
+                BugleAnalytics.logEvent("SMS_Notifications_Pushed", true,
+                        "PrivacyMode", String.valueOf(isPrivacyMode));
+                BugleFirebaseAnalytics.logEvent("SMS_Notifications_Pushed", "PrivacyMode", String.valueOf(isPrivacyMode));
+                AutopilotEvent.logTopicEvent("topic-768lyi3sp", "notification_pushed");
+                NotificationAccessAutopilotUtils.logNotificationPushed();
+                PopupsReplyAutopilotUtils.logNotificationPushed();
+                if (isPrivacyMode) {
+                    BugleAnalytics.logEvent("SMS_PrivacyNotifications_Pushed");
+                    BugleFirebaseAnalytics.logEvent("SMS_PrivacyNotifications_Pushed");
+                }
             }
         }
     }

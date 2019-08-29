@@ -331,9 +331,9 @@ public class ProcessSentMessageAction extends Action {
             // this message.
             if (failed) {
                 BugleNotifications.update(false, BugleNotifications.UPDATE_ERRORS);
-                HSGlobalNotificationCenter.sendNotification(NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED);
+                HSGlobalNotificationCenter.sendNotificationOnMainThread(NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED);
             } else {
-                HSGlobalNotificationCenter.sendNotification(NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEED);
+                HSGlobalNotificationCenter.sendNotificationOnMainThread(NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEED);
             }
             BugleActionToasts.onSendMessageOrManualDownloadActionCompleted(
                     conversationId, !failed, status, isSms, subId, true/*isSend*/);

@@ -398,24 +398,21 @@ public class MessageBoxActivity extends AppCompatActivity implements INotificati
 
     @Override
     public void onReceive(String s, HSBundle hsBundle) {
-        Threads.postOnMainThread(() -> {
-            if (NOTIFICATION_FINISH_MESSAGE_BOX.equals(s)) {
-                finish(CLICK_CONTENT);
-            } else if (NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED.equals(s)) {
-                Toasts.showToast(R.string.message_box_send_failed_toast);
-                removeCurrentPage(REPLY);
-                BugleAnalytics.logEvent("SMS_Popups_Reply", true);
-                PopupsReplyAutopilotUtils.logPopupReply();
-            } else if (NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEED.equals(s)) {
-                Toast toast = Toast.makeText(HSApplication.getContext(), R.string.message_box_send_successfully_toast, Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.BOTTOM, 0, Dimensions.pxFromDp(44));
-                toast.show();
-                removeCurrentPage(REPLY);
-                BugleAnalytics.logEvent("SMS_Popups_Reply", true);
-                PopupsReplyAutopilotUtils.logPopupReply();
-            }
-        });
-
+        if (NOTIFICATION_FINISH_MESSAGE_BOX.equals(s)) {
+            finish(CLICK_CONTENT);
+        } else if (NOTIFICATION_MESSAGE_BOX_SEND_SMS_FAILED.equals(s)) {
+            Toasts.showToast(R.string.message_box_send_failed_toast);
+            removeCurrentPage(REPLY);
+            BugleAnalytics.logEvent("SMS_Popups_Reply", true);
+            PopupsReplyAutopilotUtils.logPopupReply();
+        } else if (NOTIFICATION_MESSAGE_BOX_SEND_SMS_SUCCEED.equals(s)) {
+            Toast toast = Toast.makeText(HSApplication.getContext(), R.string.message_box_send_successfully_toast, Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.BOTTOM, 0, Dimensions.pxFromDp(44));
+            toast.show();
+            removeCurrentPage(REPLY);
+            BugleAnalytics.logEvent("SMS_Popups_Reply", true);
+            PopupsReplyAutopilotUtils.logPopupReply();
+        }
     }
 
     @Override
