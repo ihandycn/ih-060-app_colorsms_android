@@ -208,7 +208,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private LightWeightCustomizeGuideController mCustomizeGuideController;
     private final BuglePrefs mPrefs = Factory.get().getApplicationPrefs();
     private HomeKeyWatcher mHomeKeyWatcher;
-    private boolean mIsHomeKeyPressed;
+    private boolean mIsHomeKeyPressedAfterExitAdShow;
 
 
     @Override
@@ -370,7 +370,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         mHomeKeyWatcher.setOnHomePressedListener(new HomeKeyWatcher.OnHomePressedListener() {
             @Override
             public void onHomePressed() {
-                mIsHomeKeyPressed = true;
+                mIsHomeKeyPressedAfterExitAdShow = true;
             }
 
             @Override
@@ -401,7 +401,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @DebugLog
     protected void onResume() {
         super.onResume();
-        mIsHomeKeyPressed = false;
+        mIsHomeKeyPressedAfterExitAdShow = false;
         if (mIsExitAdShown) {
             showExitAppAnimation();
             return;
@@ -979,7 +979,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @Override
     protected void onRestart() {
         super.onRestart();
-        if (!mIsHomeKeyPressed){
+        if (!mIsHomeKeyPressedAfterExitAdShow){
             return;
         }
         if (mIsExitAdShown) {
