@@ -1,5 +1,6 @@
 package com.android.messaging.notificationcleaner.floatwindow;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -36,7 +37,7 @@ public class NotificationCleanerAccessGuideAnimationDialog extends AnimationPerm
 
     @Override
     protected void onActionButtonClick(View v) {
-
+        ((Activity)getContext()).finish();
     }
 
     @Override
@@ -61,5 +62,17 @@ public class NotificationCleanerAccessGuideAnimationDialog extends AnimationPerm
     @Override
     protected boolean isShowConfirmDialog() {
         return true;
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        switch (ev.getAction()) {
+            case MotionEvent.ACTION_OUTSIDE:
+                ((Activity)getContext()).finish();
+                break;
+            default:
+                break;
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }

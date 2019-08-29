@@ -24,6 +24,7 @@ import com.android.messaging.notificationcleaner.NotificationCleanerConstants;
 import com.android.messaging.notificationcleaner.NotificationCleanerTest;
 import com.android.messaging.notificationcleaner.activity.NCPermissionGuideActivity;
 import com.android.messaging.notificationcleaner.activity.NotificationBlockedActivity;
+import com.android.messaging.notificationcleaner.activity.NotificationGuideActivity;
 import com.android.messaging.notificationcleaner.data.NotificationCleanerProvider;
 import com.android.messaging.ui.welcome.NotificationAccessGuideActivity;
 import com.android.messaging.util.BugleAnalytics;
@@ -87,8 +88,9 @@ public class AnimatedNotificationView extends RelativeLayout {
                                 true, "from", from);
                     }
                     NotificationCleanerTest.logNotificationAccessGrant();
-                    Intent intentSelf = new Intent(HSApplication.getContext(), NotificationBlockedActivity.class);
+                    Intent intentSelf = new Intent(HSApplication.getContext(), NotificationGuideActivity.class);
                     intentSelf.putExtra(NotificationBlockedActivity.START_FROM, mStartFrom);
+                    intentSelf.putExtra(NotificationGuideActivity.START_FROM_SELF, true);
                     intentSelf.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP
                             | Intent.FLAG_ACTIVITY_CLEAR_TOP
                             | Intent.FLAG_ACTIVITY_NEW_TASK);

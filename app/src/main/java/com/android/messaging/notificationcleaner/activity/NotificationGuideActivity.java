@@ -21,6 +21,7 @@ import com.superapps.util.Navigations;
 import com.superapps.util.Permissions;
 
 public class NotificationGuideActivity extends HSAppCompatActivity {
+    public static final String START_FROM_SELF = "start_from_self";
 
     private String mFrom;
     private boolean mIsFromGuide = false;
@@ -34,9 +35,10 @@ public class NotificationGuideActivity extends HSAppCompatActivity {
         setContentView(R.layout.activity_notification_cleaner_guide);
 
         mFrom =  getIntent().getStringExtra(NotificationBlockedActivity.START_FROM);
+        boolean mIsStartFromSelf = getIntent().getBooleanExtra(START_FROM_SELF, false);
         mIsFromGuide = NotificationBlockedActivity.START_FROM_GUIDE_BAR.equals(mFrom)
                 || NotificationBlockedActivity.START_FROM_GUIDE_FULL.equals(mFrom);
-        if (mIsFromGuide) {
+        if (mIsFromGuide && !mIsStartFromSelf) {
             mIsMainPageGuideJustCreated = true;
         }
 
@@ -86,8 +88,7 @@ public class NotificationGuideActivity extends HSAppCompatActivity {
 
         NotificationBarUtil.checkToUpdateBlockedNotification();
         Intent intentBlocked = new Intent(NotificationGuideActivity.this, NotificationBlockedActivity.class);
-        intentBlocked.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intentBlocked.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intentBlocked.putExtra(NotificationBlockedActivity.START_FROM, mFrom);
         Navigations.startActivitySafely(this, intentBlocked);
         finish();
