@@ -96,6 +96,7 @@ import com.android.messaging.util.BuglePrefsKeys;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.CreateShortcutUtils;
 import com.android.messaging.util.ExitAdAutopilotUtils;
+import com.android.messaging.util.ExitAdMonitor;
 import com.android.messaging.util.NotificationAccessAutopilotUtils;
 import com.android.messaging.util.PhoneUtils;
 import com.ihs.app.framework.HSApplication;
@@ -208,8 +209,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private LightWeightCustomizeGuideController mCustomizeGuideController;
     private final BuglePrefs mPrefs = Factory.get().getApplicationPrefs();
     private HomeKeyWatcher mHomeKeyWatcher;
-    private boolean mIsHomeKeyPressedAfterExitAdShow;
-
 
     @Override
     @DebugLog
@@ -364,13 +363,18 @@ public class ConversationListActivity extends AbstractConversationListActivity
             }
         });
 
-
-
         mHomeKeyWatcher = new HomeKeyWatcher(this);
         mHomeKeyWatcher.setOnHomePressedListener(new HomeKeyWatcher.OnHomePressedListener() {
             @Override
             public void onHomePressed() {
-                mIsHomeKeyPressedAfterExitAdShow = true;
+                ExitAdMonitor.getInstance().finishExitAdActivity();
+                if (mInterstitialAd != null) {
+                    mInterstitialAd.release();
+                }
+                mIsExitAdShown = false;
+                if (mExitAppAnimationViewContainer != null) {
+                    mExitAppAnimationViewContainer.setVisibility(View.GONE);
+                }
             }
 
             @Override
@@ -401,7 +405,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
     @DebugLog
     protected void onResume() {
         super.onResume();
-        mIsHomeKeyPressedAfterExitAdShow = false;
         if (mIsExitAdShown) {
             showExitAppAnimation();
             return;
@@ -913,6 +916,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         AutopilotEvent.logAppEvent("exitad_chance");
         List<AcbInterstitialAd> ads = AcbInterstitialAdManager.fetch(AdPlacement.AD_EXIT_WIRE, 1);
         if (ads.size() > 0) {
+            ExitAdMonitor.getInstance().setEnabled(true);
             ExitAdAutopilotUtils.logSmsExitApp();
             mInterstitialAd = ads.get(0);
             mInterstitialAd.setInterstitialAdListener(new AcbInterstitialAd.IAcbInterstitialAdListener() {
@@ -974,27 +978,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
     boolean getExitAdShown() {
         return mIsExitAdShown;
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if (!mIsHomeKeyPressedAfterExitAdShow){
-            return;
-        }
-        if (mIsExitAdShown) {
-            Intent intent = new Intent(this, ConversationListActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-            if (mInterstitialAd != null) {
-                mInterstitialAd.release();
-            }
-            mIsExitAdShown = false;
-            if (mExitAppAnimationViewContainer != null) {
-                mExitAppAnimationViewContainer.setVisibility(View.GONE);
-            }
-
-        }
     }
 
     @Override

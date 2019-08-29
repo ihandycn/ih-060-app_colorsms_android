@@ -74,6 +74,7 @@ import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.DebugUtils;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.DefaultSmsAppChangeObserver;
+import com.android.messaging.util.ExitAdMonitor;
 import com.android.messaging.util.FabricUtils;
 import com.android.messaging.util.LogUtil;
 import com.android.messaging.util.OsUtil;
@@ -421,6 +422,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
         if (!sRunningTests) {
             // Only create the factory if not running tests
             FactoryImpl.register(getApplicationContext(), this);
+            ExitAdMonitor.getInstance().registerExitAdMonitorForExitAdActivity(this);
         } else {
             LogUtil.e(TAG, "BugleApplication.onCreate: FactoryImpl.register skipped for test run");
         }
