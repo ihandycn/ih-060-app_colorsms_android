@@ -7,6 +7,7 @@ import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.database.ContentObserver;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -180,7 +181,13 @@ public class NotificationBlockedActivity extends BaseActivity
         mNotificationAdapter.setRemoveOrphanHeaders(true);
 
         final RecyclerView notificationRecyclerView = findViewById(R.id.notification_block_recyclerview);
-        notificationRecyclerView.setLayoutManager(new SmoothScrollLinearLayoutManager(this));
+        notificationRecyclerView.setLayoutManager(new SmoothScrollLinearLayoutManager(this) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        });
+
         notificationRecyclerView.setAdapter(mNotificationAdapter);
         notificationRecyclerView.setHasFixedSize(true);
         notificationRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -630,6 +637,9 @@ public class NotificationBlockedActivity extends BaseActivity
     }
 
     private void initAdView() {
+        if (mNativeAd != null || mNotificationAdapter.isEmpty()) {
+            return;
+        }
         mAdLoader = AcbNativeAdManager.createLoaderWithPlacement(AdPlacement.NOTIFICATION_CLEANER_AD_PLACEMENT_APP_MANAGER);
         mAdLoader.load(1, new AcbNativeAdLoader.AcbNativeAdLoadListener() {
             @Override
@@ -639,15 +649,8 @@ public class NotificationBlockedActivity extends BaseActivity
                 }
                 mNativeAd = list.get(0);
 
-                View adView;
-                if (mNotificationAdapter.isEmpty()) {
-                    adView = getLayoutInflater().inflate(R.layout.notification_cleaner_block_info_ad_layout_shadow_bg, mAdViewContainer, false);
-                    mAdViewContainer.setBackgroundDrawable(getResources().getDrawable(R.drawable.notification_cleaner_block_ad_layout_shadow_bg));
-                    mAdViewContainer.setPadding(Dimensions.pxFromDp(6), Dimensions.pxFromDp(1.2f), Dimensions.pxFromDp(6), 0);
-                    findViewById(R.id.content_container).setBackgroundColor(getResources().getColor(R.color.white));
-                } else {
-                    adView = getLayoutInflater().inflate(R.layout.notification_cleaner_block_info_ad_layout, mAdViewContainer, false);
-                }
+                View adView = getLayoutInflater().inflate(R.layout.notification_cleaner_block_info_ad_layout,
+                        mAdViewContainer, false);
 
                 AcbNativeAdContainerView adContainer = new AcbNativeAdContainerView(HSApplication.getContext());
 
@@ -657,9 +660,12 @@ public class NotificationBlockedActivity extends BaseActivity
                 adContainer.setAdBodyView(ViewUtils.findViewById(adView, R.id.ad_entry_content));
                 adContainer.setAdIconView(ViewUtils.findViewById(adView, R.id.ad_entry_icon));
                 adContainer.setAdActionView(ViewUtils.findViewById(adView, R.id.ad_entry_button));
+                adContainer.setAdPrimaryView(ViewUtils.findViewById(adView, R.id.ad_primary_view));
 
-                ViewUtils.findViewById(adView, R.id.ad_entry_button).setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.primary_color),
-                        getResources().getColor(R.color.ripples_ripple_color), Dimensions.pxFromDp(3.3f), true, true));
+                ViewUtils.findViewById(adView, R.id.ad_entry_button).setBackground(
+                        BackgroundDrawables.createBackgroundDrawable(Color.TRANSPARENT,
+                                getResources().getColor(R.color.ripples_ripple_color), Dimensions.pxFromDp(1), 0xffffffff,
+                                Dimensions.pxFromDp(3.3f), true, true));
 
                 adContainer.fillNativeAd(mNativeAd, null);
 

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/primary_color"
     android:clipChildren="false"
     android:fitsSystemWindows="false">
 
@@ -20,29 +21,29 @@
             android:layout_height="match_parent"
             android:background="@color/white">
 
-            <FrameLayout
-                android:id="@+id/ad_container"
+            <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="130dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:visibility="gone" />
+                android:layout_height="match_parent">
 
-            <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_below="@id/ad_container"
-                android:clipChildren="true">
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/notification_block_recyclerview"
+                <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:clipToPadding="false"
-                    android:theme="@style/Theme.CustomOverScroll" />
-            </FrameLayout>
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
 
-            <include layout="@layout/sticky_header_layout" />
+                    <FrameLayout
+                        android:id="@+id/ad_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="200dp"
+                        android:visibility="gone" />
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/notification_block_recyclerview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:theme="@style/Theme.CustomOverScroll" />
+                </LinearLayout>
+            </ScrollView>
 
             <FrameLayout
                 android:layout_width="wrap_content"
