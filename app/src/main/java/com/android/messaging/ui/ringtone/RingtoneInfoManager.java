@@ -144,12 +144,15 @@ public class RingtoneInfoManager {
         List<RingtoneInfo> ansList = new ArrayList<>();
         for (String item : list) {
             RingtoneInfo info = new RingtoneInfo();
-            info.name = item;
-            info.uri = Uri.parse("android.resource://" + packageName + "/" +
-                    context.getResources().getIdentifier("ringtone_" + item, "raw", packageName)).toString();
-            info.type = RingtoneInfo.TYPE_APP;
-
-            ansList.add(info);
+            try {
+                info.name = context.getResources().getString(context.getResources().getIdentifier(item, "string", packageName));
+                info.uri = Uri.parse("android.resource://" + packageName + "/" +
+                        context.getResources().getIdentifier(item, "raw", packageName)).toString();
+                info.type = RingtoneInfo.TYPE_APP;
+                ansList.add(info);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return ansList;
     }
@@ -196,7 +199,7 @@ public class RingtoneInfoManager {
         }
     }
 
-    public static void upgrade(){
+    public static void upgrade() {
         final BuglePrefs prefs = BuglePrefs.getApplicationPrefs();
         String prefKey = HSApplication.getContext().getString(R.string.notification_sound_pref_key);
         String ringtoneString = prefs.getString(prefKey, null);

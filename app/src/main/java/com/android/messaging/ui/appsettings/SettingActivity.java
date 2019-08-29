@@ -40,7 +40,6 @@ import com.android.messaging.util.UiUtils;
 import com.firebase.ui.auth.AuthUI;
 import com.google.firebase.auth.FirebaseAuth;
 import com.ihs.commons.config.HSConfig;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.util.Navigations;
 import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
@@ -513,7 +512,6 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
             RingtoneInfo info = data.getParcelableExtra(RingtoneSettingActivity.EXTRA_CUR_RINGTONE_INFO);
             RingtoneInfoManager.setCurSound(info);
             updateSoundSummary();
-            HSLog.i("test_test", "onActivityResult: ");
 
         } else if (requestCode == RC_SIGN_IN) {
             if (resultCode == RESULT_OK) {

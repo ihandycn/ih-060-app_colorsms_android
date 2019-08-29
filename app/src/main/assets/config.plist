@@ -10,12 +10,32 @@
 			<dict>
 				<key>RingtoneList</key>
 				<array>
-					<string>spanish_army_trumpet_bugle_call</string>
-					<string>marimba</string>
-					<string>jingle_bells</string>
-					<string>horse_neigh</string>
-					<string>glitch_hit</string>
-					<string>funny_circus</string>
+					<string>ringtone_bubble_ding</string>
+					<string>ringtone_yay_girl</string>
+					<string>ringtone_wow</string>
+					<string>ringtone_uh_oh</string>
+					<string>ringtone_tech</string>
+					<string>ringtone_snoring_whistle</string>
+					<string>ringtone_select</string>
+					<string>ringtone_positive_swoosh</string>
+					<string>ringtone_pop_up2</string>
+					<string>ringtone_pop_up1</string>
+					<string>ringtone_pop_up</string>
+					<string>ringtone_oh_oh</string>
+					<string>ringtone_littleyellowman</string>
+					<string>ringtone_laugh</string>
+					<string>ringtone_kiss3</string>
+					<string>ringtone_kiss</string>
+					<string>ringtone_horse</string>
+					<string>ringtone_horn</string>
+					<string>ringtone_happy</string>
+					<string>ringtone_gamehappy</string>
+					<string>ringtone_appearanceringtone_BubbleDing.aacringtone_Cat.aacringtone_Christmas.aacringtone_Confirm.aacringtone_ElectronicBubbles.aacringtone_Gamehappy.aacringtone_Happy.aacringtone_Horn.aacringtone_Horse.aacringtone_Kiss.aacringtone_Kiss3.aacringtone_Laugh.aacringtone_Littleyellowman.aacringtone_OhOh.aacringtone_PopUp.aacringtone_PopUp1.aacringtone_PopUp2.aacringtone_PositiveSwoosh.aacringtone_Select.aacringtone_SnoringWhistle.aacringtone_Tech.aacringtone_UhOh.aacringtone_Wow.aacringtone_YayGirl.aac</string>
+					<string>ringtone_bubbleringtone_BubbleDing.aacringtone_Cat.aacringtone_Christmas.aacringtone_Confirm.aacringtone_ElectronicBubbles.aacringtone_Gamehappy.aacringtone_Happy.aacringtone_Horn.aacringtone_Horse.aacringtone_Kiss.aacringtone_Kiss3.aacringtone_Laugh.aacringtone_Littleyellowman.aacringtone_OhOh.aacringtone_PopUp.aacringtone_PopUp1.aacringtone_PopUp2.aacringtone_PositiveSwoosh.aacringtone_Select.aacringtone_SnoringWhistle.aacringtone_Tech.aacringtone_UhOh.aacringtone_Wow.aacringtone_YayGirl.aac</string>
+					<string>ringtone_catringtone_BubbleDing.aacringtone_Cat.aacringtone_Christmas.aacringtone_Confirm.aacringtone_ElectronicBubbles.aacringtone_Gamehappy.aacringtone_Happy.aacringtone_Horn.aacringtone_Horse.aacringtone_Kiss.aacringtone_Kiss3.aacringtone_Laugh.aacringtone_Littleyellowman.aacringtone_OhOh.aacringtone_PopUp.aacringtone_PopUp1.aacringtone_PopUp2.aacringtone_PositiveSwoosh.aacringtone_Select.aacringtone_SnoringWhistle.aacringtone_Tech.aacringtone_UhOh.aacringtone_Wow.aacringtone_YayGirl.aac</string>
+					<string>ringtone_confirmringtone_BubbleDing.aacringtone_Cat.aacringtone_Christmas.aacringtone_Confirm.aacringtone_ElectronicBubbles.aacringtone_Gamehappy.aacringtone_Happy.aacringtone_Horn.aacringtone_Horse.aacringtone_Kiss.aacringtone_Kiss3.aacringtone_Laugh.aacringtone_Littleyellowman.aacringtone_OhOh.aacringtone_PopUp.aacringtone_PopUp1.aacringtone_PopUp2.aacringtone_PositiveSwoosh.aacringtone_Select.aacringtone_SnoringWhistle.aacringtone_Tech.aacringtone_UhOh.aacringtone_Wow.aacringtone_YayGirl.aac</string>
+					<string>ringtone_electronic_bubblesringtone_BubbleDing.aacringtone_Cat.aacringtone_Christmas.aacringtone_Confirm.aacringtone_ElectronicBubbles.aacringtone_Gamehappy.aacringtone_Happy.aacringtone_Horn.aacringtone_Horse.aacringtone_Kiss.aacringtone_Kiss3.aacringtone_Laugh.aacringtone_Littleyellowman.aacringtone_OhOh.aacringtone_PopUp.aacringtone_PopUp1.aacringtone_PopUp2.aacringtone_PositiveSwoosh.aacringtone_Select.aacringtone_SnoringWhistle.aacringtone_Tech.aacringtone_UhOh.aacringtone_Wow.aacringtone_YayGirl.aac</string>
+					<string>ringtone_christmasringtone_BubbleDing.aacringtone_Cat.aacringtone_Christmas.aacringtone_Confirm.aacringtone_ElectronicBubbles.aacringtone_Gamehappy.aacringtone_Happy.aacringtone_Horn.aacringtone_Horse.aacringtone_Kiss.aacringtone_Kiss3.aacringtone_Laugh.aacringtone_Littleyellowman.aacringtone_OhOh.aacringtone_PopUp.aacringtone_PopUp1.aacringtone_PopUp2.aacringtone_PositiveSwoosh.aacringtone_Select.aacringtone_SnoringWhistle.aacringtone_Tech.aacringtone_UhOh.aacringtone_Wow.aacringtone_YayGirl.aac</string>
 				</array>
 			</dict>
 			<key>DeliveryReportDefaultSwitch</key>

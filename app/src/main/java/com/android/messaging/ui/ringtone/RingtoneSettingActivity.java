@@ -25,7 +25,6 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
-import com.ihs.commons.utils.HSLog;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Navigations;
 
@@ -176,9 +175,7 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
                 return;
             }
             Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-            HSLog.i("test_test", "onActivityResult: system ringtone: " + uri.toString());
             if (UriUtil.isFileUri(uri)) {
-                HSLog.i("test_test", uri.toString() + " is File ");
                 handleUriFromFile(uri);
                 return ;
             }
@@ -195,7 +192,6 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
             if (uri == null) {
                 return;
             }
-            HSLog.i("test_test", "onActivityResult: file: " + uri.toString());
             handleUriFromFile(uri);
         }
     }
