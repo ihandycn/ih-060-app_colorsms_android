@@ -9,6 +9,8 @@ import com.facebook.ads.AudienceNetworkActivity;
 import com.google.android.gms.ads.AdActivity;
 import com.ihs.commons.utils.HSLog;
 import com.mopub.mobileads.MoPubActivity;
+import com.mopub.mobileads.MraidActivity;
+import com.mopub.mobileads.MraidVideoPlayerActivity;
 
 public class ExitAdMonitor {
     private static ExitAdMonitor sInstance = new ExitAdMonitor();
@@ -33,7 +35,9 @@ public class ExitAdMonitor {
                 if (mIsEnabled
                         && (activity instanceof MoPubActivity
                         || activity instanceof AdActivity
-                        || activity instanceof AudienceNetworkActivity)) {
+                        || activity instanceof AudienceNetworkActivity
+                        || activity instanceof MraidActivity
+                        || activity instanceof MraidVideoPlayerActivity)) {
                     mExitAd = activity;
                 }
                 HSLog.d("lifecycle_callback", "onActivityCreated");
@@ -64,7 +68,9 @@ public class ExitAdMonitor {
                 if (mIsEnabled
                         && (activity instanceof MoPubActivity
                         || activity instanceof AdActivity
-                        || activity instanceof AudienceNetworkActivity)) {
+                        || activity instanceof AudienceNetworkActivity
+                        || activity instanceof MraidActivity
+                        || activity instanceof MraidVideoPlayerActivity)) {
                     mExitAd = null;
                     mIsEnabled = false;
                 }
