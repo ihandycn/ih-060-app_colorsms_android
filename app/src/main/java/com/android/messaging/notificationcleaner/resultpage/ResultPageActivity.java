@@ -122,8 +122,6 @@ public class ResultPageActivity extends HSAppCompatActivity implements INotifica
             mContentType = ResultContentType.OPTIMAL;
         }
 
-      //  ResultManager.getInstance().preLoadAds();
-
         mContent = getContent(mContentType);
         ITransition transitionState = mPageState.getTransition(getIntent(), mInterstitialAd);
         transitionState.setContent(mContent);
@@ -214,12 +212,14 @@ public class ResultPageActivity extends HSAppCompatActivity implements INotifica
     }
 
     private void backToNCPageIfNeeded() {
-        if (NotificationCleanerUtil.getNotificationBlockedActivityIllustratePageShowingState() < NotificationCleanerUtil.NOTIFICATION_STATE_SHOWED) {
-            NotificationCleanerUtil.setNotificationBlockedActivityIllustratePageShowingState(NotificationCleanerUtil.NOTIFICATION_STATE_SHOWING);
-        }
-        Intent intent = new Intent(this, NotificationBlockedActivity.class);
-        intent.putExtra(NotificationBlockedActivity.START_FROM, NotificationBlockedActivity.START_FROM_RESULT_AD_PAGE);
-        Navigations.startActivitySafely(this, intent);
+        if (mContentType == ResultContentType.AD) {
+            if (NotificationCleanerUtil.getNotificationBlockedActivityIllustratePageShowingState() < NotificationCleanerUtil.NOTIFICATION_STATE_SHOWED) {
+                NotificationCleanerUtil.setNotificationBlockedActivityIllustratePageShowingState(NotificationCleanerUtil.NOTIFICATION_STATE_SHOWING);
+            }
+            Intent intent = new Intent(this, NotificationBlockedActivity.class);
+            intent.putExtra(NotificationBlockedActivity.START_FROM, NotificationBlockedActivity.START_FROM_RESULT_AD_PAGE);
+            Navigations.startActivitySafely(this, intent);
+        } 
         finish();
     }
 

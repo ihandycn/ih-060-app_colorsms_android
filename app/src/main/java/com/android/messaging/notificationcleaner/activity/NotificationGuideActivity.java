@@ -34,7 +34,7 @@ public class NotificationGuideActivity extends HSAppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification_cleaner_guide);
 
-        mFrom =  getIntent().getStringExtra(NotificationBlockedActivity.START_FROM);
+        mFrom = getIntent().getStringExtra(NotificationBlockedActivity.START_FROM);
         boolean mIsStartFromSelf = getIntent().getBooleanExtra(START_FROM_SELF, false);
         mIsFromGuide = NotificationBlockedActivity.START_FROM_GUIDE_BAR.equals(mFrom)
                 || NotificationBlockedActivity.START_FROM_GUIDE_FULL.equals(mFrom);
@@ -64,7 +64,21 @@ public class NotificationGuideActivity extends HSAppCompatActivity {
         mAnimatedNotificationView.setStartFrom(mFrom);
         mAnimatedNotificationView.startAnimations();
 
-        BugleAnalytics.logEvent("NotificationCleaner_Guide_Show", true);
+        String from;
+        switch (mFrom) {
+            case NotificationBlockedActivity.START_FROM_GUIDE_BAR:
+                from = "push";
+                break;
+            case NotificationBlockedActivity.START_FROM_GUIDE_FULL:
+                from = "full";
+                break;
+            case NotificationBlockedActivity.START_FROM_MAIN_PAGE:
+                from = "menu";
+                break;
+            default:
+                from = "other";
+        }
+        BugleAnalytics.logEvent("NotificationCleaner_Guide_Show", true, "from", from);
 
         NotificationCleanerUtil.insertFakeNotificationsIfNeeded();
     }

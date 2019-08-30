@@ -117,6 +117,7 @@ public class NotificationBlockedActivity extends BaseActivity
     private boolean mIsClearAll;
     private boolean mIsShownLogged = false;
     private boolean mIsAdChanceEventLogged = false;
+    private boolean mIsAdShowEventLogged = false;
     private String mStartFrom;
 
     private ContentObserver mBlockListContentObserver = new ContentObserver(new Handler()) {
@@ -332,6 +333,7 @@ public class NotificationBlockedActivity extends BaseActivity
 
         int lastHeaderDay = -1;
         HeaderItem headerItem = null;
+        int count = 0;
 
         List<ApplicationInfo> applicationInfoList = BuglePackageManager.getInstance().getInstalledApplications();
 
@@ -362,7 +364,7 @@ public class NotificationBlockedActivity extends BaseActivity
             if (!isContain) {
                 continue;
             }
-
+            count++;
             int dayDiff = (int) DateUtil.daysFromNow(notificationData.postTime);
             if (dayDiff > lastHeaderDay) {
                 String headText;
@@ -406,7 +408,7 @@ public class NotificationBlockedActivity extends BaseActivity
         if (flexibleItems.isEmpty()) {
             mClearAllBtn.setVisibility(View.GONE);
         } else {
-            setActionButtonTranslation(mNotificationDataList.size());
+            setActionButtonTranslation(count);
         }
     }
 
@@ -433,10 +435,7 @@ public class NotificationBlockedActivity extends BaseActivity
     }
 
     public void setActionButtonTranslation(int count) {
-        if (mClearAllBtn instanceof TextView) {
-            mClearAllBtn.setText(getString(R.string.notification_cleaner_clean_all, count));
-        }
-
+        mClearAllBtn.setText(getString(R.string.notification_cleaner_clean_all, count));
         if (mClearAllBtn.getVisibility() == View.GONE) {
             final float startTranslation = getResources().getDimensionPixelOffset(R.dimen.action_btn_anim_translation);
             final float toTranslation = 0;
@@ -682,9 +681,11 @@ public class NotificationBlockedActivity extends BaseActivity
                 mAdViewContainer.setVisibility(View.VISIBLE);
                 mAdViewContainer.addView(adContainer);
 
-                NotificationCleanerTest.logNcHomepageAdShow();
-                BugleAnalytics.logEvent("NotificationCleaner_HomepageAd_Show", true);
-
+                if (!mIsAdShowEventLogged) {
+                    mIsAdShowEventLogged = true;
+                    NotificationCleanerTest.logNcHomepageAdShow();
+                    BugleAnalytics.logEvent("NotificationCleaner_HomepageAd_Show", true);
+                }
                 mNativeAd.setNativeClickListener(acbAd ->
                         BugleAnalytics.logEvent("NotificationCleaner_HomepageAd_Click", true));
             }

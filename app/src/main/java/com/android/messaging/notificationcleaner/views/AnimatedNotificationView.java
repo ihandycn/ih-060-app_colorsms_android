@@ -146,7 +146,8 @@ public class AnimatedNotificationView extends RelativeLayout {
         mStartButton.setOnClickListener(v -> {
             NotificationCleanerProvider.switchNotificationOrganizer(true);
             boolean isNotificationAccessGranted = Permissions.isNotificationAccessGranted();
-            BugleAnalytics.logEvent("NotificationCleaner_Guide_BtnClick", true);
+            String from = getEventFromString();
+            BugleAnalytics.logEvent("NotificationCleaner_Guide_BtnClick", true, "from", from);
             if (isNotificationAccessGranted) {
                 NotificationBarUtil.checkToUpdateBlockedNotification();
                 sendGetActiveNotificationBroadcast();
@@ -177,7 +178,6 @@ public class AnimatedNotificationView extends RelativeLayout {
                 getContext().startActivity(intent);
                 Threads.postOnMainThreadDelayed(() -> {
                     Navigations.startActivity(getContext(), NCPermissionGuideActivity.class);
-                    String from = getEventFromString();
                     if (from != null) {
                         BugleAnalytics.logEvent("NotificationCleaner_AccessGuide_Show",
                                 true, "from", from);
@@ -283,7 +283,7 @@ public class AnimatedNotificationView extends RelativeLayout {
     }
 
     private String getEventFromString() {
-        String from = null;
+        String from;
         switch (mStartFrom) {
             case NotificationBlockedActivity.START_FROM_GUIDE_BAR:
                 from = "push";
@@ -294,6 +294,8 @@ public class AnimatedNotificationView extends RelativeLayout {
             case NotificationBlockedActivity.START_FROM_MAIN_PAGE:
                 from = "menu";
                 break;
+            default:
+                from = "other";
         }
         return from;
     }
