@@ -190,8 +190,10 @@ public class NotificationBlockedActivity extends BaseActivity
             }
         });
 
+        notificationRecyclerView.setNestedScrollingEnabled(false);
+
         notificationRecyclerView.setAdapter(mNotificationAdapter);
-        notificationRecyclerView.setHasFixedSize(true);
+        //notificationRecyclerView.setHasFixedSize(true);
         notificationRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mNotificationAdapter.setHandleDragEnabled(true)
