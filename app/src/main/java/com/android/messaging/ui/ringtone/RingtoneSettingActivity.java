@@ -14,7 +14,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -42,6 +41,7 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
     public static final String EXTRA_FROM_PAGE = "extra_from_page";
     public static final String FROM_SETTING = "settings";
     public static final String FROM_DETAILS_PAGE = "detailspage";
+    public static final String FROM_MENU = " menu";
 
     private ViewGroup mSystemItemView;
     private ViewGroup mFileItemView;
@@ -81,21 +81,15 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
 
         mSystemItemView = findViewById(R.id.system_item);
         mSystemItemView.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff, 0, true));
-        mSystemItemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onSystemItemClick();
-                BugleAnalytics.logEvent("Ringtone_Page_System_Click");
-            }
+        mSystemItemView.setOnClickListener(v -> {
+            onSystemItemClick();
+            BugleAnalytics.logEvent("Ringtone_Page_System_Click");
         });
         mFileItemView = findViewById(R.id.file_item);
         mFileItemView.setBackground(BackgroundDrawables.createBackgroundDrawable(0xffffffff, 0, true));
-        mFileItemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onFileItemClick();
-                BugleAnalytics.logEvent("Ringtone_Page_Music_Click");
-            }
+        mFileItemView.setOnClickListener(v -> {
+            onFileItemClick();
+            BugleAnalytics.logEvent("Ringtone_Page_Music_Click");
         });
 
         RingtoneEntranceAutopilotUtils.logRingtonePageShow();
@@ -131,11 +125,10 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
         Intent intent = getIntent();
         RingtoneInfo info = intent.getParcelableExtra(EXTRA_CUR_RINGTONE_INFO);
         String from = intent.getStringExtra(RingtoneSettingActivity.EXTRA_FROM_PAGE);
-        if (from == null) {
+        if (FROM_MENU.equals(from)) {
             // if intent's data "from" is null, maybe the page is start from navigation view
             mIsFromNavigation = true;
             info = RingtoneInfoManager.getCurSound();
-            return info;
         }
         BugleAnalytics.logEvent("Ringtone_Page_Show", true, "from", from);
 

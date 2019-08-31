@@ -559,7 +559,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         break;
                     case DRAWER_INDEX_RINGTONE:
                         BugleAnalytics.logEvent("Menu_Ringtone_Click", true);
-                        Navigations.startActivity(ConversationListActivity.this, RingtoneSettingActivity.class);
+                        Intent intent = new Intent(ConversationListActivity.this, RingtoneSettingActivity.class);
+                        intent.putExtra(RingtoneSettingActivity.EXTRA_FROM_PAGE, RingtoneSettingActivity.FROM_MENU);
+                        Navigations.startActivitySafely(ConversationListActivity.this, intent);
                         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_ringtone_new_text).setVisibility(View.GONE);
                         break;
