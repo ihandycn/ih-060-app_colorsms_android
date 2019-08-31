@@ -1304,6 +1304,18 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             int tensNum = Math.min((int) (alpha * 10), 9);
                             opacityStr = tensNum + "0%-" + (tensNum + 1) + "0%";
                         }
+
+                        RingtoneInfo info = RingtoneInfoManager.getCurSound();
+                        String ringtoneStr = "system";
+                        switch (info.type) {
+                            case RingtoneInfo.TYPE_FILE:
+                                ringtoneStr = "file";
+                                break;
+                            case RingtoneInfo.TYPE_APP:
+                                ringtoneStr = info.name;
+                                break;
+                        }
+
                         BugleAnalytics.logEvent("SMS_Messages_Show_2", true,
                                 "subscription", String.valueOf(BillingManager.isPremiumUser()),
                                 "type", EmojiManager.getEmojiStyle(),
@@ -1312,19 +1324,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                         .getString(ChatListCustomizeActivity.PREF_KEY_EVENT_CHANGE_COLOR_TYPE, "theme"),
                                 "chat_list_opacity", opacityStr,
                                 "vibrate", VibrateSettings.getVibrateDescription(""),
-                                "led", LedSettings.getLedDescription(""));
-                        RingtoneInfo info = RingtoneInfoManager.getCurSound();
-                        switch (info.type) {
-                            case RingtoneInfo.TYPE_SYSTEM:
-                                BugleAnalytics.logEvent("SMS_Messages_Show_2", true, "ringtone", "system");
-                                break;
-                            case RingtoneInfo.TYPE_FILE:
-                                BugleAnalytics.logEvent("SMS_Messages_Show_2", true, "ringtone", "file");
-                                break;
-                            case RingtoneInfo.TYPE_APP:
-                                BugleAnalytics.logEvent("SMS_Messages_Show_2", true, "ringtone", info.name);
-                                break;
-                        }
+                                "led", LedSettings.getLedDescription(""),
+                                "ringtone", ringtoneStr);
 
 
                         BugleFirebaseAnalytics.logEvent("SMS_Messages_Show_2",
@@ -1335,7 +1336,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                         .getString(ChatListCustomizeActivity.PREF_KEY_EVENT_CHANGE_COLOR_TYPE, "theme"),
                                 "chat_list_opacity", opacityStr,
                                 "vibrate", VibrateSettings.getVibrateDescription(""),
-                                "led", LedSettings.getLedDescription(""));
+                                "led", LedSettings.getLedDescription(""),
+                                "ringtone", ringtoneStr);
                     });
                 }
                 break;
