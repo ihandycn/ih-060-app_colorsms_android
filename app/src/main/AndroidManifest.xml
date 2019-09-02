@@ -961,5 +961,14 @@
             android:screenOrientation="portrait"
             android:taskAffinity=".permission.guide"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <receiver
+            android:name="notificationcleaner.receivers.PackageAddedReceiver"
+            android:exported="true">
+        </receiver>
+        <receiver
+            android:name="notificationcleaner.receivers.PackageRemovedReceiver"
+            android:exported="true">
+        </receiver>
     </application>
 </manifest>

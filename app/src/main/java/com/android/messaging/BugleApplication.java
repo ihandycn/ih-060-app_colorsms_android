@@ -46,6 +46,8 @@ import com.android.messaging.debug.CrashGuard;
 import com.android.messaging.debug.UploadLeakService;
 import com.android.messaging.notificationcleaner.BuglePackageManager;
 import com.android.messaging.notificationcleaner.NotificationPushGuideUtils;
+import com.android.messaging.notificationcleaner.receivers.PackageAddedReceiver;
+import com.android.messaging.notificationcleaner.receivers.PackageRemovedReceiver;
 import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.receiver.SmsReceiver;
 import com.android.messaging.scheduledmessage.MessageScheduleManager;
@@ -382,6 +384,14 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 BuglePackageManager.getInstance().updateInstalledApplicationsOnWorkerThread();
             }));
             TaskRunner.run(initWorks);
+
+            IntentFilter intentFilter = new IntentFilter(Intent.ACTION_PACKAGE_ADDED);
+            intentFilter.addDataScheme("package");
+            HSApplication.getContext().registerReceiver(new PackageAddedReceiver(), intentFilter);
+
+            intentFilter = new IntentFilter(Intent.ACTION_PACKAGE_REMOVED);
+            intentFilter.addDataScheme("package");
+            HSApplication.getContext().registerReceiver(new PackageRemovedReceiver(), intentFilter);
         } finally {
             TraceCompat.endSection();
         }
