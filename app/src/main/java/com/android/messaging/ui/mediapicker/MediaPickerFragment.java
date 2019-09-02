@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.DraftMessageData;
@@ -61,6 +62,7 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
         view.findViewById(R.id.media_camera).setOnClickListener(this);
         view.findViewById(R.id.media_photo).setOnClickListener(this);
         view.findViewById(R.id.media_schedule).setOnClickListener(this);
+        view.findViewById(R.id.media_contact).setOnClickListener(this);
         ImageView mediaVoice = view.findViewById(R.id.media_voice);
         mediaVoice.setOnClickListener(this);
         mediaVoice.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.primary_color),
@@ -86,8 +88,11 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
                 return 0;
             }
         });
-        view.findViewById(R.id.media_schedule_container).setVisibility(
-                HSConfig.optBoolean(false, "Application", "ScheduleMessage") ? View.VISIBLE : View.GONE);
+
+        if (!HSConfig.optBoolean(false, "Application", "ScheduleMessage")) {
+            view.findViewById(R.id.media_schedule_container).setVisibility(View.GONE);
+            ((LinearLayout.LayoutParams)view.findViewById(R.id.media_select_placeholder).getLayoutParams()).weight = 2;
+        }
     }
 
     @Override
@@ -114,6 +119,9 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
                 if (mOnMediaItemListener != null) {
                     mOnMediaItemListener.onScheduledIconClick();
                 }
+                break;
+            case R.id.media_contact:
+
                 break;
             default:
                 break;
