@@ -22,8 +22,6 @@ public class PackageRemovedReceiver extends PostOnNextFrameReceiver {
                     if (Packages.isPackageInstalled(packageName)) {
                         return;
                     }
-                    if (!TextUtils.isEmpty(packageName)) {
-                    }
                 }
                 BuglePackageManager.getInstance().updateInstalledApplications();
             } catch (Exception e) {
