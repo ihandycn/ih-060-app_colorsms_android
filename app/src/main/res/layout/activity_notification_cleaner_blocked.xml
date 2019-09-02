@@ -64,10 +64,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginLeft="20dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginStart="20dp"
+                        android:layout_marginEnd="26.7dp"
+                        android:layout_marginLeft="26.7dp"
+                        android:layout_marginRight="26.7dp"
+                        android:layout_marginStart="26.7dp"
                         app:aspectRatio="1.2">
 
                         <android.support.v7.widget.AppCompatImageView
@@ -86,11 +86,12 @@
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
                         android:layout_marginStart="20dp"
-                        android:layout_marginTop="25dp"
+                        android:layout_marginTop="29.3dp"
                         android:gravity="center"
+                        android:includeFontPadding="false"
                         android:text="@string/notification_cleaner_illustration_page"
                         android:textColor="#DF000000"
-                        android:textSize="20sp"
+                        android:textSize="15.3sp"
                         app:font_family_changeable="false"
                         app:typeface="@string/custom_font_regular" />
                 </RelativeLayout>
@@ -143,9 +144,6 @@
         android:layout_marginRight="19dp"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:shadowColor="#33000000"
-        android:shadowDy="6"
-        android:shadowRadius="9"
         android:textAllCaps="true"
         android:textColor="@color/clean_btn_text_color"
         android:textSize="14sp"

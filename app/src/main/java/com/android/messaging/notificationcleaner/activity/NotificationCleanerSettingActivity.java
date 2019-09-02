@@ -166,7 +166,7 @@ public class NotificationCleanerSettingActivity extends BaseActivity {
                 long timeSinceLastUse;
                 if (lastNCUsedTime > 0) {
                     timeSinceLastUse = System.currentTimeMillis() - lastNCUsedTime;
-                }  else {
+                } else {
                     timeSinceLastUse = System.currentTimeMillis() - installTime;
                 }
                 String countText = String.valueOf(count);
@@ -181,22 +181,28 @@ public class NotificationCleanerSettingActivity extends BaseActivity {
                                 ContextCompat.getColor(NotificationCleanerSettingActivity.this, R.color.func_off_content)),
                         content.indexOf(dayText), content.indexOf(dayText) + dayText.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                AlertDialog functionOffDialog = new AlertDialog.Builder(NotificationCleanerSettingActivity.this).create();
+                AlertDialog functionOffDialog =
+                        new AlertDialog.Builder(NotificationCleanerSettingActivity.this,
+                                R.style.DefaultCompatDialog).create();
                 functionOffDialog.setCanceledOnTouchOutside(false);
                 @SuppressLint("InflateParams")
                 View functionOffView = getLayoutInflater().inflate(R.layout.function_off_dialog, null);
                 functionOffDialog.setView(functionOffView);
+                functionOffDialog.getWindow().setBackgroundDrawable(null);
 
                 TextView titleTv = functionOffView.findViewById(R.id.func_off_dialog_title);
                 titleTv.setText(NotificationCleanerSettingActivity.this.getString(R.string.function_off_dialog_NC_title));
                 TextView contentTv = functionOffView.findViewById(R.id.func_off_dialog_content);
                 contentTv.setText(contentSpannableString);
 
+                boolean isRtl = Dimensions.isRtl();
                 functionOffView.findViewById(R.id.func_off_dialog_btn_yes).setBackground(
                         BackgroundDrawables.createBackgroundDrawable(
                                 getResources().getColor(R.color.primary_color),
                                 getResources().getColor(R.color.ripples_ripple_color),
-                                0, 0, Dimensions.pxFromDp(3.3f), 0,
+                                0, 0,
+                                isRtl ? 0 : Dimensions.pxFromDp(3.3f),
+                                !isRtl ? 0 : Dimensions.pxFromDp(3.3f),
                                 true, true
                         ));
                 functionOffView.findViewById(R.id.func_off_dialog_btn_yes).setOnClickListener(view -> {
@@ -210,7 +216,9 @@ public class NotificationCleanerSettingActivity extends BaseActivity {
                 functionOffView.findViewById(R.id.func_off_dialog_btn_no).setBackground(
                         BackgroundDrawables.createBackgroundDrawable(0xffF7F8F9,
                                 getResources().getColor(R.color.ripples_ripple_color),
-                                0, 0, 0, Dimensions.pxFromDp(3.3f),
+                                0, 0,
+                                isRtl ? Dimensions.pxFromDp(3.3f) : 0,
+                                !isRtl ? Dimensions.pxFromDp(3.3f) : 0,
                                 true, true
                         ));
                 functionOffView.findViewById(R.id.func_off_dialog_btn_no).setOnClickListener(view -> {
@@ -299,7 +307,8 @@ public class NotificationCleanerSettingActivity extends BaseActivity {
             switch (viewType) {
                 case TYPE_ITEM_HEADER:
                     return new RecyclerView.ViewHolder(LayoutInflater.from(parent.getContext())
-                            .inflate(R.layout.notification_cleaner_header_view_item, parent, false)) {};
+                            .inflate(R.layout.notification_cleaner_header_view_item, parent, false)) {
+                    };
 
                 case TYPE_ITEM_REGULAR:
                     return new BlockNotificationItemViewHolder(LayoutInflater.from(parent.getContext())
