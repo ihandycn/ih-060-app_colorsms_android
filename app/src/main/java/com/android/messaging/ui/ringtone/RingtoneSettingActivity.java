@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
@@ -170,7 +169,7 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
             Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
             if (UriUtil.isFileUri(uri)) {
                 handleUriFromFile(uri);
-                return ;
+                return;
             }
             String uriStr = uri == null ? RingtoneInfoManager.SILENT_URI : uri.toString();
             putRingtoneIntoIntent(RingtoneInfoManager.getSystemRingtoneInfo(uriStr));
@@ -212,11 +211,7 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
             return;
         }
         String fileName = getFileFromContentUri(uri, this);
-        if (Build.VERSION.SDK_INT < 24) {
-            uri = Uri.fromFile(file);
-        } else {
-            uri = FileProvider.getUriForFile(this, getResources().getString(R.string.file_provider), file);
-        }
+        uri = FileProvider.getUriForFile(this, getResources().getString(R.string.file_provider), file);
         RingtoneInfo info = new RingtoneInfo();
         info.uri = uri.toString();
         info.name = fileName;
