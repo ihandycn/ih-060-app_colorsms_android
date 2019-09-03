@@ -52,6 +52,10 @@ import com.android.messaging.datamodel.data.MessageBoxItemData;
 import com.android.messaging.font.ChangeFontActivity;
 import com.android.messaging.font.FontStyleManager;
 import com.android.messaging.mmslib.SqliteWrapper;
+import com.android.messaging.notificationcleaner.NotificationCleanerTest;
+import com.android.messaging.notificationcleaner.NotificationCleanerUtil;
+import com.android.messaging.notificationcleaner.activity.NotificationBlockedActivity;
+import com.android.messaging.notificationcleaner.activity.NotificationGuideActivity;
 import com.android.messaging.privatebox.AppPrivateLockManager;
 import com.android.messaging.privatebox.MoveConversationToPrivateBoxAction;
 import com.android.messaging.privatebox.PrivateBoxSettings;
@@ -183,6 +187,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final int DRAWER_INDEX_EMOJI_STORE = 10;
     private static final int DRAWER_INDEX_REMOVE_ADS = 11;
     private static final int DRAWER_INDEX_CHAT_LIST = 12;
+    private static final int DRAWER_INDEX_NOTIFICATION_CLEANER = 13;
 
     private static final int MIN_AD_CLICK_DELAY_TIME = 300;
     private int drawerClickIndex = DRAWER_INDEX_NONE;
@@ -242,12 +247,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
         if (sIsRecreate) {
             sIsRecreate = false;
         } else {
-            Preferences.get(DESKTOP_PREFS).incrementAndGetInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME);
+            int openTimes = Preferences.get(DESKTOP_PREFS).incrementAndGetInt(PREF_KEY_MAIN_ACTIVITY_SHOW_TIME);
             if (CommonUtils.isNewUser() && DateUtils.isToday(CommonUtils.getAppInstallTimeMillis())) {
                 BugleAnalytics.logEvent("SMS_Messages_Show_NewUser", true);
             }
             if (HSApplication.getFirstLaunchInfo().appVersionCode >= 48) {
                 BugleAnalytics.logEvent("SMS_Messages_Show_NewUser", true, "SendDelay", "" + SendDelaySettings.getSendDelayInSecs());
+            }
+
+            if (openTimes >= 2) {
+                showNotificationCleanerGuideIfNeed();
             }
         }
 
@@ -372,6 +381,18 @@ public class ConversationListActivity extends AbstractConversationListActivity
         mHasInflatedDrawer = true;
 
         setupDrawer();
+    }
+
+    private void showNotificationCleanerGuideIfNeed() {
+        if (NotificationCleanerUtil.hasNotificationCleanerEverOpened()) {
+            return;
+        }
+        Preferences.getDefault().doOnce(() -> {
+            Intent notificationGuideIntent = new Intent(this, NotificationGuideActivity.class);
+            notificationGuideIntent.putExtra(NotificationBlockedActivity.START_FROM,
+                    NotificationBlockedActivity.START_FROM_GUIDE_FULL);
+            Navigations.startActivitySafely(this, notificationGuideIntent);
+        }, "show_notification_cleaner_full_guide");
     }
 
     @DebugLog
@@ -636,6 +657,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         BugleAnalytics.logEvent("Subscription_Analysis", "Menu_Subscription_Click", "true");
                         BugleFirebaseAnalytics.logEvent("Subscription_Analysis", "Menu_Subscription_Click", "true");
                         break;
+                    case DRAWER_INDEX_NOTIFICATION_CLEANER:
+                        Intent notificationCleanerIntent = new Intent(ConversationListActivity.this, NotificationBlockedActivity.class);
+                        notificationCleanerIntent.putExtra(NotificationBlockedActivity.START_FROM, NotificationBlockedActivity.START_FROM_MAIN_PAGE);
+                        Navigations.startActivitySafely(ConversationListActivity.this, notificationCleanerIntent);
+                        BugleAnalytics.logEvent("Menu_NotificationCleaner_Click", true);
+                        break;
                     case DRAWER_INDEX_NONE:
                     default:
                         break;
@@ -681,6 +708,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
             }
         }
 
+        if(!NotificationCleanerTest.getSwitch()) {
+            navigationContent.findViewById(R.id.navigation_item_notification_cleaner).setVisibility(View.GONE);
+        }
+
         navigationContent.findViewById(R.id.navigation_item_theme).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_theme_color).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_bubble).setOnClickListener(this);
@@ -689,6 +720,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_setting).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_emoji_store).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_chat_list).setOnClickListener(this);
+        navigationContent.findViewById(R.id.navigation_item_notification_cleaner).setOnClickListener(this);
 
         View backupEntrance = navigationContent.findViewById(R.id.navigation_item_backup_restore);
         backupEntrance.setOnClickListener(this);
@@ -1173,6 +1205,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 drawerClickIndex = DRAWER_INDEX_CHAT_LIST;
                 drawerLayout.closeDrawer(navigationView);
                 break;
+            case R.id.navigation_item_notification_cleaner:
+                drawerClickIndex = DRAWER_INDEX_NOTIFICATION_CLEANER;
+                drawerLayout.closeDrawer(navigationView);
         }
     }
 

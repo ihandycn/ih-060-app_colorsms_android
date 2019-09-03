@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="43dp"
+    android:background="@color/white">
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/notification_block_date"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:includeFontPadding="false"
+        android:paddingEnd="@dimen/notification_cleaner_block_date_padding_left"
+        android:paddingStart="@dimen/notification_cleaner_block_date_padding_left"
+        android:textColor="#878a95"
+        android:textSize="13.3sp"
+        app:font_family_changeable="false"
+        app:typeface="@string/custom_font_regular" />
+</LinearLayout>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="8dp">
+
+    <android.support.percent.PercentRelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/white_rounded_corner_bg">
+
+        <com.superapps.view.FixedRatioLayout
+            android:id="@+id/result_image_container_ad_primaryview_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:aspectRatio="1.9">
+
+            <net.appcloudbox.ads.base.ContainerView.AcbNativeAdPrimaryView
+                android:id="@+id/promote_ad_primary_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </com.superapps.view.FixedRatioLayout>
+
+        <FrameLayout
+            android:id="@+id/promote_ad_choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/result_image_container_ad_primaryview_container"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="6dp"
+            tools:background="@android:color/holo_orange_dark"
+            tools:layout_height="10dp"
+            tools:layout_width="30dp"/>
+
+        <LinearLayout
+            android:id="@+id/promote_charging_bottom_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/result_image_container_ad_primaryview_container"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <com.android.messaging.notificationcleaner.resultpage.views.ShadowLayout
+                android:id="@+id/promote_ad_icon_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                android:alpha="1"
+                app:layout_marginTopPercent="6.2%"
+                app:sl_cornerRadius="2dp"
+                app:sl_dx="0dp"
+                app:sl_dy="1dp"
+                app:sl_shadowColor="#50000000"
+                app:sl_shadowRadius="1dp">
+
+                <net.appcloudbox.ads.base.ContainerView.AcbNativeAdIconView
+                    android:id="@+id/ad_icon_view_promote_ad_icon"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_gravity="center_horizontal"/>
+            </com.android.messaging.notificationcleaner.resultpage.views.ShadowLayout>
+
+            <TextView
+                android:id="@+id/promote_ad_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="6dp"
+                android:gravity="center"
+                android:singleLine="true"
+                android:textColor="#333333"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/promote_ad_body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginLeft="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="8dp"
+                android:gravity="center"
+                android:lineSpacingExtra="1dp"
+                android:lines="2"
+                android:textColor="#666666"
+                android:textSize="13sp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"/>
+
+            <Button
+                android:id="@+id/promote_ad_button"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@drawable/material_compat_button_bg_blue"
+                android:textColor="#fff"
+                android:textSize="18sp"/>
+        </LinearLayout>
+    </android.support.percent.PercentRelativeLayout>
+</RelativeLayout>

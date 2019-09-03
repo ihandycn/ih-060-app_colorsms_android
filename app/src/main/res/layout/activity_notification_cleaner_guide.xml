@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/view_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false">
+
+    <android.support.v7.widget.AppCompatImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/notification_cleaner_guide_bg" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/action_bar_height"
+        app:navigationIcon="@drawable/ic_back">
+
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="0dp"
+            android:ellipsize="end"
+            android:includeFontPadding="false"
+            android:lines="1"
+            android:paddingEnd="20dp"
+            android:text="@string/notification_cleaner_title"
+            android:textColor="#ffffff"
+            android:textSize="16.7sp"
+            app:font_family_changeable="false"
+            app:typeface="@string/custom_font_semibold" />
+
+        <FrameLayout
+            android:id="@+id/exit"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center_vertical|end"
+            android:layout_marginEnd="9dp"
+            android:layout_marginRight="9dp"
+            android:clickable="true"
+            android:focusable="true">
+
+            <android.support.v7.widget.AppCompatImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_close" />
+        </FrameLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <include
+        android:id="@+id/guide_container_view"
+        layout="@layout/notification_cleaner_animation_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</FrameLayout>

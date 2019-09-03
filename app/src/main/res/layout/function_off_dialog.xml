@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_white_func_off_bg">
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/func_off_dialog_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="19dp"
+        android:layout_marginLeft="19dp"
+        android:layout_marginRight="19dp"
+        android:layout_marginStart="19dp"
+        android:layout_marginTop="26dp"
+        android:textColor="@color/function_off_dialog_title"
+        android:textSize="20sp"
+        app:font_family_changeable="false"
+        app:typeface="@string/custom_font_medium" />
+
+    <com.android.messaging.ui.view.MessagesTextView
+        android:id="@+id/func_off_dialog_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/func_off_dialog_title"
+        android:layout_marginLeft="19dp"
+        android:layout_marginRight="19dp"
+        android:layout_marginTop="12dp"
+        android:lineSpacingExtra="2dp"
+        android:textColor="@color/function_off_dialog_content"
+        android:textSize="14sp"
+        app:font_family_changeable="false"
+        app:typeface="@string/custom_font_regular" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_below="@id/func_off_dialog_content"
+        android:layout_marginTop="23dp"
+        android:orientation="horizontal">
+
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/func_off_dialog_btn_no"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="@string/disable"
+            android:textAllCaps="true"
+            android:textColor="#9094A0"
+            android:textSize="16sp"
+            app:font_family_changeable="false"
+            app:typeface="@string/custom_font_medium" />
+
+        <com.android.messaging.ui.view.MessagesTextView
+            android:id="@+id/func_off_dialog_btn_yes"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="@string/function_off_dialog_btn_positive"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            app:font_family_changeable="false"
+            app:typeface="@string/custom_font_medium" />
+    </LinearLayout>
+</RelativeLayout>

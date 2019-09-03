@@ -1366,6 +1366,45 @@
     <string name="schedule_select_time_error">Select time in future</string>
     <string name="scheduled_edit_title">Scheduled message</string>
     <string name="scheduled_edit_send_now">Send now</string>
-    
+
+    <!--Notification Cleaner-->
+    <string name="optimal">OPTIMAL</string>
+    <string name="notification_cleaner_title">Notification Cleaner</string>
+    <string name="notification_cleaner_intercepted" formatted="false">%1$s Junk Notifications</string>
+    <string name="notification_cleaner_clean_now_tip">Hide junk notifications, Never miss any important messages</string>
+    <string name="notification_cleaner_clean_now">CLEAN NOW</string>
+    <string name="notification_cleaner_illustration_page">Junk notifications will be hidden in Notification Cleaner Bar.</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="notification_cleaner_clean_all">CLEAN ALL (%1$d)</string>
+    <string name="notification_cleaner_settings_description">Select apps to block notifications</string>
+    <string name="notification_cleaner_deleted">DELETED</string>
+    <string name="notification_cleaner_cleared_up">%1$s notifications cleared up!</string>
+    <string name="notification_cleaner_hidden_description">No Notifications.</string>
+    <string name="notification_cleaner_guide_white_list">settings for whitelist</string>
+    <string name="notification_cleaner_fake_notification_title_1">Notification Cleaner Enabled!</string>
+    <string name="notification_cleaner_fake_notification_title_2">Click to see details</string>
+    <string name="notification_cleaner_fake_notification_body_1">Blocked notifications will show up here.</string>
+    <string name="notification_cleaner_fake_notification_body_2">Slide to delete a single notification.</string>
+
+    <string name="notification_cleaner_block_closed">%1$s notifications will not be blocked</string>
+    <string name="notification_cleaner_block_opened">%1$s notifications will be blocked</string>
+
+    <string name="function_off_dialog_NC_title">Disable Notification Cleaner?</string>
+    <string name="function_off_dialog_NC_content">%1$s unwanted notifications have been blocked by Notification Cleaner in %2$s days.</string>
+    <string name="function_off_dialog_btn_positive">KEEP USING</string>
+
+    <string name="nc_notification_channel">Notification Cleaner</string>
+    <string name="nc_notification_channel_description">Organise and delete unwanted notification pushes.</string>
+    <string name="showing_ads">Showing Ads...</string>
+
+    <string name="disable">Disable</string>
+    <string name="clean">Clean</string>
+    <string name="off">Off</string>
+
+    <string name="result_page_optimized_healthy">Your phone is optimal now!</string>
+    <string name="notification_cleaner_permission_guide_title">Find %1$s and turn it on. No private info will be collected.</string>
+
+    <string name="notification_cleaner_push_title">Block Junk Notifications </string>
 </resources>
 

@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.messaging.R;
+import com.android.messaging.notificationcleaner.NotificationCleanerTest;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversationlist.ConversationListActivity;
 import com.android.messaging.ui.dialog.NotificationAccessDialogActivity;
@@ -49,6 +50,7 @@ public class NotificationAccessGuideActivity extends AppCompatActivity {
                     }
                     BugleAnalytics.logEvent("Start_NA_SetSuccess", true);
                     BugleFirebaseAnalytics.logEvent("SMS_NotificationAccess", "NA_setsuccess", "true");
+                    NotificationCleanerTest.logNotificationAccessGrant();
                     Intent intentSelf = new Intent(HSApplication.getContext(), NotificationAccessGuideActivity.class);
                     intentSelf.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     HSApplication.getContext().startActivity(intentSelf);
