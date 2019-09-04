@@ -77,6 +77,7 @@ import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.appsettings.VibrateSettings;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
+import com.android.messaging.ui.ringtone.RingtoneInfoManager;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
 import com.android.messaging.util.BugleAnalytics;
@@ -95,7 +96,6 @@ import com.android.messaging.util.NotificationPlayer;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.PendingIntentConstants;
 import com.android.messaging.util.PopupsReplyAutopilotUtils;
-import com.android.messaging.util.RingtoneUtil;
 import com.android.messaging.util.ThreadUtil;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
@@ -367,7 +367,7 @@ public class BugleNotifications {
         final DatabaseWrapper db = DataModel.get().getDatabase();
         final ConversationListItemData convData =
                 ConversationListItemData.getExistingConversation(db, conversationId);
-        return RingtoneUtil.getNotificationRingtoneUri(
+        return RingtoneInfoManager.getNotificationRingtoneUri(
                 convData != null ? convData.getNotificationSoundUri() : null);
     }
 
@@ -444,7 +444,7 @@ public class BugleNotifications {
     private static void processAndSend(final NotificationState state, final boolean silent,
                                        final boolean softSound, String conversationId) {
         final Context context = Factory.get().getApplicationContext();
-        final Uri ringtoneUri = RingtoneUtil.getNotificationRingtoneUri(state.getRingtoneUri());
+        final Uri ringtoneUri = RingtoneInfoManager.getNotificationRingtoneUri(state.getRingtoneUri());
 
         NotificationChannel notificationChannel = null;
         String channelId = PendingIntentConstants.SMS_NOTIFICATION_CHANNEL_ID;

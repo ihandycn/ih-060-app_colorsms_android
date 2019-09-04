@@ -5,14 +5,9 @@ import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -31,10 +26,12 @@ import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.invitefriends.InviteFriendsActivity;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
+import com.android.messaging.ui.ringtone.RingtoneInfo;
+import com.android.messaging.ui.ringtone.RingtoneInfoManager;
+import com.android.messaging.ui.ringtone.RingtoneSettingActivity;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.ui.signature.TextSettingDialog;
 import com.android.messaging.util.BugleAnalytics;
-import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.BuglePrefs;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.PhoneUtils;
@@ -52,7 +49,8 @@ import java.util.Collections;
 import static android.view.View.GONE;
 
 public class SettingActivity extends BaseActivity implements TextSettingDialog.TextSettingDialogCallback {
-    private static final int REQUEST_CODE_START_RINGTONE_PICKER = 1;
+    private static final int REQUEST_CODE_RINGTONE_PICKER = 1;
+
     private static final int RC_SIGN_IN = 12;
     private static final int EMOJI_STYLE_SET = 13;
 
@@ -439,27 +437,13 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
         });
     }
 
+
     private void updateSoundSummary() {
         // The silent ringtone just returns an empty string
-        String ringtoneName = getString(R.string.silent_ringtone);
-        String prefKey = getString(R.string.notification_sound_pref_key);
-
-        String ringtoneString = prefs.getString(prefKey, null);
-
-        if (ringtoneString == null) {
-            ringtoneString = Settings.System.DEFAULT_NOTIFICATION_URI.toString();
-            prefs.putString(prefKey, ringtoneString);
-        }
-
+        String ringtoneName = "";
         try {
-            if (!TextUtils.isEmpty(ringtoneString)) {
-                final Uri ringtoneUri = Uri.parse(ringtoneString);
-                final Ringtone tone = RingtoneManager.getRingtone(this, ringtoneUri);
-
-                if (tone != null) {
-                    ringtoneName = tone.getTitle(this);
-                }
-            }
+            RingtoneInfo info = RingtoneInfoManager.getCurSound();
+            ringtoneName = info.name;
         } catch (SecurityException e) {
             e.printStackTrace();
             mSoundView.setVisibility(GONE);
@@ -499,24 +483,15 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
     }
 
     private void onSoundItemClick() {
-        String prefKey = getString(R.string.notification_sound_pref_key);
-        String ringtoneString = prefs.getString(prefKey, null);
-        if (ringtoneString == null) {
-            ringtoneString = Settings.System.DEFAULT_NOTIFICATION_URI.toString();
-            prefs.putString(prefKey, ringtoneString);
-        }
+        Intent ringtonePickerIntent = new Intent(this, RingtoneSettingActivity.class);
+        ringtonePickerIntent.putExtra(RingtoneSettingActivity.EXTRA_CUR_RINGTONE_INFO, RingtoneInfoManager.getCurSound());
+        ringtonePickerIntent.putExtra(RingtoneSettingActivity.EXTRA_FROM_PAGE, RingtoneSettingActivity.FROM_SETTING);
 
-        Intent ringtonePickerIntent = new Intent(RingtoneManager.ACTION_RINGTONE_PICKER);
-        ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_EXISTING_URI, Uri.parse(ringtoneString));
-        ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_DEFAULT, true);
-        ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_DEFAULT_URI,
-                RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-        ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_SHOW_SILENT, true);
-        ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TYPE, RingtoneManager.TYPE_NOTIFICATION);
-        ringtonePickerIntent.putExtra(RingtoneManager.EXTRA_RINGTONE_TITLE, getTitle()); //title
         Navigations.startActivityForResultSafely(SettingActivity.this,
-                ringtonePickerIntent, REQUEST_CODE_START_RINGTONE_PICKER);
+                ringtonePickerIntent, REQUEST_CODE_RINGTONE_PICKER);
         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
+
+        RingtoneEntranceAutopilotUtils.logSettingsRingtoneClick();
     }
 
     @Override
@@ -527,21 +502,15 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE_START_RINGTONE_PICKER) {
+        if (requestCode == REQUEST_CODE_RINGTONE_PICKER) {
             if (resultCode != RESULT_OK) {
                 return;
             }
             if (data == null) {
                 return;
             }
-            Uri uri = data.getParcelableExtra(RingtoneManager.EXTRA_RINGTONE_PICKED_URI);
-            String prefKey = getString(R.string.notification_sound_pref_key);
-            String currentRingtone = prefs.getString(prefKey, Settings.System.DEFAULT_NOTIFICATION_URI.toString());
-            if (currentRingtone != null && !currentRingtone.equals(uri == null ? "" : uri.toString())) {
-                BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, "from", "settings");
-                BugleFirebaseAnalytics.logEvent("Customize_Notification_Sound_Change", "from", "settings");
-            }
-            prefs.putString(prefKey, uri == null ? "" : uri.toString());
+            RingtoneInfo info = data.getParcelableExtra(RingtoneSettingActivity.EXTRA_CUR_RINGTONE_INFO);
+            RingtoneInfoManager.setCurSound(info);
             updateSoundSummary();
 
         } else if (requestCode == RC_SIGN_IN) {

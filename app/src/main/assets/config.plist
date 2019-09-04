@@ -135,6 +135,38 @@
 					<string>com.samsung.android.messaging</string>
 				</array>
 			</dict>
+			<key>Ringtone</key>
+			<dict>
+				<key>RingtoneList</key>
+				<array>
+					<string>ringtone_bubble_ding</string>
+					<string>ringtone_yay_girl</string>
+					<string>ringtone_wow</string>
+					<string>ringtone_uh_oh</string>
+					<string>ringtone_tech</string>
+					<string>ringtone_snoring_whistle</string>
+					<string>ringtone_select</string>
+					<string>ringtone_positive_swoosh</string>
+					<string>ringtone_pop_up2</string>
+					<string>ringtone_pop_up1</string>
+					<string>ringtone_pop_up</string>
+					<string>ringtone_oh_oh</string>
+					<string>ringtone_littleyellowman</string>
+					<string>ringtone_laugh</string>
+					<string>ringtone_kiss3</string>
+					<string>ringtone_kiss</string>
+					<string>ringtone_horse</string>
+					<string>ringtone_horn</string>
+					<string>ringtone_happy</string>
+					<string>ringtone_gamehappy</string>
+					<string>ringtone_appearance</string>
+					<string>ringtone_bubble</string>
+					<string>ringtone_cat</string>
+					<string>ringtone_confirm</string>
+					<string>ringtone_electronic_bubbles</string>
+					<string>ringtone_christmas</string>
+				</array>
+			</dict>
 			<key>DeliveryReportDefaultSwitch</key>
 			<true/>
 			<key>ScheduleMessage</key>

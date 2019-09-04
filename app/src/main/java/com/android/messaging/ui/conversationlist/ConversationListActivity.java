@@ -70,6 +70,7 @@ import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.UIIntentsImpl;
 import com.android.messaging.ui.appsettings.ChooseThemeColorRecommendViewHolder;
 import com.android.messaging.ui.appsettings.LedSettings;
+import com.android.messaging.ui.appsettings.RingtoneEntranceAutopilotUtils;
 import com.android.messaging.ui.appsettings.SendDelaySettings;
 import com.android.messaging.ui.appsettings.ThemeColorSelectActivity;
 import com.android.messaging.ui.appsettings.VibrateSettings;
@@ -87,6 +88,9 @@ import com.android.messaging.ui.emoji.EmojiStoreActivity;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.messagebox.MessageBoxActivity;
 import com.android.messaging.ui.messagebox.MessageBoxSettings;
+import com.android.messaging.ui.ringtone.RingtoneInfo;
+import com.android.messaging.ui.ringtone.RingtoneInfoManager;
+import com.android.messaging.ui.ringtone.RingtoneSettingActivity;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.ui.smspro.BillingActivity;
 import com.android.messaging.ui.wallpaper.WallpaperDownloader;
@@ -160,6 +164,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final String PREF_KEY_THEME_CLICKED = "pref_key_navigation_theme_clicked";
     private static final String PREF_KEY_EMOJI_STORE_CLICKED = "pref_key_emoji_store_clicked";
     private static final String PREF_KEY_THEME_COLOR_CLICKED = "pref_key_navigation_theme_color_clicked";
+    private static final String PREF_KEY_RINGTONE_CLICKED = "pref_key_navigation_ringtone";
     private static final String PREF_KEY_BUBBLE_CLICKED = "pref_key_navigation_bubble_clicked";
     private static final String PREF_KEY_PRIVATE_BOX_CLICKED = "pref_key_navigation_private_box_clicked";
     private static final String PREF_KEY_BACKGROUND_CLICKED = "pref_key_navigation_background_clicked";
@@ -188,6 +193,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private static final int DRAWER_INDEX_REMOVE_ADS = 11;
     private static final int DRAWER_INDEX_CHAT_LIST = 12;
     private static final int DRAWER_INDEX_NOTIFICATION_CLEANER = 13;
+    private static final int DRAWER_INDEX_RINGTONE = 14;
 
     private static final int MIN_AD_CLICK_DELAY_TIME = 300;
     private int drawerClickIndex = DRAWER_INDEX_NONE;
@@ -571,6 +577,14 @@ public class ConversationListActivity extends AbstractConversationListActivity
                         overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                         navigationContent.findViewById(R.id.navigation_item_theme_color_new_text).setVisibility(View.GONE);
                         break;
+                    case DRAWER_INDEX_RINGTONE:
+                        BugleAnalytics.logEvent("Menu_Ringtone_Click", true);
+                        Intent intent = new Intent(ConversationListActivity.this, RingtoneSettingActivity.class);
+                        intent.putExtra(RingtoneSettingActivity.EXTRA_FROM_PAGE, RingtoneSettingActivity.FROM_MENU);
+                        Navigations.startActivitySafely(ConversationListActivity.this, intent);
+                        overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
+                        navigationContent.findViewById(R.id.navigation_item_ringtone_new_text).setVisibility(View.GONE);
+                        break;
                     case DRAWER_INDEX_BUBBLE:
                         BugleAnalytics.logEvent("Menu_Bubble_Click", true);
                         BugleFirebaseAnalytics.logEvent("Menu_Bubble_Click");
@@ -714,6 +728,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
         navigationContent.findViewById(R.id.navigation_item_theme).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_theme_color).setOnClickListener(this);
+        navigationContent.findViewById(R.id.navigation_item_ringtone).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_bubble).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_chat_background).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_change_font).setOnClickListener(this);
@@ -721,6 +736,10 @@ public class ConversationListActivity extends AbstractConversationListActivity
         navigationContent.findViewById(R.id.navigation_item_emoji_store).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_chat_list).setOnClickListener(this);
         navigationContent.findViewById(R.id.navigation_item_notification_cleaner).setOnClickListener(this);
+
+        if (!RingtoneEntranceAutopilotUtils.getIsShowMenuEntrance()) {
+            navigationContent.findViewById(R.id.navigation_item_ringtone).setVisibility(View.GONE);
+        }
 
         View backupEntrance = navigationContent.findViewById(R.id.navigation_item_backup_restore);
         backupEntrance.setOnClickListener(this);
@@ -883,6 +902,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                     dismissActionMode();
                     return true;
                 } else {
+                    RingtoneEntranceAutopilotUtils.logMenuShow();
                     drawerLayout.openDrawer(navigationView);
                     return true;
                 }
@@ -1159,11 +1179,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 drawerLayout.closeDrawer(navigationView);
                 Preferences.getDefault().putBoolean(PREF_KEY_THEME_CLICKED, true);
                 break;
-
             case R.id.navigation_item_theme_color:
                 drawerClickIndex = DRAWER_INDEX_THEME_COLOR;
                 drawerLayout.closeDrawer(navigationView);
                 Preferences.getDefault().putBoolean(PREF_KEY_THEME_COLOR_CLICKED, true);
+                break;
+            case R.id.navigation_item_ringtone:
+                drawerClickIndex = DRAWER_INDEX_RINGTONE;
+                drawerLayout.closeDrawer(navigationView);
+                Preferences.getDefault().putBoolean(PREF_KEY_RINGTONE_CLICKED, true);
+                RingtoneEntranceAutopilotUtils.logMenuRingtoneClick();
                 break;
             case R.id.navigation_item_bubble:
                 drawerClickIndex = DRAWER_INDEX_BUBBLE;
@@ -1294,6 +1319,18 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             int tensNum = Math.min((int) (alpha * 10), 9);
                             opacityStr = tensNum + "0%-" + (tensNum + 1) + "0%";
                         }
+
+                        RingtoneInfo info = RingtoneInfoManager.getCurSound();
+                        String ringtoneStr = "system";
+                        switch (info.type) {
+                            case RingtoneInfo.TYPE_FILE:
+                                ringtoneStr = "file";
+                                break;
+                            case RingtoneInfo.TYPE_APP:
+                                ringtoneStr = info.name;
+                                break;
+                        }
+
                         BugleAnalytics.logEvent("SMS_Messages_Show_2", true,
                                 "subscription", String.valueOf(BillingManager.isPremiumUser()),
                                 "type", EmojiManager.getEmojiStyle(),
@@ -1302,7 +1339,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                         .getString(ChatListCustomizeActivity.PREF_KEY_EVENT_CHANGE_COLOR_TYPE, "theme"),
                                 "chat_list_opacity", opacityStr,
                                 "vibrate", VibrateSettings.getVibrateDescription(""),
-                                "led", LedSettings.getLedDescription(""));
+                                "led", LedSettings.getLedDescription(""),
+                                "ringtone", ringtoneStr);
+
 
                         BugleFirebaseAnalytics.logEvent("SMS_Messages_Show_2",
                                 "subscription", String.valueOf(BillingManager.isPremiumUser()),
@@ -1312,7 +1351,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                         .getString(ChatListCustomizeActivity.PREF_KEY_EVENT_CHANGE_COLOR_TYPE, "theme"),
                                 "chat_list_opacity", opacityStr,
                                 "vibrate", VibrateSettings.getVibrateDescription(""),
-                                "led", LedSettings.getLedDescription(""));
+                                "led", LedSettings.getLedDescription(""),
+                                "ringtone", ringtoneStr);
                     });
                 }
                 break;
