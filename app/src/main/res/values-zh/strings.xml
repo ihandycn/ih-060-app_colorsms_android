@@ -806,7 +806,21 @@
     <string name="action_rename_group_chat">重命名群組</string>
     <string name="conversation_setting_guide_text">個性化這個聯繫人吧！ </string>
     <string name="permission_guide_description">現在授予並使用%1$s吧！ </string>
-    <string name="notification_guide_content">為了讓您更好的接收消息，請授予通知權限。
-    </string><string name="notification_guide_title">最後一步</string>
+    <string name="notification_guide_content">為了讓您更好的接收消息，請授予通知權限。</string>
+    <string name="notification_guide_title">最後一步</string>
 
+    <string name="ringtone">鈴聲</string>
+    <string name="music">音樂</string>
+    <string name="settings_vibrate_off">關</string>
+    <string name="settings_led_none">無</string>
+    <string name="settings_vibrate_normal">正常</string>
+    <string name="settings_led_white">白色</string>
+    <string name="settings_led_red">紅色</string>
+    <string name="settings_led_blue">藍色</string>
+    <string name="settings_led_yellow">黃色</string>
+    <string name="settings_led_green">綠色</string>
+    <string name="settings_led_purple">紫色</string>
+    <string name="settings_led_cyan">青色</string>
+    <string name="settings_vibrate_short">短</string>
+    <string name="settings_vibrate_long">長</string>
 </resources>

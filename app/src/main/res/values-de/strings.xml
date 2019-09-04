@@ -818,4 +818,19 @@
 	<string name="notification_guide_content">Um Ihren einen besseren Empfang von Nachrichten zu bieten, geben Sie bitte die Erlaubnis für den Benachrichtigungszugang.</string>
 	<string name="notification_guide_title">Letzter Schritt</string>
 
+    <string name="ringtone">Klingelton</string>
+    <string name="music">Musik</string>
+    <string name="settings_vibrate_off">aus</string>
+    <string name="settings_led_none">Keiner</string>
+    <string name="settings_vibrate_normal">Normal</string>
+    <string name="settings_led_white">Weiß</string>
+    <string name="settings_led_red">rot</string>
+    <string name="settings_led_blue">Blau</string>
+    <string name="settings_led_yellow">Gelb</string>
+    <string name="settings_led_green">Grün</string>
+    <string name="settings_led_purple">Lila</string>
+    <string name="settings_led_cyan">Cyan</string>
+    <string name="settings_vibrate_short">Kurz</string>
+    <string name="settings_vibrate_long">Lange</string>
+
 </resources>

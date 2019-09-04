@@ -816,4 +816,19 @@
 	<string name="notification_guide_content">Mesaj alırken size daha iyi hizmet verebilmemiz için lütfen Bildirim Erişimine izin verin.</string>
 	<string name="notification_guide_title">Son Adım</string>
 
+    <string name="ringtone">Zil</string>
+    <string name="music">Müzik</string>
+    <string name="settings_vibrate_off">kapalı</string>
+    <string name="settings_led_none">Yok</string>
+    <string name="settings_vibrate_normal">Normal</string>
+    <string name="settings_led_white">Beyaz</string>
+    <string name="settings_led_red">Kırmızı</string>
+    <string name="settings_led_blue">Mavi</string>
+    <string name="settings_led_yellow">Sarı</string>
+    <string name="settings_led_green">Yeşil</string>
+    <string name="settings_led_purple">Mor</string>
+    <string name="settings_led_cyan">Mavi</string>
+    <string name="settings_vibrate_short">Kısa</string>
+    <string name="settings_vibrate_long">Uzun</string>
+
 </resources>

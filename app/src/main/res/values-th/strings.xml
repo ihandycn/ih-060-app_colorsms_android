@@ -823,4 +823,19 @@
 	<string name="notification_guide_content">ในการให้บริการรับข้อความได้ดีขึ้น กรุณาอนุญาตการเข้าถึงการแจ้งเตือน</string>
 	<string name="notification_guide_title">ขั้นตอนสุดท้าย</string>
 
+    <string name="ringtone">ริงโทน</string>
+    <string name="music">เพลง</string>
+    <string name="settings_vibrate_off">ปิด</string>
+    <string name="settings_led_none">ไม่มี</string>
+    <string name="settings_vibrate_normal">ปกติ</string>
+    <string name="settings_led_white">ขาว</string>
+    <string name="settings_led_red">สีแดง</string>
+    <string name="settings_led_blue">สีน้ำเงิน</string>
+    <string name="settings_led_yellow">สีเหลือง</string>
+    <string name="settings_led_green">สีเขียว</string>
+    <string name="settings_led_purple">สีม่วง</string>
+    <string name="settings_led_cyan">สีฟ้า</string>
+    <string name="settings_vibrate_short">สั้น</string>
+    <string name="settings_vibrate_long">ยาว</string>
+
 </resources>

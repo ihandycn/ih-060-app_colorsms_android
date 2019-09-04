@@ -822,4 +822,19 @@
 	<string name="notification_guide_content">संदेश प्राप्</string>
 	<string name="notification_guide_title">आखिरी चरण</string>
 
+    <string name="ringtone">रिंगटोन</string>
+    <string name="music">संगीत</string>
+    <string name="settings_vibrate_off">बंद</string>
+    <string name="settings_led_none">कोई नहीं</string>
+    <string name="settings_vibrate_normal">साधारण</string>
+    <string name="settings_led_white">सफेद</string>
+    <string name="settings_led_red">लाल</string>
+    <string name="settings_led_blue">नीला</string>
+    <string name="settings_led_yellow">पीला</string>
+    <string name="settings_led_green">हरा</string>
+    <string name="settings_led_purple">बैंगनी</string>
+    <string name="settings_led_cyan">सियान</string>
+    <string name="settings_vibrate_short">कम</string>
+    <string name="settings_vibrate_long">लंबा</string>
+
 </resources>

@@ -807,4 +807,18 @@
 	<string name="notification_guide_content">メッセージをよりうまく受信するために、通知のアクセスを許可してください。</string>
 	<string name="notification_guide_title">最後のステップ</string>
 
+    <string name="ringtone">着メロ</string>
+    <string name="music">音楽</string>
+    <string name="settings_vibrate_off">オフ</string>
+    <string name="settings_led_none">無し</string>
+    <string name="settings_vibrate_normal">普通</string>
+    <string name="settings_led_white">白</string>
+    <string name="settings_led_red">赤</string>
+    <string name="settings_led_blue">青</string>
+    <string name="settings_led_yellow">黄</string>
+    <string name="settings_led_green">緑</string>
+    <string name="settings_led_purple">紫の</string>
+    <string name="settings_led_cyan">シアン</string>
+    <string name="settings_vibrate_short">ショート</string>
+    <string name="settings_vibrate_long">長いです</string>
 </resources>

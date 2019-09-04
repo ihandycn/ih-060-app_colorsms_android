@@ -1418,24 +1418,24 @@
     <string name="ringtone_christmas">Christmas</string>
     <string name="ringtone_confirm">Confirm</string>
     <string name="ringtone_electronic_bubbles">ElectronicBubbles</string>
-    <string name="ringtone_gamehappy">Gamehappy</string>
+    <string name="ringtone_gamehappy">HappyGame</string>
     <string name="ringtone_happy">Happy</string>
     <string name="ringtone_horn">Horn</string>
     <string name="ringtone_horse">Horse</string>
-    <string name="ringtone_kiss">Kiss</string>
-    <string name="ringtone_kiss3">Kiss3</string>
+    <string name="ringtone_kiss">SweetKiss</string>
+    <string name="ringtone_kiss3">Kiss</string>
     <string name="ringtone_laugh">Laugh</string>
-    <string name="ringtone_littleyellowman">Littleyellowman</string>
+    <string name="ringtone_littleyellowman">Minions</string>
     <string name="ringtone_oh_oh">OhOh</string>
-    <string name="ringtone_popUp">PopUp</string>
-    <string name="ringtone_popUp1">PopUp1</string>
-    <string name="ringtone_popUp2">PopUp2</string>
-    <string name="ringtone_positiveSwoosh">PositiveSwoosh</string>
+    <string name="ringtone_pop_up">PopUp</string>
+    <string name="ringtone_pop_up1">Whistle</string>
+    <string name="ringtone_pop_up2">Bottle</string>
+    <string name="ringtone_positive_swoosh">Positive Swoosh</string>
     <string name="ringtone_select">Select</string>
-    <string name="ringtone_snoring_whistle">SnoringWhistle</string>
+    <string name="ringtone_snoring_whistle">Snoring Whistle</string>
     <string name="ringtone_tech">Tech</string>
     <string name="ringtone_uh_oh">UhOh</string>
     <string name="ringtone_wow">Wow</string>
-    <string name="ringtone_yay_girl">YayGirl</string>
+    <string name="ringtone_yay_girl">Yay</string>
 </resources>
 

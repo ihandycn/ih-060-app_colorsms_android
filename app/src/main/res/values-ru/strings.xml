@@ -872,4 +872,19 @@
 	<string name="notification_guide_content">Для предоставления услуг лучшего качества приложению необходим доступ к уведомлениям.</string>
 	<string name="notification_guide_title">Последний шаг</string>
 
+    <string name="ringtone">Мелодия</string>
+    <string name="music">Музыка</string>
+    <string name="settings_vibrate_off">от</string>
+    <string name="settings_led_none">Никто</string>
+    <string name="settings_vibrate_normal">Нормальный</string>
+    <string name="settings_led_white">белый</string>
+    <string name="settings_led_red">красный</string>
+    <string name="settings_led_blue">синий</string>
+    <string name="settings_led_yellow">желтый</string>
+    <string name="settings_led_green">зеленый</string>
+    <string name="settings_led_purple">Пурпурный</string>
+    <string name="settings_led_cyan">Cyan</string>
+    <string name="settings_vibrate_short">короткий</string>
+    <string name="settings_vibrate_long">Долго</string>
+
 </resources>

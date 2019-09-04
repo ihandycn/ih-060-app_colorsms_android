@@ -917,4 +917,19 @@
 	<string name="notification_guide_content">لنخدمك بشكل أفضل في تلقي الرسائل، يرجى منح إذن الإخطارات.</string>
 	<string name="notification_guide_title">الخطوة الأخيرة</string>
 
+    <string name="ringtone">نغمة</string>
+    <string name="music">موسيقى</string>
+    <string name="settings_vibrate_off">إيقاف</string>
+    <string name="settings_led_none">لا شيء</string>
+    <string name="settings_vibrate_normal">عادي</string>
+    <string name="settings_led_white">أبيض</string>
+    <string name="settings_led_red">أحمر</string>
+    <string name="settings_led_blue">أزرق</string>
+    <string name="settings_led_yellow">الأصفر</string>
+    <string name="settings_led_green">أخضر</string>
+    <string name="settings_led_purple">أرجواني</string>
+    <string name="settings_led_cyan">ازرق سماوي</string>
+    <string name="settings_vibrate_short">قصيرة</string>
+    <string name="settings_vibrate_long">طويل</string>
+
 </resources>

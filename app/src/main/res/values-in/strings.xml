@@ -830,4 +830,19 @@
 	<string name="notification_guide_content">Agar menerima pesan lebih menyenangkan, berikan kami Akses Notifikasi.</string>
 	<string name="notification_guide_title">Langkah Terakhir</string>
 
+    <string name="ringtone">Nada dering</string>
+    <string name="music">Musik</string>
+    <string name="settings_vibrate_off">Mati</string>
+    <string name="settings_led_none">Tidak ada</string>
+    <string name="settings_vibrate_normal">Normal</string>
+    <string name="settings_led_white">putih</string>
+    <string name="settings_led_red">Merah</string>
+    <string name="settings_led_blue">Biru</string>
+    <string name="settings_led_yellow">Kuning</string>
+    <string name="settings_led_green">hijau</string>
+    <string name="settings_led_purple">Ungu</string>
+    <string name="settings_led_cyan">Cyan</string>
+    <string name="settings_vibrate_short">Pendek</string>
+    <string name="settings_vibrate_long">Panjang</string>
+
 </resources>

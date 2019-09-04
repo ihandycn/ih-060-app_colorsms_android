@@ -823,4 +823,19 @@
 	<string name="notification_guide_content">메시지 수신을 더 원활하게 하기 위해 알림 권한을 부여하세요.</string>
 	<string name="notification_guide_title">마지막 단계</string>
 
+    <string name="ringtone">벨소리</string>
+    <string name="music">음악</string>
+    <string name="settings_vibrate_off">떨어져서</string>
+    <string name="settings_led_none">없음</string>
+    <string name="settings_vibrate_normal">표준</string>
+    <string name="settings_led_white">화이트</string>
+    <string name="settings_led_red">빨간</string>
+    <string name="settings_led_blue">푸른</string>
+    <string name="settings_led_yellow">노랑</string>
+    <string name="settings_led_green">녹색</string>
+    <string name="settings_led_purple">자</string>
+    <string name="settings_led_cyan">청록</string>
+    <string name="settings_vibrate_short">짧은</string>
+    <string name="settings_vibrate_long">긴</string>
+
 </resources>

@@ -830,4 +830,19 @@
 	<string name="notification_guide_title">Último Passo</string>
 
     <string name="message_box_reply_message_button">RESPONDER À MENSAGEM</string>
+
+    <string name="ringtone">toque</string>
+    <string name="music">Música</string>
+    <string name="settings_vibrate_off">Fora</string>
+    <string name="settings_led_none">Nenhum</string>
+    <string name="settings_vibrate_normal">Normal</string>
+    <string name="settings_led_white">Branco</string>
+    <string name="settings_led_red">Vermelho</string>
+    <string name="settings_led_blue">Azul</string>
+    <string name="settings_led_yellow">Amarelo</string>
+    <string name="settings_led_green">Verde</string>
+    <string name="settings_led_purple">Roxa</string>
+    <string name="settings_led_cyan">Ciano</string>
+    <string name="settings_vibrate_short">Baixo</string>
+    <string name="settings_vibrate_long">Longo</string>
 </resources>

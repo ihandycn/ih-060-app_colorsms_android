@@ -820,4 +820,20 @@
 	<string name="notification_guide_title">Dernière étape</string>
 
     <string name="message_box_reply_message_button">MESSAGE DE RÉPONSE</string>
+
+    <string name="ringtone">Sonnerie</string>
+    <string name="music">La musique</string>
+    <string name="settings_vibrate_off">De</string>
+    <string name="settings_led_none">Aucun</string>
+    <string name="settings_vibrate_normal">Ordinaire</string>
+    <string name="settings_led_white">blanc</string>
+    <string name="settings_led_red">rouge</string>
+    <string name="settings_led_blue">Bleu</string>
+    <string name="settings_led_yellow">Jaune</string>
+    <string name="settings_led_green">vert</string>
+    <string name="settings_led_purple">Violet</string>
+    <string name="settings_led_cyan">Cyan</string>
+    <string name="settings_vibrate_short">Court</string>
+    <string name="settings_vibrate_long">Longue</string>
+
 </resources>

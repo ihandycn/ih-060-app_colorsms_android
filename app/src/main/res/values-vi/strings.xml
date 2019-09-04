@@ -825,4 +825,19 @@
 	<string name="notification_guide_content">Để phục vụ bạn tốt hơn khi nhận tin nhắn, vui lòng cấp Quyền truy cập thông báo.</string>
 	<string name="notification_guide_title">Bước cuối cùng</string>
 
+    <string name="ringtone">Nhạc chuông</string>
+    <string name="music">Âm nhạc</string>
+    <string name="settings_vibrate_off">Tắt</string>
+    <string name="settings_led_none">không ai</string>
+    <string name="settings_vibrate_normal">Bình thường</string>
+    <string name="settings_led_white">trắng</string>
+    <string name="settings_led_red">Màu đỏ</string>
+    <string name="settings_led_blue">Màu xanh da trời</string>
+    <string name="settings_led_yellow">Màu vàng</string>
+    <string name="settings_led_green">màu xanh lá</string>
+    <string name="settings_led_purple">Màu tím</string>
+    <string name="settings_led_cyan">Cyan</string>
+    <string name="settings_vibrate_short">Ngắn</string>
+    <string name="settings_vibrate_long">Dài</string>
+
 </resources>

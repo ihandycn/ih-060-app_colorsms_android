@@ -804,6 +804,20 @@
     <string name="notification_guide_content">为了让您更好的接收消息，请授予通知权限。</string>
     <string name="notification_guide_title">最后一步</string>
 
+    <string name="ringtone">铃声</string>
+    <string name="music">音乐</string>
+    <string name="settings_vibrate_off">关</string>
+    <string name="settings_led_none">无</string>
+    <string name="settings_vibrate_normal">正常</string>
+    <string name="settings_led_white">白色</string>
+    <string name="settings_led_red">红色</string>
+    <string name="settings_led_blue">蓝色</string>
+    <string name="settings_led_yellow">黄色</string>
+    <string name="settings_led_green">绿色</string>
+    <string name="settings_led_purple">紫色</string>
+    <string name="settings_led_cyan">青色</string>
+    <string name="settings_vibrate_short">短</string>
+    <string name="settings_vibrate_long">长</string>
 
 
 </resources>

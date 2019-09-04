@@ -823,4 +823,19 @@
 	<string name="notification_guide_content">Per offrirti un miglior servizio di ricezione di messaggi, autorizza l\'Accesso alle notifiche.</string>
 	<string name="notification_guide_title">Ultimo passaggio</string>
 
+    <string name="ringtone">Suoneria</string>
+    <string name="music">Musica</string>
+    <string name="settings_vibrate_off">via</string>
+    <string name="settings_led_none">Nessuna</string>
+    <string name="settings_vibrate_normal">Normale</string>
+    <string name="settings_led_white">bianca</string>
+    <string name="settings_led_red">Rosso</string>
+    <string name="settings_led_blue">Blu</string>
+    <string name="settings_led_yellow">Giallo</string>
+    <string name="settings_led_green">verde</string>
+    <string name="settings_led_purple">Viola</string>
+    <string name="settings_led_cyan">Ciano</string>
+    <string name="settings_vibrate_short">Corto</string>
+    <string name="settings_vibrate_long">Lungo</string>
+
 </resources>
