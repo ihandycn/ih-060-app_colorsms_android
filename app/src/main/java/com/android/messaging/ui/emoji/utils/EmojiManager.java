@@ -3,13 +3,17 @@ package com.android.messaging.ui.emoji.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
+import com.android.messaging.R;
 import com.android.messaging.download.Downloader;
 import com.android.messaging.glide.GlideApp;
+import com.android.messaging.ui.appsettings.SystemEmojiStylePreview;
 import com.android.messaging.ui.emoji.BaseEmojiInfo;
 import com.android.messaging.ui.emoji.EmojiInfo;
 import com.android.messaging.ui.emoji.EmojiPackageInfo;
@@ -21,6 +25,7 @@ import com.android.messaging.ui.emoji.utils.emoispan.EmojiSpannableWorker;
 import com.android.messaging.util.BugleAnalytics;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSLog;
@@ -50,6 +55,7 @@ public class EmojiManager {
 
     private static final String PREF_FIRST_VARIANT_CLICK = "pref_first_variant_click";
     private static final String PREF_FIRST_EMOJI_PAGE_CLICK = "pref_frist_emoji_page_click";
+    private static final String PREF_EMOJI_STYLE_GUIDE_SHOW_TIMES = "pref_emoji_style_guide_show_times";
 
     private static final String PREF_SKIN_FILE_NAME = "pref_skin_record";
     private static final String PREF_SKIN_SET_DEFAULT = "pref_skin_set_default";
@@ -400,6 +406,10 @@ public class EmojiManager {
         return (List<Map<String, String>>) HSConfig.getList("Application", "EmojiStyle");
     }
 
+    public static boolean getConfigEmojiStyleGuide(){
+        return HSConfig.getString("Application", "EmojiStyleGuide").equals("YES");
+    }
+
     public static boolean isSystemEmojiStyle() {
         return getEmojiStyle().equals(EMOJI_STYLE_SYSTEM);
     }
@@ -437,9 +447,30 @@ public class EmojiManager {
         return result;
     }
 
-    public static boolean isFirstEmojiPageClick() {
+    public static boolean getEnableEmojiStyleGuide() {
         boolean result = Preferences.get(PREF_FILE_NAME).getBoolean(PREF_FIRST_EMOJI_PAGE_CLICK, true);
-        Preferences.get(PREF_FILE_NAME).putBoolean(PREF_FIRST_EMOJI_PAGE_CLICK, false);
         return result;
+    }
+
+    public static void disableEmojiStyleGuide(){
+        Preferences.get(PREF_FILE_NAME).putBoolean(PREF_FIRST_EMOJI_PAGE_CLICK, false);
+    }
+
+    public static int getEmojiStyleGuideShowTimes(){
+        return Preferences.get(PREF_FILE_NAME).incrementAndGetInt(PREF_EMOJI_STYLE_GUIDE_SHOW_TIMES);
+    }
+
+    public static Drawable getEmojiStyleResource(String name){
+        Resources resources = HSApplication.getContext().getResources();
+        switch (name) {
+            case "Android Blob":
+                return resources.getDrawable(R.drawable.emoji_style_blob);
+            case "Android Pie":
+                return resources.getDrawable(R.drawable.emoji_style_pie);
+            case "Twitter":
+                return resources.getDrawable(R.drawable.emoji_style_twitter);
+            default:
+                return new SystemEmojiStylePreview();
+        }
     }
 }

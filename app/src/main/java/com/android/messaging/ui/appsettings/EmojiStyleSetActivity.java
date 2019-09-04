@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.android.messaging.BaseActivity;
 import com.android.messaging.R;
+import com.android.messaging.ui.emoji.EmojiStyleGuideView;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.emoji.utils.EmojiStyleDownloadManager;
 import com.android.messaging.util.BugleAnalytics;
@@ -34,6 +35,8 @@ public class EmojiStyleSetActivity extends BaseActivity {
 
     private String newStyle = null;
 
+    private boolean mFromGuide = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +51,12 @@ public class EmojiStyleSetActivity extends BaseActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+
+        if (getIntent() != null) {
+            mFromGuide = getIntent().getBooleanExtra(EmojiStyleGuideView.EXTRA_INTENT_FROM_GUIDE, false);
+        }
+        String from = mFromGuide ? "guide" : "settings";
+        BugleAnalytics.logEvent("Settings_EmojiStyle_Show", true, "from", from);
 
         mRecyclerView = findViewById(R.id.recycler_view);
         mAdapter = new ChooseEmojiStyleAdapter();
@@ -91,7 +100,8 @@ public class EmojiStyleSetActivity extends BaseActivity {
             @Override
             public void onItemSelected(ChooseEmojiStyleAdapter.EmojiStyleItem item, EmojiStyleDownloadManager.DownloadCallback callback) {
                 if (!item.isDownloaded && !item.isSystem) {
-                    BugleAnalytics.logEvent("Settings_EmojiStyle_Download", true, "type", item.name);
+                    String from = mFromGuide ? "guide" : "settings";
+                    BugleAnalytics.logEvent("Settings_EmojiStyle_Download", true, "type", item.name, "from", from);
                     EmojiStyleDownloadManager.getInstance().downloadEmojiStyle(item.downloadUrl, item.name,
                             new SettingDownloadCallback(item, callback, EmojiStyleSetActivity.this));
                 } else {

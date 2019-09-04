@@ -13,7 +13,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.messaging.R;
-import com.android.messaging.glide.GlideApp;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.emoji.utils.EmojiStyleDownloadManager;
@@ -74,21 +73,9 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
         if (item.isSystem) {
             holder.sampleImage.setImageDrawable(new SystemEmojiStylePreview());
         } else {
-            switch (item.name) {
-                case "Android Blob":
-                    holder.sampleImage.setImageResource(R.drawable.emoji_style_blob);
-                    break;
-                case "Android Pie":
-                    holder.sampleImage.setImageResource(R.drawable.emoji_style_pie);
-                    break;
-                case "Android Twitter":
-                    holder.sampleImage.setImageResource(R.drawable.emoji_style_twitter);
-                    break;
-                default:
-                    GlideApp.with(holder.sampleImage).load(item.sampleImageUrl).into(holder.sampleImage);
-                    break;
-            }
+            holder.sampleImage.setImageDrawable(EmojiManager.getEmojiStyleResource(item.name));
         }
+
         // selected it
         if (position == mLastItem) {
             holder.radioButton.setChecked(true);

@@ -171,6 +171,8 @@
 			<true/>
 			<key>ScheduleMessage</key>
 			<true/>
+			<key>EmojiStyleGuide</key>
+			<string>YES</string>
 			<key>EmojiStyle</key>
 			<array>
 				<dict>

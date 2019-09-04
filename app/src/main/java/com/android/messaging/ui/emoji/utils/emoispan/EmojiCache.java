@@ -51,6 +51,6 @@ public class EmojiCache {
     }
 
     public void flush() {
-        initMemoryCache();
+        mMemoryCache.evictAll();
     }
 }

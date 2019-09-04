@@ -528,8 +528,7 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
         } else if (requestCode == EMOJI_STYLE_SET) {
             if (resultCode == RESULT_OK) {
                 String name = data.getStringExtra("name");
-                String url = data.getStringExtra("url");
-                mSettingEmojiStyleItemView.update(name, url);
+                mSettingEmojiStyleItemView.update(name);
 
                 updateEmojiSkinItemView(name.equals(EmojiManager.EMOJI_STYLE_SYSTEM));
             }
