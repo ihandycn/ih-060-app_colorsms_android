@@ -259,9 +259,13 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
                     List<Uri> vCardList = new ArrayList<>();
                     for (String key : set) {
                         Uri uri = ContactFileCreator.create(contacts.get(key), null, key);
-                        vCardList.add(uri);
+                        if (uri != null) {
+                            vCardList.add(uri);
+                        }
                     }
-                    mOnMediaItemListener.onVCardContactAdded(vCardList);
+                    if (vCardList.size() > 0) {
+                        mOnMediaItemListener.onVCardContactAdded(vCardList);
+                    }
                 }
             }
         }

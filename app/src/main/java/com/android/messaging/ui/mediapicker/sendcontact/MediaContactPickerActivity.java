@@ -6,6 +6,7 @@ import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.view.animation.PathInterpolatorCompat;
 import android.support.v7.widget.AppCompatAutoCompleteTextView;
@@ -37,6 +38,7 @@ import com.android.messaging.util.TextViewUtil;
 import com.android.messaging.util.UiUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
+import com.superapps.util.Threads;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -122,21 +124,25 @@ public class MediaContactPickerActivity extends BaseActivity
         mTypeSelectContainer = findViewById(R.id.contact_select_type_container);
         mTypeSelectContainer.setTranslationY(Dimensions.pxFromDp(80));
 
-        View typeText = findViewById(R.id.contact_select_type_text_container);
-        typeText.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE,
+        Drawable leftCornerDrawable = BackgroundDrawables.createBackgroundDrawable(Color.WHITE,
                 getResources().getColor(R.color.ripples_ripple_color),
                 Dimensions.pxFromDp(24), 0, 0, Dimensions.pxFromDp(24),
-                true, true));
+                true, true);
+        Drawable rightCornerDrawable = BackgroundDrawables.createBackgroundDrawable(Color.WHITE,
+                getResources().getColor(R.color.ripples_ripple_color),
+                0, Dimensions.pxFromDp(24), Dimensions.pxFromDp(24), 0,
+                true, true);
+
+        boolean isRtl = Dimensions.isRtl();
+        View typeText = findViewById(R.id.contact_select_type_text_container);
+        typeText.setBackground(isRtl ? rightCornerDrawable : leftCornerDrawable);
         typeText.setOnClickListener(v -> {
             setResult(CONTACT_SEND_TYPE_TEXT);
             BugleAnalytics.logEvent("Contact_SendTypeButton_Click", "type", "text");
         });
 
         View vcardText = findViewById(R.id.contact_select_type_vcard_container);
-        vcardText.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE,
-                getResources().getColor(R.color.ripples_ripple_color),
-                0, Dimensions.pxFromDp(24), Dimensions.pxFromDp(24), 0,
-                true, true));
+        vcardText.setBackground(isRtl ? leftCornerDrawable : rightCornerDrawable);
         vcardText.setOnClickListener(v -> {
             setResult(CONTACT_SEND_TYPE_VCARD);
             BugleAnalytics.logEvent("Contact_SendTypeButton_Click", "type", "vcard");
@@ -220,8 +226,10 @@ public class MediaContactPickerActivity extends BaseActivity
             hideAnimator.setDuration(280);
             ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mTypeSelectContainer, "alpha", 0);
             alphaAnimator.setDuration(280);
-            hideAnimator.start();
-            alphaAnimator.start();
+            Threads.postOnMainThreadDelayed(() -> {
+                hideAnimator.start();
+                alphaAnimator.start();
+            }, 50);
         } else {
             if (mTypeSelectContainer.getTranslationY() == 0) {
                 return;
@@ -234,15 +242,17 @@ public class MediaContactPickerActivity extends BaseActivity
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     Animator animator = ObjectAnimator.ofFloat(mTypeSelectContainer, "translationY", 0);
-                    animator.setDuration(120);
+                    animator.setDuration(80);
                     animator.start();
                 }
             });
 
             ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(mTypeSelectContainer, "alpha", 0.4f, 1f);
             alphaAnimator.setDuration(360);
-            showAnimator.start();
-            alphaAnimator.start();
+            Threads.postOnMainThreadDelayed(() -> {
+                showAnimator.start();
+                alphaAnimator.start();
+            }, 50);
         }
     }
 }

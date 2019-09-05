@@ -19,10 +19,10 @@
             app:theme="@style/ThemeOverlay.AppCompat.ActionBar">
 
             <com.android.messaging.ui.MaxHeightScrollView
-                android:layout_marginEnd="55dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginEnd="55dp"
                 android:maxHeight="@dimen/compose_message_chips_view_max_height">
 
                 <android.support.v7.widget.AppCompatAutoCompleteTextView
@@ -31,13 +31,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
+                    android:backgroundTint="#efefef"
                     android:drawableBottom="@drawable/chip_autocomplete_bottom_line"
                     android:drawablePadding="4dp"
                     android:dropDownWidth="match_parent"
                     android:hint="@string/send_contact_search_hint"
                     android:includeFontPadding="false"
                     android:minHeight="@dimen/compose_message_contacts_height"
-                    android:backgroundTint="#efefef"
                     android:popupBackground="@drawable/contact_popup_background"
                     android:textCursorDrawable="@drawable/chip_autocomplete_cursor" />
             </com.android.messaging.ui.MaxHeightScrollView>
@@ -69,19 +69,20 @@
     <LinearLayout
         android:id="@+id/contact_select_type_container"
         android:layout_width="match_parent"
-        android:layout_height="66dp"
+        android:layout_height="70dp"
         android:layout_gravity="bottom"
         android:layout_marginBottom="4.3dp"
         android:layout_marginEnd="11.7dp"
         android:layout_marginStart="11.7dp"
         android:background="@drawable/contact_send_type_bg"
         android:orientation="horizontal"
-        android:padding="9dp">
+        android:padding="11dp">
 
         <LinearLayout
             android:id="@+id/contact_select_type_text_container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
             android:layout_weight="1"
             android:gravity="center">
 
@@ -113,6 +114,7 @@
             android:id="@+id/contact_select_type_vcard_container"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginEnd="5dp"
             android:layout_weight="1"
             android:gravity="center">
 
