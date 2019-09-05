@@ -35,7 +35,7 @@ public class AttachmentVCardItemView extends LinearLayout implements PersonItemD
     protected final DetachableBinding<PersonItemData> mBinding;
     private TextView mNameTextView;
     private TextView mDetailsTextView;
-    private ContactIconView mContactIconView;
+    private ImageView mContactIconView;
     private View mDetailsContainer;
     private PersonItemViewListener mListener;
     private boolean mAvatarOnly;
@@ -58,7 +58,7 @@ public class AttachmentVCardItemView extends LinearLayout implements PersonItemD
         mNameTextView.setTextColor(0xffffffff);
         mDetailsTextView.setTextColor(0xb3ffffff);
         setBackground(BackgroundDrawables.createBackgroundDrawable(
-                PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(10), true));
+                PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(10), false));
     }
 
     @Override
@@ -134,10 +134,8 @@ public class AttachmentVCardItemView extends LinearLayout implements PersonItemD
         mDetailsContainer.setVisibility(avatarOnly ? GONE : VISIBLE);
         if (mAvatarOnly) {
             setGravity(Gravity.CENTER);
-            mContactIconView.setVisibility(GONE);
-            ImageView multiContactView = findViewById(R.id.contact_icon_multi);
-            multiContactView.setVisibility(VISIBLE);
-            multiContactView.setImageResource(R.drawable.attatchment_contact_multi);
+            mContactIconView.setVisibility(VISIBLE);
+            mContactIconView.setImageResource(R.drawable.attachment_contact_multi);
         }
     }
 
