@@ -8,7 +8,6 @@ import android.provider.Settings;
 import android.text.TextUtils;
 
 import com.android.messaging.R;
-import com.android.messaging.ui.appsettings.RingtoneEntranceAutopilotUtils;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.BuglePrefs;
@@ -62,7 +61,6 @@ public class RingtoneInfoManager {
         if (currentRingtone != null && !currentRingtone.equals(info.uri)) {
             BugleAnalytics.logEvent("Customize_Notification_Sound_Change", true, "from", "settings");
             BugleFirebaseAnalytics.logEvent("Customize_Notification_Sound_Change", "from", "settings");
-            RingtoneEntranceAutopilotUtils.logAppRingtoneSet();
         }
         prefs.putInt(PREF_KEY_APP_TYPE, info.type);
         prefs.putString(PREF_KEY_APP_NAME, info.name);

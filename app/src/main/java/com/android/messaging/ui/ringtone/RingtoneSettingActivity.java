@@ -25,6 +25,7 @@ import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Navigations;
+import com.superapps.util.Toasts;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -173,6 +174,7 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
             }
             String uriStr = uri == null ? RingtoneInfoManager.SILENT_URI : uri.toString();
             putRingtoneIntoIntent(RingtoneInfoManager.getSystemRingtoneInfo(uriStr));
+            mCurRingtoneInfo = mSetInfo;
         } else if (requestCode == REQUEST_CODE_START_FILE_RINGTONE_PICKER) {
             if (resultCode != RESULT_OK) {
                 return;
@@ -185,6 +187,7 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
                 return;
             }
             handleUriFromFile(uri);
+            Toasts.showToast(R.string.apply_theme_success);
         }
     }
 
@@ -248,6 +251,7 @@ public class RingtoneSettingActivity extends BaseActivity implements RingtoneSet
     @Override
     public void onAppRingtoneSelected(RingtoneInfo info) {
         putRingtoneIntoIntent(info);
+        RingtoneEntranceAutopilotUtils.logAppRingtoneSet();
     }
 
     @Override
