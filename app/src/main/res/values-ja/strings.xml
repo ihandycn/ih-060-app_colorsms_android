@@ -849,5 +849,5 @@
 	<string name="clean">削除</string>
 	<string name="result_page_optimized_healthy">お使いのデバイスは健康です。</string>
 	<string name="function_off">オフ</string>
-	<string name="permission_guide_description_accessibility">☆Super Security☆を見つけてオンにします。</string>
+	<string name="permission_guide_description_accessibility">☆%1$s☆を見つけてオンにします。</string>
 </resources>

@@ -830,6 +830,8 @@
 	<string name="notification_guide_content">Agar menerima pesan lebih menyenangkan, berikan kami Akses Notifikasi.</string>
 	<string name="notification_guide_title">Langkah Terakhir</string>
 
+    <string name="emoji_style_set_guide">Coba Twitter Emoji!</string>
+
     <string name="ringtone">Nada dering</string>
     <string name="music">Musik</string>
     <string name="settings_vibrate_off">Mati</string>
@@ -873,5 +875,5 @@
 	<string name="clean">Hapus</string>
 	<string name="result_page_optimized_healthy">Perangkat Anda sehat.</string>
 	<string name="function_off">Mati</string>
-	<string name="permission_guide_description_accessibility">Temukan ☆Super Security☆ dan nyalakan.</string>
+	<string name="permission_guide_description_accessibility">Temukan ☆%1$s☆ dan nyalakan.</string>
 </resources>

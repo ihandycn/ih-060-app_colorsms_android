@@ -868,5 +868,5 @@
 	<string name="clean">Dọn dẹp</string>
 	<string name="result_page_optimized_healthy">Thiết bị của bạn ở trạng thái tốt.</string>
 	<string name="function_off">Tắt</string>
-	<string name="permission_guide_description_accessibility">Tìm ☆Super Security☆ và bật lên.</string>
+	<string name="permission_guide_description_accessibility">Tìm ☆%1$s☆ và bật lên.</string>
 </resources>

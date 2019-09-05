@@ -915,5 +915,5 @@
 	<string name="clean">Очистка</string>
 	<string name="result_page_optimized_healthy">Ваше устройство в порядке.</string>
 	<string name="function_off">Выкл.</string>
-	<string name="permission_guide_description_accessibility">Найдите и включите ☆Super Security☆.</string>
+	<string name="permission_guide_description_accessibility">Найдите и включите ☆%1$s☆.</string>
 </resources>

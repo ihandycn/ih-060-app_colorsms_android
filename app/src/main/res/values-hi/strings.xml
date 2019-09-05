@@ -865,5 +865,5 @@
 	<string name="clean">साफ करें</string>
 	<string name="result_page_optimized_healthy">आपका उपकरण अच्‍छा है।</string>
 	<string name="function_off">बंद</string>
-	<string name="permission_guide_description_accessibility">☆Super Security☆ ढूंढें और उसे चालू करें।</string>
+	<string name="permission_guide_description_accessibility">%1$s ढूंढें और उसे चालू करें।</string>
 </resources>

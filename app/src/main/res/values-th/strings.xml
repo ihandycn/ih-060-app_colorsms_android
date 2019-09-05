@@ -866,5 +866,5 @@
 	<string name="clean">ล้าง</string>
 	<string name="result_page_optimized_healthy">อุปกรณ์ของคุณปลอดภัยดี</string>
 	<string name="function_off">ปิด</string>
-	<string name="permission_guide_description_accessibility">ค้นหา ☆Super Security☆ และเปิดใช้งาน</string>
+	<string name="permission_guide_description_accessibility">ค้นหา ☆%1$s☆ และเปิดใช้งาน</string>
 </resources>

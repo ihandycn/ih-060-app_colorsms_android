@@ -825,6 +825,8 @@
 
     <string name="message_box_reply_message_button">MENSAJE DE RESPUESTA</string>
 
+    <string name="emoji_style_set_guide">Prueba Twitter Emoji!</string>
+
     <string name="ringtone">Tono de llamada</string>
     <string name="music">Música</string>
     <string name="settings_vibrate_off">Apagado</string>
@@ -867,5 +869,5 @@
 	<string name="clean">Limpiar</string>
 	<string name="result_page_optimized_healthy">Tu dispositivo está en buen estado.</string>
 	<string name="function_off">No</string>
-	<string name="permission_guide_description_accessibility">Busca ☆Super Security☆ y actívalo.</string>
+	<string name="permission_guide_description_accessibility">Busca ☆%1$s☆ y actívalo.</string>
 </resources>

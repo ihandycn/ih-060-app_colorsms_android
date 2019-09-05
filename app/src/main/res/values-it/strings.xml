@@ -866,5 +866,5 @@
 	<string name="clean">Pulizia</string>
 	<string name="result_page_optimized_healthy">Il dispositivo è al sicuro.</string>
 	<string name="function_off">Off</string>
-	<string name="permission_guide_description_accessibility">Trova ☆Super Security☆ e attivala.</string>
+	<string name="permission_guide_description_accessibility">Trova ☆%1$s☆ e attivala.</string>
 </resources>

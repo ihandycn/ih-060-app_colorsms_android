@@ -851,5 +851,5 @@
 	<string name="clean">清理</string>
 	<string name="result_page_optimized_healthy">您的設備狀態良好！</string>
 	<string name="function_off">關閉</string>
-	<string name="permission_guide_description_accessibility">找到☆Super Security☆並打開</string>
+	<string name="permission_guide_description_accessibility">找到☆%1$s☆並打開</string>
 </resources>

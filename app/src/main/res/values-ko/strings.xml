@@ -866,5 +866,5 @@
 	<string name="clean">정리</string>
 	<string name="result_page_optimized_healthy">기기 상태가 양호합니다.</string>
 	<string name="function_off">끔</string>
-	<string name="permission_guide_description_accessibility">☆Super Security☆을 찾아 켜세요.</string>
+	<string name="permission_guide_description_accessibility">%1$s을 찾아 켜세요.</string>
 </resources>

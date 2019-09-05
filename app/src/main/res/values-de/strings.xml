@@ -861,5 +861,5 @@
 	<string name="clean">Säubern</string>
 	<string name="result_page_optimized_healthy">Ihr Gerät ist gesund.</string>
 	<string name="function_off">Aus</string>
-	<string name="permission_guide_description_accessibility">☆Super Security☆ suchen und aktivieren.</string>
+	<string name="permission_guide_description_accessibility">☆%1$s☆ suchen und aktivieren.</string>
 </resources>

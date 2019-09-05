@@ -873,5 +873,5 @@
 	<string name="clean">Limpar</string>
 	<string name="result_page_optimized_healthy">Seu dispositivo está em boas condições.</string>
 	<string name="function_off">Desativado</string>
-	<string name="permission_guide_description_accessibility">Encontre o ☆Super Security☆ e ative-o.</string>
+	<string name="permission_guide_description_accessibility">Encontre o ☆%1$s☆ e ative-o.</string>
 </resources>

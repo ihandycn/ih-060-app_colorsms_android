@@ -821,6 +821,8 @@
 
     <string name="message_box_reply_message_button">MESSAGE DE RÉPONSE</string>
 
+    <string name="emoji_style_set_guide">Essayez Twitter Emoji!</string>
+
     <string name="ringtone">Sonnerie</string>
     <string name="music">La musique</string>
     <string name="settings_vibrate_off">De</string>
@@ -864,5 +866,5 @@
 	<string name="clean">Nettoyer</string>
 	<string name="result_page_optimized_healthy">Votre appareil est sein.</string>
 	<string name="function_off">Non</string>
-	<string name="permission_guide_description_accessibility">Trouvez ☆Super Security☆ et activez-le.</string>
+	<string name="permission_guide_description_accessibility">Trouvez ☆%1$s☆ et activez-le.</string>
 </resources>

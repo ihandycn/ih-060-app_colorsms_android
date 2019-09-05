@@ -960,5 +960,5 @@
 	<string name="clean">تنظيف</string>
 	<string name="result_page_optimized_healthy">جهازك يعمل على النحو الأمثل.</string>
 	<string name="function_off">معطل</string>
-	<string name="permission_guide_description_accessibility">اعثر على ☆Super Security☆ وشغّله.</string>
+	<string name="permission_guide_description_accessibility">اعثر على ☆%1$s☆ وشغّله.</string>
 </resources>
