@@ -134,6 +134,7 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
             case R.id.media_contact:
                 Intent intent = new Intent(getContext(), MediaContactPickerActivity.class);
                 startActivityForResult(intent, CHOOSE_CONTACT_REQUEST_CODE);
+                BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Contact", true);
                 break;
             default:
                 break;

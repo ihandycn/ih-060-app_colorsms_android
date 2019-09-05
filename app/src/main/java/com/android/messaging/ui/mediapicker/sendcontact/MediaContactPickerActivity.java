@@ -30,6 +30,7 @@ import com.android.messaging.ui.contact.ContactDropdownLayouter;
 import com.android.messaging.ui.contact.ContactListItemView;
 import com.android.messaging.ui.contact.ContactRecipientAdapter;
 import com.android.messaging.ui.customize.PrimaryColors;
+import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.ContactUtil;
 import com.android.messaging.util.ImeUtil;
 import com.android.messaging.util.TextViewUtil;
@@ -126,14 +127,20 @@ public class MediaContactPickerActivity extends BaseActivity
                 getResources().getColor(R.color.ripples_ripple_color),
                 Dimensions.pxFromDp(24), 0, 0, Dimensions.pxFromDp(24),
                 true, true));
-        typeText.setOnClickListener(v -> setResult(CONTACT_SEND_TYPE_TEXT));
+        typeText.setOnClickListener(v -> {
+            setResult(CONTACT_SEND_TYPE_TEXT);
+            BugleAnalytics.logEvent("Contact_SendTypeButton_Click", "type", "text");
+        });
 
         View vcardText = findViewById(R.id.contact_select_type_vcard_container);
         vcardText.setBackground(BackgroundDrawables.createBackgroundDrawable(Color.WHITE,
                 getResources().getColor(R.color.ripples_ripple_color),
                 0, Dimensions.pxFromDp(24), Dimensions.pxFromDp(24), 0,
                 true, true));
-        vcardText.setOnClickListener(v -> setResult(CONTACT_SEND_TYPE_VCARD));
+        vcardText.setOnClickListener(v -> {
+            setResult(CONTACT_SEND_TYPE_VCARD);
+            BugleAnalytics.logEvent("Contact_SendTypeButton_Click", "type", "vcard");
+        });
     }
 
     @Override
