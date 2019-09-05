@@ -19,8 +19,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/audio_attachment_background"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/attachment_audio_preview_multi_background">
+    android:layout_height="match_parent">
 
     <com.android.messaging.ui.AudioAttachmentView
         android:id="@+id/audio_attachment_view"

@@ -48,6 +48,8 @@ import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 /**
  * A view factory that creates previews for single/multiple attachments.
@@ -266,14 +268,14 @@ public class AttachmentPreviewFactory {
                 break;
         }
         final View view = layoutInflater.inflate(layoutId, parent, false /* attachToRoot */);
-        final AudioAttachmentView audioView = (AudioAttachmentView)
-                view.findViewById(R.id.audio_attachment_view);
+        final AudioAttachmentView audioView = view.findViewById(R.id.audio_attachment_view);
         audioView.bindMessagePartData(
                 attachmentData, false /* incoming */, false /* showAsSelected */);
 
         final ViewGroup audioViewContainer =
                 view.findViewById(R.id.audio_attachment_background);
-        audioViewContainer.getBackground().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+        audioViewContainer.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(10), true));;
 
         return view;
     }

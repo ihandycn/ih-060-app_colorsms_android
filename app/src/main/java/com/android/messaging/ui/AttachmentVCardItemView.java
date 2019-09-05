@@ -6,9 +6,11 @@ import android.support.v4.text.BidiFormatter;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLayoutChangeListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -130,6 +132,13 @@ public class AttachmentVCardItemView extends LinearLayout implements PersonItemD
     public void setAvatarOnly(final boolean avatarOnly) {
         mAvatarOnly = avatarOnly;
         mDetailsContainer.setVisibility(avatarOnly ? GONE : VISIBLE);
+        if (mAvatarOnly) {
+            setGravity(Gravity.CENTER);
+            mContactIconView.setVisibility(GONE);
+            ImageView multiContactView = findViewById(R.id.contact_icon_multi);
+            multiContactView.setVisibility(VISIBLE);
+            multiContactView.setImageResource(R.drawable.attatchment_contact_multi);
+        }
     }
 
     public void setListener(final PersonItemViewListener listener) {
