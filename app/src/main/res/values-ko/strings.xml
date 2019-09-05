@@ -838,4 +838,33 @@
     <string name="settings_vibrate_short">짧은</string>
     <string name="settings_vibrate_long">긴</string>
 
+	<string name="optimal">최적</string>
+	<string name="notification_cleaner_title">알림 클리너</string>
+	<string name="notification_cleaner_intercepted">정크 알림 %1$s개</string>
+	<string name="notification_cleaner_clean_now_tip">알림이 너무 많으면 휴대폰이 느려집니다. 원치 않는 알림을 숨기세요!</string>
+	<string name="notification_cleaner_clean_now">지금 정리</string>
+	<string name="notification_cleaner_illustration_page">알림 클리너 바에 정크 알림이 숨겨집니다.</string>
+	<string name="today">오늘</string>
+	<string name="yesterday">어제</string>
+	<string name="notification_cleaner_clean_all">모두 정리(%1$d)</string>
+	<string name="notification_cleaner_settings_description">알림 차단할 앱 선택</string>
+	<string name="notification_cleaner_deleted">삭제됨</string>
+	<string name="notification_cleaner_cleared_up">%1$s개의 알림을 정리했습니다!</string>
+	<string name="notification_cleaner_hidden_description">알림이 없습니다.</string>
+	<string name="notification_cleaner_guide_white_list">화이트리스트에 대한 설정</string>
+	<string name="notification_cleaner_fake_notification_title_1">알림 클리너 활성화됨!</string>
+	<string name="notification_cleaner_fake_notification_title_2">클릭하여 상세 내용 확인하기</string>
+	<string name="notification_cleaner_fake_notification_body_1">차단된 알림이 여기에 나타납니다.</string>
+	<string name="notification_cleaner_fake_notification_body_2">알림 1개를 삭제하려면 슬라이드 하세요.</string>
+	<string name="notification_cleaner_block_closed">%1$s 알림은 차단되지 않습니다.</string>
+	<string name="notification_cleaner_block_opened">%1$s 알림이 차단됩니다.</string>
+	<string name="function_off_dialog_NC_title">알림 클리너를 비활성화 하시겠습니까?</string>
+	<string name="function_off_dialog_NC_content">알림 클리너가 %2$s일 동안 원치 않는 알림 %1$s개를 차단했습니다.</string>
+	<string name="function_off_dialog_btn_positive">계속 사용하기</string>
+	<string name="showing_ads">광고 게재 중 …</string>
+	<string name="disable">비활성화</string>
+	<string name="clean">정리</string>
+	<string name="result_page_optimized_healthy">기기 상태가 양호합니다.</string>
+	<string name="function_off">끔</string>
+	<string name="permission_guide_description_accessibility">☆Super Security☆을 찾아 켜세요.</string>
 </resources>

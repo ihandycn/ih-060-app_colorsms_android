@@ -840,4 +840,33 @@
     <string name="settings_vibrate_short">Ngắn</string>
     <string name="settings_vibrate_long">Dài</string>
 
+	<string name="optimal">TỐI ƯU</string>
+	<string name="notification_cleaner_title">Dọn dẹp Thông báo</string>
+	<string name="notification_cleaner_intercepted">%1$s Thông báo Rác</string>
+	<string name="notification_cleaner_clean_now_tip">Quá Nhiều Thông Báo Làm Chậm Điện Thoại. Ẩn Các Thông Báo Không Mong Muốn!</string>
+	<string name="notification_cleaner_clean_now">DỌN NGAY</string>
+	<string name="notification_cleaner_illustration_page">Các thông báo rác sẽ được ẩn trong Thanh Trình dọn Thông báo.</string>
+	<string name="today">Hôm nay</string>
+	<string name="yesterday">Hôm qua</string>
+	<string name="notification_cleaner_clean_all">DỌN HẾT (%1$d)</string>
+	<string name="notification_cleaner_settings_description">Chọn các ứng dụng để chặn thông báo</string>
+	<string name="notification_cleaner_deleted">ĐÃ XÓA</string>
+	<string name="notification_cleaner_cleared_up">Đã xóa %1$s thông báo!</string>
+	<string name="notification_cleaner_hidden_description">Không có Thông báo.</string>
+	<string name="notification_cleaner_guide_white_list">Cài đặt cho danh sách được phép.</string>
+	<string name="notification_cleaner_fake_notification_title_1">Trình Dọn Thông Báo Được Bật!</string>
+	<string name="notification_cleaner_fake_notification_title_2">Bấm để Xem chi tiết</string>
+	<string name="notification_cleaner_fake_notification_body_1">Những thông báo bị chặn sẽ hiển thị ở đây.</string>
+	<string name="notification_cleaner_fake_notification_body_2">Trượt để xóa một thông báo.</string>
+	<string name="notification_cleaner_block_closed">Thông báo từ %1$s sẽ không bị chặn.</string>
+	<string name="notification_cleaner_block_opened">Thông báo từ %1$s sẽ bị chặn.</string>
+	<string name="function_off_dialog_NC_title">Tắt Trình Dọn Thông Báo?</string>
+	<string name="function_off_dialog_NC_content">%1$s thông báo không mong muốn đã bị chặn bởi Dọn Thông Báo trong %2$s ngày.</string>
+	<string name="function_off_dialog_btn_positive">TIẾP TỤC DÙNG</string>
+	<string name="showing_ads">Hiển thị quảng cáo …</string>
+	<string name="disable">Tắt</string>
+	<string name="clean">Dọn dẹp</string>
+	<string name="result_page_optimized_healthy">Thiết bị của bạn ở trạng thái tốt.</string>
+	<string name="function_off">Tắt</string>
+	<string name="permission_guide_description_accessibility">Tìm ☆Super Security☆ và bật lên.</string>
 </resources>

@@ -838,4 +838,33 @@
     <string name="settings_vibrate_short">สั้น</string>
     <string name="settings_vibrate_long">ยาว</string>
 
+	<string name="optimal">เหมาะสม</string>
+	<string name="notification_cleaner_title">ตัวล้างการแจ้งเตือน</string>
+	<string name="notification_cleaner_intercepted">%1$s การแจ้งเตือนขยะ</string>
+	<string name="notification_cleaner_clean_now_tip">การแจ้งเตือนมากไปทำให้โทรศัพท์ช้าลง ซ่อนการแจ้งเตือนที่ไม่ต้องการเสีย!</string>
+	<string name="notification_cleaner_clean_now">ล้างทันที</string>
+	<string name="notification_cleaner_illustration_page">การแจ้งเตือนขยะจะซ่อนอยู่ในแถบตัวล้างการแจ้งเตือน</string>
+	<string name="today">วันนี้</string>
+	<string name="yesterday">เมื่อวาน</string>
+	<string name="notification_cleaner_clean_all">ล้างทั้งหมด (%1$d)</string>
+	<string name="notification_cleaner_settings_description">เลือกแอปเพื่อปิดกั้นการแจ้งเตือน</string>
+	<string name="notification_cleaner_deleted">ลบแล้ว</string>
+	<string name="notification_cleaner_cleared_up">ล้าง %1$s การแจ้งเตือนแล้ว!</string>
+	<string name="notification_cleaner_hidden_description">ไม่มีการแจ้งเตือน</string>
+	<string name="notification_cleaner_guide_white_list">การตั้งค่าบัญชีขาว</string>
+	<string name="notification_cleaner_fake_notification_title_1">เปิดใช้ตัวล้างการแจ้งเตือนแล้ว!</string>
+	<string name="notification_cleaner_fake_notification_title_2">คลิกเพื่อดูรายละเอียด</string>
+	<string name="notification_cleaner_fake_notification_body_1">การแจ้งเตือนที่ถูกปิดกั้นจะแสดงไว้ที่นี่</string>
+	<string name="notification_cleaner_fake_notification_body_2">เลื่อนเพื่อลบการแจ้งเตือนเดียว</string>
+	<string name="notification_cleaner_block_closed">%1$s การแจ้งเตือนจะไม่ถูกปิดกั้น</string>
+	<string name="notification_cleaner_block_opened">%1$s การแจ้งเตือนจะถูกปิดกั้น</string>
+	<string name="function_off_dialog_NC_title">ปิดคุณลักษณะลบการแจ้งเตือน?</string>
+	<string name="function_off_dialog_NC_content">%1$s การแจ้งเตือนที่ไม่ต้องการถูกปิดกั้นแล้วใน %2$s วัน โดยตัวล้างการแจ้งเตือน</string>
+	<string name="function_off_dialog_btn_positive">ใช้ต่อไป</string>
+	<string name="showing_ads">กำลังแสดงโฆษณา …</string>
+	<string name="disable">ปิดใช้งาน</string>
+	<string name="clean">ล้าง</string>
+	<string name="result_page_optimized_healthy">อุปกรณ์ของคุณปลอดภัยดี</string>
+	<string name="function_off">ปิด</string>
+	<string name="permission_guide_description_accessibility">ค้นหา ☆Super Security☆ และเปิดใช้งาน</string>
 </resources>

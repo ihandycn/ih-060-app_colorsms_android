@@ -836,4 +836,33 @@
     <string name="settings_vibrate_short">Court</string>
     <string name="settings_vibrate_long">Longue</string>
 
+	<string name="optimal">OPTIMAL</string>
+	<string name="notification_cleaner_title">Videur de notifications</string>
+	<string name="notification_cleaner_intercepted">%1$s notif. indésirab.</string>
+	<string name="notification_cleaner_clean_now_tip">Trop de notifications ralentissent le téléphone. Cachez les indésirables !</string>
+	<string name="notification_cleaner_clean_now">NETTOYER MAINT.</string>
+	<string name="notification_cleaner_illustration_page">Les notifications indésirables seront masquées dans la barre du nettoyeur de notifications.</string>
+	<string name="today">Aujourd\'hui</string>
+	<string name="yesterday">Hier</string>
+	<string name="notification_cleaner_clean_all">TOUT NETTOYER (%1$d)</string>
+	<string name="notification_cleaner_settings_description">Sél. les applis pour bloquer les notif.</string>
+	<string name="notification_cleaner_deleted">SUPPRIMÉ</string>
+	<string name="notification_cleaner_cleared_up">%1$s notifications vidées !</string>
+	<string name="notification_cleaner_hidden_description">Aucune notif.</string>
+	<string name="notification_cleaner_guide_white_list">Param. liste blanche</string>
+	<string name="notification_cleaner_fake_notification_title_1">Nettoyeur de notification activé !</string>
+	<string name="notification_cleaner_fake_notification_title_2">Cliquer pour voir les détails</string>
+	<string name="notification_cleaner_fake_notification_body_1">Les notifications bloquées apparaîtront ici.</string>
+	<string name="notification_cleaner_fake_notification_body_2">Faire coulisser pour supprimer une seule notification.</string>
+	<string name="notification_cleaner_block_closed">Les notifications de %1$s se seront pas bloquées.</string>
+	<string name="notification_cleaner_block_opened">Les notif. de %1$s seront bloquées.</string>
+	<string name="function_off_dialog_NC_title">Désactiver le Videur de notif. ?</string>
+	<string name="function_off_dialog_NC_content">%1$s notif. indésirables bloquées par le Videur de notifications en %2$s jours.</string>
+	<string name="function_off_dialog_btn_positive">UTILISER</string>
+	<string name="showing_ads">Afficher les annonces …</string>
+	<string name="disable">Désactiver</string>
+	<string name="clean">Nettoyer</string>
+	<string name="result_page_optimized_healthy">Votre appareil est sein.</string>
+	<string name="function_off">Non</string>
+	<string name="permission_guide_description_accessibility">Trouvez ☆Super Security☆ et activez-le.</string>
 </resources>

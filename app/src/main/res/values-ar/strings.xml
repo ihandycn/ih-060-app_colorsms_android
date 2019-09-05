@@ -932,4 +932,33 @@
     <string name="settings_vibrate_short">قصيرة</string>
     <string name="settings_vibrate_long">طويل</string>
 
+	<string name="optimal">مثالي</string>
+	<string name="notification_cleaner_title">منظّف الإخطارات</string>
+	<string name="notification_cleaner_intercepted">%1$s إخطار غير مرغوب</string>
+	<string name="notification_cleaner_clean_now_tip">الإخطارات الكثيرة تبطئ الهاتف. قم بإخفاء الإخطارات غير المرغوب فيها!</string>
+	<string name="notification_cleaner_clean_now">تنظيف الآن</string>
+	<string name="notification_cleaner_illustration_page">سيتم إخفاء الإخطارات غير المرغوبة في شريط منظف الإخطارات.</string>
+	<string name="today">اليوم</string>
+	<string name="yesterday">أمس</string>
+	<string name="notification_cleaner_clean_all">تنظيف الكل (%1$d)</string>
+	<string name="notification_cleaner_settings_description">حدد التطبيقات لحظر الإخطارات</string>
+	<string name="notification_cleaner_deleted">تم الحذف</string>
+	<string name="notification_cleaner_cleared_up">تم تنظيف %1$s إخطار!</string>
+	<string name="notification_cleaner_hidden_description">لا توجد إخطارات.</string>
+	<string name="notification_cleaner_guide_white_list">إعدادات القائمة البيضاء</string>
+	<string name="notification_cleaner_fake_notification_title_1">تم تمكين منظف الإخطارات!</string>
+	<string name="notification_cleaner_fake_notification_title_2">اضغط لرؤية التفاصيل</string>
+	<string name="notification_cleaner_fake_notification_body_1">سوف تظهر الإخطارات المحجوبة هنا.</string>
+	<string name="notification_cleaner_fake_notification_body_2">اسحب لحذف إخطار محدد.</string>
+	<string name="notification_cleaner_block_closed">لن يتم حظر %1$s إخطارات.</string>
+	<string name="notification_cleaner_block_opened">سيتم حظر %1$s إخطارات.</string>
+	<string name="function_off_dialog_NC_title">تعطيل منظّف الإخطارات؟</string>
+	<string name="function_off_dialog_NC_content">تم حظر %1$s إخطار غير مرغوب فيه بواسطة مركز الاخطارات في غضون %2$s يوم/أيام.</string>
+	<string name="function_off_dialog_btn_positive">استخدام</string>
+	<string name="showing_ads">عرض الإعلانات …</string>
+	<string name="disable">تعطيل</string>
+	<string name="clean">تنظيف</string>
+	<string name="result_page_optimized_healthy">جهازك يعمل على النحو الأمثل.</string>
+	<string name="function_off">معطل</string>
+	<string name="permission_guide_description_accessibility">اعثر على ☆Super Security☆ وشغّله.</string>
 </resources>

@@ -820,4 +820,33 @@
     <string name="settings_vibrate_long">长</string>
 
 
+	<string name="optimal">已最优</string>
+	<string name="notification_cleaner_title">通知栏清理</string>
+	<string name="notification_cleaner_intercepted">%1$s条垃圾消息</string>
+	<string name="notification_cleaner_clean_now_tip">过多的垃圾消息会拖慢手机！快来屏蔽你不想要的消息！</string>
+	<string name="notification_cleaner_clean_now">立即清理</string>
+	<string name="notification_cleaner_illustration_page">垃圾通知会被隐藏在消息工具栏</string>
+	<string name="today">今天</string>
+	<string name="yesterday">昨天</string>
+	<string name="notification_cleaner_clean_all">一键清理（%1$d）</string>
+	<string name="notification_cleaner_settings_description">选择你想屏蔽消息的应用</string>
+	<string name="notification_cleaner_deleted">已删除</string>
+	<string name="notification_cleaner_cleared_up">%1$s通知消息已清理！</string>
+	<string name="notification_cleaner_hidden_description">没有任何通知消息</string>
+	<string name="notification_cleaner_guide_white_list">设置内可配置白名单。</string>
+	<string name="notification_cleaner_fake_notification_title_1">通知栏清理功能成功开启！</string>
+	<string name="notification_cleaner_fake_notification_title_2">点击来查看详情</string>
+	<string name="notification_cleaner_fake_notification_body_1">被屏蔽的通知消息会展示在这里。</string>
+	<string name="notification_cleaner_fake_notification_body_2">滑动来删除本条通知消息。</string>
+	<string name="notification_cleaner_block_closed">%1$s的通知消息将不再屏蔽</string>
+	<string name="notification_cleaner_block_opened">%1$s的通知消息将被屏蔽</string>
+	<string name="function_off_dialog_NC_title">关闭通知栏清理功能？</string>
+	<string name="function_off_dialog_NC_content">%2$s内通知栏清理功能已帮你屏蔽了%1$s条垃圾消息。</string>
+	<string name="function_off_dialog_btn_positive">继续使用</string>
+	<string name="showing_ads">正在加载广告…</string>
+	<string name="disable">关闭</string>
+	<string name="clean">清理</string>
+	<string name="result_page_optimized_healthy">您的设备状态良好！</string>
+	<string name="function_off">关闭</string>
+	<string name="permission_guide_description_accessibility">找到☆Super Security☆并打开</string>
 </resources>

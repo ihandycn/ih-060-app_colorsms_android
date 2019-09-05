@@ -1387,27 +1387,24 @@
     <string name="notification_cleaner_fake_notification_title_2">Click to see details</string>
     <string name="notification_cleaner_fake_notification_body_1">Blocked notifications will show up here.</string>
     <string name="notification_cleaner_fake_notification_body_2">Slide to delete a single notification.</string>
-
     <string name="notification_cleaner_block_closed">%1$s notifications will not be blocked</string>
     <string name="notification_cleaner_block_opened">%1$s notifications will be blocked</string>
-
     <string name="function_off_dialog_NC_title">Disable Notification Cleaner?</string>
     <string name="function_off_dialog_NC_content">%1$s unwanted notifications have been blocked by Notification Cleaner in %2$s days.</string>
     <string name="function_off_dialog_btn_positive">KEEP USING</string>
-
-    <string name="nc_notification_channel">Notification Cleaner</string>
-    <string name="nc_notification_channel_description">Organise and delete unwanted notification pushes.</string>
     <string name="showing_ads">Showing Ads...</string>
-
     <string name="disable">Disable</string>
     <string name="clean">Clean</string>
-    <string name="off">Off</string>
-
+    <string name="function_off">Off</string>
     <string name="result_page_optimized_healthy">Your phone is optimal now!</string>
-    <string name="notification_cleaner_permission_guide_title">Find %1$s and turn it on. No private info will be collected.</string>
+    <string name="permission_guide_description_accessibility">Find %1$s and turn it on.</string>
 
+    <string name="permission_guide_description_subtitle">No private info will be collected.</string>
+    <string name="nc_notification_channel">Notification Cleaner</string>
+    <string name="nc_notification_channel_description">Organise and delete unwanted notification pushes.</string>
     <string name="notification_cleaner_push_title">Block Junk Notifications </string>
 
+    <!--ring tone-->
     <string name="ringtone">Ringtone</string>
     <string name="music">Music</string>
     <string name="file_provider">com.color.sms.messages.emoji.files</string>

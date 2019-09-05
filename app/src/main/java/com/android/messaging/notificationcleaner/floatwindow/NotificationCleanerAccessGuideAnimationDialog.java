@@ -17,6 +17,7 @@ public class NotificationCleanerAccessGuideAnimationDialog extends AnimationPerm
 
     public NotificationCleanerAccessGuideAnimationDialog(Context context, AttributeSet attrs) {
         super(context, attrs);
+        findViewById(R.id.permission_guide_content_subtitle).setVisibility(VISIBLE);
     }
 
     @Override
@@ -26,13 +27,12 @@ public class NotificationCleanerAccessGuideAnimationDialog extends AnimationPerm
 
     @Override
     protected String getContent() {
-        return getResources().getString(R.string.off);
+        return getResources().getString(R.string.function_off);
     }
 
     @Override
     protected String getDescription() {
-        return String.format(getResources().getString(R.string.notification_cleaner_permission_guide_title),
-                getResources().getString(R.string.app_name));
+        return String.format(getResources().getString(R.string.permission_guide_description_accessibility), getResources().getString(R.string.app_name));
     }
 
     @Override

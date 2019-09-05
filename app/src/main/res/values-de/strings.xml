@@ -833,4 +833,33 @@
     <string name="settings_vibrate_short">Kurz</string>
     <string name="settings_vibrate_long">Lange</string>
 
+	<string name="optimal">OPTIMAL</string>
+	<string name="notification_cleaner_title">Benachrichtigungsreiniger</string>
+	<string name="notification_cleaner_intercepted">%1$s Junk-Mitteilungen</string>
+	<string name="notification_cleaner_clean_now_tip">Zu viele Benachrichtigungen verlangsamen das Telefon. Unerwünschte Mitteilungen ausblenden!</string>
+	<string name="notification_cleaner_clean_now">JETZT REINIGEN</string>
+	<string name="notification_cleaner_illustration_page">Junk-Mitteilungen sind in der Mitteilungsreiniger-Leiste verborgen.</string>
+	<string name="today">Heute</string>
+	<string name="yesterday">Gestern</string>
+	<string name="notification_cleaner_clean_all">ALLE BEREINIGEN (%1$d)</string>
+	<string name="notification_cleaner_settings_description">Apps auswählen, um Benachrichtigungen zu blockieren</string>
+	<string name="notification_cleaner_deleted">GELÖSCHT</string>
+	<string name="notification_cleaner_cleared_up">%1$s Benachrichtigungen aufgeräumt!</string>
+	<string name="notification_cleaner_hidden_description">Keine Benachrichtigungen.</string>
+	<string name="notification_cleaner_guide_white_list">Einstellungen für Whitelist.</string>
+	<string name="notification_cleaner_fake_notification_title_1">Benachrichtigungsreiniger aktiviert!</string>
+	<string name="notification_cleaner_fake_notification_title_2">Klicken, um Details anzuzeigen</string>
+	<string name="notification_cleaner_fake_notification_body_1">Blockierte Benachrichtigungen werden hier angezeigt.</string>
+	<string name="notification_cleaner_fake_notification_body_2">Wischen, um einzelne Benachrichtigung zu löschen.</string>
+	<string name="notification_cleaner_block_closed">%1$s Benachrichtigungen werden nicht blockiert.</string>
+	<string name="notification_cleaner_block_opened">%1$s Benachrichtigungen werden blockiert.</string>
+	<string name="function_off_dialog_NC_title">Benachrichtigungsreiniger deaktivieren?</string>
+	<string name="function_off_dialog_NC_content">%1$s unerwünschter Benachrichtigungen durch Benachrichtigungsreiniger in %2$s Tagen blockiert.</string>
+	<string name="function_off_dialog_btn_positive">VERWENDEN</string>
+	<string name="showing_ads">Anzeigen werden angezeigt …</string>
+	<string name="disable">Deaktivieren</string>
+	<string name="clean">Säubern</string>
+	<string name="result_page_optimized_healthy">Ihr Gerät ist gesund.</string>
+	<string name="function_off">Aus</string>
+	<string name="permission_guide_description_accessibility">☆Super Security☆ suchen und aktivieren.</string>
 </resources>

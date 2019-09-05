@@ -887,4 +887,33 @@
     <string name="settings_vibrate_short">короткий</string>
     <string name="settings_vibrate_long">Долго</string>
 
+	<string name="optimal">ОПТИМАЛЬНО</string>
+	<string name="notification_cleaner_title">Очистка уведомлений</string>
+	<string name="notification_cleaner_intercepted">Ненужные уведомл.: %1$s</string>
+	<string name="notification_cleaner_clean_now_tip">Большое количество уведомлений замедляет работу телефона. Скрыть ненужные уведомления!</string>
+	<string name="notification_cleaner_clean_now">ОЧИСТИТЬ</string>
+	<string name="notification_cleaner_illustration_page">Ненужные уведомления будут показаны в окне очистки уведомлений.</string>
+	<string name="today">Сегодня</string>
+	<string name="yesterday">Вчера</string>
+	<string name="notification_cleaner_clean_all">ОЧИСТИТЬ ВСЕ (%1$d)</string>
+	<string name="notification_cleaner_settings_description">Выберите приложения, уведомления от которых нужно блокировать.</string>
+	<string name="notification_cleaner_deleted">УДАЛЕНО</string>
+	<string name="notification_cleaner_cleared_up">Уведомления удалены (%1$s)!</string>
+	<string name="notification_cleaner_hidden_description">Нет уведомлений.</string>
+	<string name="notification_cleaner_guide_white_list">Настройка белого списка.</string>
+	<string name="notification_cleaner_fake_notification_title_1">Очистка уведомлений включена!</string>
+	<string name="notification_cleaner_fake_notification_title_2">Нажмите, чтобы узнать подробнее</string>
+	<string name="notification_cleaner_fake_notification_body_1">Заблокированные уведомления будут находиться здесь.</string>
+	<string name="notification_cleaner_fake_notification_body_2">Проведите, чтобы удалить уведомление.</string>
+	<string name="notification_cleaner_block_closed">%1$s уведомл. не будет заблокировано.</string>
+	<string name="notification_cleaner_block_opened">%1$s уведомл. будет заблокировано.</string>
+	<string name="function_off_dialog_NC_title">Отключить функцию очистки уведомлений?</string>
+	<string name="function_off_dialog_NC_content">За %2$s д. были заблокированы ненужные уведомления (%1$s).</string>
+	<string name="function_off_dialog_btn_positive">ПРОДОЛЖИТЬ</string>
+	<string name="showing_ads">Показывать объявления …</string>
+	<string name="disable">Отключить</string>
+	<string name="clean">Очистка</string>
+	<string name="result_page_optimized_healthy">Ваше устройство в порядке.</string>
+	<string name="function_off">Выкл.</string>
+	<string name="permission_guide_description_accessibility">Найдите и включите ☆Super Security☆.</string>
 </resources>

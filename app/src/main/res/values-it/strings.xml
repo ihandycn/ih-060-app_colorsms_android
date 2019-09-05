@@ -838,4 +838,33 @@
     <string name="settings_vibrate_short">Corto</string>
     <string name="settings_vibrate_long">Lungo</string>
 
+	<string name="optimal">OTTIMALE</string>
+	<string name="notification_cleaner_title">Rimozione notifiche</string>
+	<string name="notification_cleaner_intercepted">%1$s notifiche inutili</string>
+	<string name="notification_cleaner_clean_now_tip">Troppe notifiche rallentano il telefono. Nascondi le notifiche indesiderate!</string>
+	<string name="notification_cleaner_clean_now">PULISCI ORA</string>
+	<string name="notification_cleaner_illustration_page">Le notifiche indesiderate saranno nascoste nella barra Notification Cleaner.</string>
+	<string name="today">Oggi</string>
+	<string name="yesterday">Ieri</string>
+	<string name="notification_cleaner_clean_all">PULISCI TUTTO (%1$d)</string>
+	<string name="notification_cleaner_settings_description">Seleziona le app per bloccare le notifiche</string>
+	<string name="notification_cleaner_deleted">ELIMINATE</string>
+	<string name="notification_cleaner_cleared_up">%1$s notifiche cancellate!</string>
+	<string name="notification_cleaner_hidden_description">Non ci sono notifiche.</string>
+	<string name="notification_cleaner_guide_white_list">Impostazioni per la whitelist.</string>
+	<string name="notification_cleaner_fake_notification_title_1">Eliminazione delle notifiche attiva!</string>
+	<string name="notification_cleaner_fake_notification_title_2">Fai clic per vedere i dettagli</string>
+	<string name="notification_cleaner_fake_notification_body_1">Le notifiche bloccate verranno visualizzate qui.</string>
+	<string name="notification_cleaner_fake_notification_body_2">Scorri per eliminare una notifica.</string>
+	<string name="notification_cleaner_block_closed">%1$s notifiche non verranno bloccate.</string>
+	<string name="notification_cleaner_block_opened">%1$s notifiche verranno bloccate.</string>
+	<string name="function_off_dialog_NC_title">Vuoi disattivare Elimina notifiche?</string>
+	<string name="function_off_dialog_NC_content">%1$s notifiche indesiderate sono state bloccate dallo strumento Elimina notifiche in %2$s giorni.</string>
+	<string name="function_off_dialog_btn_positive">CONTINUA</string>
+	<string name="showing_ads">Mostrare annunci …</string>
+	<string name="disable">Disattiva</string>
+	<string name="clean">Pulizia</string>
+	<string name="result_page_optimized_healthy">Il dispositivo è al sicuro.</string>
+	<string name="function_off">Off</string>
+	<string name="permission_guide_description_accessibility">Trova ☆Super Security☆ e attivala.</string>
 </resources>

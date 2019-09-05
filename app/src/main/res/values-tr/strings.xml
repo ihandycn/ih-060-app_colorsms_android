@@ -831,4 +831,33 @@
     <string name="settings_vibrate_short">Kısa</string>
     <string name="settings_vibrate_long">Uzun</string>
 
+	<string name="optimal">ENİYİ</string>
+	<string name="notification_cleaner_title">Bildirim Temizleyici</string>
+	<string name="notification_cleaner_intercepted">%1$s Çöp Bildirimi</string>
+	<string name="notification_cleaner_clean_now_tip">Çok Fazla Bildirim Telefonu Yavaşlatıyor İstenmeyen Bildirimleri Gizle!</string>
+	<string name="notification_cleaner_clean_now">HEMEN TEMİZLE</string>
+	<string name="notification_cleaner_illustration_page">Çöp bildirimler Bildirim Temizleyici Çubuğunda gizlenecektir.</string>
+	<string name="today">Bugün</string>
+	<string name="yesterday">Dün</string>
+	<string name="notification_cleaner_clean_all">TÜMÜNÜ TEMİZLE (%1$d)</string>
+	<string name="notification_cleaner_settings_description">Bildirimleri engellemek için uygulamaları seç</string>
+	<string name="notification_cleaner_deleted">SİLİNDİ</string>
+	<string name="notification_cleaner_cleared_up">%1$s bildirim temizlendi!</string>
+	<string name="notification_cleaner_hidden_description">Bildirim Yok.</string>
+	<string name="notification_cleaner_guide_white_list">Güvenli liste ayarları.</string>
+	<string name="notification_cleaner_fake_notification_title_1">Bildirim Temizleyici Etkinleştirildi!</string>
+	<string name="notification_cleaner_fake_notification_title_2">Ayrıntıları Görmek için Tıkla</string>
+	<string name="notification_cleaner_fake_notification_body_1">Engellenmiş bildirimler burada gösterilecek.</string>
+	<string name="notification_cleaner_fake_notification_body_2">Tek bir bildirimi silmek için kaydırın.</string>
+	<string name="notification_cleaner_block_closed">%1$s bildirim engellenmeyecek.</string>
+	<string name="notification_cleaner_block_opened">%1$s bildirim engellenecek.</string>
+	<string name="function_off_dialog_NC_title">Bildirim Temizleyici Etkisiz Kılınsın mı?</string>
+	<string name="function_off_dialog_NC_content">%2$s günde %1$s istenmeyen bildirim Bildirim Temizleyici tarafından engelledi.</string>
+	<string name="function_off_dialog_btn_positive">DEVAM ET</string>
+	<string name="showing_ads">Reklam gösteriliyor…</string>
+	<string name="disable">Etkisiz Kıl</string>
+	<string name="clean">Temizle</string>
+	<string name="result_page_optimized_healthy">Cihazın sağlıklı.</string>
+	<string name="function_off">Kapalı</string>
+	<string name="permission_guide_description_accessibility">☆Super Security☆ bul ve aç.</string>
 </resources>

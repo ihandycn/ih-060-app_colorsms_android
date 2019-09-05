@@ -845,4 +845,33 @@
     <string name="settings_vibrate_short">Pendek</string>
     <string name="settings_vibrate_long">Panjang</string>
 
+	<string name="optimal">OPTIMAL</string>
+	<string name="notification_cleaner_title">Pembersih Notifikasi</string>
+	<string name="notification_cleaner_intercepted">%1$s Notifikasi Sampah</string>
+	<string name="notification_cleaner_clean_now_tip">Terlalu Banyak Notifikasi yang Memperlambat Lambat Ponsel. Sembunyikan Notifikasi yang Tidak Diinginkan!</string>
+	<string name="notification_cleaner_clean_now">HAPUS SEKARANG</string>
+	<string name="notification_cleaner_illustration_page">Notifikasi sampah akan disembunyikan di Bilah Pembersih Notifikasi.</string>
+	<string name="today">Hari Ini</string>
+	<string name="yesterday">Kemarin</string>
+	<string name="notification_cleaner_clean_all">HAPUS SEMUA (%1$d)</string>
+	<string name="notification_cleaner_settings_description">Pilih aplikasi untuk memblokir notifikasi</string>
+	<string name="notification_cleaner_deleted">DIHAPUS</string>
+	<string name="notification_cleaner_cleared_up">%1$s notifikasi akan dihapus!</string>
+	<string name="notification_cleaner_hidden_description">Tidak Ada Notifikasi</string>
+	<string name="notification_cleaner_guide_white_list">Pengaturan daftar putih.</string>
+	<string name="notification_cleaner_fake_notification_title_1">Pembersih Notifikasi Diaktifkan!</string>
+	<string name="notification_cleaner_fake_notification_title_2">Klik untuk Melihat Detail</string>
+	<string name="notification_cleaner_fake_notification_body_1">Notifikasi yang diblokir akan ditampilkan di sini.</string>
+	<string name="notification_cleaner_fake_notification_body_2">Geser untuk menghapus notifikasi tunggal.</string>
+	<string name="notification_cleaner_block_closed">%1$s notifikasi tidak akan diblokir.</string>
+	<string name="notification_cleaner_block_opened">%1$s notifikasi akan diblokir.</string>
+	<string name="function_off_dialog_NC_title">Nonaktifkan Pembersih Notifikasi?</string>
+	<string name="function_off_dialog_NC_content">%1$s notifikasi yang tidak diinginkan telah diblokir oleh Pembersih Notifikasi selama %2$s hari.</string>
+	<string name="function_off_dialog_btn_positive">TTP GUNAKN</string>
+	<string name="showing_ads">Menampilkan Iklan …</string>
+	<string name="disable">Nonaktifkan</string>
+	<string name="clean">Hapus</string>
+	<string name="result_page_optimized_healthy">Perangkat Anda sehat.</string>
+	<string name="function_off">Mati</string>
+	<string name="permission_guide_description_accessibility">Temukan ☆Super Security☆ dan nyalakan.</string>
 </resources>

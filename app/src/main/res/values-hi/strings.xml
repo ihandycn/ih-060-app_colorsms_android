@@ -837,4 +837,33 @@
     <string name="settings_vibrate_short">कम</string>
     <string name="settings_vibrate_long">लंबा</string>
 
+	<string name="optimal">श्रेष्‍ठ</string>
+	<string name="notification_cleaner_title">अधिसूचना क्‍लीनर</string>
+	<string name="notification_cleaner_intercepted">%1$s जंक अधिसूचनाएं</string>
+	<string name="notification_cleaner_clean_now_tip">बहुत ज्‍यादा अधिसूचनाएं फोन को सुस्‍त करती है। अवांछित अधिसूचनाएं छुपाएं!</string>
+	<string name="notification_cleaner_clean_now">अभी क्‍लीन करें</string>
+	<string name="notification_cleaner_illustration_page">अधिसूचना क्लीनर बार में जंक अधिसूचनाएं छिप जाएंगी।</string>
+	<string name="today">आज</string>
+	<string name="yesterday">कल</string>
+	<string name="notification_cleaner_clean_all">सभी क्‍लीन करें (%1$d)</string>
+	<string name="notification_cleaner_settings_description">अधिसूचनाएं ब्‍लॉक करने के लिए ऐप्‍स चुनें</string>
+	<string name="notification_cleaner_deleted">हट गए</string>
+	<string name="notification_cleaner_cleared_up">%1$s अधिसूचनाएं क्लीयर है!</string>
+	<string name="notification_cleaner_hidden_description">अधिसूचनाएं नहीं।</string>
+	<string name="notification_cleaner_guide_white_list">व्‍हाइटलिस्‍ट के लिए सेटिंग्‍स</string>
+	<string name="notification_cleaner_fake_notification_title_1">अधिसूचना क्‍लीनर सक्षम है!</string>
+	<string name="notification_cleaner_fake_notification_title_2">विवरण देखने के लिए क्लिक करें</string>
+	<string name="notification_cleaner_fake_notification_body_1">ब्‍लॉक सूचनाएं यहां दिखाई देंगी।</string>
+	<string name="notification_cleaner_fake_notification_body_2">एकल सूचना को हटाने के लिए स्लाइड करें।</string>
+	<string name="notification_cleaner_block_closed">%1$s अधिसूचनाएं ब्‍लॉक नहीं होगी।</string>
+	<string name="notification_cleaner_block_opened">%1$s अधिसूचनाएं ब्‍लॉक हो जाएगी।</string>
+	<string name="function_off_dialog_NC_title">अधिसूचना क्‍लीनर अक्षम करना है?</string>
+	<string name="function_off_dialog_NC_content">अधिसूचना क्लीनर द्वारा %2$s दिनों में %1$s अवांछित अधिसूचनाएं ब्लॉक कर कर दी जाएगी।</string>
+	<string name="function_off_dialog_btn_positive">प्रयोग करे</string>
+	<string name="showing_ads">विज्ञापन दिखा रहा है …</string>
+	<string name="disable">अक्षम करें</string>
+	<string name="clean">साफ करें</string>
+	<string name="result_page_optimized_healthy">आपका उपकरण अच्‍छा है।</string>
+	<string name="function_off">बंद</string>
+	<string name="permission_guide_description_accessibility">☆Super Security☆ ढूंढें और उसे चालू करें।</string>
 </resources>
