@@ -50,7 +50,7 @@ public class ContactDropdownLayouter extends DropdownChipLayouter {
 
             @Override
             public void onContactListItemClicked(final ContactListItemData item,
-                    final ContactListItemView view) {
+                    final View view) {
                 // The chips UI will handle auto-complete item click events, so No-op here.
             }
 

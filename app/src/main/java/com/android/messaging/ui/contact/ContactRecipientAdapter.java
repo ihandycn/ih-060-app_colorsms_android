@@ -65,18 +65,26 @@ public final class ContactRecipientAdapter extends BaseRecipientAdapter {
     private int mWorkDirectoryHeaderPos = WORD_DIRECTORY_HEADER_POS_NONE;
     private final LayoutInflater mInflater;
 
+    private boolean mShowInputNumberInSuggestList = true;
+
     /**
      * Type of directory entry.
      */
     private static final int ENTRY_TYPE_DIRECTORY = RecipientEntry.ENTRY_TYPE_SIZE;
 
     public ContactRecipientAdapter(final Context context,
-            final ContactListItemView.HostInterface clivHost) {
+                                   final ContactListItemView.HostInterface clivHost) {
         this(context, Integer.MAX_VALUE, QUERY_TYPE_PHONE, clivHost);
     }
 
+    public ContactRecipientAdapter(final Context context,
+                                   final ContactListItemView.HostInterface clivHost, boolean showInputNumberInSuggestList) {
+        this(context, Integer.MAX_VALUE, QUERY_TYPE_PHONE, clivHost);
+        mShowInputNumberInSuggestList = showInputNumberInSuggestList;
+    }
+
     public ContactRecipientAdapter(final Context context, final int preferredMaxResultCount,
-            final int queryMode, final ContactListItemView.HostInterface clivHost) {
+                                   final int queryMode, final ContactListItemView.HostInterface clivHost) {
         super(context, preferredMaxResultCount, queryMode);
         setPhotoManager(new ContactRecipientPhotoManager(context, clivHost));
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -177,9 +185,11 @@ public final class ContactRecipientAdapter extends BaseRecipientAdapter {
 
             // First check if the constraint is a valid SMS destination. If so, add the
             // destination as a suggestion item to the drop down.
-            if (PhoneUtils.isValidSmsMmsDestination(searchText)) {
-                entries.add(ContactRecipientEntryUtils
-                        .constructSendToDestinationEntry(searchText));
+            if (mShowInputNumberInSuggestList) {
+                if (PhoneUtils.isValidSmsMmsDestination(searchText)) {
+                    entries.add(ContactRecipientEntryUtils
+                            .constructSendToDestinationEntry(searchText));
+                }
             }
 
             // Only show work directory header if more than one result in work directory.
@@ -324,7 +334,7 @@ public final class ContactRecipientAdapter extends BaseRecipientAdapter {
             public final int workDirectoryPos;
 
             public ContactReceipientFilterResult(List<RecipientEntry> recipientEntries,
-                    int workDirectoryPos) {
+                                                 int workDirectoryPos) {
                 this.recipientEntries = recipientEntries;
                 this.workDirectoryPos = workDirectoryPos;
             }
@@ -339,7 +349,7 @@ public final class ContactRecipientAdapter extends BaseRecipientAdapter {
      */
     @Override
     public void getMatchingRecipients(final ArrayList<String> inAddresses,
-            final RecipientMatchCallback callback) {
+                                      final RecipientMatchCallback callback) {
         final int addressesSize = Math.min(
                 RecipientAlternatesAdapter.MAX_LOOKUPS, inAddresses.size());
         final HashSet<String> addresses = new HashSet<String>();

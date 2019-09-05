@@ -41,7 +41,7 @@ public class ContactSectionIndexer implements SectionIndexer {
     private static final String BLANK_HEADER_STRING = " ";
     private SparseArray<String> mMap;
 
-    ContactSectionIndexer(final Cursor contactsCursor) {
+    public ContactSectionIndexer(final Cursor contactsCursor) {
         buildIndexer(contactsCursor);
         mMap = new SparseArray<>();
         int count = contactsCursor.getCount();
@@ -55,11 +55,11 @@ public class ContactSectionIndexer implements SectionIndexer {
     }
 
     @Nullable
-    String getSectionForStartingPosition(int position) {
+    public String getSectionForStartingPosition(int position) {
         return mMap.get(position);
     }
 
-    int mapListPositionToCursorPosition(int listPosition) {
+    public int mapListPositionToCursorPosition(int listPosition) {
         int size = mMap.size();
         for (int i = 0; i < size; i++) {
             int key = mMap.keyAt(i);
@@ -72,7 +72,7 @@ public class ContactSectionIndexer implements SectionIndexer {
         return listPosition - size;
     }
 
-    int getSectionCount() {
+    public int getSectionCount() {
         return mSections == null ? 0 : mSections.length;
     }
 

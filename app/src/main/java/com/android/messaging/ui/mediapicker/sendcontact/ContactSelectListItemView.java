@@ -1,24 +1,9 @@
-/*
- * Copyright (C) 2015 The Android Open Source Project
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-package com.android.messaging.ui.contact;
+package com.android.messaging.ui.mediapicker.sendcontact;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,6 +17,7 @@ import com.android.messaging.datamodel.DataModel;
 import com.android.messaging.datamodel.data.ContactListItemData;
 import com.android.messaging.datamodel.data.ParticipantData;
 import com.android.messaging.ui.ContactIconView;
+import com.android.messaging.ui.contact.ContactListItemView;
 import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.AvatarUriUtil;
@@ -42,23 +28,18 @@ import com.superapps.util.Dimensions;
 /**
  * The view for a single entry in a contact list.
  */
-public class ContactListItemView extends LinearLayout implements OnClickListener {
-    public interface HostInterface {
-        void onContactListItemClicked(ContactListItemData item, View itemView);
-
-        boolean isContactSelected(ContactListItemData item);
-    }
-
+public class ContactSelectListItemView extends LinearLayout implements OnClickListener {
     @VisibleForTesting
     final ContactListItemData mData;
     private TextView mContactNameTextView;
     private TextView mContactDetailsTextView;
-    private TextView mContactDetailTypeTextView;
     private ContactIconView mContactIconView;
-    private ImageView mContactCheckmarkView;
-    private HostInterface mHostInterface;
+    private ContactListItemView.HostInterface mHostInterface;
+    private ImageView mCheckBox;
+    private Drawable mCheckBoxUnselectedBg;
+    private Drawable mCheckBoxSelectedBg;
 
-    public ContactListItemView(final Context context, final AttributeSet attrs) {
+    public ContactSelectListItemView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         mData = DataModel.get().createContactListItemData();
     }
@@ -66,16 +47,18 @@ public class ContactListItemView extends LinearLayout implements OnClickListener
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        mContactNameTextView = (TextView) findViewById(R.id.contact_name);
-        mContactDetailsTextView = (TextView) findViewById(R.id.contact_details);
-        mContactDetailTypeTextView = (TextView) findViewById(R.id.contact_detail_type);
-        mContactIconView = (ContactIconView) findViewById(R.id.contact_icon);
+        mContactNameTextView = findViewById(R.id.main_title);
+        mContactDetailsTextView = findViewById(R.id.sub_title);
+        mContactIconView = findViewById(R.id.contact_icon);
         findViewById(R.id.contact_bg).setBackground(
-                BackgroundDrawables.createBackgroundDrawable(0xffd1d6dc, Dimensions.pxFromDp(20), false));
-        mContactCheckmarkView = (ImageView) findViewById(R.id.contact_checkmark);
-        mContactCheckmarkView.setBackground(BackgroundDrawables.
-                createBackgroundDrawable(PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(28), false));
-
+                BackgroundDrawables.createBackgroundDrawable(0xffd1d6dc,
+                        Dimensions.pxFromDp(20), false));
+        mCheckBoxUnselectedBg = BackgroundDrawables.createBackgroundDrawable(0, 0, 4,
+                0xffbdc2c9, Dimensions.pxFromDp(20), false, false);
+        mCheckBoxSelectedBg = BackgroundDrawables.createBackgroundDrawable(
+                PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(20), false);
+        mCheckBox = findViewById(R.id.contact_checked);
+        mCheckBox.setBackground(mCheckBoxUnselectedBg);
     }
 
     /**
@@ -85,7 +68,7 @@ public class ContactListItemView extends LinearLayout implements OnClickListener
      * @param cursor        the contact cursor.
      * @param hostInterface host interface to this view.
      */
-    public void bind(final Cursor cursor, final HostInterface hostInterface) {
+    public void bind(final Cursor cursor, final ContactListItemView.HostInterface hostInterface) {
         mData.bind(cursor);
         mHostInterface = hostInterface;
         setOnClickListener(this);
@@ -107,7 +90,7 @@ public class ContactListItemView extends LinearLayout implements OnClickListener
      * @param isWorkContact     whether the contact is in managed profile.
      */
     public void bind(final RecipientEntry recipientEntry, final CharSequence styledName,
-                     final CharSequence styledDestination, final HostInterface hostInterface,
+                     final CharSequence styledDestination, final ContactListItemView.HostInterface hostInterface,
                      final boolean isSingleRecipient, final boolean isWorkContact) {
         mData.bind(recipientEntry, styledName, styledDestination, isSingleRecipient, isWorkContact);
         mHostInterface = hostInterface;
@@ -117,8 +100,7 @@ public class ContactListItemView extends LinearLayout implements OnClickListener
     private void updateViewAppearance() {
         mContactNameTextView.setText(mData.getDisplayName());
         mContactDetailsTextView.setText(mData.getDestination());
-        mContactDetailTypeTextView.setText(Phone.getTypeLabel(getResources(),
-                mData.getDestinationType(), mData.getDestinationLabel()));
+
         final RecipientEntry recipientEntry = mData.getRecipientEntry();
         final String destinationString = String.valueOf(mData.getDestination());
         if (mData.getIsSimpleContactItem()) {
@@ -130,8 +112,6 @@ public class ContactListItemView extends LinearLayout implements OnClickListener
             mContactIconView.setImageResourceUri(avatarUri, mData.getContactId(),
                     mData.getLookupKey(), destinationString, false);
             mContactIconView.setVisibility(VISIBLE);
-            mContactCheckmarkView.setVisibility(GONE);
-            mContactDetailTypeTextView.setVisibility(GONE);
             mContactDetailsTextView.setVisibility(GONE);
             mContactNameTextView.setVisibility(VISIBLE);
         } else if (mData.getIsFirstLevel()) {
@@ -143,18 +123,24 @@ public class ContactListItemView extends LinearLayout implements OnClickListener
             mContactNameTextView.setVisibility(VISIBLE);
             final boolean isSelected = mHostInterface.isContactSelected(mData);
             setSelected(isSelected);
-            mContactCheckmarkView.setVisibility(isSelected ? VISIBLE : GONE);
             mContactDetailsTextView.setVisibility(VISIBLE);
-            mContactDetailTypeTextView.setVisibility(VISIBLE);
         } else {
             mContactIconView.setImageResourceUri(null);
             mContactIconView.setVisibility(INVISIBLE);
             mContactNameTextView.setVisibility(GONE);
             final boolean isSelected = mHostInterface.isContactSelected(mData);
             setSelected(isSelected);
-            mContactCheckmarkView.setVisibility(isSelected ? VISIBLE : GONE);
             mContactDetailsTextView.setVisibility(VISIBLE);
-            mContactDetailTypeTextView.setVisibility(VISIBLE);
+        }
+    }
+
+    public void setSelectState(boolean selected) {
+        if (selected) {
+            mCheckBox.setImageResource(R.drawable.conversation_check);
+            mCheckBox.setBackground(mCheckBoxSelectedBg);
+        } else {
+            mCheckBox.setImageDrawable(null);
+            mCheckBox.setBackground(mCheckBoxUnselectedBg);
         }
     }
 

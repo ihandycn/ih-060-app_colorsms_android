@@ -2175,6 +2175,16 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         showScheduleTimeSelectDialog(System.currentTimeMillis() + 10 * DateUtils.MINUTE_IN_MILLIS);
     }
 
+    @Override
+    public void addContactString(String info) {
+        mComposeMessageView.onContactTextAdded(info);
+    }
+
+    @Override
+    public void addVCardDraft(List<Uri> vCardList) {
+        mComposeMessageView.onContactVCardAdded(vCardList);
+    }
+
     private void showScheduleTimeSelectDialog(long defaultTime) {
         Context context = getActivity();
         if (context == null) {

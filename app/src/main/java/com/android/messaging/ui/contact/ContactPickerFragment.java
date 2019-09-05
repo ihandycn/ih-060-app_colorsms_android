@@ -165,7 +165,7 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.contact_picker_fragment, container, false);
         mRecipientTextView = view.findViewById(R.id.recipient_text_view);
-        TextViewUtil.setCursorPointColor(mRecipientTextView, PrimaryColors.DEFAULT_PRIMARY_COLOR);
+        TextViewUtil.setCursorPointColor(mRecipientTextView, PrimaryColors.getPrimaryColor());
         mRecipientTextView.setUnselectedChipBackgroundColor(PrimaryColors.getPrimaryColor());
         mRecipientTextView.setThreshold(0);
         mRecipientTextView.setDropDownAnchor(R.id.compose_contact_divider);
@@ -289,10 +289,10 @@ public class ContactPickerFragment extends Fragment implements ContactPickerData
 
     @Override // From ContactListItemView.HostInterface
     public void onContactListItemClicked(final ContactListItemData item,
-                                         final ContactListItemView view) {
+                                         final View itemView) {
         if (!isContactSelected(item)) {
             if (mContactPickingMode == MODE_PICK_INITIAL_CONTACT) {
-                mPendingExplodeView = view;
+                mPendingExplodeView = itemView;
             }
             mRecipientTextView.appendRecipientEntry(item.getRecipientEntry());
         } else if (mContactPickingMode != MODE_PICK_INITIAL_CONTACT) {

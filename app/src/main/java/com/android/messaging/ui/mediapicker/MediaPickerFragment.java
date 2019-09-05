@@ -1,8 +1,11 @@
 package com.android.messaging.ui.mediapicker;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,15 +18,23 @@ import android.widget.LinearLayout;
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.DraftMessageData;
 import com.android.messaging.datamodel.data.MessagePartData;
+import com.android.messaging.ui.mediapicker.sendcontact.ContactFileCreator;
+import com.android.messaging.ui.mediapicker.sendcontact.MediaContactPickerActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.OsUtil;
 import com.ihs.commons.config.HSConfig;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Set;
+
 public class MediaPickerFragment extends Fragment implements View.OnClickListener {
 
     public static final String FRAGMENT_TAG = "media_picker_fragment";
+    public static final int CHOOSE_CONTACT_REQUEST_CODE = 332;
 
     private static final int CAMERA_PERMISSION_REQUEST_CODE = 1;
     private static final int GALLERY_PERMISSION_REQUEST_CODE = 2;
@@ -91,7 +102,7 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
 
         if (!HSConfig.optBoolean(false, "Application", "ScheduleMessage")) {
             view.findViewById(R.id.media_schedule_container).setVisibility(View.GONE);
-            ((LinearLayout.LayoutParams)view.findViewById(R.id.media_select_placeholder).getLayoutParams()).weight = 2;
+            ((LinearLayout.LayoutParams) view.findViewById(R.id.media_select_placeholder).getLayoutParams()).weight = 2;
         }
     }
 
@@ -121,7 +132,8 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
                 }
                 break;
             case R.id.media_contact:
-
+                Intent intent = new Intent(getContext(), MediaContactPickerActivity.class);
+                startActivityForResult(intent, CHOOSE_CONTACT_REQUEST_CODE);
                 break;
             default:
                 break;
@@ -136,6 +148,10 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
         void onAudioRecorded(MessagePartData item);
 
         void onScheduledIconClick();
+
+        void onVCardContactAdded(List<Uri> vCardList);
+
+        void onTextContactAdded(String contactString);
     }
 
     private void openCamera() {
@@ -212,6 +228,40 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
 
             if (mMissingPermissionView != null) {
                 mMissingPermissionView.setVisibility(permissionGranted ? View.GONE : View.VISIBLE);
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode != Activity.RESULT_OK) {
+            return;
+        }
+        if (requestCode == CHOOSE_CONTACT_REQUEST_CODE) {
+            HashMap<String, String> contacts =
+                    (HashMap<String, String>) data.getSerializableExtra("contacts");
+            if (MediaContactPickerActivity.CONTACT_SEND_TYPE_TEXT.equals(data.getStringExtra("type"))) {
+                if (mOnMediaItemListener != null) {
+                    StringBuilder sb = new StringBuilder();
+                    Set<String> set = contacts.keySet();
+                    for (String key : set) {
+                        if (sb.length() > 0) {
+                            sb.append(",\r\n");
+                        }
+                        sb.append(contacts.get(key)).append(" (").append(key).append(")");
+                    }
+                    mOnMediaItemListener.onTextContactAdded(sb.toString());
+                }
+            } else if (MediaContactPickerActivity.CONTACT_SEND_TYPE_VCARD.equals(data.getStringExtra("type"))) {
+                if (mOnMediaItemListener != null) {
+                    Set<String> set = contacts.keySet();
+                    List<Uri> vCardList = new ArrayList<>();
+                    for (String key : set) {
+                        Uri uri = ContactFileCreator.create(contacts.get(key), null, key);
+                        vCardList.add(uri);
+                    }
+                    mOnMediaItemListener.onVCardContactAdded(vCardList);
+                }
             }
         }
     }
