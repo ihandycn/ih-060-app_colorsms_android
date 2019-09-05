@@ -1195,7 +1195,8 @@ public abstract class MessageNotificationState extends NotificationState {
         if (state != null && LogUtil.isLoggable(TAG, LogUtil.VERBOSE)) {
             LogUtil.v(TAG, "MessageNotificationState: Notification state created"
                     + ", title = " + LogUtil.sanitizePII(state.mTitle)
-                    + ", content = " + LogUtil.sanitizePII(state.mContent.toString()));
+                    + ", content = " +
+                    state.mContent == null ? "null" : LogUtil.sanitizePII(state.mContent.toString()));
         }
         return state;
     }
