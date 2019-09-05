@@ -120,6 +120,9 @@ public class ChooseEmojiStyleAdapter extends RecyclerView.Adapter<ChooseEmojiSty
                 }
                 int lastPos = mLastItem;
                 mLastItem = holder.getAdapterPosition();
+                if (mLastItem == lastPos) {
+                    return;
+                }
                 notifyItemChanged(holder.getAdapterPosition());
                 notifyItemChanged(lastPos);
                 UiDownloadCallback callback = new UiDownloadCallback(ChooseEmojiStyleAdapter.this, item, position);
