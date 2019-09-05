@@ -142,7 +142,7 @@ public class ConversationListFragment extends Fragment implements ConversationLi
     }
 
     private ConversationListFragmentHost mHost;
-    private ConversationListRecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView;
     private ImageView mStartNewConversationButton;
     private ListEmptyView mEmptyListMessageView;
     private ConversationListAdapter mAdapter;
@@ -757,6 +757,8 @@ public class ConversationListFragment extends Fragment implements ConversationLi
             // stop loading animation
             mEmptyListMessageView.setIsLoadingAnimationVisible(false);
             mEmptyListMessageView.setVisibility(View.GONE);
+
+            HSGlobalNotificationCenter.sendNotification(ConversationListActivity.CONVERSATION_LIST_DISPLAYED);
         }
     }
 

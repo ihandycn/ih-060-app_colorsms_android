@@ -217,7 +217,6 @@ public class ConversationListActivity extends AbstractConversationListActivity
     private boolean mIsMessageMoving;
     private ConstraintLayout mExitAppAnimationViewContainer;
     private LottieAnimationView mLottieAnimationView;
-    private LightWeightCustomizeGuideController mCustomizeGuideController;
     private final BuglePrefs mPrefs = Factory.get().getApplicationPrefs();
     private HomeKeyWatcher mHomeKeyWatcher;
 
@@ -722,7 +721,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
             }
         }
 
-        if(!NotificationCleanerTest.getSwitch()) {
+        if (!NotificationCleanerTest.getSwitch()) {
             navigationContent.findViewById(R.id.navigation_item_notification_cleaner).setVisibility(View.GONE);
         }
 
@@ -1261,11 +1260,8 @@ public class ConversationListActivity extends AbstractConversationListActivity
             case CONVERSATION_LIST_DISPLAYED:
                 if (Preferences.getDefault().getBoolean(PREF_KEY_SHOULD_SHOW_CUSTOMIZE_GUIDE, true)) {
                     Threads.postOnMainThreadDelayed(() -> {
-                        if (mCustomizeGuideController == null) {
-                            if (!isFinishing()) {
-                                mCustomizeGuideController = new LightWeightCustomizeGuideController();
-                                mCustomizeGuideController.showGuideIfNeed(this);
-                            }
+                        if (!isFinishing()) {
+                            new LightWeightCustomizeGuideController().showGuideIfNeed(this);
                         }
                     }, 200);
                 }
