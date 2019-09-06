@@ -869,4 +869,12 @@
 	<string name="result_page_optimized_healthy">Thiết bị của bạn ở trạng thái tốt.</string>
 	<string name="function_off">Tắt</string>
 	<string name="permission_guide_description_accessibility">Tìm ☆%1$s☆ và bật lên.</string>
+
+	<string name="settings_led_color_title">Màu LED\n(một số thiết bị có thể không hỗ trợ)</string>
+	<string name="settings_vibrate_multiple_short">Nhiều Ngắn</string>
+	<string name="settings_vibrate_multiple_long">Nhiều Dài</string>
+	<string name="firebase_sync_desktop_settings_title">Đồng bộ hóa cài đặt</string>
+	<string name="firebase_sync_desktop_settings_description_logged_out">Sau khi đăng nhập, bạn có thể đồng bộ hóa cài đặt SMS của mình trên nhiều thiết bị.</string>
+	<string name="emoji_style_set_guide">Thử Twitter Emoji!</string>
+
 </resources>

@@ -1207,8 +1207,8 @@
     <string name="firebase_login_out_succeed" translatable="false">Logged out</string>
     <string name="firebase_login_out_title" translatable="false">Are you sure to log out?</string>
     <string name="firebase_login_out" translatable="false">Log out</string>
-    <string name="firebase_sync_desktop_settings_title" translatable="false">Sync settings</string>
-    <string name="firebase_sync_desktop_settings_description_logged_out" translatable="false">After logging in, you can sync your sms settings across multiple devices</string>
+    <string name="firebase_sync_desktop_settings_title" translatable="false">Sync Settings</string>
+    <string name="firebase_sync_desktop_settings_description_logged_out" translatable="false">After logging in, you can sync your sms settings across multiple devices.</string>
     <string name="firebase_sync_desktop_settings_description_logged_in" translatable="false">Sync succeed</string>
 
     <string name="get_now">Get Now</string>

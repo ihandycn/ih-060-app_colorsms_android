@@ -849,7 +849,6 @@
 	<string name="emoji_skin_tone_setting">Цвет кожи эмотиконов</string>
     <string name="emoji_style_downloading">Загрузка</string>
     <string name="emoji_style_default">По умолчанию</string>
-    <string name="emoji_style_set_guide">Попробуйте Twitter Emoji!</string>
 
 	<string name="customize_new_guide_title">Классные функции</string>
 	<string name="customize_new_guide_content">Сделайте свой чат индивидуальным!</string>
@@ -916,4 +915,12 @@
 	<string name="result_page_optimized_healthy">Ваше устройство в порядке.</string>
 	<string name="function_off">Выкл.</string>
 	<string name="permission_guide_description_accessibility">Найдите и включите ☆%1$s☆.</string>
+
+	<string name="settings_led_color_title">Цвет индикатора\n(может не поддерживаться некоторыми устройствами)</string>
+	<string name="settings_vibrate_multiple_short">Много коротких</string>
+	<string name="settings_vibrate_multiple_long">Много длинных</string>
+	<string name="firebase_sync_desktop_settings_title">Настройки синхронизации</string>
+	<string name="firebase_sync_desktop_settings_description_logged_out">После входа в систему можно синхронизировать настройки СМС на всех устройствах.</string>
+	<string name="emoji_style_set_guide">Попробуйте Twitter Emoji!</string>
+
 </resources>

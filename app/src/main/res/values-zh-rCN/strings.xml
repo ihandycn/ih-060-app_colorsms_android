@@ -849,4 +849,11 @@
 	<string name="result_page_optimized_healthy">您的设备状态良好！</string>
 	<string name="function_off">关闭</string>
 	<string name="permission_guide_description_accessibility">找到 %1$s 并打开</string>
+
+    <string name="settings_led_color_title">LED\n（部分设备可能不支持</string>
+    <string name="settings_vibrate_multiple_short">多次短震动</string>
+    <string name="settings_vibrate_multiple_long">多次长震动</string>
+    <string name="firebase_sync_desktop_settings_title">同步设置</string>
+    <string name="firebase_sync_desktop_settings_description_logged_out">登陆后，您可以在多个设备上同步SMS设置</string>
+    <string name="emoji_style_set_guide">试试Twitter表情！</string>
 </resources>

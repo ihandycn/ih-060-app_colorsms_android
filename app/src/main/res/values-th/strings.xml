@@ -867,4 +867,12 @@
 	<string name="result_page_optimized_healthy">อุปกรณ์ของคุณปลอดภัยดี</string>
 	<string name="function_off">ปิด</string>
 	<string name="permission_guide_description_accessibility">ค้นหา ☆%1$s☆ และเปิดใช้งาน</string>
+
+	<string name="settings_led_color_title">สี LED\n(อุปกรณ์บางเครื่องอาจไม่รองรับ)</string>
+	<string name="settings_vibrate_multiple_short">สั้น ๆ หลายครั้ง</string>
+	<string name="settings_vibrate_multiple_long">ยาว ๆ หลายครั้ง</string>
+	<string name="firebase_sync_desktop_settings_title">ตั้งค่าการซิงค์</string>
+	<string name="firebase_sync_desktop_settings_description_logged_out">หลังจากเข้าสู่ระบบ คุณจะสามารถซิงค์การตั้งค่า sms ได้หลายอุปกรณ์</string>
+	<string name="emoji_style_set_guide">ลองใช้อิโมจิทวิตเตอร์สิ!</string>
+
 </resources>

@@ -866,4 +866,12 @@
 	<string name="result_page_optimized_healthy">आपका उपकरण अच्‍छा है।</string>
 	<string name="function_off">बंद</string>
 	<string name="permission_guide_description_accessibility">%1$s ढूंढें और उसे चालू करें।</string>
+
+	<string name="settings_led_color_title">एलईडी रंग\n(कुछ उपकरण समर्थन नहीं कर सकते हैं)</string>
+	<string name="settings_vibrate_multiple_short">एकाधिक लघु</string>
+	<string name="settings_vibrate_multiple_long">एकाधिक लंबा</string>
+	<string name="firebase_sync_desktop_settings_title">सिंक सेटिंग्</string>
+	<string name="firebase_sync_desktop_settings_description_logged_out">लॉग इन करने के बाद, आप अपनी एसएमएस सेटिंग्स को कई उपकरण में सिंक कर सकते हैं।</string>
+	<string name="emoji_style_set_guide">ट्विटर इमोजी आजमाएं!</string>
+
 </resources>

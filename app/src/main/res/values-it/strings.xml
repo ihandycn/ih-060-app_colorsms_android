@@ -867,4 +867,12 @@
 	<string name="result_page_optimized_healthy">Il dispositivo è al sicuro.</string>
 	<string name="function_off">Off</string>
 	<string name="permission_guide_description_accessibility">Trova ☆%1$s☆ e attivala.</string>
+
+	<string name="settings_led_color_title">Colore LED\n(non supportato su alcuni dispositivi)</string>
+	<string name="settings_vibrate_multiple_short">Brevi ripetute</string>
+	<string name="settings_vibrate_multiple_long">Lunghe ripetute</string>
+	<string name="firebase_sync_desktop_settings_title">Sincronizza impostazioni</string>
+	<string name="firebase_sync_desktop_settings_description_logged_out">Dopo aver effettuato l\'accesso è possibile sincronizzare le impostazioni per gli SMS su diversi dispositivi.</string>
+	<string name="emoji_style_set_guide">Prova Twitter Emoji!</string>
+
 </resources>

@@ -825,7 +825,6 @@
 
     <string name="message_box_reply_message_button">MENSAJE DE RESPUESTA</string>
 
-    <string name="emoji_style_set_guide">Prueba Twitter Emoji!</string>
 
     <string name="ringtone">Tono de llamada</string>
     <string name="music">Música</string>
@@ -870,4 +869,12 @@
 	<string name="result_page_optimized_healthy">Tu dispositivo está en buen estado.</string>
 	<string name="function_off">No</string>
 	<string name="permission_guide_description_accessibility">Busca ☆%1$s☆ y actívalo.</string>
+
+	<string name="settings_led_color_title">Color LED\n(Puede que algún dispositivo no lo admita)</string>
+	<string name="settings_vibrate_multiple_short">Corto múltiple</string>
+	<string name="settings_vibrate_multiple_long">Largo múltiple</string>
+	<string name="firebase_sync_desktop_settings_title">Ajustes de sincronización</string>
+	<string name="firebase_sync_desktop_settings_description_logged_out">Tras iniciar sesión, puedes sincronizar tus ajustes de SMS en múltiples dispositivos.</string>
+	<string name="emoji_style_set_guide">¡Prueba el emoji de Twitter!</string>
+
 </resources>

@@ -874,4 +874,12 @@
 	<string name="result_page_optimized_healthy">Seu dispositivo está em boas condições.</string>
 	<string name="function_off">Desativado</string>
 	<string name="permission_guide_description_accessibility">Encontre o ☆%1$s☆ e ative-o.</string>
+
+	<string name="settings_led_color_title">Cor do LED\n(Alguns dispositivos podem não suportar)</string>
+	<string name="settings_vibrate_multiple_short">Vários curtos</string>
+	<string name="settings_vibrate_multiple_long">Vários longos</string>
+	<string name="firebase_sync_desktop_settings_title">Configurações de sincronização</string>
+	<string name="firebase_sync_desktop_settings_description_logged_out">Após entrar, você pode sincronizar suas configurações de SMS em vários dispositivos.</string>
+	<string name="emoji_style_set_guide">Experimente o Twitter Emoji!</string>
+
 </resources>

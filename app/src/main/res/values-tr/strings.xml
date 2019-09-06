@@ -860,4 +860,12 @@
 	<string name="result_page_optimized_healthy">Cihazın sağlıklı.</string>
 	<string name="function_off">Kapalı</string>
 	<string name="permission_guide_description_accessibility">☆%1$s☆ bul ve aç.</string>
+
+	<string name="settings_led_color_title">LED Renk\n(bazı cihazlar desteklemeyebilir?</string>
+	<string name="settings_vibrate_multiple_short">Çoklu Kısa</string>
+	<string name="settings_vibrate_multiple_long">Çoklu Uzun</string>
+	<string name="firebase_sync_desktop_settings_title">Eşitleme Ayarları</string>
+	<string name="firebase_sync_desktop_settings_description_logged_out">Oturum açtıktan sonra sms ayarlarınızı birçok cihazda eşitleyebilirsiniz.</string>
+	<string name="emoji_style_set_guide">Twitter Emoji Deneyin!</string>
+
 </resources>

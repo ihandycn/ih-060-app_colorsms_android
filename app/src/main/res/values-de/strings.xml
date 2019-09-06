@@ -862,4 +862,12 @@
 	<string name="result_page_optimized_healthy">Ihr Gerät ist gesund.</string>
 	<string name="function_off">Aus</string>
 	<string name="permission_guide_description_accessibility">☆%1$s☆ suchen und aktivieren.</string>
+
+	<string name="settings_led_color_title">LED-Farbe \n(Wird auf einigen Geräten nicht unterstützt.)</string>
+	<string name="settings_vibrate_multiple_short">Mehrmals kurz</string>
+	<string name="settings_vibrate_multiple_long">Mehrmals lang</string>
+	<string name="firebase_sync_desktop_settings_title">Sync.-Einstellungen</string>
+	<string name="firebase_sync_desktop_settings_description_logged_out">Nach der Anmeldung lassen sich SMS-Einstellungen auf mehreren Geräten synchronisieren.</string>
+	<string name="emoji_style_set_guide">Teste Twitter Emoji!</string>
+
 </resources>

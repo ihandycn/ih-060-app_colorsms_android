@@ -850,4 +850,12 @@
 	<string name="result_page_optimized_healthy">お使いのデバイスは健康です。</string>
 	<string name="function_off">オフ</string>
 	<string name="permission_guide_description_accessibility">☆%1$s☆を見つけてオンにします。</string>
+
+	<string name="settings_led_color_title">LEDの色\n（サポートされていないデバイスもあります）</string>
+	<string name="settings_vibrate_multiple_short">短い振動を繰り返す</string>
+	<string name="settings_vibrate_multiple_long">長い振動を繰り返す</string>
+	<string name="firebase_sync_desktop_settings_title">同期設定</string>
+	<string name="firebase_sync_desktop_settings_description_logged_out">ログイン後、複数のデバイスでショートメールの設定を同期できます。</string>
+	<string name="emoji_style_set_guide">ツイッターの絵文字を使ってみよう！</string>
+
 </resources>

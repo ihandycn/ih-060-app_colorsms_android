@@ -961,4 +961,12 @@
 	<string name="result_page_optimized_healthy">جهازك يعمل على النحو الأمثل.</string>
 	<string name="function_off">معطل</string>
 	<string name="permission_guide_description_accessibility">اعثر على ☆%1$s☆ وشغّله.</string>
+
+	<string name="settings_led_color_title">لون الضوء\n(قد لا تدعم بعض الأجهزة هذه الخاصية)</string>
+	<string name="settings_vibrate_multiple_short">قصيرة متكررة</string>
+	<string name="settings_vibrate_multiple_long">طويلة متكررة</string>
+	<string name="firebase_sync_desktop_settings_title">إعدادات المزامنة</string>
+	<string name="firebase_sync_desktop_settings_description_logged_out">بعد تسجيل الدخول، يمكنك مزامنة إعدادات الرسائل القصيرة عبر أجهزة متعددة.</string>
+	<string name="emoji_style_set_guide">جرّب إيموجي Twitter!</string>
+
 </resources>

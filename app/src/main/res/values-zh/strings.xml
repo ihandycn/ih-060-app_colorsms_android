@@ -852,4 +852,11 @@
 	<string name="result_page_optimized_healthy">您的設備狀態良好！</string>
 	<string name="function_off">關閉</string>
 	<string name="permission_guide_description_accessibility">找到☆%1$s☆並打開</string>
+
+    <string name="settings_led_color_title">LED\n（部分設備可能不支持</string>
+    <string name="settings_vibrate_multiple_short">多次短震動</string>
+    <string name="settings_vibrate_multiple_long">多次長震動</string>
+    <string name="firebase_sync_desktop_settings_title">同步設置</string>
+    <string name="firebase_sync_desktop_settings_description_logged_out">登陸後，您可以在多個設備上同步SMS設置</string>
+    <string name="emoji_style_set_guide">試試Twitter表情！ </string>
 </resources>
