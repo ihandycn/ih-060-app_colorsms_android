@@ -88,7 +88,7 @@ public class Upgrader extends BaseUpgrader {
             ThemeDownloadManager.getInstance().copyAndResizeThemeWhenAppInstallOrUpgrade();
         }
 
-        if (oldVersion < 75 && newVersion >= 75) {
+        if (oldVersion < 79 && newVersion >= 79) {
             RingtoneInfoManager.upgrade();
         }
 
