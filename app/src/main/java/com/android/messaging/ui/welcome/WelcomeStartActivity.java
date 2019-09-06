@@ -33,6 +33,7 @@ import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.OsUtil;
 import com.android.messaging.util.view.AdvancedPageIndicator;
 import com.android.messaging.util.view.IndicatorMark;
+import com.ihs.app.analytics.HSAnalytics;
 import com.ihs.app.framework.HSGdprConsent;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.utils.HSLog;
@@ -166,10 +167,12 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                         || Compats.IS_LGE_DEVICE
                         || Compats.IS_ZTE_DEVICE) {
                     BugleFirebaseAnalytics.logEvent("Device_High_Retention", new HashMap<>());
+                    HSAnalytics.logEventToAppsFlyer("Device_High_Retention");
                 }
                 if (Compats.IS_MOTOROLA_DEVICE
                         || (Compats.IS_LGE_DEVICE && Build.VERSION.SDK_INT == Build.VERSION_CODES.O_MR1)) {
                     BugleFirebaseAnalytics.logEvent("Device_ExtraHigh_Retention",  new HashMap<>());
+                    HSAnalytics.logEventToAppsFlyer("Device_ExtraHigh_Retention");
                 }
             } else if (locale.equalsIgnoreCase("PH")) {
                 if (Compats.IS_SAMSUNG_DEVICE
@@ -177,6 +180,7 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                         || Compats.IS_HUAWEI_DEVICE
                         || Compats.IS_CHERRY_MOBILE) {
                     BugleFirebaseAnalytics.logEvent("Device_High_Retention", new HashMap<>());
+                    HSAnalytics.logEventToAppsFlyer("Device_High_Retention");
                 }
                 if (Compats.IS_SAMSUNG_DEVICE
                         || Compats.IS_VIVO_DEVICE
@@ -184,11 +188,13 @@ public class WelcomeStartActivity extends AppCompatActivity implements View.OnCl
                         || Compats.IS_CHERRY_MOBILE
                         || (Compats.IS_OPPO_DEVICE && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)) {
                     BugleFirebaseAnalytics.logEvent("Device_ExtraHigh_Retention", new HashMap<>());
+                    HSAnalytics.logEventToAppsFlyer("Device_ExtraHigh_Retention");
                 }
             }
 
             if (Compats.IS_HUAWEI_DEVICE) {
                 BugleFirebaseAnalytics.logEvent("Device_HUAWEI", new HashMap<>());
+                HSAnalytics.logEventToAppsFlyer("Device_HUAWEI");
             }
         }, "pref_key_log_retention_events");
     }

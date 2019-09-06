@@ -107,6 +107,7 @@ import com.android.messaging.util.ExitAdAutopilotUtils;
 import com.android.messaging.util.ExitAdMonitor;
 import com.android.messaging.util.NotificationAccessAutopilotUtils;
 import com.android.messaging.util.PhoneUtils;
+import com.ihs.app.analytics.HSAnalytics;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
@@ -358,12 +359,16 @@ public class ConversationListActivity extends AbstractConversationListActivity
 
                 if (Compats.IS_HUAWEI_DEVICE) {
                     BugleFirebaseAnalytics.logEvent("Device_HUAWEI", new HashMap<>());
+                    HSAnalytics.logEventToAppsFlyer("Device_HUAWEI");
                 } else if (Compats.IS_MOTOROLA_DEVICE || Compats.IS_LGE_DEVICE) {
                     BugleFirebaseAnalytics.logEvent("Device_MOTOLG", new HashMap<>());
+                    HSAnalytics.logEventToAppsFlyer("Device_MOTOLG");
                 } else if (Compats.IS_SAMSUNG_DEVICE) {
                     BugleFirebaseAnalytics.logEvent("Device_Samsung", new HashMap<>());
+                    HSAnalytics.logEventToAppsFlyer("Device_Samsung");
                 } else if (Compats.IS_VIVO_DEVICE) {
                     BugleFirebaseAnalytics.logEvent("Device_Vivo", new HashMap<>());
+                    HSAnalytics.logEventToAppsFlyer("Device_Vivo");
                 }
             });
         }
@@ -435,6 +440,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         Preferences.getDefault().putLong(PREF_KEY_LAST_SHOW_TIME, System.currentTimeMillis());
         if (todayShowCount > 20) {
             BugleFirebaseAnalytics.logEvent("SMS_Messages_Show_Positive");
+            HSAnalytics.logEventToAppsFlyer("SMS_Messages_Show_Positive");
         }
 
         BugleAnalytics.logEvent("SMS_Messages_Show_Corrected", true);
