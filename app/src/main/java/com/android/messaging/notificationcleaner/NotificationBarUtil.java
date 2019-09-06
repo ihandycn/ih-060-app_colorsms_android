@@ -4,6 +4,7 @@ import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
@@ -13,6 +14,7 @@ import android.support.v4.content.ContextCompat;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.StyleSpan;
 import android.view.View;
@@ -20,6 +22,7 @@ import android.widget.RemoteViews;
 
 import com.android.messaging.R;
 import com.android.messaging.notificationcleaner.activity.NotificationBlockedActivity;
+import com.android.messaging.notificationcleaner.data.BlockedNotificationInfo;
 import com.android.messaging.notificationcleaner.data.NotificationCleanerProvider;
 import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.utils.HSLog;
@@ -91,14 +94,49 @@ public class NotificationBarUtil {
 
     @WorkerThread
     private static RemoteViews createBlockNotificationRemoteViews() {
-        final int blockedNotificationCount = NotificationCleanerProvider.fetchBlockedAndTimeValidNotificationCount(false);
+        List<BlockedNotificationInfo> notificationList = NotificationCleanerProvider.fetchBlockedAndTimeValidNotificationDataList(true);
+        List<BlockedNotificationInfo> fixedNotificationList = new ArrayList<>();
+        List<ApplicationInfo> applicationInfoList = BuglePackageManager.getInstance().getInstalledApplications();
+
+        for (BlockedNotificationInfo notificationData : notificationList) {
+            boolean isContain = false;
+            if (null == applicationInfoList || applicationInfoList.size() == 0) {
+                isContain = true;
+            } else {
+                for (ApplicationInfo applicationInfo : applicationInfoList) {
+                    if (null != applicationInfo && TextUtils.equals(notificationData.packageName, applicationInfo.packageName)) {
+                        isContain = true;
+                        break;
+                    }
+                }
+            }
+
+            if (NotificationCleanerUtil.FAKE_NOTIFICATION_PACKAGE_NAME_1.equals(notificationData.packageName)
+                    || NotificationCleanerUtil.FAKE_NOTIFICATION_PACKAGE_NAME_2.equals(notificationData.packageName)) {
+                isContain = true;
+            }
+            if (!isContain) {
+                continue;
+            }
+
+            fixedNotificationList.add(notificationData);
+        }
+
+        final int blockedNotificationCount = fixedNotificationList.size();
+        //  final int blockedNotificationCount = NotificationCleanerProvider.fetchBlockedAndTimeValidNotificationCount(false);
         HSLog.d(NotificationCleanerConstants.TAG, "createBlockNotificationRemoteViews blockedNotificationCount = " + blockedNotificationCount);
         if (blockedNotificationCount <= 0) {
             Notifications.cancelSafely(NotificationCleanerConstants.NOTIFICATION_ID_BLOCK_NOTIFICATION);
             return null;
         }
 
-        List<String> recentBlockedApps = NotificationCleanerProvider.fetchRecentBlockedAppPackageNameList(false);
+        // List<String> recentBlockedApps = NotificationCleanerProvider.fetchRecentBlockedAppPackageNameList(false);
+        List<String> recentBlockedApps = new ArrayList<>();
+        for (int i = 0; i < blockedNotificationCount; i++) {
+            if (!recentBlockedApps.contains(fixedNotificationList.get(i).packageName)) {
+                recentBlockedApps.add(fixedNotificationList.get(i).packageName);
+            }
+        }
         List<Drawable> drawableList = new ArrayList<>();
         for (int index = 0; index < recentBlockedApps.size() && index < ICON_CONTAINER_RES_ID.length; index++) {
             Drawable drawable = BuglePackageManager.getInstance().getApplicationIcon(recentBlockedApps.get(index));
