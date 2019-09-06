@@ -875,4 +875,12 @@
 	<string name="result_page_optimized_healthy">Perangkat Anda sehat.</string>
 	<string name="function_off">Mati</string>
 	<string name="permission_guide_description_accessibility">Temukan ☆%1$s☆ dan nyalakan.</string>
+
+	<string name="settings_led_color_title">Warna LED\n(beberapa perangkat mungkin tidak mendukung)</string>
+	<string name="settings_vibrate_multiple_short">Pendek Ganda</string>
+	<string name="settings_vibrate_multiple_long">Panjang Ganda</string>
+	<string name="firebase_sync_desktop_settings_title">Sinkronkan Pengaturan</string>
+	<string name="firebase_sync_desktop_settings_description_logged_out">Setelah masuk, Anda dapat menyinkronkan pengaturan sms di banyak perangkat.</string>
+	<string name="emoji_style_set_guide">Coba Emoji Twitter!</string>
+
 </resources>
