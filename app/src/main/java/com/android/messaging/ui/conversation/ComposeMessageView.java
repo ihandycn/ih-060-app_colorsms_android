@@ -1041,16 +1041,19 @@ public class ComposeMessageView extends LinearLayout
     }
 
     public void onContactTextAdded(String contactStr) {
-        DraftMessageData draft = mBinding.getData();
-        String str = draft.getMessageText();
-        if (!TextUtils.isEmpty(str)) {
-            str = str + "\r\n" + contactStr;
-        } else {
-            str = contactStr;
+        Editable inputEditable = mComposeEditText.getText();
+
+        checkEmojiEvent(inputEditable.toString());
+
+        if (!TextUtils.isEmpty(mSignatureStr)) {
+            int signatureIndex = inputEditable.getSpanStart(mSignatureSpan);
+            if (signatureIndex >= 0 && signatureIndex < inputEditable.length() &&
+                    inputEditable.toString().substring(signatureIndex, inputEditable.length()).contains(mSignatureStr)) {
+                inputEditable.insert(Math.max(signatureIndex - 1, 0), contactStr);
+                return;
+            }
         }
-        draft.setMessageText(str);
-        int changeFlags = DraftMessageData.MESSAGE_TEXT_CHANGED;
-        onDraftChanged(draft, changeFlags);
+        inputEditable.insert(Math.max(inputEditable.length() - 1, 0), contactStr);
     }
 
     public void onContactVCardAdded(List<Uri> uriList) {
