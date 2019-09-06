@@ -17,7 +17,6 @@ package com.android.messaging.ui;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.support.annotation.Nullable;
@@ -48,24 +47,32 @@ import com.android.messaging.util.ContentType;
 import com.android.messaging.util.ImageUtils;
 import com.android.messaging.util.UiUtils;
 import com.android.messaging.util.UriUtil;
+import com.superapps.util.BackgroundDrawables;
+import com.superapps.util.Dimensions;
 
 /**
  * A view factory that creates previews for single/multiple attachments.
  */
 public class AttachmentPreviewFactory {
-    /** Standalone attachment preview */
+    /**
+     * Standalone attachment preview
+     */
     public static final int TYPE_SINGLE = 1;
 
-    /** Attachment preview displayed in a multi-attachment layout */
+    /**
+     * Attachment preview displayed in a multi-attachment layout
+     */
     public static final int TYPE_MULTIPLE = 2;
 
-    /** Attachment preview displayed in the attachment chooser grid view */
+    /**
+     * Attachment preview displayed in the attachment chooser grid view
+     */
     public static final int TYPE_CHOOSER_GRID = 3;
 
     public static View createAttachmentPreview(final LayoutInflater layoutInflater,
-            final MessagePartData attachmentData, final ViewGroup parent,
-            final int viewType, final boolean startImageRequest,
-            @Nullable final OnAttachmentClickListener clickListener) {
+                                               final MessagePartData attachmentData, final ViewGroup parent,
+                                               final int viewType, final boolean startImageRequest,
+                                               @Nullable final OnAttachmentClickListener clickListener) {
         final String contentType = attachmentData.getContentType();
         View attachmentView = null;
         if (attachmentData instanceof PendingAttachmentData) {
@@ -79,7 +86,7 @@ public class AttachmentPreviewFactory {
         } else if (ContentType.isVideoType(contentType)) {
             attachmentView = createVideoPreview(layoutInflater, attachmentData, parent, viewType);
         } else if (ContentType.isVCardType(contentType)) {
-            attachmentView = createVCardPreview(layoutInflater, attachmentData, parent, viewType);
+            attachmentView = createVCardPreview(layoutInflater, attachmentData, parent, viewType, clickListener);
         } else {
             Assert.fail("unsupported attachment type: " + contentType);
             return null;
@@ -95,27 +102,27 @@ public class AttachmentPreviewFactory {
 
         if (attachmentView != null && clickListener != null) {
             attachmentView.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(final View view) {
-                        final Rect bounds = UiUtils.getMeasuredBoundsOnScreen(view);
-                        clickListener.onAttachmentClick(attachmentData, bounds,
-                                false /* longPress */);
-                    }
-                });
+                @Override
+                public void onClick(final View view) {
+                    final Rect bounds = UiUtils.getMeasuredBoundsOnScreen(view);
+                    clickListener.onAttachmentClick(attachmentData, bounds,
+                            false /* longPress */);
+                }
+            });
             attachmentView.setOnLongClickListener(new OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(final View view) {
-                        final Rect bounds = UiUtils.getMeasuredBoundsOnScreen(view);
-                        return clickListener.onAttachmentClick(attachmentData, bounds,
-                                true /* longPress */);
-                    }
-                });
+                @Override
+                public boolean onLongClick(final View view) {
+                    final Rect bounds = UiUtils.getMeasuredBoundsOnScreen(view);
+                    return clickListener.onAttachmentClick(attachmentData, bounds,
+                            true /* longPress */);
+                }
+            });
         }
         return attachmentView;
     }
 
     public static MultiAttachmentLayout createMultiplePreview(final Context context,
-            final OnAttachmentClickListener listener) {
+                                                              final OnAttachmentClickListener listener) {
         final MultiAttachmentLayout multiAttachmentLayout =
                 new MultiAttachmentLayout(context, null);
         final ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
@@ -148,8 +155,8 @@ public class AttachmentPreviewFactory {
     }
 
     private static View createImagePreview(final LayoutInflater layoutInflater,
-            final MessagePartData attachmentData, final ViewGroup parent,
-            final int viewType, final boolean startImageRequest) {
+                                           final MessagePartData attachmentData, final ViewGroup parent,
+                                           final int viewType, final boolean startImageRequest) {
         int layoutId = R.layout.attachment_single_image;
         switch (viewType) {
             case AttachmentPreviewFactory.TYPE_SINGLE:
@@ -189,7 +196,7 @@ public class AttachmentPreviewFactory {
     }
 
     private static View createPendingAttachmentPreview(final LayoutInflater layoutInflater,
-            final ViewGroup parent, final PendingAttachmentData attachmentData) {
+                                                       final ViewGroup parent, final PendingAttachmentData attachmentData) {
         final View pendingItemView = layoutInflater.inflate(R.layout.attachment_pending_item,
                 parent, false);
         final ImageView imageView = (ImageView)
@@ -205,8 +212,8 @@ public class AttachmentPreviewFactory {
     }
 
     private static View createVCardPreview(final LayoutInflater layoutInflater,
-            final MessagePartData attachmentData, final ViewGroup parent,
-            final int viewType) {
+                                           final MessagePartData attachmentData, final ViewGroup parent,
+                                           final int viewType, final OnAttachmentClickListener clickListener) {
         int layoutId = R.layout.attachment_single_vcard;
         switch (viewType) {
             case AttachmentPreviewFactory.TYPE_SINGLE:
@@ -223,7 +230,7 @@ public class AttachmentPreviewFactory {
                 break;
         }
         final View view = layoutInflater.inflate(layoutId, parent, false /* attachToRoot */);
-        final AttachmentVCardItemView vcardPreview =  view.findViewById(
+        final AttachmentVCardItemView vcardPreview = view.findViewById(
                 R.id.vcard_attachment_view);
         vcardPreview.setAvatarOnly(viewType != AttachmentPreviewFactory.TYPE_SINGLE);
         vcardPreview.bind(DataModel.get().createVCardContactItemData(layoutInflater.getContext(),
@@ -241,15 +248,18 @@ public class AttachmentPreviewFactory {
 
             @Override
             public boolean onPersonLongClicked(final PersonItemData data) {
-                return false;
+                final Rect bounds = UiUtils.getMeasuredBoundsOnScreen(view);
+                return clickListener.onAttachmentClick(attachmentData, bounds,
+                        true /* longPress */);
+                //return false;
             }
         });
         return view;
     }
 
     private static View createAudioPreview(final LayoutInflater layoutInflater,
-                final MessagePartData attachmentData, final ViewGroup parent,
-                final int viewType) {
+                                           final MessagePartData attachmentData, final ViewGroup parent,
+                                           final int viewType) {
         int layoutId = R.layout.attachment_single_audio;
         switch (viewType) {
             case AttachmentPreviewFactory.TYPE_SINGLE:
@@ -266,21 +276,22 @@ public class AttachmentPreviewFactory {
                 break;
         }
         final View view = layoutInflater.inflate(layoutId, parent, false /* attachToRoot */);
-        final AudioAttachmentView audioView = (AudioAttachmentView)
-                view.findViewById(R.id.audio_attachment_view);
+        final AudioAttachmentView audioView = view.findViewById(R.id.audio_attachment_view);
         audioView.bindMessagePartData(
                 attachmentData, false /* incoming */, false /* showAsSelected */);
 
         final ViewGroup audioViewContainer =
                 view.findViewById(R.id.audio_attachment_background);
-        audioViewContainer.getBackground().setColorFilter(PrimaryColors.getPrimaryColor(), PorterDuff.Mode.SRC_ATOP);
+        audioViewContainer.setBackground(BackgroundDrawables.createBackgroundDrawable(
+                PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(10), true));
+        ;
 
         return view;
     }
 
     private static View createVideoPreview(final LayoutInflater layoutInflater,
-            final MessagePartData attachmentData, final ViewGroup parent,
-            final int viewType) {
+                                           final MessagePartData attachmentData, final ViewGroup parent,
+                                           final int viewType) {
         int layoutId = R.layout.attachment_single_video;
         switch (viewType) {
             case AttachmentPreviewFactory.TYPE_SINGLE:

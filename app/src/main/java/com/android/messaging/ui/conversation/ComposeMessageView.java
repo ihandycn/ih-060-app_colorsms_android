@@ -1040,6 +1040,34 @@ public class ComposeMessageView extends LinearLayout
         onDraftChanged(draft, changeFlags);
     }
 
+    public void onContactTextAdded(String contactStr) {
+        Editable inputEditable = mComposeEditText.getText();
+
+        checkEmojiEvent(inputEditable.toString());
+
+        if (!TextUtils.isEmpty(mSignatureStr)) {
+            int signatureIndex = inputEditable.getSpanStart(mSignatureSpan);
+            if (signatureIndex >= 0 && signatureIndex < inputEditable.length() &&
+                    inputEditable.toString().substring(signatureIndex, inputEditable.length()).contains(mSignatureStr)) {
+                inputEditable.insert(Math.max(signatureIndex - 1, 0), contactStr);
+                return;
+            }
+        }
+        inputEditable.insert(Math.max(inputEditable.length() - 1, 0), contactStr);
+    }
+
+    public void onContactVCardAdded(List<Uri> uriList) {
+        DraftMessageData draft = mBinding.getData();
+        List<MessagePartData> dataCollection = new ArrayList<>();
+        for (int i = 0; i < uriList.size(); i++) {
+            MessagePartData data = MessagePartData.createMediaMessagePart(ContentType.TEXT_VCARD, uriList.get(i), -1, -1);
+            dataCollection.add(data);
+        }
+        draft.addAttachments(dataCollection);
+        int changeFlags = DraftMessageData.ATTACHMENTS_CHANGED;
+        onDraftChanged(draft, changeFlags);
+    }
+
     @Override   // From DraftMessageDataListener
     public void onDraftAttachmentLimitReached(final DraftMessageData data) {
         mBinding.ensureBound(data);

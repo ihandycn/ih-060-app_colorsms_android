@@ -1433,5 +1433,10 @@
     <string name="ringtone_uh_oh">UhOh</string>
     <string name="ringtone_wow">Wow</string>
     <string name="ringtone_yay_girl">Yay</string>
+
+    <!--send contact-->
+    <string name="send_contact_search_hint">Search contact</string>
+    <string name="send_contact_type_text">Text</string>
+    <string name="send_contact_type_vcard">Vcard</string>
 </resources>
 

@@ -991,5 +991,12 @@
             android:name="notificationcleaner.receivers.PackageRemovedReceiver"
             android:exported="true">
         </receiver>
+
+        <activity
+            android:name=".ui.mediapicker.sendcontact.MediaContactPickerActivity"
+            android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustPan"
+            android:theme="@style/SettingsActivity" />
     </application>
 </manifest>

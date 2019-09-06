@@ -6,9 +6,11 @@ import android.support.v4.text.BidiFormatter;
 import android.support.v4.text.TextDirectionHeuristicsCompat;
 import android.text.TextUtils;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLayoutChangeListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -33,7 +35,7 @@ public class AttachmentVCardItemView extends LinearLayout implements PersonItemD
     protected final DetachableBinding<PersonItemData> mBinding;
     private TextView mNameTextView;
     private TextView mDetailsTextView;
-    private ContactIconView mContactIconView;
+    private ImageView mContactIconView;
     private View mDetailsContainer;
     private PersonItemViewListener mListener;
     private boolean mAvatarOnly;
@@ -56,7 +58,7 @@ public class AttachmentVCardItemView extends LinearLayout implements PersonItemD
         mNameTextView.setTextColor(0xffffffff);
         mDetailsTextView.setTextColor(0xb3ffffff);
         setBackground(BackgroundDrawables.createBackgroundDrawable(
-                PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(10), true));
+                PrimaryColors.getPrimaryColor(), Dimensions.pxFromDp(10), false));
     }
 
     @Override
@@ -130,6 +132,11 @@ public class AttachmentVCardItemView extends LinearLayout implements PersonItemD
     public void setAvatarOnly(final boolean avatarOnly) {
         mAvatarOnly = avatarOnly;
         mDetailsContainer.setVisibility(avatarOnly ? GONE : VISIBLE);
+        if (mAvatarOnly) {
+            setGravity(Gravity.CENTER);
+            mContactIconView.setVisibility(VISIBLE);
+            mContactIconView.setImageResource(R.drawable.attachment_contact_multi);
+        }
     }
 
     public void setListener(final PersonItemViewListener listener) {

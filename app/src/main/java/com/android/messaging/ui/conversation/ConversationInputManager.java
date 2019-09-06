@@ -78,6 +78,10 @@ public class ConversationInputManager implements ConversationInput.ConversationI
         void showPhoto();
 
         void onScheduledIconClick();
+
+        void addContactString(String info);
+
+        void addVCardDraft(List<Uri> vCardList);
     }
 
     /**
@@ -415,6 +419,16 @@ public class ConversationInputManager implements ConversationInput.ConversationI
                 public void onScheduledIconClick() {
                     BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Schedule", true);
                     mHost.onScheduledIconClick();
+                }
+
+                @Override
+                public void onVCardContactAdded(List<Uri> vCardList) {
+                    mHost.addVCardDraft(vCardList);
+                }
+
+                @Override
+                public void onTextContactAdded(String contactString) {
+                    mHost.addContactString(contactString);
                 }
             });
         }
