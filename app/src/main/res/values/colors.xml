@@ -172,7 +172,6 @@
     <color name="widget_conversation_title_color">#FFFFFF</color>
 
     <color name="attachment_chooser_audio_background">@color/primary_color</color>
-    <color name="attachment_chooser_vcard_background">#eeeeee</color>
 
     <color name="fastscroll_track_color">#1e000000</color>
     <color name="fastscroll_thumb_color">#42000000</color>
