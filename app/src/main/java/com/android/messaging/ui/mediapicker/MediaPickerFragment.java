@@ -22,6 +22,7 @@ import com.android.messaging.ui.mediapicker.sendcontact.ContactFileCreator;
 import com.android.messaging.ui.mediapicker.sendcontact.MediaContactPickerActivity;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.OsUtil;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.config.HSConfig;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
@@ -132,7 +133,7 @@ public class MediaPickerFragment extends Fragment implements View.OnClickListene
                 }
                 break;
             case R.id.media_contact:
-                Intent intent = new Intent(getContext(), MediaContactPickerActivity.class);
+                Intent intent = new Intent(HSApplication.getContext(), MediaContactPickerActivity.class);
                 startActivityForResult(intent, CHOOSE_CONTACT_REQUEST_CODE);
                 BugleAnalytics.logEvent("SMS_DetailsPage_Plus_Contact", true);
                 break;
