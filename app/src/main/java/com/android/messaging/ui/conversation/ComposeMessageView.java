@@ -1059,8 +1059,8 @@ public class ComposeMessageView extends LinearLayout
         for (int i = 0; i < uriList.size(); i++) {
             MessagePartData data = MessagePartData.createMediaMessagePart(ContentType.TEXT_VCARD, uriList.get(i), -1, -1);
             dataCollection.add(data);
-            draft.addAttachments(dataCollection);
         }
+        draft.addAttachments(dataCollection);
         int changeFlags = DraftMessageData.ATTACHMENTS_CHANGED;
         onDraftChanged(draft, changeFlags);
     }
