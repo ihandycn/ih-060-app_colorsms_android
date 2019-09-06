@@ -201,10 +201,6 @@ public class NotificationBlockedActivity extends BaseActivity
                 .setDisplayHeadersAtStartUp(true)
                 .showAllHeaders();
 
-        if (!BillingManager.isPremiumUser()) {
-            ResultManager.getInstance().preLoadAds();
-        }
-
         mClearAllBtn.setOnClickListener(v -> {
             if (mNotificationAdapter.isEmpty()) {
                 return;
@@ -321,10 +317,6 @@ public class NotificationBlockedActivity extends BaseActivity
             }
         }
 
-        if (!mIsAdChanceEventLogged) {
-            mIsAdChanceEventLogged = true;
-            BugleAnalytics.logEvent("NotificationCleaner_HomepageAd_Chance", true);
-        }
         mProgressBar.setVisibility(View.GONE);
         if (null == blockedNotificationInfo) {
             return;
@@ -404,6 +396,11 @@ public class NotificationBlockedActivity extends BaseActivity
 
             if (!flexibleItems.isEmpty() && !BillingManager.isPremiumUser()) {
                 initAdView();
+                ResultManager.getInstance().preLoadAds();
+                if (!mIsAdChanceEventLogged) {
+                    mIsAdChanceEventLogged = true;
+                    BugleAnalytics.logEvent("NotificationCleaner_HomepageAd_Chance", true);
+                }
             }
         }
 
