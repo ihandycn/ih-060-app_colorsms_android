@@ -1163,7 +1163,6 @@
     <string name="set_password_sub_prompt">Enter 4 numbers</string>
     <string name="confirm_prompt_password">Confirm passcode</string>
     <string name="app_lock_verify_identity">Verify Identity</string>
-
     <string name="private_box_add_private_contacts">Please add private contacts!</string>
     <string name="private_box_add_now">Add Now</string>
     <string name="private_box_setting_security">Security</string>
