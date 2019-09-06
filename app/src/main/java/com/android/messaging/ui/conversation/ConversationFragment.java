@@ -274,6 +274,8 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     private boolean mIsDestroyed = false;
 
     private boolean mIsBlockAd = false;
+    //try to fix crash
+    private boolean mIsActivityCreated = false;
 
     // Normally, as soon as draft message is loaded, we trust the UI state held in
     // ComposeMessageView to be the only source of truth (incl. the conversation self id). However,
@@ -880,8 +882,11 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         super.onActivityCreated(savedInstanceState);
         // Delay showing the message list until the participant list is loaded.
         mRecyclerView.setVisibility(View.INVISIBLE);
-        mBinding.ensureBound();
-        mBinding.getData().init(getLoaderManager(), mBinding);
+        if (mBinding.isBound()) {
+            mBinding.ensureBound();
+            mBinding.getData().init(getLoaderManager(), mBinding);
+        }
+        mIsActivityCreated = true;
         // Build the input manager with all its required dependencies and pass it along to the
         // compose message view.
         final ConversationInputManager inputManager = new ConversationInputManager(
@@ -1366,6 +1371,14 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
             mConversationId = conversationId;
             mIncomingDraft = draftData;
             mBinding.bind(DataModel.get().createConversationData(context, this, conversationId));
+            if (mIsActivityCreated) {
+                try {
+                    mBinding.getData().init(getLoaderManager(), mBinding);
+                    CrashlyticsCore.getInstance().logException(new CrashlyticsLog("bind conversation data"));
+                } catch (Exception ignored) {
+                    CrashlyticsCore.getInstance().logException(new CrashlyticsLog("bind conversation data when set conversation error"));
+                }
+            }
         } else {
             Assert.isTrue(TextUtils.equals(mBinding.getData().getConversationId(), conversationId));
         }
