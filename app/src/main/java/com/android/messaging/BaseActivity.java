@@ -20,6 +20,7 @@ import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID
 
 public abstract class BaseActivity extends AppCompatActivity {
 
+    public static final String IS_START_FROM_NOTIFICATION_BAR = "is_start_from_notification_bar";
     private static final String TAG = BaseActivity.class.getSimpleName();
 
     private boolean mJustCreated = true;
@@ -38,8 +39,17 @@ public abstract class BaseActivity extends AppCompatActivity {
                 return;
             }
 
+            boolean launchNotificationCleanerAfterDefaultSmsSet = launchIntent.getBooleanExtra(IS_START_FROM_NOTIFICATION_BAR, false);
+            if (launchNotificationCleanerAfterDefaultSmsSet) {
+                Intent intent = new Intent(this, WelcomeSetAsDefaultActivity.class);
+                intent.putExtra(IS_START_FROM_NOTIFICATION_BAR, true);
+                startActivity(intent, TransitionUtils.getTransitionInBundle(this));
+                finish();
+                return;
+            }
+
             String conversationId = launchIntent.getStringExtra(UI_INTENT_EXTRA_CONVERSATION_ID_AFTER_DEFAULT_SET);
-            boolean launchConversationActivityAfterDefaultSmsSet =  (conversationId != null);
+            boolean launchConversationActivityAfterDefaultSmsSet = (conversationId != null);
             boolean launchConversationListActivityAfterDefaultSmsSet = launchIntent.getBooleanExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, false);
             boolean isTriggerByNotificationReplyAction = launchIntent.getBooleanExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION_ACTION, false);
 
@@ -75,7 +85,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    @Override protected void onResume() {
+    @Override
+    protected void onResume() {
         super.onResume();
 
         if (!mJustCreated) {
@@ -93,7 +104,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         mJustCreated = false;
     }
 
-    @Override public void finish() {
+    @Override
+    public void finish() {
         super.finish();
         overridePendingTransition(R.anim.anim_null, R.anim.slide_out_to_right_and_fade);
     }

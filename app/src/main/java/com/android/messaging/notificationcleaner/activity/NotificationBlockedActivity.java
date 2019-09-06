@@ -80,6 +80,7 @@ import eu.davidea.viewholders.FlexibleViewHolder;
 
 public class NotificationBlockedActivity extends BaseActivity
         implements FlexibleAdapter.OnItemSwipeListener, FlexibleAdapter.OnItemClickListener, INotificationObserver {
+    public static final String NOTIFICATION_CLEANER_AD_LAST_SHOW_TIME = "notification_cleaner_ad_last_show_time";
 
     public static final String START_FROM = "start_from";
     public static final String START_FROM_MAIN_PAGE = "main_page";

@@ -924,6 +924,12 @@ public class ConversationListActivity extends AbstractConversationListActivity
             BugleAnalytics.logEvent("SMS_Messages_Back", true, "type", "premiumuser");
             return false;
         }
+        if (System.currentTimeMillis() -
+                Preferences.getDefault().getLong(NotificationBlockedActivity.NOTIFICATION_CLEANER_AD_LAST_SHOW_TIME, 0)
+                >= 30 * DateUtils.SECOND_IN_MILLIS) {
+            BugleAnalytics.logEvent("SMS_Messages_Back", true, "type", "lessthan30s");
+            return false;
+        }
         if (!(HSConfig.optBoolean(true, "Application", "SMSAd", "SMSExitAd", "Enabled")
                 && ExitAdAutopilotUtils.getIsExitAdSwitchOn())) {
             BugleAnalytics.logEvent("SMS_Messages_Back", true, "type", "configdisabled");

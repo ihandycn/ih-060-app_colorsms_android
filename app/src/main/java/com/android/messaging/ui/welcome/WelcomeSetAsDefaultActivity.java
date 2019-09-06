@@ -9,8 +9,10 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.android.messaging.BaseActivity;
 import com.android.messaging.Factory;
 import com.android.messaging.R;
+import com.android.messaging.notificationcleaner.activity.NotificationBlockedActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
@@ -35,11 +37,13 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
     private boolean mIsFromWelcomeStart = false;
     private boolean mIsFromConversationNotification = false;
     private boolean mIsFromOverrideNotification = false;
+    private boolean mIsFromNotificationCleanerBar = false;
     private String mConversationIdFromNotification = null;
 
     private static final int EVENT_RETRY_NAVIGATION = 0;
     private Handler mHandler = new Handler() {
-        @Override public void handleMessage(Message msg) {
+        @Override
+        public void handleMessage(Message msg) {
             super.handleMessage(msg);
 
             if (OsUtil.hasRequiredPermissions()) {
@@ -50,7 +54,12 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
                     overridePendingTransition(R.anim.slide_in_from_right_and_fade, R.anim.anim_null);
                 } else {
                     HSLog.d("NotificationListener", "mIsFromConversationNotification");
-                    if (!mIsFromConversationNotification) {
+                    if (mIsFromNotificationCleanerBar) {
+                        Intent intent = new Intent(WelcomeSetAsDefaultActivity.this, NotificationBlockedActivity.class);
+                        intent.putExtra(NotificationBlockedActivity.START_FROM,
+                                NotificationBlockedActivity.START_FROM_NOTIFICATION_BAR);
+                        Navigations.startActivitySafely(WelcomeSetAsDefaultActivity.this, intent);
+                    } else if (!mIsFromConversationNotification) {
                         HSLog.d("NotificationListener", "mIsFromConversationNotification false");
                         UIIntents.get().launchConversationListActivity(WelcomeSetAsDefaultActivity.this);
                     } else {
@@ -59,12 +68,14 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
                 }
                 if (mIsFromWelcomeStart) {
                     BugleAnalytics.logEvent("Start_SetAsDefault_Success", true, "step", "setasdefault page");
-                    BugleFirebaseAnalytics.logEvent("Start_SetAsDefault_Success",  "step", "setasdefault page");
+                    BugleFirebaseAnalytics.logEvent("Start_SetAsDefault_Success", "step", "setasdefault page");
                 } else {
-                    if (mIsFromOverrideNotification){
-                        BugleAnalytics.logEvent("SetAsDefault_GuidePage_Success",true,"TYPE", "PUSH");
+                    if (mIsFromNotificationCleanerBar) {
+                        BugleAnalytics.logEvent("SetAsDefault_GuidePage_Success", true, "TYPE", "NotificationCleaner");
+                    } else if (mIsFromOverrideNotification) {
+                        BugleAnalytics.logEvent("SetAsDefault_GuidePage_Success", true, "TYPE", "PUSH");
                     } else {
-                        BugleAnalytics.logEvent("SetAsDefault_GuidePage_Success",true,"TYPE", "OTHER");
+                        BugleAnalytics.logEvent("SetAsDefault_GuidePage_Success", true, "TYPE", "OTHER");
                     }
                     BugleAnalytics.logEvent("SetAsDefault_GuidePage_Success", true);
                     BugleFirebaseAnalytics.logEvent("SetAsDefault_GuidePage_Success");
@@ -82,14 +93,18 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome_set_as_default);
 
         if (getIntent() != null) {
-            mIsFromWelcomeStart = getIntent().getBooleanExtra(EXTRA_FROM_WELCOME_START, false);
-            String conversationId = getIntent().getStringExtra(UI_INTENT_EXTRA_CONVERSATION_ID_AFTER_DEFAULT_SET);
-            if (conversationId != null){
-                mIsFromConversationNotification = true;
-                mConversationIdFromNotification = conversationId;
-            }
-            if (mIsFromConversationNotification || getIntent().getBooleanExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, false)){
-                mIsFromOverrideNotification = true;
+            if (getIntent().getBooleanExtra(BaseActivity.IS_START_FROM_NOTIFICATION_BAR, false)) {
+                mIsFromNotificationCleanerBar = true;
+            } else {
+                mIsFromWelcomeStart = getIntent().getBooleanExtra(EXTRA_FROM_WELCOME_START, false);
+                String conversationId = getIntent().getStringExtra(UI_INTENT_EXTRA_CONVERSATION_ID_AFTER_DEFAULT_SET);
+                if (conversationId != null) {
+                    mIsFromConversationNotification = true;
+                    mConversationIdFromNotification = conversationId;
+                }
+                if (mIsFromConversationNotification || getIntent().getBooleanExtra(EXTRA_FROM_OVERRIDE_SYSTEM_SMS_NOTIFICATION, false)) {
+                    mIsFromOverrideNotification = true;
+                }
             }
         }
 
@@ -102,10 +117,12 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
                 BugleAnalytics.logEvent("Start_SetAsDefault_Click", true);
                 BugleFirebaseAnalytics.logEvent("Start_SetAsDefault_Click");
             } else {
-                if (mIsFromOverrideNotification){
-                    BugleAnalytics.logEvent("SetAsDefault_GuidePage_Click",true,"TYPE", "PUSH");
+                if (mIsFromNotificationCleanerBar) {
+                    BugleAnalytics.logEvent("SetAsDefault_GuidePage_Click", true, "TYPE", "NotificationCleaner");
+                } else if (mIsFromOverrideNotification) {
+                    BugleAnalytics.logEvent("SetAsDefault_GuidePage_Click", true, "TYPE", "PUSH");
                 } else {
-                    BugleAnalytics.logEvent("SetAsDefault_GuidePage_Click",true,"TYPE", "OTHER");
+                    BugleAnalytics.logEvent("SetAsDefault_GuidePage_Click", true, "TYPE", "OTHER");
                 }
                 BugleFirebaseAnalytics.logEvent("SetAsDefault_GuidePage_Click");
             }
@@ -122,10 +139,12 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
             BugleAnalytics.logEvent("Start_SetAsDefault_Show", true);
             BugleFirebaseAnalytics.logEvent("Start_SetAsDefault_Show");
         } else {
-            if (mIsFromOverrideNotification){
-                BugleAnalytics.logEvent("SetAsDefault_GuidePage_Show",true,"TYPE", "PUSH");
+            if (mIsFromNotificationCleanerBar) {
+                BugleAnalytics.logEvent("SetAsDefault_GuidePage_Show", true, "TYPE", "NotificationCleaner");
+            } else if (mIsFromOverrideNotification) {
+                BugleAnalytics.logEvent("SetAsDefault_GuidePage_Show", true, "TYPE", "PUSH");
             } else {
-                BugleAnalytics.logEvent("SetAsDefault_GuidePage_Show",true,"TYPE", "OTHER");
+                BugleAnalytics.logEvent("SetAsDefault_GuidePage_Show", true, "TYPE", "OTHER");
             }
             BugleFirebaseAnalytics.logEvent("SetAsDefault_GuidePage_Show");
         }

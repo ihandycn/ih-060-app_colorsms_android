@@ -24,6 +24,7 @@ import com.android.messaging.notificationcleaner.resultpage.pagestate.IPageState
 import com.android.messaging.notificationcleaner.resultpage.pagestate.NotificationCleanerState;
 import com.android.messaging.notificationcleaner.resultpage.transition.ITransition;
 import com.android.messaging.notificationcleaner.resultpage.views.AdLoadingView;
+import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UiUtils;
@@ -33,6 +34,7 @@ import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.notificationcenter.INotificationObserver;
 import com.ihs.commons.utils.HSBundle;
 import com.superapps.util.Navigations;
+import com.superapps.util.Preferences;
 import com.superapps.util.Threads;
 
 import net.appcloudbox.ads.base.AcbInterstitialAd;
@@ -109,6 +111,7 @@ public class ResultPageActivity extends HSAppCompatActivity implements INotifica
         if (mInterstitialAd != null) {
             BugleAnalytics.logEvent("ResultPage_FullAd_Show", true);
             NotificationCleanerTest.logResultpageFulladShow();
+            Preferences.getDefault().putLong(NotificationBlockedActivity.NOTIFICATION_CLEANER_AD_LAST_SHOW_TIME, System.currentTimeMillis());
         }
 
         mAd = LocalNativeAdPool.getInstance().fetch(AdPlacement.NOTIFICATION_CLEANER_AD_PLACEMENT_RESULT_PAGE_NATIVE);
@@ -147,7 +150,7 @@ public class ResultPageActivity extends HSAppCompatActivity implements INotifica
             mExitBtn.setVisible(false);
             mExitBtn.setOnMenuItemClickListener(menuItem -> {
                 //onBackFromAdContent();
-                backToNCPageIfNeeded();
+                backToMainPageIfNeeded();
                 return false;
             });
         }
@@ -194,7 +197,7 @@ public class ResultPageActivity extends HSAppCompatActivity implements INotifica
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
-                backToNCPageIfNeeded();
+                backToMainPageIfNeeded();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -208,18 +211,19 @@ public class ResultPageActivity extends HSAppCompatActivity implements INotifica
 //        }
 //
 //        finish();
-        backToNCPageIfNeeded();
+        backToMainPageIfNeeded();
     }
 
-    private void backToNCPageIfNeeded() {
-        if (mContentType == ResultContentType.AD) {
-            if (NotificationCleanerUtil.getNotificationBlockedActivityIllustratePageShowingState() < NotificationCleanerUtil.NOTIFICATION_STATE_SHOWED) {
-                NotificationCleanerUtil.setNotificationBlockedActivityIllustratePageShowingState(NotificationCleanerUtil.NOTIFICATION_STATE_SHOWING);
-            }
-            Intent intent = new Intent(this, NotificationBlockedActivity.class);
-            intent.putExtra(NotificationBlockedActivity.START_FROM, NotificationBlockedActivity.START_FROM_RESULT_AD_PAGE);
-            Navigations.startActivitySafely(this, intent);
-        } 
+    private void backToMainPageIfNeeded() {
+//        if (mContentType == ResultContentType.AD) {
+//            if (NotificationCleanerUtil.getNotificationBlockedActivityIllustratePageShowingState() < NotificationCleanerUtil.NOTIFICATION_STATE_SHOWED) {
+//                NotificationCleanerUtil.setNotificationBlockedActivityIllustratePageShowingState(NotificationCleanerUtil.NOTIFICATION_STATE_SHOWING);
+//            }
+//            Intent intent = new Intent(this, NotificationBlockedActivity.class);
+//            intent.putExtra(NotificationBlockedActivity.START_FROM, NotificationBlockedActivity.START_FROM_RESULT_AD_PAGE);
+//            Navigations.startActivitySafely(this, intent);
+//        }
+        UIIntents.get().launchConversationListActivity(this);
         finish();
     }
 
