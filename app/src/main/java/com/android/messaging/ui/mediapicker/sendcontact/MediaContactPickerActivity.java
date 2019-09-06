@@ -120,6 +120,7 @@ public class MediaContactPickerActivity extends BaseActivity
             }
             mRecipientTextView.setText("");
             handleChooseTypeView();
+            UiUtils.hideKeyboard(this);
         });
 
         mTypeSelectContainer = findViewById(R.id.contact_select_type_container);
