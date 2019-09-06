@@ -119,6 +119,7 @@ public class MediaContactPickerActivity extends BaseActivity
                 adapter.notifyDataSetChanged();
             }
             mRecipientTextView.setText("");
+            handleChooseTypeView();
         });
 
         mTypeSelectContainer = findViewById(R.id.contact_select_type_container);
