@@ -45,6 +45,7 @@ import com.android.messaging.notificationcleaner.data.BlockedNotificationInfo;
 import com.android.messaging.notificationcleaner.data.NotificationCleanerProvider;
 import com.android.messaging.notificationcleaner.resultpage.ResultManager;
 import com.android.messaging.notificationcleaner.resultpage.util.ResultTransitionUtils;
+import com.android.messaging.ui.UIIntents;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.Typefaces;
 import com.android.messaging.util.UiUtils;
@@ -464,6 +465,12 @@ public class NotificationBlockedActivity extends BaseActivity
     }
 
     @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        UIIntents.get().launchConversationListActivity(this);
+    }
+
+    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
 
@@ -496,7 +503,7 @@ public class NotificationBlockedActivity extends BaseActivity
         int id = item.getItemId();
 
         if (item.getItemId() == android.R.id.home) {
-            finish();
+            onBackPressed();
             return true;
         }
 

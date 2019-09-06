@@ -926,7 +926,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
         }
         if (System.currentTimeMillis() -
                 Preferences.getDefault().getLong(NotificationBlockedActivity.NOTIFICATION_CLEANER_AD_LAST_SHOW_TIME, 0)
-                >= 30 * DateUtils.SECOND_IN_MILLIS) {
+                < 30 * DateUtils.SECOND_IN_MILLIS) {
             BugleAnalytics.logEvent("SMS_Messages_Back", true, "type", "lessthan30s");
             return false;
         }

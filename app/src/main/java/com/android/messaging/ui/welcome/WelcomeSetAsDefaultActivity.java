@@ -77,7 +77,6 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
                     } else {
                         BugleAnalytics.logEvent("SetAsDefault_GuidePage_Success", true, "TYPE", "OTHER");
                     }
-                    BugleAnalytics.logEvent("SetAsDefault_GuidePage_Success", true);
                     BugleFirebaseAnalytics.logEvent("SetAsDefault_GuidePage_Success");
                 }
                 finish();
@@ -153,8 +152,10 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        notificationManager.cancelAll();
+        if (!mIsFromNotificationCleanerBar) {
+            NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            notificationManager.cancelAll();
+        }
     }
 
     @Override
