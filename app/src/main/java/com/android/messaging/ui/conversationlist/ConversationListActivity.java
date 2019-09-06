@@ -389,6 +389,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
     }
 
     private void showNotificationCleanerGuideIfNeed() {
+        if (!NotificationCleanerTest.getSwitch()) {
+            return;
+        }
         if (NotificationCleanerUtil.hasNotificationCleanerEverOpened()) {
             return;
         }
