@@ -93,7 +93,7 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome_set_as_default);
 
         if (getIntent() != null) {
-            if (getIntent().getBooleanExtra(BaseActivity.IS_START_FROM_NOTIFICATION_BAR, false)) {
+            if (getIntent().getBooleanExtra(BaseActivity.IS_START_FROM_NOTIFICATION_CLEANER_BAR, false)) {
                 mIsFromNotificationCleanerBar = true;
             } else {
                 mIsFromWelcomeStart = getIntent().getBooleanExtra(EXTRA_FROM_WELCOME_START, false);

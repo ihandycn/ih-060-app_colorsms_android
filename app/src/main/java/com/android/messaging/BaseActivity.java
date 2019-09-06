@@ -20,7 +20,7 @@ import static com.android.messaging.ui.UIIntents.UI_INTENT_EXTRA_CONVERSATION_ID
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    public static final String IS_START_FROM_NOTIFICATION_BAR = "is_start_from_notification_bar";
+    public static final String IS_START_FROM_NOTIFICATION_CLEANER_BAR = "is_start_from_notification_bar";
     private static final String TAG = BaseActivity.class.getSimpleName();
 
     private boolean mJustCreated = true;
@@ -39,10 +39,10 @@ public abstract class BaseActivity extends AppCompatActivity {
                 return;
             }
 
-            boolean launchNotificationCleanerAfterDefaultSmsSet = launchIntent.getBooleanExtra(IS_START_FROM_NOTIFICATION_BAR, false);
+            boolean launchNotificationCleanerAfterDefaultSmsSet = launchIntent.getBooleanExtra(IS_START_FROM_NOTIFICATION_CLEANER_BAR, false);
             if (launchNotificationCleanerAfterDefaultSmsSet) {
                 Intent intent = new Intent(this, WelcomeSetAsDefaultActivity.class);
-                intent.putExtra(IS_START_FROM_NOTIFICATION_BAR, true);
+                intent.putExtra(IS_START_FROM_NOTIFICATION_CLEANER_BAR, true);
                 startActivity(intent, TransitionUtils.getTransitionInBundle(this));
                 finish();
                 return;

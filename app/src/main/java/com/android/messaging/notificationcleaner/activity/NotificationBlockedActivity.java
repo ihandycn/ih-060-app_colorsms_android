@@ -15,6 +15,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -135,6 +136,10 @@ public class NotificationBlockedActivity extends BaseActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if (isFinishing()) {
+            return;
+        }
 
         mStartFrom = getIntent().getStringExtra(START_FROM);
         if (START_FROM_GUIDE_BAR.equals(mStartFrom)) {
