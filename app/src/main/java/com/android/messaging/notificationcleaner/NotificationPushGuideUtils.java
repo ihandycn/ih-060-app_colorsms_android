@@ -65,7 +65,12 @@ public class NotificationPushGuideUtils {
         Threads.postOnMainThreadDelayed(runnable, 10 * DateUtils.SECOND_IN_MILLIS);
 
         Threads.postOnMainThreadDelayed(
-                () -> HSApplication.getContext().unregisterReceiver(receiver),
+                () -> {
+                    try {
+                        HSApplication.getContext().unregisterReceiver(receiver);
+                    } catch (Exception e) {
+                    }
+                },
                 10 * DateUtils.SECOND_IN_MILLIS);
     }
 
