@@ -1331,15 +1331,20 @@ public class ConversationListActivity extends AbstractConversationListActivity
                             opacityStr = tensNum + "0%-" + (tensNum + 1) + "0%";
                         }
 
-                        RingtoneInfo info = RingtoneInfoManager.getCurSound();
                         String ringtoneStr = "system";
-                        switch (info.type) {
-                            case RingtoneInfo.TYPE_FILE:
-                                ringtoneStr = "file";
-                                break;
-                            case RingtoneInfo.TYPE_APP:
-                                ringtoneStr = info.name;
-                                break;
+                        try {
+                            RingtoneInfo info = RingtoneInfoManager.getCurSound();
+                            switch (info.type) {
+                                case RingtoneInfo.TYPE_FILE:
+                                    ringtoneStr = "file";
+                                    break;
+                                case RingtoneInfo.TYPE_APP:
+                                    ringtoneStr = info.name;
+                                    break;
+                            }
+
+                        } catch (SecurityException e) {
+
                         }
 
                         BugleAnalytics.logEvent("SMS_Messages_Show_2", true,
