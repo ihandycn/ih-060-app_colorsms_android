@@ -208,7 +208,7 @@ public class NotificationServiceV18 extends NotificationListenerService {
 
         boolean isOtherSmsAppNotification = false;
         boolean isBlockedAppNotification = false;
-        if (!DefaultSMSUtils.isDefaultSmsApp()) {
+        if (NotificationAccessAutopilotUtils.getIsNotificationAccessSwitchOn() && !DefaultSMSUtils.isDefaultSmsApp()) {
             if (sDefaultSmsApp == null) {
                 sDefaultSmsApp = Telephony.Sms.getDefaultSmsPackage(HSApplication.getContext());
             }
