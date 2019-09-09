@@ -76,9 +76,12 @@ public class RingtoneInfoManager {
             return info;
         }
         final Ringtone tone = RingtoneManager.getRingtone(HSApplication.getContext(), Uri.parse(uri));
-        String name;
+        String name = "";
         if (tone != null) {
-            name = tone.getTitle(HSApplication.getContext());
+            try {
+                name = tone.getTitle(HSApplication.getContext());
+            } catch (Exception e) {
+            }
         } else {
             name = "";
         }
