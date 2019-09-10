@@ -94,6 +94,7 @@ import com.android.messaging.ui.ringtone.RingtoneSettingActivity;
 import com.android.messaging.ui.signature.SignatureManager;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.ui.smspro.BillingActivity;
+import com.android.messaging.ui.wallpaper.WallpaperChooserItem;
 import com.android.messaging.ui.wallpaper.WallpaperDownloader;
 import com.android.messaging.ui.wallpaper.WallpaperInfos;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
@@ -290,8 +291,9 @@ public class ConversationListActivity extends AbstractConversationListActivity
                 } else if (bgPath.contains("_1.png")) {
                     backgroundStr = "customize";
                 } else {
-                    for (int i = 0; i < WallpaperInfos.sRemoteUrl.length; i++) {
-                        if (WallpaperDownloader.getWallpaperLocalPath(WallpaperInfos.sRemoteUrl[i]).equals(bgPath)) {
+                    List<WallpaperChooserItem> list = WallpaperManager.getOnlineWallpaperList();
+                    for (int i = 0; i < list.size(); i++) {
+                        if (WallpaperDownloader.getWallpaperLocalPath(list.get(i).getRemoteUrl()).equals(bgPath)) {
                             backgroundStr = "colorsms_" + i;
                             break;
                         }

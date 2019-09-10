@@ -6,7 +6,8 @@ public class WallpaperChooserItem {
     public static final int TYPE_NORMAL_WALLPAPER = 2;
 
     private int mItemType = TYPE_NORMAL_WALLPAPER;
-    private int mIndex;
+    private String mThumbUrl;
+    private String mSourceUrl;
     private boolean mIsWallpaperDownloading = false;
     private boolean mIsItemSelected = false;
     private boolean mIsItemPreSelected = false;
@@ -91,8 +92,12 @@ public class WallpaperChooserItem {
         return mIsItemSelected;
     }
 
-    public void setIndex(int mIndex) {
-        this.mIndex = mIndex;
+    public void setThumbUrl(String thumbUrl) {
+        this.mThumbUrl = thumbUrl;
+    }
+
+    public void setSourceUrl(String sourceUrl) {
+        this.mSourceUrl = sourceUrl;
     }
 
     public int getItemType() {
@@ -104,22 +109,22 @@ public class WallpaperChooserItem {
     }
 
     String getThumbnailUrl() {
-        return WallpaperInfos.sThumbnailUrl[mIndex];
+        return mThumbUrl;
     }
 
     public String getSourceLocalPath() {
-        return WallpaperDownloader.getSourceLocalPath(WallpaperInfos.sRemoteUrl[mIndex]);
+        return WallpaperDownloader.getSourceLocalPath(mSourceUrl);
     }
 
     public String getWallpaperLocalPath() {
-        return WallpaperDownloader.getWallpaperLocalPath(WallpaperInfos.sRemoteUrl[mIndex]);
+        return WallpaperDownloader.getWallpaperLocalPath(mSourceUrl);
     }
 
     public String getRemoteUrl() {
-        return WallpaperInfos.sRemoteUrl[mIndex];
+        return mSourceUrl;
     }
 
     public boolean isDownloaded() {
-        return WallpaperDownloader.isWallpaperDownloaded(WallpaperInfos.sRemoteUrl[mIndex]);
+        return WallpaperDownloader.isWallpaperDownloaded(mSourceUrl);
     }
 }

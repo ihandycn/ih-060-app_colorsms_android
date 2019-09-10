@@ -9,10 +9,12 @@ import android.widget.ImageView;
 import com.android.messaging.Factory;
 import com.android.messaging.ui.customize.WallpaperDrawables;
 import com.android.messaging.util.BuglePrefs;
+import com.ihs.commons.config.HSConfig;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class WallpaperManager {
     private static final String PREF_KEY_WALLPAPER_PATH = "pref_key_wallpaper_path";
@@ -63,7 +65,6 @@ public class WallpaperManager {
             l.onOnlineWallpaperChanged();
         }
     }
-
 
     public static void setWallPaperOnView(final ImageView view, String conversationId) {
         if (TextUtils.isEmpty(conversationId)) {
@@ -176,10 +177,23 @@ public class WallpaperManager {
         emptyItem.setItemType(WallpaperChooserItem.TYPE_EMPTY);
         list.add(emptyItem);
 
-        for (int i = 0; i < WallpaperInfos.sThumbnailUrl.length; i++) {
+        list.addAll(getOnlineWallpaperList());
+        return list;
+    }
+
+    public static List<WallpaperChooserItem> getOnlineWallpaperList() {
+        List<WallpaperChooserItem> list = new ArrayList<>();
+        String thumbBaseUrl = HSConfig.optString("http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/backgroundthumb/",
+                "Application", "OnlineWallpaper", "ThumbBaseUrl");
+        String sourceBaseUrl = HSConfig.optString("http://cdn.appcloudbox.net/smoothappsstudio/apps/bubble/chatbackground/",
+                "Application", "OnlineWallpaper", "SourceBaseUrl");
+        List<Map<String, String>> wallpaperInfoList = (List<Map<String, String>>) HSConfig.getList("Application", "OnlineWallpaper", "Wallpapers");
+
+        for (int i = 0; i < wallpaperInfoList.size(); i++) {
             WallpaperChooserItem item = new WallpaperChooserItem();
             item.setItemType(WallpaperChooserItem.TYPE_NORMAL_WALLPAPER);
-            item.setIndex(i);
+            item.setThumbUrl(thumbBaseUrl + wallpaperInfoList.get(i).get("Thumb"));
+            item.setSourceUrl(sourceBaseUrl + wallpaperInfoList.get(i).get("Source"));
             list.add(item);
         }
         return list;
