@@ -91,6 +91,7 @@ import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.ringtone.RingtoneInfo;
 import com.android.messaging.ui.ringtone.RingtoneInfoManager;
 import com.android.messaging.ui.ringtone.RingtoneSettingActivity;
+import com.android.messaging.ui.signature.SignatureManager;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.ui.smspro.BillingActivity;
 import com.android.messaging.ui.wallpaper.WallpaperDownloader;
@@ -1303,8 +1304,7 @@ public class ConversationListActivity extends AbstractConversationListActivity
                                 "font", FontStyleManager.getInstance().getFontFamily(),
                                 "size", size,
                                 "open time", String.valueOf(hour),
-                                "signature", String.valueOf(!TextUtils.isEmpty(Preferences.getDefault().getString(
-                                        SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null))),
+                                "signature", String.valueOf(!TextUtils.isEmpty(SignatureManager.getSignatureString(null))),
                                 "pin", String.valueOf(hasPinConversation),
                                 "backup", String.valueOf(Preferences.getDefault().getBoolean(
                                         ChooseBackupViewHolder.PREF_KEY_BACKUP_SUCCESS_FOR_EVENT, false)),

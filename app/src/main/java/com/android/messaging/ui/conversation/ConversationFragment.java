@@ -907,6 +907,12 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         }
     }
 
+    public void onActivityRestart() {
+        if (mComposeMessageView != null) {
+            mComposeMessageView.refreshSignature();
+        }
+    }
+
     public void onAttachmentChoosen() {
         // Attachment has been choosen in the AttachmentChooserActivity, so clear local draft
         // and reload draft on resume.

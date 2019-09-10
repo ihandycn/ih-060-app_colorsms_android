@@ -13,8 +13,17 @@ import com.android.messaging.util.BugleAnalytics;
 import com.superapps.util.Preferences;
 
 public class SignatureSettingDialog extends TextSettingDialog {
+    public static final String BUNDLE_KEY_CONVERSATION_ID = "conversation_id";
 
-    public static final String PREF_KEY_SIGNATURE_CONTENT = "pref_key_signature_content";
+    private String mConversationId;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null && getArguments().containsKey(BUNDLE_KEY_CONVERSATION_ID)) {
+            mConversationId = getArguments().getString(BUNDLE_KEY_CONVERSATION_ID);
+        }
+    }
 
     @Nullable
     @Override
@@ -25,8 +34,7 @@ public class SignatureSettingDialog extends TextSettingDialog {
 
     @Override
     public void onSave(String text) {
-
-        Preferences.getDefault().putString(PREF_KEY_SIGNATURE_CONTENT, text);
+        SignatureManager.setSignature(text, mConversationId);
         if (mHost != null) {
             mHost.onTextSaved(text);
         }
@@ -51,7 +59,11 @@ public class SignatureSettingDialog extends TextSettingDialog {
 
     @Override
     public String getDefaultText() {
-        return Preferences.getDefault().getString(PREF_KEY_SIGNATURE_CONTENT, null);
+        if (TextUtils.isEmpty(mConversationId)) {
+            return SignatureManager.getSignatureString(null);
+        } else {
+            return SignatureManager.getConversationSignature(mConversationId);
+        }
     }
 
     @Override

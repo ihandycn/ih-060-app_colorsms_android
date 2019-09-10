@@ -59,7 +59,7 @@ public class PeopleOptionsItemView extends GeneralSettingItemView {
                      ParticipantData otherParticipant,
                      final HostInterface hostInterface,
                      final String conversationId) {
-        Assert.isTrue(columnIndex < PeopleOptionsItemData.SETTINGS_COUNT && columnIndex >= 0);
+        Assert.isTrue(columnIndex < PeopleOptionsItemData.SETTINGS_TOTAL_COUNT && columnIndex >= 0);
 
         mData.bind(cursor, otherParticipant, columnIndex, conversationId);
 

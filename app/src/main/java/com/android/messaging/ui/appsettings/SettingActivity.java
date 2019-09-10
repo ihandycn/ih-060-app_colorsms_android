@@ -29,6 +29,7 @@ import com.android.messaging.ui.messagebox.MessageBoxSettings;
 import com.android.messaging.ui.ringtone.RingtoneInfo;
 import com.android.messaging.ui.ringtone.RingtoneInfoManager;
 import com.android.messaging.ui.ringtone.RingtoneSettingActivity;
+import com.android.messaging.ui.signature.SignatureManager;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.ui.signature.TextSettingDialog;
 import com.android.messaging.util.BugleAnalytics;
@@ -345,7 +346,7 @@ public class SettingActivity extends BaseActivity implements TextSettingDialog.T
     }
 
     public void refreshSignature() {
-        String signature = Preferences.getDefault().getString(SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null);
+        String signature = SignatureManager.getSignatureString(null);
         mSignature.setSummary(signature);
     }
 

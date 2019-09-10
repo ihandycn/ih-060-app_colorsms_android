@@ -60,6 +60,8 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.ringtone.RingtoneInfo;
 import com.android.messaging.ui.ringtone.RingtoneInfoManager;
 import com.android.messaging.ui.ringtone.RingtoneSettingActivity;
+import com.android.messaging.ui.signature.SignatureManager;
+import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.ui.signature.TextSettingDialog;
 import com.android.messaging.ui.view.MessagesTextView;
 import com.android.messaging.ui.wallpaper.WallpaperManager;
@@ -68,8 +70,10 @@ import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.BugleFirebaseAnalytics;
 import com.android.messaging.util.UiUtils;
+import com.ihs.app.framework.HSApplication;
 import com.ihs.commons.notificationcenter.HSGlobalNotificationCenter;
 import com.ihs.commons.utils.HSLog;
+import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
 
 import java.util.List;
@@ -84,6 +88,7 @@ import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_NOTIFICATION_VIBRATION;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_PRIVACY_MODE;
 import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_RENAME_GROUP;
+import static com.android.messaging.datamodel.data.PeopleOptionsItemData.SETTING_SIGNATURE;
 import static com.android.messaging.ui.conversation.ConversationActivity.DELETE_CONVERSATION_RESULT_CODE;
 import static com.android.messaging.ui.conversation.ConversationActivity.EXTRA_NEW_GROUP_NAME;
 import static com.android.messaging.ui.conversation.ConversationActivity.FINISH_RESULT_CODE;
@@ -94,7 +99,8 @@ import static com.android.messaging.ui.conversation.ConversationFragment.EVENT_U
  * Shows a list of participants of a conversation and displays options.
  */
 public class PeopleAndOptionsFragment extends Fragment
-        implements PeopleAndOptionsDataListener, PeopleOptionsItemView.HostInterface, WallpaperManager.WallpaperChangeListener {
+        implements PeopleAndOptionsDataListener, PeopleOptionsItemView.HostInterface,
+        WallpaperManager.WallpaperChangeListener, TextSettingDialog.TextSettingDialogCallback {
 
     private final int REQUEST_CODE_RINGTONE_PICKER = 1;
 
@@ -117,6 +123,7 @@ public class PeopleAndOptionsFragment extends Fragment
     private PeopleOptionsItemView mDeleteItemView;
     private PeopleOptionsItemView mAddContactItemView;
     private PeopleOptionsItemView mRenameGroupItemView;
+    private PeopleOptionsItemView mSignatureItemView;
     private ViewGroup mNotificationChildrenGroup;
     private ViewGroup mContainer;
 
@@ -151,6 +158,7 @@ public class PeopleAndOptionsFragment extends Fragment
         mAddContactItemView = view.findViewById(R.id.setting_item_add_contact);
         mRenameGroupItemView = view.findViewById(R.id.setting_item_rename_group);
         mNotificationChildrenGroup = view.findViewById(R.id.notification_children_group);
+        mSignatureItemView = view.findViewById(R.id.setting_item_signature);
         mContainer = view.findViewById(R.id.container);
 
         MessagesTextView mCustomizeTitleView = view.findViewById(R.id.setting_title_customize);
@@ -252,6 +260,7 @@ public class PeopleAndOptionsFragment extends Fragment
         mVibrateItemView.bind(cursor, SETTING_NOTIFICATION_VIBRATION, mOtherParticipantData, PeopleAndOptionsFragment.this, mConversationId);
         mLedColorItemView.bind(cursor, SETTING_NOTIFICATION_LED_COLOR, mOtherParticipantData, PeopleAndOptionsFragment.this, mConversationId);
         mDeleteItemView.bind(cursor, SETTING_DELETE, mOtherParticipantData, PeopleAndOptionsFragment.this, mConversationId);
+        mSignatureItemView.bind(cursor, SETTING_SIGNATURE, mOtherParticipantData, PeopleAndOptionsFragment.this, mConversationId);
 
         showNotificationListItemView();
 
@@ -471,6 +480,14 @@ public class PeopleAndOptionsFragment extends Fragment
                 });
                 UiUtils.showDialogFragment(getActivity(), mRenameGroupDialog);
                 break;
+            case SETTING_SIGNATURE:
+                TextSettingDialog signatureSettingDialog = new SignatureSettingDialog();
+                Bundle bundle = new Bundle();
+                bundle.putString(SignatureSettingDialog.BUNDLE_KEY_CONVERSATION_ID, mConversationId);
+                signatureSettingDialog.setArguments(bundle);
+                signatureSettingDialog.setHost(this);
+                UiUtils.showDialogFragment(getActivity(), signatureSettingDialog);
+                break;
         }
     }
 
@@ -504,4 +521,12 @@ public class PeopleAndOptionsFragment extends Fragment
         return mOtherParticipantData == null;
     }
 
+    public void onTextSaved(String text) {
+        refreshSignature();
+    }
+
+    public void refreshSignature() {
+        String signature = SignatureManager.getConversationSignature(mConversationId);
+        mSignatureItemView.setSummary(signature);
+    }
 }

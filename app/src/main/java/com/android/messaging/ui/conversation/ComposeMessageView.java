@@ -86,6 +86,7 @@ import com.android.messaging.ui.customize.PrimaryColors;
 import com.android.messaging.ui.dialog.FiveStarRateDialog;
 import com.android.messaging.ui.emoji.utils.EmojiManager;
 import com.android.messaging.ui.senddelaymessages.SendDelayMessagesManager;
+import com.android.messaging.ui.signature.SignatureManager;
 import com.android.messaging.ui.signature.SignatureSettingDialog;
 import com.android.messaging.util.Assert;
 import com.android.messaging.util.BugleActivityUtil;
@@ -237,7 +238,6 @@ public class ComposeMessageView extends LinearLayout
         super(new ContextThemeWrapper(context, R.style.ColorAccentBlueOverrideStyle), attrs);
         mOriginalContext = context;
         mBinding = BindingBase.createBinding(this);
-        mSignatureStr = Preferences.getDefault().getString(SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null);
     }
 
     /**
@@ -249,6 +249,7 @@ public class ComposeMessageView extends LinearLayout
         data.addListener(this);
         data.setSubscriptionDataProvider(host);
         resumeIncompleteWorkInThisConversation();
+        mSignatureStr = SignatureManager.getSignatureString(mBinding.getData().getConversationId());
     }
 
     /**
@@ -965,6 +966,38 @@ public class ComposeMessageView extends LinearLayout
         }).start();
     }
 
+    public void refreshSignature() {
+        String newSignature = SignatureManager.getSignatureString(mBinding.getData().getConversationId());
+        if (TextUtils.isEmpty(newSignature) && TextUtils.isEmpty(mSignatureStr)) {
+            return;
+        }
+        if (!TextUtils.isEmpty(newSignature) && newSignature.equals(mSignatureStr)) {
+            return;
+        }
+
+        Editable text = mComposeEditText.getText();
+        if (!TextUtils.isEmpty(mSignatureStr)) {
+            int startIndex = text.getSpanStart(mSignatureSpan);
+            if (startIndex > 0) {
+                text.delete(startIndex, text.length());
+            }
+            if (text.toString().endsWith("\n")) {
+                text.delete(text.length() - 1, text.length());
+            }
+        }
+        if (TextUtils.isEmpty(newSignature)) {
+            mComposeEditText.setText(text, TextView.BufferType.SPANNABLE);
+            mComposeEditText.setSelection(mComposeEditText.getText().length());
+        } else {
+            SpannableString sb = new SpannableString(text + "\n" + newSignature);
+            sb.setSpan(mSignatureSpan, text.length() + 1, sb.length(), 0);
+            sb.setSpan(new AbsoluteSizeSpan(13, true), text.length() + 1, sb.length(), 0);
+            mComposeEditText.setText(sb, TextView.BufferType.SPANNABLE);
+            mComposeEditText.setSelection(Math.min(text.length(), mComposeEditText.getText().length()));
+            mSignatureStr = newSignature;
+        }
+    }
+
     /**
      * {@inheritDoc} from DraftMessageDataListener
      */
@@ -982,7 +1015,7 @@ public class ComposeMessageView extends LinearLayout
 
         if ((changeFlags & DraftMessageData.MESSAGE_TEXT_CHANGED) ==
                 DraftMessageData.MESSAGE_TEXT_CHANGED) {
-            String signature = Preferences.getDefault().getString(SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null);
+            String signature = SignatureManager.getSignatureString(mBinding.getData().getConversationId());
             if (!TextUtils.isEmpty(signature)) {
                 SpannableString sb = new SpannableString(message + "\n" + signature);
                 sb.setSpan(mSignatureSpan, message.length() + 1, sb.length(), 0);
@@ -1154,10 +1187,8 @@ public class ComposeMessageView extends LinearLayout
     }
 
     public void writeDraftMessage() {
-
         Editable e = mComposeEditText.getText();
-        String signature = Preferences.getDefault().
-                getString(SignatureSettingDialog.PREF_KEY_SIGNATURE_CONTENT, null);
+        String signature = SignatureManager.getSignatureString(mBinding.getData().getConversationId());
         String messageText = e.toString();
 
         if (!TextUtils.isEmpty(signature)) {

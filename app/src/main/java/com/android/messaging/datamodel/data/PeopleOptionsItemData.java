@@ -18,6 +18,7 @@ package com.android.messaging.datamodel.data;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.text.TextUtils;
 
 import com.android.messaging.R;
 import com.android.messaging.datamodel.data.ConversationListItemData.ConversationListViewColumns;
@@ -27,6 +28,7 @@ import com.android.messaging.ui.appsettings.PrivacyModeSettings;
 import com.android.messaging.ui.appsettings.VibrateSettings;
 import com.android.messaging.ui.ringtone.RingtoneInfo;
 import com.android.messaging.ui.ringtone.RingtoneInfoManager;
+import com.android.messaging.ui.signature.SignatureManager;
 import com.android.messaging.util.Assert;
 
 public class PeopleOptionsItemData {
@@ -56,7 +58,9 @@ public class PeopleOptionsItemData {
     public static final int SETTING_DELETE = 7;
     public static final int SETTING_RENAME_GROUP = 8;
     public static final int SETTING_NOTIFICATION_LED_COLOR = 9;
-    public static final int SETTINGS_COUNT = 10;
+    public static final int SETTING_SIGNATURE = 10;
+
+    public static final int SETTINGS_TOTAL_COUNT = 11;
 
     private String mTitle;
     private String mSubtitle;
@@ -169,6 +173,16 @@ public class PeopleOptionsItemData {
             case SETTING_RENAME_GROUP:
                 mTitle = mContext.getString(R.string.action_rename_group_chat);
                 mSubtitle = cursor.getString(INDEX_GROUP_NAME);
+                mCheckable = false;
+                mType = GeneralSettingItemView.NORMAL;
+                break;
+
+            case SETTING_SIGNATURE:
+                mTitle = mContext.getString(R.string.signature);
+                String signature = SignatureManager.getConversationSignature(conversationId);
+                if (!TextUtils.isEmpty(signature)) {
+                    mSubtitle = signature;
+                }
                 mCheckable = false;
                 mType = GeneralSettingItemView.NORMAL;
                 break;

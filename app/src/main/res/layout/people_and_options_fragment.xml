@@ -115,10 +115,14 @@
             android:layout_height="wrap_content" />
 
         <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
-            android:id="@+id/setting_item_rename_group"
+            android:id="@+id/setting_item_signature"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
+            android:id="@+id/setting_item_rename_group"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
         <com.android.messaging.ui.conversationsettings.PeopleOptionsItemView
             android:id="@+id/setting_item_add_contact"
