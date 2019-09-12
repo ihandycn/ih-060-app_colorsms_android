@@ -526,7 +526,7 @@ public class PeopleAndOptionsFragment extends Fragment
     }
 
     public void refreshSignature() {
-        String signature = SignatureManager.getConversationSignature(mConversationId);
+        String signature = SignatureManager.getSignatureString(mConversationId);
         mSignatureItemView.setSummary(signature);
     }
 }

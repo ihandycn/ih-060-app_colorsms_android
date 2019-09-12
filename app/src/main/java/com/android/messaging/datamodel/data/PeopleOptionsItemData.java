@@ -179,7 +179,7 @@ public class PeopleOptionsItemData {
 
             case SETTING_SIGNATURE:
                 mTitle = mContext.getString(R.string.signature);
-                String signature = SignatureManager.getConversationSignature(conversationId);
+                String signature = SignatureManager.getSignatureString(conversationId);
                 if (!TextUtils.isEmpty(signature)) {
                     mSubtitle = signature;
                 }

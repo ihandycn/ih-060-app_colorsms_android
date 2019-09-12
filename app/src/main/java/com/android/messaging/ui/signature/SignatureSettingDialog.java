@@ -59,11 +59,7 @@ public class SignatureSettingDialog extends TextSettingDialog {
 
     @Override
     public String getDefaultText() {
-        if (TextUtils.isEmpty(mConversationId)) {
-            return SignatureManager.getSignatureString(null);
-        } else {
-            return SignatureManager.getConversationSignature(mConversationId);
-        }
+        return SignatureManager.getSignatureString(mConversationId);
     }
 
     @Override
