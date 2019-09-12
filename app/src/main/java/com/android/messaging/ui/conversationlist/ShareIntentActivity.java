@@ -81,7 +81,7 @@ public class ShareIntentActivity extends BaseBugleActivity implements
                 LogUtil.i(
                         LogUtil.BUGLE_TAG,
                         "Ignoring attachment from file URI which are no longer supported.");
-                return;
+               // return;
             }
             final String contentType = extractContentType(contentUri, intent.getType());
             if (LogUtil.isLoggable(LogUtil.BUGLE_TAG, LogUtil.DEBUG)) {
