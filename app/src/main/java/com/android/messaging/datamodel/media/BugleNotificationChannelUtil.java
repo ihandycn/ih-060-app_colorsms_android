@@ -52,7 +52,6 @@ public class BugleNotificationChannelUtil {
                 HSApplication.getContext().getResources().getString(R.string.sms_notification_channel_set_default),
                 HSApplication.getContext().getResources().getString(R.string.sms_notification_channel_set_default),
                 NotificationManager.IMPORTANCE_HIGH);
-        channel.setSound(null, null);
         channel.enableVibration(false);
         return channel;
     }
