@@ -559,7 +559,6 @@
     <string name="setting_text_size_hint_medium_small">Pequeno</string>
     <string name="setting_text_size_hint_small">Menor</string>
     <string name="setting_text_size_hint_normal">Padrão</string>
-    <string name="set_as_default_dialog_description_user_present">Envie emojis divertidos, figurinhas e GIFs para amigos via Color SMS.</string>
     <string name="set_as_default_dialog_title_default_change">Padrão de SMS limpo</string>
     <string name="set_as_default_dialog_description_default_change">O Color SMS não pode funcionar corretamente sem ser definido como padrão.</string>
     <string name="drag_hotseat_title">Arraste o Color SMS até o Hotseat</string>

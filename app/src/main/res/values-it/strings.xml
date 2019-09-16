@@ -561,7 +561,6 @@
     <string name="setting_text_size_hint_medium_small">Piccolo</string>
     <string name="setting_text_size_hint_small">Piccolissimo</string>
     <string name="setting_text_size_hint_normal">Predefinito</string>
-    <string name="set_as_default_dialog_description_user_present">Invia divertenti emoji, adesivi e GIF agli amici tramite Color SMS.</string>
     <string name="set_as_default_dialog_title_default_change">App SMS predefinita non impostata</string>
     <string name="set_as_default_dialog_description_default_change">Per il corretto funzionamento, è necessario impostare Color SMS come app predefinita.</string>
     <string name="drag_hotseat_title">Trascina Color SMS nella posizione</string>

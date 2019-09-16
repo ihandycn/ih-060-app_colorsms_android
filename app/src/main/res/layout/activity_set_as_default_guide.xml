@@ -34,11 +34,20 @@
         app:layout_constraintStart_toStartOf="@id/set_as_default_guideline"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/set_as_default_top_image"
+        <com.superapps.view.RoundImageView
+            android:id="@+id/set_as_default_top_image_theme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            android:src="@drawable/theme_upgrade_banner"
+            app:radius_leftTop="8dp"
+            app:radius_rightTop="8dp" />
+
+        <ImageView
+            android:id="@+id/set_as_default_top_image_emoji"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/set_as_default_top_image_user_present"/>
 
         <com.android.messaging.ui.view.MessagesTextView
 

@@ -557,7 +557,6 @@
     <string name="setting_text_size_hint_medium_small">เล็ก</string>
     <string name="setting_text_size_hint_small">เล็กที่สุด</string>
     <string name="setting_text_size_hint_normal">ค่าเริ่มต้น</string>
-    <string name="set_as_default_dialog_description_user_present">ส่งอิโมจิ สติกเกอร์ และ GIF สนุก ๆ ให้เพื่อนผ่าน</string>
     <string name="set_as_default_dialog_title_default_change">จัดการแอป SMS ค่าเริ่มต้นแล้ว</string>
     <string name="set_as_default_dialog_description_default_change">Color SMS ไม่สามารถทำงานได้อย่างเหมาะสมหากไม่ได้ตั้งเป็นค่าเริ่มต้น</string>
     <string name="drag_hotseat_title">ลาก Color SMS ไปยังช่องพิเศษ</string>

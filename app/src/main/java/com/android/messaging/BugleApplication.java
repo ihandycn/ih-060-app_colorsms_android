@@ -55,6 +55,7 @@ import com.android.messaging.sms.ApnDatabase;
 import com.android.messaging.sms.BugleApnSettingsLoader;
 import com.android.messaging.sms.BugleUserAgentInfoLoader;
 import com.android.messaging.sms.MmsConfig;
+import com.android.messaging.ui.ActiveNotification;
 import com.android.messaging.ui.ConversationDrawables;
 import com.android.messaging.ui.SetAsDefaultGuideActivity;
 import com.android.messaging.ui.customize.theme.ThemeDownloadManager;
@@ -127,9 +128,11 @@ import org.json.JSONObject;
 import java.io.File;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -415,8 +418,8 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
     private void initAutopilot(HSApplication application) {
         AutopilotConfig.initialize(application, "autopilot-topics.json");
-//        AutopilotConfig.setAudienceProperty("device_language",
-//                "english".equalsIgnoreCase(Locale.getDefault().getDisplayLanguage()) ? "english" : "non-english");
+        AutopilotConfig.setAudienceProperty("device_language",
+                "english".equalsIgnoreCase(Locale.getDefault().getDisplayLanguage()) ? "english" : "non-english");
     }
 
     public static boolean isFabricInited() {
@@ -486,8 +489,6 @@ public class BugleApplication extends HSApplication implements UncaughtException
         screenFilter.addAction(Intent.ACTION_USER_PRESENT);
         screenFilter.setPriority(SYSTEM_HIGH_PRIORITY);
 
-        final String KEY_FOR_LAST_USER_PRESENT_TIME = "last_user_present_time";
-        final String KEY_FOR_TODAY_USER_PRESENT_COUNT = "today_user_present_count";
         BroadcastCenter.register(getApplicationContext(), (context, intent) -> {
 
             NotificationPushGuideUtils.pushNotificationCleanerGuideIfNeed();
@@ -498,21 +499,27 @@ public class BugleApplication extends HSApplication implements UncaughtException
             if (DefaultSMSUtils.isDefaultSmsApp()) {
                 return;
             }
+            if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) <= 9) {
+                return;
+            }
+
+            final String KEY_FOR_LAST_USER_PRESENT_TIME = "last_user_present_time";
+            final String KEY_FOR_USER_PRESENT_DAYS_COUNT = "user_present_days_count";
             long lastUserPresent = Preferences.getDefault().getLong(KEY_FOR_LAST_USER_PRESENT_TIME, 0);
             long now = System.currentTimeMillis();
-            if (Calendars.isSameDay(lastUserPresent, now)) {
-                Preferences.getDefault().incrementAndGetInt(KEY_FOR_TODAY_USER_PRESENT_COUNT);
-            } else {
-                Preferences.getDefault().putInt(KEY_FOR_TODAY_USER_PRESENT_COUNT, 1);
+            if (!Calendars.isSameDay(lastUserPresent, now)) {
                 Preferences.getDefault().putLong(KEY_FOR_LAST_USER_PRESENT_TIME, now);
-            }
-            if (Preferences.getDefault().getInt(KEY_FOR_TODAY_USER_PRESENT_COUNT, 0) == 3) {
-                Preferences.getDefault().doLimitedTimes(new Runnable() {
-                    @Override
-                    public void run() {
-                        SetAsDefaultGuideActivity.startActivity(getApplicationContext(), SetAsDefaultGuideActivity.USER_PRESENT);
+                int count = Preferences.getDefault().incrementAndGetInt(KEY_FOR_USER_PRESENT_DAYS_COUNT);
+
+                if (count > 3) {  // after 3 days, send push when user unlock phone after 9:00
+                    ActiveNotification notification = new ActiveNotification(this);
+                    if (notification.getEnablePush()) {
+                        notification.sendNotification();
                     }
-                }, "show_set_as_default_dialog_when_user_present", 3);
+                } else { //in 3 days, after 9:00, show popup window when unlock phone in most 3 times.
+                    SetAsDefaultGuideActivity.startActivity(getApplicationContext(), SetAsDefaultGuideActivity.USER_PRESENT);
+                }
+
             }
         }, screenFilter);
     }

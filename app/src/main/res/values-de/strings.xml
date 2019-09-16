@@ -561,7 +561,6 @@
     <string name="setting_text_size_hint_medium_small">Klein</string>
     <string name="setting_text_size_hint_small">Minimum</string>
     <string name="setting_text_size_hint_normal">Standard</string>
-    <string name="set_as_default_dialog_description_user_present">Sende lustige Emojis, Sticker und GIFs an Freunde über Color SMS.</string>
     <string name="set_as_default_dialog_title_default_change">Standard-SMS gelöscht</string>
     <string name="set_as_default_dialog_description_default_change">Color SMS funktioniert nicht einwandfrei, wenn sie nicht als Standard festgelegt wird.</string>
     <string name="drag_hotseat_title">Color SMS zum Hotseat ziehen</string>

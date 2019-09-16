@@ -561,7 +561,6 @@
     <string name="setting_text_size_hint_medium_small">Nhỏ</string>
     <string name="setting_text_size_hint_small">Nhỏ nhất</string>
     <string name="setting_text_size_hint_normal">Mặc định</string>
-    <string name="set_as_default_dialog_description_user_present">Gửi các biểu tượng cảm xúc, nhãn dán và ảnh GIF vui nhộn cho bạn bè qua Color SMS.</string>
     <string name="set_as_default_dialog_title_default_change">SMS mặc định đã xóa</string>
     <string name="set_as_default_dialog_description_default_change">Color SMS không thể hoạt động bình thường nếu không được đặt làm mặc định.</string>
     <string name="drag_hotseat_title">Kéo Color SMS tới Ghế nóng</string>

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,16 +18,24 @@ import com.android.messaging.util.BugleAnalytics;
 import com.android.messaging.util.CommonUtils;
 import com.android.messaging.util.DefaultSMSUtils;
 import com.android.messaging.util.PopupsReplyAutopilotUtils;
+import com.android.messaging.util.SetDefaultPushAutopilotUtils;
 import com.superapps.util.BackgroundDrawables;
 import com.superapps.util.Dimensions;
 import com.superapps.util.Navigations;
+import com.superapps.util.Preferences;
 import com.superapps.util.Toasts;
+import com.superapps.view.RoundImageView;
 
 public class SetAsDefaultGuideActivity extends AppCompatActivity {
     private static final int REQUEST_SET_DEFAULT_SMS_APP = 3;
 
     public static final int USER_PRESENT = 1;
     public static final int DEFAULT_CHANGED = 2;
+
+    public static final String KEY_FOR_USER_PRESENT_DAYS_COUNT = "user_present_days_count";
+
+    private int userPresentTimes = 0;
+    private boolean mShouldPush = true;
 
     @IntDef({USER_PRESENT, DEFAULT_CHANGED})
     @interface DialogType {
@@ -52,7 +61,9 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
         mType = getIntent().getIntExtra("from", USER_PRESENT);
 
         if (mType == USER_PRESENT) {
+            userPresentTimes = Preferences.getDefault().getInt(KEY_FOR_USER_PRESENT_DAYS_COUNT, 1);
             BugleAnalytics.logEvent("SMS_DefaultAlert_Show", true, "type", "Unlock");
+            SetDefaultPushAutopilotUtils.logAlertSetDefaultShow();
         } else {
             BugleAnalytics.logEvent("SMS_DefaultAlert_Show", true, "type", "Cleared");
         }
@@ -67,19 +78,30 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
         TextView title = findViewById(R.id.set_as_default_title);
         TextView subtitle = findViewById(R.id.set_as_default_content);
         TextView okBtn = findViewById(R.id.set_as_default_ok_btn);
-        ImageView topImage = findViewById(R.id.set_as_default_top_image);
+        ImageView topImageEmoji = findViewById(R.id.set_as_default_top_image_emoji);
+        RoundImageView topImageTheme = findViewById(R.id.set_as_default_top_image_theme);
 
         if (mType == USER_PRESENT) {
-            title.setText(R.string.set_as_default_dialog_title_user_present);
-            subtitle.setText(R.string.set_as_default_dialog_description_user_present);
-            topImage.setImageResource(R.drawable.set_as_default_top_image_user_present);
+            if (userPresentTimes >= 3) {
+                topImageEmoji.setVisibility(View.VISIBLE);
+                topImageTheme.setVisibility(View.GONE);
+                title.setText(R.string.set_as_default_dialog_title_user_present);
+                subtitle.setText(R.string.set_as_default_dialog_description_user_present_emoji);
+            } else {
+                topImageEmoji.setVisibility(View.GONE);
+                topImageTheme.setVisibility(View.VISIBLE);
+                title.setText(R.string.set_as_default_dialog_title_user_present);
+                subtitle.setText(R.string.set_as_default_dialog_description_user_present_theme);
+            }
             okBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.dialog_positive_button_color),
                     Dimensions.pxFromDp(3.3f), true));
             okBtn.setText(R.string.set_as_default_dialog_button_ok_user_present);
         } else {
             title.setText(R.string.set_as_default_dialog_title_default_change);
             subtitle.setText(R.string.set_as_default_dialog_description_default_change);
-            topImage.setImageResource(R.drawable.set_as_default_top_image_cleard);
+            topImageTheme.setVisibility(View.GONE);
+            topImageEmoji.setVisibility(View.VISIBLE);
+            topImageEmoji.setImageResource(R.drawable.set_as_default_top_image_cleard);
             okBtn.setBackground(BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.dialog_positive_button_color),
                     Dimensions.pxFromDp(3.3f), true));
             okBtn.setText(R.string.set_as_default_dialog_button_ok_default_change);
@@ -89,6 +111,7 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
 
         okBtn.setOnClickListener((v) -> {
             if (mType == USER_PRESENT) {
+                SetDefaultPushAutopilotUtils.logAlertSetDefaultClick();
                 BugleAnalytics.logEvent("SMS_DefaultAlert_BtnClick", true, "type", "Unlock");
             } else {
                 BugleAnalytics.logEvent("SMS_DefaultAlert_BtnClick", true, "type", "Cleared");
@@ -96,6 +119,8 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
             PopupsReplyAutopilotUtils.logDefaultAlertClick();
             final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(SetAsDefaultGuideActivity.this);
             startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
+
+            mShouldPush = false;
         });
     }
 
@@ -121,6 +146,7 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
         if (requestCode == REQUEST_SET_DEFAULT_SMS_APP) {
             if (DefaultSMSUtils.isDefaultSmsApp(true)) {
                 if (mType == USER_PRESENT) {
+                    SetDefaultPushAutopilotUtils.logAlertSetDefaultSuccess();
                     BugleAnalytics.logEvent("SMS_DefaultAlert_SetDefault_Success", true, "type", "Unlock");
                 } else {
                     BugleAnalytics.logEvent("SMS_DefaultAlert_SetDefault_Success", true, "type", "Cleared");
@@ -145,5 +171,16 @@ public class SetAsDefaultGuideActivity extends AppCompatActivity {
     public void onBackPressed() {
         finish();
         overridePendingTransition(0, R.anim.app_lock_fade_out_long);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mType == USER_PRESENT && mShouldPush) {
+            SetDefaultNotification notification = new SetDefaultNotification(this);
+            if (notification.getEnablePush()) {
+                notification.sendNotification();
+            }
+        }
+        super.onDestroy();
     }
 }

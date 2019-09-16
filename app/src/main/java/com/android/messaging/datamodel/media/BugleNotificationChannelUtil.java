@@ -46,6 +46,18 @@ public class BugleNotificationChannelUtil {
     }
 
     @TargetApi(Build.VERSION_CODES.O)
+    public static NotificationChannel getSetDefaultNotificationChannel() {
+        NotificationChannel channel = Notifications.getChannel(
+                PendingIntentConstants.SMS_NOTIFICATION_CHANGLE_ID_SET_DEFAULT,
+                HSApplication.getContext().getResources().getString(R.string.sms_notification_channel_set_default),
+                HSApplication.getContext().getResources().getString(R.string.sms_notification_channel_set_default),
+                NotificationManager.IMPORTANCE_HIGH);
+        channel.setSound(null, null);
+        channel.enableVibration(false);
+        return channel;
+    }
+
+    @TargetApi(Build.VERSION_CODES.O)
     public static void deleteNotificationChannels() {
         NotificationManager notifyMgr = (NotificationManager)
                 HSApplication.getContext().getSystemService(Context.NOTIFICATION_SERVICE);

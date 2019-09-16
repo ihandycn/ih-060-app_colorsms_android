@@ -558,7 +558,6 @@
     <string name="setting_text_size_hint_medium_small">소형</string>
     <string name="setting_text_size_hint_small">초소형</string>
     <string name="setting_text_size_hint_normal">기본</string>
-    <string name="set_as_default_dialog_description_user_present">친구에게 재미난 이모지, 스티커 및 GIF를 Colr SMS로 보내세요.</string>
     <string name="set_as_default_dialog_title_default_change">기본 SMS 삭제됨</string>
     <string name="set_as_default_dialog_description_default_change">Color SMS를 기본으로 설정하지 않으면 제대로 작동하지 않습니다.</string>
     <string name="drag_hotseat_title">Color SMS를 기본으로 끌어다 놓으세요</string>

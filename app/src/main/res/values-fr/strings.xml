@@ -561,7 +561,6 @@
     <string name="setting_text_size_hint_medium_small">Petite</string>
     <string name="setting_text_size_hint_small">Plus petite</string>
     <string name="setting_text_size_hint_normal">Par défaut</string>
-    <string name="set_as_default_dialog_description_user_present">Envoyez des emojis, des autocollants et des GIF amusants via Color SMS.</string>
     <string name="set_as_default_dialog_title_default_change">SMS par défaut enlevé</string>
     <string name="set_as_default_dialog_description_default_change">Color SMS ne peut pas fonctionner correctement s\'il n\'est pas défini par défaut.</string>
     <string name="drag_hotseat_title">Glissez Color SMS vers l\'accès rapide</string>
