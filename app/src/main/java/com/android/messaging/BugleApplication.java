@@ -501,21 +501,12 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 return;
             }
 
-            if (!HSConfig.optBoolean(false, "Application", "SetDefaultAlert", "Switch")) {
-                ActiveNotification notification = new ActiveNotification(this);
-                if (notification.getEnablePush()) {
-                    notification.sendNotification();
-                }
-                return;
-            }
-
             final String KEY_FOR_LAST_USER_PRESENT_TIME = "last_user_present_time";
             final String KEY_FOR_USER_PRESENT_DAYS_COUNT = "user_present_days_count";
             long lastUserPresent = Preferences.getDefault().getLong(KEY_FOR_LAST_USER_PRESENT_TIME, 0);
             long now = System.currentTimeMillis();
 
-//            if (!Calendars.isSameDay(lastUserPresent, now))
-            {
+            if (!Calendars.isSameDay(lastUserPresent, now)) {
                 Preferences.getDefault().putLong(KEY_FOR_LAST_USER_PRESENT_TIME, now);
                 int count = Preferences.getDefault().incrementAndGetInt(KEY_FOR_USER_PRESENT_DAYS_COUNT);
 
