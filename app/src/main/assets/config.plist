@@ -1582,7 +1582,7 @@
 							<string>preview_2.jpg</string>
 						</array>
 						<key>Hot</key>
-						<integer>24573</integer>
+						<real>24698</real>
 						<key>Name</key>
 						<string>Cute Graffiti</string>
 						<key>AvatarForegroundColor</key>
@@ -1648,7 +1648,7 @@
 							<string>preview_2.jpg</string>
 						</array>
 						<key>Hot</key>
-						<real>23996</real>
+						<real>24185</real>
 						<key>ThemeColor</key>
 						<string>#2177e0</string>
 						<key>FontName</key>
@@ -1700,12 +1700,76 @@
 						<key>BubbleOutgoingSolidUrl</key>
 						<string></string>
 					</dict>
-					<key>pinkheart</key>
+					<key>waterfall</key>
 					<dict>
 						<key>IsLocalTheme</key>
 						<false/>
 						<key>Name</key>
-						<string>Pink Heart</string>
+						<string>Waterfall</string>
+						<key>PreviewList</key>
+						<array>
+							<string>preview_1.jpg</string>
+							<string>preview_2.jpg</string>
+						</array>
+						<key>Hot</key>
+						<real>24003</real>
+						<key>ThemeColor</key>
+						<string>#3da62c</string>
+						<key>FontName</key>
+						<string>lobster_two</string>
+						<key>AvatarForegroundColor</key>
+						<string>#ffffff</string>
+						<key>ListTitleColor</key>
+						<string>#ffffff</string>
+						<key>ListSubtitleColor</key>
+						<string>#ffffff</string>
+						<key>ListTimeColor</key>
+						<string>#ffffff</string>
+						<key>IncomingBubbleBgColor</key>
+						<string>#00000000</string>
+						<key>IncomingBubbleTextColor</key>
+						<string>#ffffff</string>
+						<key>OutgoingBubbleBgColor</key>
+						<string>#00000000</string>
+						<key>OutgoingBubbleTextColor</key>
+						<string>#ffffff</string>
+						<key>BubbleAdColor</key>
+						<string>#e3187b</string>
+						<key>BannerAdBgColor</key>
+						<string>#40000000</string>
+						<key>BannerAdActionColor</key>
+						<string>#80ffffff</string>
+						<key>BannerAdActionTextColor</key>
+						<string>#ffffff</string>
+						<key>PreviewUrl</key>
+						<string>preview.jpg</string>
+						<key>ToolbarBgUrl</key>
+						<string>toolbar.jpg</string>
+						<key>AvatarUrl</key>
+						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
+						<key>ListWallpaperUrl</key>
+						<string>wallpaper.jpg</string>
+						<key>WallpaperUrl</key>
+						<string>wallpaper.jpg</string>
+						<key>NewConversationIconUrl</key>
+						<string></string>
+						<key>BubbleIncomingUrl</key>
+						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
+						<key>BubbleOutgoingUrl</key>
+						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
+					</dict>
+					<key>ice</key>
+					<dict>
+						<key>IsLocalTheme</key>
+						<false/>
+						<key>Name</key>
+						<string>Ice</string>
 						<key>PreviewList</key>
 						<array>
 							<string>preview_1.jpg</string>
@@ -1714,9 +1778,9 @@
 						<key>Hot</key>
 						<real>23987</real>
 						<key>ThemeColor</key>
-						<string>#ff2587</string>
+						<string>#1da0e4</string>
 						<key>FontName</key>
-						<string>lobster_two</string>
+						<string>averia_libre</string>
 						<key>AvatarForegroundColor</key>
 						<string>#ffffff</string>
 						<key>ListTitleColor</key>
@@ -1801,70 +1865,6 @@
 						<string>#e3187b</string>
 						<key>BannerAdBgColor</key>
 						<string>#26ffffff</string>
-						<key>BannerAdActionColor</key>
-						<string>#80ffffff</string>
-						<key>BannerAdActionTextColor</key>
-						<string>#ffffff</string>
-						<key>PreviewUrl</key>
-						<string>preview.jpg</string>
-						<key>ToolbarBgUrl</key>
-						<string>toolbar.jpg</string>
-						<key>AvatarUrl</key>
-						<string>avatar.png</string>
-						<key>AvatarSolidUrl</key>
-						<string></string>
-						<key>ListWallpaperUrl</key>
-						<string>wallpaper.jpg</string>
-						<key>WallpaperUrl</key>
-						<string>wallpaper.jpg</string>
-						<key>NewConversationIconUrl</key>
-						<string></string>
-						<key>BubbleIncomingUrl</key>
-						<string>incoming.9.png</string>
-						<key>BubbleIncomingSolidUrl</key>
-						<string></string>
-						<key>BubbleOutgoingUrl</key>
-						<string>outgoing.9.png</string>
-						<key>BubbleOutgoingSolidUrl</key>
-						<string></string>
-					</dict>
-					<key>lightedheart</key>
-					<dict>
-						<key>IsLocalTheme</key>
-						<false/>
-						<key>Name</key>
-						<string>Lighted Heart</string>
-						<key>PreviewList</key>
-						<array>
-							<string>preview_1.jpg</string>
-							<string>preview_2.jpg</string>
-						</array>
-						<key>Hot</key>
-						<real>23681</real>
-						<key>ThemeColor</key>
-						<string>#3512b6</string>
-						<key>FontName</key>
-						<string>laila</string>
-						<key>AvatarForegroundColor</key>
-						<string>#ffffff</string>
-						<key>ListTitleColor</key>
-						<string>#ffffff</string>
-						<key>ListSubtitleColor</key>
-						<string>#ffffff</string>
-						<key>ListTimeColor</key>
-						<string>#ccffffff</string>
-						<key>IncomingBubbleBgColor</key>
-						<string>#00000000</string>
-						<key>IncomingBubbleTextColor</key>
-						<string>#ffffff</string>
-						<key>OutgoingBubbleBgColor</key>
-						<string>#00000000</string>
-						<key>OutgoingBubbleTextColor</key>
-						<string>#ffffff</string>
-						<key>BubbleAdColor</key>
-						<string>#e3187b</string>
-						<key>BannerAdBgColor</key>
-						<string>#4c000000</string>
 						<key>BannerAdActionColor</key>
 						<string>#80ffffff</string>
 						<key>BannerAdActionTextColor</key>
@@ -2086,6 +2086,70 @@
 						<key>BubbleOutgoingSolidUrl</key>
 						<string></string>
 					</dict>
+					<key>lightedheart</key>
+					<dict>
+						<key>IsLocalTheme</key>
+						<false/>
+						<key>Name</key>
+						<string>Lighted Heart</string>
+						<key>PreviewList</key>
+						<array>
+							<string>preview_1.jpg</string>
+							<string>preview_2.jpg</string>
+						</array>
+						<key>Hot</key>
+						<real>23481</real>
+						<key>ThemeColor</key>
+						<string>#3512b6</string>
+						<key>FontName</key>
+						<string>laila</string>
+						<key>AvatarForegroundColor</key>
+						<string>#ffffff</string>
+						<key>ListTitleColor</key>
+						<string>#ffffff</string>
+						<key>ListSubtitleColor</key>
+						<string>#ffffff</string>
+						<key>ListTimeColor</key>
+						<string>#ccffffff</string>
+						<key>IncomingBubbleBgColor</key>
+						<string>#00000000</string>
+						<key>IncomingBubbleTextColor</key>
+						<string>#ffffff</string>
+						<key>OutgoingBubbleBgColor</key>
+						<string>#00000000</string>
+						<key>OutgoingBubbleTextColor</key>
+						<string>#ffffff</string>
+						<key>BubbleAdColor</key>
+						<string>#e3187b</string>
+						<key>BannerAdBgColor</key>
+						<string>#4c000000</string>
+						<key>BannerAdActionColor</key>
+						<string>#80ffffff</string>
+						<key>BannerAdActionTextColor</key>
+						<string>#ffffff</string>
+						<key>PreviewUrl</key>
+						<string>preview.jpg</string>
+						<key>ToolbarBgUrl</key>
+						<string>toolbar.jpg</string>
+						<key>AvatarUrl</key>
+						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
+						<key>ListWallpaperUrl</key>
+						<string>wallpaper.jpg</string>
+						<key>WallpaperUrl</key>
+						<string>wallpaper.jpg</string>
+						<key>NewConversationIconUrl</key>
+						<string></string>
+						<key>BubbleIncomingUrl</key>
+						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
+						<key>BubbleOutgoingUrl</key>
+						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
+					</dict>
 					<key>koifish</key>
 					<dict>
 						<key>IsLocalTheme</key>
@@ -2193,6 +2257,70 @@
 						<string>#ffd0c2c0</string>
 						<key>BannerAdActionTextColor</key>
 						<string>#fefefe</string>
+						<key>PreviewUrl</key>
+						<string>preview.jpg</string>
+						<key>ToolbarBgUrl</key>
+						<string>toolbar.jpg</string>
+						<key>AvatarUrl</key>
+						<string>avatar.png</string>
+						<key>AvatarSolidUrl</key>
+						<string></string>
+						<key>ListWallpaperUrl</key>
+						<string>wallpaper.jpg</string>
+						<key>WallpaperUrl</key>
+						<string>wallpaper.jpg</string>
+						<key>NewConversationIconUrl</key>
+						<string></string>
+						<key>BubbleIncomingUrl</key>
+						<string>incoming.9.png</string>
+						<key>BubbleIncomingSolidUrl</key>
+						<string></string>
+						<key>BubbleOutgoingUrl</key>
+						<string>outgoing.9.png</string>
+						<key>BubbleOutgoingSolidUrl</key>
+						<string></string>
+					</dict>
+					<key>pinkheart</key>
+					<dict>
+						<key>IsLocalTheme</key>
+						<false/>
+						<key>Name</key>
+						<string>Pink Heart</string>
+						<key>PreviewList</key>
+						<array>
+							<string>preview_1.jpg</string>
+							<string>preview_2.jpg</string>
+						</array>
+						<key>Hot</key>
+						<real>22897</real>
+						<key>ThemeColor</key>
+						<string>#ff2587</string>
+						<key>FontName</key>
+						<string>lobster_two</string>
+						<key>AvatarForegroundColor</key>
+						<string>#ffffff</string>
+						<key>ListTitleColor</key>
+						<string>#ffffff</string>
+						<key>ListSubtitleColor</key>
+						<string>#ffffff</string>
+						<key>ListTimeColor</key>
+						<string>#ccffffff</string>
+						<key>IncomingBubbleBgColor</key>
+						<string>#00000000</string>
+						<key>IncomingBubbleTextColor</key>
+						<string>#ffffff</string>
+						<key>OutgoingBubbleBgColor</key>
+						<string>#00000000</string>
+						<key>OutgoingBubbleTextColor</key>
+						<string>#ffffff</string>
+						<key>BubbleAdColor</key>
+						<string>#e3187b</string>
+						<key>BannerAdBgColor</key>
+						<string>#40000000</string>
+						<key>BannerAdActionColor</key>
+						<string>#80ffffff</string>
+						<key>BannerAdActionTextColor</key>
+						<string>#ffffff</string>
 						<key>PreviewUrl</key>
 						<string>preview.jpg</string>
 						<key>ToolbarBgUrl</key>
