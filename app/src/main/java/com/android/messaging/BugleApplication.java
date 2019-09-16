@@ -493,37 +493,40 @@ public class BugleApplication extends HSApplication implements UncaughtException
 
             NotificationPushGuideUtils.pushNotificationCleanerGuideIfNeed();
 
-            if (!HSConfig.optBoolean(false, "Application", "SetDefaultAlert", "Switch")) {
-                return;
-            }
             if (DefaultSMSUtils.isDefaultSmsApp()) {
                 return;
             }
+
             if (Calendar.getInstance().get(Calendar.HOUR_OF_DAY) <= 9) {
                 return;
+            }
+
+            if (!HSConfig.optBoolean(false, "Application", "SetDefaultAlert", "Switch")) {
+                ActiveNotification notification = new ActiveNotification(this);
+                if (notification.getEnablePush()) {
+                    notification.sendNotification();
+                }
+                return ;
             }
 
             final String KEY_FOR_LAST_USER_PRESENT_TIME = "last_user_present_time";
             final String KEY_FOR_USER_PRESENT_DAYS_COUNT = "user_present_days_count";
             long lastUserPresent = Preferences.getDefault().getLong(KEY_FOR_LAST_USER_PRESENT_TIME, 0);
             long now = System.currentTimeMillis();
-            if (!HSConfig.optBoolean(false, "Application", "SetDefaultAlert", "Switch")) {
-                SetAsDefaultGuideActivity.startActivity(getApplicationContext(), SetAsDefaultGuideActivity.USER_PRESENT);
-            } else {
-                if (!Calendars.isSameDay(lastUserPresent, now)) {
-                    Preferences.getDefault().putLong(KEY_FOR_LAST_USER_PRESENT_TIME, now);
-                    int count = Preferences.getDefault().incrementAndGetInt(KEY_FOR_USER_PRESENT_DAYS_COUNT);
 
-                    if (count > 3) {  // after 3 days, send push when user unlock phone after 9:00
-                        ActiveNotification notification = new ActiveNotification(this);
-                        if (notification.getEnablePush()) {
-                            notification.sendNotification();
-                        }
-                    } else { //in 3 days, after 9:00, show popup window when unlock phone in most 3 times.
-                        SetAsDefaultGuideActivity.startActivity(getApplicationContext(), SetAsDefaultGuideActivity.USER_PRESENT);
+            if (!Calendars.isSameDay(lastUserPresent, now)) {
+                Preferences.getDefault().putLong(KEY_FOR_LAST_USER_PRESENT_TIME, now);
+                int count = Preferences.getDefault().incrementAndGetInt(KEY_FOR_USER_PRESENT_DAYS_COUNT);
+
+                if (count > 3) {  // after 3 days, send push when user unlock phone after 9:00
+                    ActiveNotification notification = new ActiveNotification(this);
+                    if (notification.getEnablePush()) {
+                        notification.sendNotification();
                     }
-
+                } else { //in 3 days, after 9:00, show popup window when unlock phone in most 3 times.
+                    SetAsDefaultGuideActivity.startActivity(getApplicationContext(), SetAsDefaultGuideActivity.USER_PRESENT);
                 }
+
             }
         }, screenFilter);
     }
