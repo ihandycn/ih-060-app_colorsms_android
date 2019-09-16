@@ -506,7 +506,7 @@ public class BugleApplication extends HSApplication implements UncaughtException
                 if (notification.getEnablePush()) {
                     notification.sendNotification();
                 }
-                return ;
+                return;
             }
 
             final String KEY_FOR_LAST_USER_PRESENT_TIME = "last_user_present_time";
@@ -514,19 +514,26 @@ public class BugleApplication extends HSApplication implements UncaughtException
             long lastUserPresent = Preferences.getDefault().getLong(KEY_FOR_LAST_USER_PRESENT_TIME, 0);
             long now = System.currentTimeMillis();
 
-            if (!Calendars.isSameDay(lastUserPresent, now)) {
+//            if (!Calendars.isSameDay(lastUserPresent, now))
+            {
                 Preferences.getDefault().putLong(KEY_FOR_LAST_USER_PRESENT_TIME, now);
                 int count = Preferences.getDefault().incrementAndGetInt(KEY_FOR_USER_PRESENT_DAYS_COUNT);
 
-                if (count > 3) {  // after 3 days, send push when user unlock phone after 9:00
+                if (!HSConfig.optBoolean(false, "Application", "SetDefaultAlert", "Switch")) {
                     ActiveNotification notification = new ActiveNotification(this);
                     if (notification.getEnablePush()) {
                         notification.sendNotification();
                     }
-                } else { //in 3 days, after 9:00, show popup window when unlock phone in most 3 times.
-                    SetAsDefaultGuideActivity.startActivity(getApplicationContext(), SetAsDefaultGuideActivity.USER_PRESENT);
+                } else {
+                    if (count > 3) {  // after 3 days, send push when user unlock phone after 9:00
+                        ActiveNotification notification = new ActiveNotification(this);
+                        if (notification.getEnablePush()) {
+                            notification.sendNotification();
+                        }
+                    } else { //in 3 days, after 9:00, show popup window when unlock phone in most 3 times.
+                        SetAsDefaultGuideActivity.startActivity(getApplicationContext(), SetAsDefaultGuideActivity.USER_PRESENT);
+                    }
                 }
-
             }
         }, screenFilter);
     }

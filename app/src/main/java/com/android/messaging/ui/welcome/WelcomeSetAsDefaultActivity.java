@@ -122,7 +122,6 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
             if (mIsFromPush) {
                 mPushType = getIntent().getStringExtra(EXTRA_FROM_PUSH_TYPE);
                 if (mPushType != null) {
-                    HSLog.i("test_test", "push_click: " + mPushType);
                     if (mPushType.equals(SetDefaultNotification.TYPE)) {
                         SetDefaultPushAutopilotUtils.logPushSetDefaultClick();
                     } else {
@@ -139,8 +138,6 @@ public class WelcomeSetAsDefaultActivity extends AppCompatActivity {
         findViewById(R.id.welcome_set_default_button).setBackgroundDrawable(
                 BackgroundDrawables.createBackgroundDrawable(getResources().getColor(R.color.primary_color), Dimensions.pxFromDp(6.7f), true));
         findViewById(R.id.welcome_set_default_button).setOnClickListener(v -> {
-            final Intent intent = UIIntents.get().getChangeDefaultSmsAppIntent(WelcomeSetAsDefaultActivity.this);
-            startActivityForResult(intent, REQUEST_SET_DEFAULT_SMS_APP);
             if (mIsFromWelcomeStart) {
                 BugleAnalytics.logEvent("Start_SetAsDefault_Click", true);
                 BugleFirebaseAnalytics.logEvent("Start_SetAsDefault_Click");
