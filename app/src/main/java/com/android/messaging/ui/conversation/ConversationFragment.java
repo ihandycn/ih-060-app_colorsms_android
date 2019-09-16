@@ -713,6 +713,9 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         if (mIsBlockAd) {
             return;
         }
+        if (!AdConfig.isDetailpageTopAdEnabled()) {
+            return;
+        }
         if (BillingManager.isPremiumUser()) {
             return;
         }
@@ -1001,8 +1004,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
                     if (mIsDestroyed || getActivity() == null) {
                         return;
                     }
-                    if (AdConfig.isDetailpageTopAdEnabled()
-                            && !mHost.isFromCreateConversation()) {
+                    if (!mHost.isFromCreateConversation()) {
                         loadTopBannerAd();
                     }
                     if (AdConfig.isHomepageBannerAdEnabled()) {
