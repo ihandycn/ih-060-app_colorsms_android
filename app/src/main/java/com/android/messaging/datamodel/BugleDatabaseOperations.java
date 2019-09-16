@@ -815,7 +815,8 @@ public class BugleDatabaseOperations {
             // Check to find the latest message in the conversation
             cursor = dbWrapper.query(DatabaseHelper.MESSAGES_TABLE,
                     REFRESH_CONVERSATION_MESSAGE_PROJECTION,
-                    MessageColumns.CONVERSATION_ID + "=?",
+                    MessageColumns.CONVERSATION_ID + "=?"
+                            + " AND " + MessageColumns.IS_DELETED + "!=1",
                     new String[]{conversationId}, null, null,
                     MessageColumns.RECEIVED_TIMESTAMP + " DESC", "1" /* limit */);
 
@@ -1492,7 +1493,7 @@ public class BugleDatabaseOperations {
                     REFRESH_CONVERSATION_MESSAGE_PROJECTION,
                     MessageColumns.CONVERSATION_ID + "=? AND " +
                             MessageColumns.STATUS + "!=" + MessageData.BUGLE_STATUS_OUTGOING_DRAFT + " AND " +
-                    MessageColumns.IS_DELETED + "!=" + "1",
+                            MessageColumns.IS_DELETED + "!=" + "1",
                     new String[]{conversationId}, null, null,
                     MessageColumns.RECEIVED_TIMESTAMP + " DESC", "1" /* limit */);
 
