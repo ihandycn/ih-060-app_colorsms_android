@@ -30,6 +30,7 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.ActionMode;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
@@ -44,6 +45,7 @@ import com.android.messaging.ad.BillingManager;
 import com.android.messaging.datamodel.BugleNotifications;
 import com.android.messaging.datamodel.MessagingContentProvider;
 import com.android.messaging.datamodel.data.MessageData;
+import com.android.messaging.gesture.SwipeRightGestureDetector;
 import com.android.messaging.ui.BugleActionBarActivity;
 import com.android.messaging.ui.UIIntents;
 import com.android.messaging.ui.conversation.ConversationFragment.ConversationFragmentHost;
@@ -121,6 +123,7 @@ public class ConversationActivity extends BugleActionBarActivity
     private String mNewGroupName = null;
 
     private BuglePrefs bugleApplicationPrefs = BugleApplicationPrefs.getApplicationPrefs();
+    SwipeRightGestureDetector mSwipeRightGestureDetector;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -202,6 +205,8 @@ public class ConversationActivity extends BugleActionBarActivity
                 UIIntents.get().launchFullScreenVideoViewer(this, Uri.parse(extraToDisplay));
             }
         }
+        mSwipeRightGestureDetector = new SwipeRightGestureDetector(this,
+                eventType -> finish());
 
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
 
@@ -223,12 +228,7 @@ public class ConversationActivity extends BugleActionBarActivity
         mCreateTime = System.currentTimeMillis();
 
         if (mNeedShowGuide) {
-            Threads.postOnMainThreadDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    showSettingGuide();
-                }
-            }, 600);
+            Threads.postOnMainThreadDelayed(this::showSettingGuide, 600);
         }
     }
 
@@ -236,26 +236,20 @@ public class ConversationActivity extends BugleActionBarActivity
         BugleAnalytics.logEvent("SMS_Detailspage_Guide_Show", true);
         ViewGroup root = this.findViewById(android.R.id.content);
         ConversationSettingGuide view = new ConversationSettingGuide(this);
-        view.setAimationEndCallback(new ConversationSettingGuide.AnimationEndCallback() {
-            @Override
-            public void onAnimationEndCallback(TextView tv) {
-                if (ConversationActivity.this.isDestroyed()) {
-                    return;
-                }
-                root.removeView(view);
-                Threads.postOnMainThreadDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        ConversationFragment fragment = getConversationFragment();
-                        if (fragment != null) {
-                            fragment.unBLockAd();
-                        } else {
-                            HSLog.e(TAG, "beginAdLoad failed: fragment is null");
-                        }
-                    }
-                }, 500);
-
+        view.setAimationEndCallback(tv -> {
+            if (ConversationActivity.this.isDestroyed()) {
+                return;
             }
+            root.removeView(view);
+            Threads.postOnMainThreadDelayed(() -> {
+                ConversationFragment fragment = getConversationFragment();
+                if (fragment != null) {
+                    fragment.unblockAd();
+                } else {
+                    HSLog.e(TAG, "beginAdLoad failed: fragment is null");
+                }
+            }, 500);
+
         });
         root.addView(view);
         ViewGroup.LayoutParams lp = view.getLayoutParams();
@@ -352,6 +346,14 @@ public class ConversationActivity extends BugleActionBarActivity
         if (conversationFragment != null) {
             conversationFragment.onActivityRestart();
         }
+    }
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        if (mSwipeRightGestureDetector != null) {
+            mSwipeRightGestureDetector.onTouchEvent(ev);
+        }
+        return super.dispatchTouchEvent(ev);
     }
 
     @Override

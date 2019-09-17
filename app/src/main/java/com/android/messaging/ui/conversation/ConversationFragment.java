@@ -864,7 +864,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         mIsBlockAd = true;
     }
 
-    public void unBLockAd() {
+    public void unblockAd() {
         mIsBlockAd = false;
         if (!mIsDestroyed && getActivity() != null) {
             loadTopBannerAd();
