@@ -1748,7 +1748,7 @@
 						<key>AvatarUrl</key>
 						<string>avatar.png</string>
 						<key>AvatarSolidUrl</key>
-						<string></string>
+						<string>avatar_solid.png</string>
 						<key>ListWallpaperUrl</key>
 						<string>wallpaper.jpg</string>
 						<key>WallpaperUrl</key>
