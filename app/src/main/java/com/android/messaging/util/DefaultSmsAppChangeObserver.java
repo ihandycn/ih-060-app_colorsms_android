@@ -11,6 +11,7 @@ import com.superapps.util.Threads;
 import com.superapps.util.Toasts;
 
 public class DefaultSmsAppChangeObserver extends ContentObserver {
+    private boolean mIsDefaultSmsBefore;
     /**
      * Creates a content observer.
      *
@@ -18,6 +19,7 @@ public class DefaultSmsAppChangeObserver extends ContentObserver {
      */
     public DefaultSmsAppChangeObserver(Handler handler) {
         super(handler);
+        mIsDefaultSmsBefore = DefaultSMSUtils.isDefaultSmsApp();
     }
 
     @Override
@@ -26,14 +28,16 @@ public class DefaultSmsAppChangeObserver extends ContentObserver {
         Threads.postOnMainThreadDelayed(new Runnable() {
             @Override
             public void run() {
-                if (!DefaultSMSUtils.isDefaultSmsApp()) {
+                boolean isDefault = DefaultSMSUtils.isDefaultSmsApp();
+                if (!isDefault && mIsDefaultSmsBefore) {
                     if (HSConfig.optBoolean(false, "Application", "SetDefaultAlert", "Switch")) {
                         SetAsDefaultGuideActivity.startActivity(HSApplication.getContext(), SetAsDefaultGuideActivity.DEFAULT_CHANGED);
                     }
                 }
 
+                mIsDefaultSmsBefore = isDefault;
                 if (BuildConfig.DEBUG) {
-                    if (DefaultSMSUtils.isDefaultSmsApp()) {
+                    if (isDefault) {
                         Toasts.showToast("debug toast : sms_default_application_set");
                     } else {
                         Toasts.showToast("debug toast : sms_default_application_cleared");
