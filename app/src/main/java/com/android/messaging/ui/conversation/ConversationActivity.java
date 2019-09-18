@@ -123,7 +123,6 @@ public class ConversationActivity extends BugleActionBarActivity
     private String mNewGroupName = null;
 
     private BuglePrefs bugleApplicationPrefs = BugleApplicationPrefs.getApplicationPrefs();
-    SwipeRightGestureDetector mSwipeRightGestureDetector;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -205,8 +204,6 @@ public class ConversationActivity extends BugleActionBarActivity
                 UIIntents.get().launchFullScreenVideoViewer(this, Uri.parse(extraToDisplay));
             }
         }
-        mSwipeRightGestureDetector = new SwipeRightGestureDetector(this,
-                eventType -> finish());
 
         BugleAnalytics.logEvent("SMS_ActiveUsers", true);
 
@@ -346,14 +343,6 @@ public class ConversationActivity extends BugleActionBarActivity
         if (conversationFragment != null) {
             conversationFragment.onActivityRestart();
         }
-    }
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        if (mSwipeRightGestureDetector != null) {
-            mSwipeRightGestureDetector.onTouchEvent(ev);
-        }
-        return super.dispatchTouchEvent(ev);
     }
 
     @Override

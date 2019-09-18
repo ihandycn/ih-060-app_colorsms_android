@@ -226,7 +226,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
     public static final int MESSAGE_ANIMATION_MAX_WAIT = 500;
 
     private ComposeMessageView mComposeMessageView;
-    private RecyclerView mRecyclerView;
+    private RightSwipeRecyclerView mRecyclerView;
     private ConversationMessageAdapter mAdapter;
     private ConversationFastScroller mFastScroller;
     private ImageView mWallpaperView;
@@ -956,6 +956,7 @@ public class ConversationFragment extends Fragment implements ConversationDataLi
         HSLog.d("message list create : " + System.currentTimeMillis());
         final View view = inflater.inflate(R.layout.conversation_fragment, container, false);
         mRecyclerView = view.findViewById(android.R.id.list);
+        mRecyclerView.setActivity(getActivity());
         mAdContainer = view.findViewById(R.id.top_banner_ad_container);
         final LinearLayoutManager manager = new LinearLayoutManager(getActivity());
         manager.setStackFromEnd(true);
